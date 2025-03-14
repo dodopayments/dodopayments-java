@@ -20,6 +20,7 @@ class DisputeListParams
 private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
+    private val customerId: String?,
     private val disputeStage: DisputeStage?,
     private val disputeStatus: DisputeStatus?,
     private val pageNumber: Long?,
@@ -33,6 +34,9 @@ private constructor(
 
     /** Get events created before this time */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
+
+    /** Filter by customer_id */
+    fun customerId(): Optional<String> = Optional.ofNullable(customerId)
 
     /** Filter by dispute stage */
     fun disputeStage(): Optional<DisputeStage> = Optional.ofNullable(disputeStage)
@@ -66,6 +70,7 @@ private constructor(
                 listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
             )
         }
+        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
         this.disputeStage?.let { queryParams.put("dispute_stage", listOf(it.toString())) }
         this.disputeStatus?.let { queryParams.put("dispute_status", listOf(it.toString())) }
         this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
@@ -90,6 +95,7 @@ private constructor(
 
         private var createdAtGte: OffsetDateTime? = null
         private var createdAtLte: OffsetDateTime? = null
+        private var customerId: String? = null
         private var disputeStage: DisputeStage? = null
         private var disputeStatus: DisputeStatus? = null
         private var pageNumber: Long? = null
@@ -101,6 +107,7 @@ private constructor(
         internal fun from(disputeListParams: DisputeListParams) = apply {
             createdAtGte = disputeListParams.createdAtGte
             createdAtLte = disputeListParams.createdAtLte
+            customerId = disputeListParams.customerId
             disputeStage = disputeListParams.disputeStage
             disputeStatus = disputeListParams.disputeStatus
             pageNumber = disputeListParams.pageNumber
@@ -122,6 +129,12 @@ private constructor(
         /** Get events created before this time */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
+
+        /** Filter by customer_id */
+        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+
+        /** Filter by customer_id */
+        fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Filter by dispute stage */
         fun disputeStage(disputeStage: DisputeStage?) = apply { this.disputeStage = disputeStage }
@@ -259,6 +272,7 @@ private constructor(
             DisputeListParams(
                 createdAtGte,
                 createdAtLte,
+                customerId,
                 disputeStage,
                 disputeStatus,
                 pageNumber,
@@ -518,11 +532,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is DisputeListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is DisputeListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && customerId == other.customerId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(createdAtGte, createdAtLte, disputeStage, disputeStatus, pageNumber, pageSize, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(createdAtGte, createdAtLte, customerId, disputeStage, disputeStatus, pageNumber, pageSize, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "DisputeListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, disputeStage=$disputeStage, disputeStatus=$disputeStatus, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "DisputeListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

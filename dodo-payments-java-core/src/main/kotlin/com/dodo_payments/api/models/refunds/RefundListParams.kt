@@ -20,6 +20,7 @@ class RefundListParams
 private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
+    private val customerId: String?,
     private val pageNumber: Long?,
     private val pageSize: Long?,
     private val status: Status?,
@@ -32,6 +33,9 @@ private constructor(
 
     /** Get events created before this time */
     fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
+
+    /** Filter by customer_id */
+    fun customerId(): Optional<String> = Optional.ofNullable(customerId)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Long> = Optional.ofNullable(pageNumber)
@@ -62,6 +66,7 @@ private constructor(
                 listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
             )
         }
+        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
         this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
         this.pageSize?.let { queryParams.put("page_size", listOf(it.toString())) }
         this.status?.let { queryParams.put("status", listOf(it.toString())) }
@@ -85,6 +90,7 @@ private constructor(
 
         private var createdAtGte: OffsetDateTime? = null
         private var createdAtLte: OffsetDateTime? = null
+        private var customerId: String? = null
         private var pageNumber: Long? = null
         private var pageSize: Long? = null
         private var status: Status? = null
@@ -95,6 +101,7 @@ private constructor(
         internal fun from(refundListParams: RefundListParams) = apply {
             createdAtGte = refundListParams.createdAtGte
             createdAtLte = refundListParams.createdAtLte
+            customerId = refundListParams.customerId
             pageNumber = refundListParams.pageNumber
             pageSize = refundListParams.pageSize
             status = refundListParams.status
@@ -115,6 +122,12 @@ private constructor(
         /** Get events created before this time */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
+
+        /** Filter by customer_id */
+        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+
+        /** Filter by customer_id */
+        fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Long?) = apply { this.pageNumber = pageNumber }
@@ -242,6 +255,7 @@ private constructor(
             RefundListParams(
                 createdAtGte,
                 createdAtLte,
+                customerId,
                 pageNumber,
                 pageSize,
                 status,
@@ -368,11 +382,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is RefundListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && pageNumber == other.pageNumber && pageSize == other.pageSize && status == other.status && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is RefundListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && customerId == other.customerId && pageNumber == other.pageNumber && pageSize == other.pageSize && status == other.status && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(createdAtGte, createdAtLte, pageNumber, pageSize, status, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(createdAtGte, createdAtLte, customerId, pageNumber, pageSize, status, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "RefundListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "RefundListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

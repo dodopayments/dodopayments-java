@@ -11,6 +11,7 @@ import com.dodo_payments.api.core.JsonMissing
 import com.dodo_payments.api.core.JsonValue
 import com.dodo_payments.api.core.NoAutoDetect
 import com.dodo_payments.api.core.Params
+import com.dodo_payments.api.core.checkKnown
 import com.dodo_payments.api.core.checkRequired
 import com.dodo_payments.api.core.getOrThrow
 import com.dodo_payments.api.core.http.Headers
@@ -42,6 +43,9 @@ private constructor(
 ) : Params {
 
     fun id(): String = id
+
+    /** Available Addons for subscription products */
+    fun addons(): Optional<List<String>> = body.addons()
 
     /** Description of the product, optional and must be at most 1000 characters. */
     fun description(): Optional<String> = body.description()
@@ -84,6 +88,9 @@ private constructor(
      * Represents the different categories of taxation applicable to various products and services.
      */
     fun taxCategory(): Optional<TaxCategory> = body.taxCategory()
+
+    /** Available Addons for subscription products */
+    fun _addons(): JsonField<List<String>> = body._addons()
 
     /** Description of the product, optional and must be at most 1000 characters. */
     fun _description(): JsonField<String> = body._description()
@@ -150,6 +157,9 @@ private constructor(
     class Body
     @JsonCreator
     private constructor(
+        @JsonProperty("addons")
+        @ExcludeMissing
+        private val addons: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("description")
         @ExcludeMissing
         private val description: JsonField<String> = JsonMissing.of(),
@@ -180,6 +190,9 @@ private constructor(
         @JsonAnySetter
         private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
+
+        /** Available Addons for subscription products */
+        fun addons(): Optional<List<String>> = Optional.ofNullable(addons.getNullable("addons"))
 
         /** Description of the product, optional and must be at most 1000 characters. */
         fun description(): Optional<String> =
@@ -233,6 +246,9 @@ private constructor(
          */
         fun taxCategory(): Optional<TaxCategory> =
             Optional.ofNullable(taxCategory.getNullable("tax_category"))
+
+        /** Available Addons for subscription products */
+        @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<String>> = addons
 
         /** Description of the product, optional and must be at most 1000 characters. */
         @JsonProperty("description")
@@ -300,6 +316,7 @@ private constructor(
                 return@apply
             }
 
+            addons()
             description()
             imageId()
             licenseKeyActivationMessage()
@@ -323,6 +340,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var addons: JsonField<MutableList<String>>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var imageId: JsonField<String> = JsonMissing.of()
             private var licenseKeyActivationMessage: JsonField<String> = JsonMissing.of()
@@ -336,6 +354,7 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                addons = body.addons.map { it.toMutableList() }
                 description = body.description
                 imageId = body.imageId
                 licenseKeyActivationMessage = body.licenseKeyActivationMessage
@@ -346,6 +365,25 @@ private constructor(
                 price = body.price
                 taxCategory = body.taxCategory
                 additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /** Available Addons for subscription products */
+            fun addons(addons: List<String>?) = addons(JsonField.ofNullable(addons))
+
+            /** Available Addons for subscription products */
+            fun addons(addons: Optional<List<String>>) = addons(addons.getOrNull())
+
+            /** Available Addons for subscription products */
+            fun addons(addons: JsonField<List<String>>) = apply {
+                this.addons = addons.map { it.toMutableList() }
+            }
+
+            /** Available Addons for subscription products */
+            fun addAddon(addon: String) = apply {
+                addons =
+                    (addons ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("addons", it).add(addon)
+                    }
             }
 
             /** Description of the product, optional and must be at most 1000 characters. */
@@ -543,6 +581,7 @@ private constructor(
 
             fun build(): Body =
                 Body(
+                    (addons ?: JsonMissing.of()).map { it.toImmutable() },
                     description,
                     imageId,
                     licenseKeyActivationMessage,
@@ -561,17 +600,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && description == other.description && imageId == other.imageId && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && licenseKeyEnabled == other.licenseKeyEnabled && name == other.name && price == other.price && taxCategory == other.taxCategory && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && addons == other.addons && description == other.description && imageId == other.imageId && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && licenseKeyEnabled == other.licenseKeyEnabled && name == other.name && price == other.price && taxCategory == other.taxCategory && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(description, imageId, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, licenseKeyEnabled, name, price, taxCategory, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(addons, description, imageId, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, licenseKeyEnabled, name, price, taxCategory, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{description=$description, imageId=$imageId, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, licenseKeyEnabled=$licenseKeyEnabled, name=$name, price=$price, taxCategory=$taxCategory, additionalProperties=$additionalProperties}"
+            "Body{addons=$addons, description=$description, imageId=$imageId, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, licenseKeyEnabled=$licenseKeyEnabled, name=$name, price=$price, taxCategory=$taxCategory, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -607,6 +646,18 @@ private constructor(
         }
 
         fun id(id: String) = apply { this.id = id }
+
+        /** Available Addons for subscription products */
+        fun addons(addons: List<String>?) = apply { body.addons(addons) }
+
+        /** Available Addons for subscription products */
+        fun addons(addons: Optional<List<String>>) = addons(addons.getOrNull())
+
+        /** Available Addons for subscription products */
+        fun addons(addons: JsonField<List<String>>) = apply { body.addons(addons) }
+
+        /** Available Addons for subscription products */
+        fun addAddon(addon: String) = apply { body.addAddon(addon) }
 
         /** Description of the product, optional and must be at most 1000 characters. */
         fun description(description: String?) = apply { body.description(description) }
