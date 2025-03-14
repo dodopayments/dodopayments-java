@@ -1,0 +1,290 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.dodopayments.api.models.payments
+
+import com.dodopayments.api.core.NoAutoDetect
+import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.http.Headers
+import com.dodopayments.api.core.http.QueryParams
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
+
+class PaymentListParams
+private constructor(
+    private val createdAtGte: OffsetDateTime?,
+    private val createdAtLte: OffsetDateTime?,
+    private val customerId: String?,
+    private val pageNumber: Long?,
+    private val pageSize: Long?,
+    private val status: IntentStatus?,
+    private val subscriptionId: String?,
+    private val additionalHeaders: Headers,
+    private val additionalQueryParams: QueryParams,
+) : Params {
+
+    /** Get events after this created time */
+    fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
+
+    /** Get events created before this time */
+    fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
+
+    /** Filter by customer id */
+    fun customerId(): Optional<String> = Optional.ofNullable(customerId)
+
+    /** Page number default is 0 */
+    fun pageNumber(): Optional<Long> = Optional.ofNullable(pageNumber)
+
+    /** Page size default is 10 max is 100 */
+    fun pageSize(): Optional<Long> = Optional.ofNullable(pageSize)
+
+    /** Filter by status */
+    fun status(): Optional<IntentStatus> = Optional.ofNullable(status)
+
+    /** Filter by subscription id */
+    fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
+
+    fun _additionalHeaders(): Headers = additionalHeaders
+
+    fun _additionalQueryParams(): QueryParams = additionalQueryParams
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams {
+        val queryParams = QueryParams.builder()
+        this.createdAtGte?.let {
+            queryParams.put(
+                "created_at_gte",
+                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
+            )
+        }
+        this.createdAtLte?.let {
+            queryParams.put(
+                "created_at_lte",
+                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
+            )
+        }
+        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
+        this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
+        this.pageSize?.let { queryParams.put("page_size", listOf(it.toString())) }
+        this.status?.let { queryParams.put("status", listOf(it.toString())) }
+        this.subscriptionId?.let { queryParams.put("subscription_id", listOf(it.toString())) }
+        queryParams.putAll(additionalQueryParams)
+        return queryParams.build()
+    }
+
+    fun toBuilder() = Builder().from(this)
+
+    companion object {
+
+        @JvmStatic fun none(): PaymentListParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [PaymentListParams]. */
+        @JvmStatic fun builder() = Builder()
+    }
+
+    /** A builder for [PaymentListParams]. */
+    @NoAutoDetect
+    class Builder internal constructor() {
+
+        private var createdAtGte: OffsetDateTime? = null
+        private var createdAtLte: OffsetDateTime? = null
+        private var customerId: String? = null
+        private var pageNumber: Long? = null
+        private var pageSize: Long? = null
+        private var status: IntentStatus? = null
+        private var subscriptionId: String? = null
+        private var additionalHeaders: Headers.Builder = Headers.builder()
+        private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+
+        @JvmSynthetic
+        internal fun from(paymentListParams: PaymentListParams) = apply {
+            createdAtGte = paymentListParams.createdAtGte
+            createdAtLte = paymentListParams.createdAtLte
+            customerId = paymentListParams.customerId
+            pageNumber = paymentListParams.pageNumber
+            pageSize = paymentListParams.pageSize
+            status = paymentListParams.status
+            subscriptionId = paymentListParams.subscriptionId
+            additionalHeaders = paymentListParams.additionalHeaders.toBuilder()
+            additionalQueryParams = paymentListParams.additionalQueryParams.toBuilder()
+        }
+
+        /** Get events after this created time */
+        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+
+        /** Get events after this created time */
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
+            createdAtGte(createdAtGte.getOrNull())
+
+        /** Get events created before this time */
+        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+
+        /** Get events created before this time */
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
+            createdAtLte(createdAtLte.getOrNull())
+
+        /** Filter by customer id */
+        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+
+        /** Filter by customer id */
+        fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
+
+        /** Page number default is 0 */
+        fun pageNumber(pageNumber: Long?) = apply { this.pageNumber = pageNumber }
+
+        /** Page number default is 0 */
+        fun pageNumber(pageNumber: Long) = pageNumber(pageNumber as Long?)
+
+        /** Page number default is 0 */
+        fun pageNumber(pageNumber: Optional<Long>) = pageNumber(pageNumber.getOrNull())
+
+        /** Page size default is 10 max is 100 */
+        fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
+
+        /** Page size default is 10 max is 100 */
+        fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
+
+        /** Page size default is 10 max is 100 */
+        fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
+
+        /** Filter by status */
+        fun status(status: IntentStatus?) = apply { this.status = status }
+
+        /** Filter by status */
+        fun status(status: Optional<IntentStatus>) = status(status.getOrNull())
+
+        /** Filter by subscription id */
+        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
+
+        /** Filter by subscription id */
+        fun subscriptionId(subscriptionId: Optional<String>) =
+            subscriptionId(subscriptionId.getOrNull())
+
+        fun additionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.clear()
+            putAllAdditionalHeaders(additionalHeaders)
+        }
+
+        fun putAdditionalHeader(name: String, value: String) = apply {
+            additionalHeaders.put(name, value)
+        }
+
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.put(name, values)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
+
+        fun replaceAdditionalHeaders(name: String, value: String) = apply {
+            additionalHeaders.replace(name, value)
+        }
+
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
+            additionalHeaders.replace(name, values)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
+
+        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+
+        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
+            additionalHeaders.removeAll(names)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
+            this.additionalQueryParams.clear()
+            putAllAdditionalQueryParams(additionalQueryParams)
+        }
+
+        fun putAdditionalQueryParam(key: String, value: String) = apply {
+            additionalQueryParams.put(key, value)
+        }
+
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.put(key, values)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.putAll(additionalQueryParams)
+        }
+
+        fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
+
+        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
+            additionalQueryParams.replace(key, value)
+        }
+
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
+            additionalQueryParams.replace(key, values)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
+            this.additionalQueryParams.replaceAll(additionalQueryParams)
+        }
+
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
+
+        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+
+        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
+            additionalQueryParams.removeAll(keys)
+        }
+
+        fun build(): PaymentListParams =
+            PaymentListParams(
+                createdAtGte,
+                createdAtLte,
+                customerId,
+                pageNumber,
+                pageSize,
+                status,
+                subscriptionId,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return /* spotless:off */ other is PaymentListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && customerId == other.customerId && pageNumber == other.pageNumber && pageSize == other.pageSize && status == other.status && subscriptionId == other.subscriptionId && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+    }
+
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(createdAtGte, createdAtLte, customerId, pageNumber, pageSize, status, subscriptionId, additionalHeaders, additionalQueryParams) /* spotless:on */
+
+    override fun toString() =
+        "PaymentListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+}
