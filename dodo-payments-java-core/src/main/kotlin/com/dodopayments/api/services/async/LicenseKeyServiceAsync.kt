@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyListPageAsync
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
@@ -36,21 +37,21 @@ interface LicenseKeyServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<LicenseKey>
 
-    fun list(): CompletableFuture<List<ListLicenseKeysResponse>> = list(LicenseKeyListParams.none())
+    fun list(): CompletableFuture<LicenseKeyListPageAsync> = list(LicenseKeyListParams.none())
 
     /** @see [list] */
     fun list(
         params: LicenseKeyListParams = LicenseKeyListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<ListLicenseKeysResponse>>
+    ): CompletableFuture<LicenseKeyListPageAsync>
 
     /** @see [list] */
     fun list(
         params: LicenseKeyListParams = LicenseKeyListParams.none()
-    ): CompletableFuture<List<ListLicenseKeysResponse>> = list(params, RequestOptions.none())
+    ): CompletableFuture<LicenseKeyListPageAsync> = list(params, RequestOptions.none())
 
     /** @see [list] */
-    fun list(requestOptions: RequestOptions): CompletableFuture<List<ListLicenseKeysResponse>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<LicenseKeyListPageAsync> =
         list(LicenseKeyListParams.none(), requestOptions)
 
     /**
@@ -95,7 +96,7 @@ interface LicenseKeyServiceAsync {
          * [LicenseKeyServiceAsync.list].
          */
         @MustBeClosed
-        fun list(): CompletableFuture<HttpResponseFor<List<ListLicenseKeysResponse>>> =
+        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
             list(LicenseKeyListParams.none())
 
         /** @see [list] */
@@ -103,20 +104,20 @@ interface LicenseKeyServiceAsync {
         fun list(
             params: LicenseKeyListParams = LicenseKeyListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeysResponse>>>
+        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>>
 
         /** @see [list] */
         @MustBeClosed
         fun list(
             params: LicenseKeyListParams = LicenseKeyListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeysResponse>>> =
+        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeysResponse>>> =
+        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
             list(LicenseKeyListParams.none(), requestOptions)
     }
 }

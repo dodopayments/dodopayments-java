@@ -4,7 +4,6 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
-import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
 import org.junit.jupiter.api.Test
@@ -58,16 +57,9 @@ class LicenseKeyInstanceServiceAsyncTest {
                 .build()
         val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
 
-        val licenseKeyInstancesFuture =
-            licenseKeyInstanceServiceAsync.list(
-                LicenseKeyInstanceListParams.builder()
-                    .licenseKeyId("license_key_id")
-                    .pageNumber(0L)
-                    .pageSize(0L)
-                    .build()
-            )
+        val pageFuture = licenseKeyInstanceServiceAsync.list()
 
-        val licenseKeyInstances = licenseKeyInstancesFuture.get()
-        licenseKeyInstances.forEach { it.validate() }
+        val page = pageFuture.get()
+        page.response().validate()
     }
 }

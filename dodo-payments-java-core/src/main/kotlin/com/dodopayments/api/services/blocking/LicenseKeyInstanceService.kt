@@ -5,6 +5,7 @@ package com.dodopayments.api.services.blocking
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPage
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
@@ -35,21 +36,21 @@ interface LicenseKeyInstanceService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstance
 
-    fun list(): List<ListLicenseKeyInstancesResponse> = list(LicenseKeyInstanceListParams.none())
+    fun list(): LicenseKeyInstanceListPage = list(LicenseKeyInstanceListParams.none())
 
     /** @see [list] */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<ListLicenseKeyInstancesResponse>
+    ): LicenseKeyInstanceListPage
 
     /** @see [list] */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-    ): List<ListLicenseKeyInstancesResponse> = list(params, RequestOptions.none())
+    ): LicenseKeyInstanceListPage = list(params, RequestOptions.none())
 
     /** @see [list] */
-    fun list(requestOptions: RequestOptions): List<ListLicenseKeyInstancesResponse> =
+    fun list(requestOptions: RequestOptions): LicenseKeyInstanceListPage =
         list(LicenseKeyInstanceListParams.none(), requestOptions)
 
     /**
@@ -94,7 +95,7 @@ interface LicenseKeyInstanceService {
          * as [LicenseKeyInstanceService.list].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<List<ListLicenseKeyInstancesResponse>> =
+        fun list(): HttpResponseFor<LicenseKeyInstanceListPage> =
             list(LicenseKeyInstanceListParams.none())
 
         /** @see [list] */
@@ -102,20 +103,17 @@ interface LicenseKeyInstanceService {
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<ListLicenseKeyInstancesResponse>>
+        ): HttpResponseFor<LicenseKeyInstanceListPage>
 
         /** @see [list] */
         @MustBeClosed
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-        ): HttpResponseFor<List<ListLicenseKeyInstancesResponse>> =
-            list(params, RequestOptions.none())
+        ): HttpResponseFor<LicenseKeyInstanceListPage> = list(params, RequestOptions.none())
 
         /** @see [list] */
         @MustBeClosed
-        fun list(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<List<ListLicenseKeyInstancesResponse>> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<LicenseKeyInstanceListPage> =
             list(LicenseKeyInstanceListParams.none(), requestOptions)
     }
 }

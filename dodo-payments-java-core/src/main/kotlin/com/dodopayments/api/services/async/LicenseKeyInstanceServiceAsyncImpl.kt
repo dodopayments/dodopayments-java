@@ -16,6 +16,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.errors.DodoPaymentsError
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPageAsync
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
@@ -47,7 +48,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
     override fun list(
         params: LicenseKeyInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<ListLicenseKeyInstancesResponse>> =
+    ): CompletableFuture<LicenseKeyInstanceListPageAsync> =
         // get /license_key_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -116,14 +117,14 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
                 }
         }
 
-        private val listHandler: Handler<List<ListLicenseKeyInstancesResponse>> =
-            jsonHandler<List<ListLicenseKeyInstancesResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<LicenseKeyInstanceListPageAsync.Response> =
+            jsonHandler<LicenseKeyInstanceListPageAsync.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
             params: LicenseKeyInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeyInstancesResponse>>> {
+        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -139,8 +140,15 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
                             .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
+                                    it.validate()
                                 }
+                            }
+                            .let {
+                                LicenseKeyInstanceListPageAsync.of(
+                                    LicenseKeyInstanceServiceAsyncImpl(clientOptions),
+                                    params,
+                                    it,
+                                )
                             }
                     }
                 }

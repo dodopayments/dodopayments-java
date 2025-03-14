@@ -16,6 +16,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.errors.DodoPaymentsError
 import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyListPageAsync
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
@@ -47,7 +48,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
     override fun list(
         params: LicenseKeyListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<ListLicenseKeysResponse>> =
+    ): CompletableFuture<LicenseKeyListPageAsync> =
         // get /license_keys
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -116,14 +117,14 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
                 }
         }
 
-        private val listHandler: Handler<List<ListLicenseKeysResponse>> =
-            jsonHandler<List<ListLicenseKeysResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<LicenseKeyListPageAsync.Response> =
+            jsonHandler<LicenseKeyListPageAsync.Response>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
 
         override fun list(
             params: LicenseKeyListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeysResponse>>> {
+        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -139,8 +140,15 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
                             .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
+                                    it.validate()
                                 }
+                            }
+                            .let {
+                                LicenseKeyListPageAsync.of(
+                                    LicenseKeyServiceAsyncImpl(clientOptions),
+                                    params,
+                                    it,
+                                )
                             }
                     }
                 }

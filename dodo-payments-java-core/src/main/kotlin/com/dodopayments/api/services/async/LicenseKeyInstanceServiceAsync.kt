@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPageAsync
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
@@ -36,25 +37,22 @@ interface LicenseKeyInstanceServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<LicenseKeyInstance>
 
-    fun list(): CompletableFuture<List<ListLicenseKeyInstancesResponse>> =
+    fun list(): CompletableFuture<LicenseKeyInstanceListPageAsync> =
         list(LicenseKeyInstanceListParams.none())
 
     /** @see [list] */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<ListLicenseKeyInstancesResponse>>
+    ): CompletableFuture<LicenseKeyInstanceListPageAsync>
 
     /** @see [list] */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-    ): CompletableFuture<List<ListLicenseKeyInstancesResponse>> =
-        list(params, RequestOptions.none())
+    ): CompletableFuture<LicenseKeyInstanceListPageAsync> = list(params, RequestOptions.none())
 
     /** @see [list] */
-    fun list(
-        requestOptions: RequestOptions
-    ): CompletableFuture<List<ListLicenseKeyInstancesResponse>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<LicenseKeyInstanceListPageAsync> =
         list(LicenseKeyInstanceListParams.none(), requestOptions)
 
     /**
@@ -102,7 +100,7 @@ interface LicenseKeyInstanceServiceAsync {
          * as [LicenseKeyInstanceServiceAsync.list].
          */
         @MustBeClosed
-        fun list(): CompletableFuture<HttpResponseFor<List<ListLicenseKeyInstancesResponse>>> =
+        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
             list(LicenseKeyInstanceListParams.none())
 
         /** @see [list] */
@@ -110,20 +108,20 @@ interface LicenseKeyInstanceServiceAsync {
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeyInstancesResponse>>>
+        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>>
 
         /** @see [list] */
         @MustBeClosed
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeyInstancesResponse>>> =
+        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<ListLicenseKeyInstancesResponse>>> =
+        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
             list(LicenseKeyInstanceListParams.none(), requestOptions)
     }
 }
