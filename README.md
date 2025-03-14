@@ -9,6 +9,8 @@
 
 The Dodo Payments Java SDK provides convenient access to the Dodo Payments REST API from applications written in Java.
 
+The Dodo Payments Java SDK is similar to the Dodo Payments Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
+
 It is generated with [Stainless](https://www.stainless.com/).
 
 The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/0.0.1-alpha.0).
