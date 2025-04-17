@@ -14,5 +14,5 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 application {
-    mainClass = "com.dodopayments.api.example.Main"
+    mainClass = "com.dodo_payments.api.example.Main"
 }
