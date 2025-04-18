@@ -1533,6 +1533,8 @@ private constructor(
 
             @JvmField val AMAZON_PAY = of("amazon_pay")
 
+            @JvmField val AFTERPAY_CLEARPAY = of("afterpay_clearpay")
+
             @JvmStatic fun of(value: String) = AllowedPaymentMethodType(JsonField.of(value))
         }
 
@@ -1555,6 +1557,7 @@ private constructor(
             SEPA,
             ACH,
             AMAZON_PAY,
+            AFTERPAY_CLEARPAY,
         }
 
         /**
@@ -1586,6 +1589,7 @@ private constructor(
             SEPA,
             ACH,
             AMAZON_PAY,
+            AFTERPAY_CLEARPAY,
             /**
              * An enum member indicating that [AllowedPaymentMethodType] was instantiated with an
              * unknown value.
@@ -1619,6 +1623,7 @@ private constructor(
                 SEPA -> Value.SEPA
                 ACH -> Value.ACH
                 AMAZON_PAY -> Value.AMAZON_PAY
+                AFTERPAY_CLEARPAY -> Value.AFTERPAY_CLEARPAY
                 else -> Value._UNKNOWN
             }
 
@@ -1650,6 +1655,7 @@ private constructor(
                 SEPA -> Known.SEPA
                 ACH -> Known.ACH
                 AMAZON_PAY -> Known.AMAZON_PAY
+                AFTERPAY_CLEARPAY -> Known.AFTERPAY_CLEARPAY
                 else ->
                     throw DodoPaymentsInvalidDataException(
                         "Unknown AllowedPaymentMethodType: $value"
