@@ -4,11 +4,11 @@ package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.CountryCode
-import kotlin.test.assertNotNull
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class PaymentCreateParamsTest {
+internal class PaymentCreateParamsTest {
 
     @Test
     fun create() {
@@ -82,7 +82,6 @@ class PaymentCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.billing())
             .isEqualTo(
                 BillingAddress.builder()
@@ -100,17 +99,15 @@ class PaymentCreateParamsTest {
                 )
             )
         assertThat(body.productCart())
-            .isEqualTo(
-                listOf(
-                    OneTimeProductCartItem.builder()
-                        .productId("product_id")
-                        .quantity(0L)
-                        .amount(0L)
-                        .build()
-                )
+            .containsExactly(
+                OneTimeProductCartItem.builder()
+                    .productId("product_id")
+                    .quantity(0L)
+                    .amount(0L)
+                    .build()
             )
-        assertThat(body.allowedPaymentMethodTypes())
-            .contains(listOf(PaymentCreateParams.AllowedPaymentMethodType.CREDIT))
+        assertThat(body.allowedPaymentMethodTypes().getOrNull())
+            .containsExactly(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
         assertThat(body.billingCurrency()).contains(PaymentCreateParams.BillingCurrency.AED)
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.metadata())
@@ -146,7 +143,6 @@ class PaymentCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.billing())
             .isEqualTo(
                 BillingAddress.builder()
@@ -164,10 +160,8 @@ class PaymentCreateParamsTest {
                 )
             )
         assertThat(body.productCart())
-            .isEqualTo(
-                listOf(
-                    OneTimeProductCartItem.builder().productId("product_id").quantity(0L).build()
-                )
+            .containsExactly(
+                OneTimeProductCartItem.builder().productId("product_id").quantity(0L).build()
             )
     }
 }

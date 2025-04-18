@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.disputes
 
-import com.dodopayments.api.core.NoAutoDetect
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
@@ -50,31 +49,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.createdAtGte?.let {
-            queryParams.put(
-                "created_at_gte",
-                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
-            )
-        }
-        this.createdAtLte?.let {
-            queryParams.put(
-                "created_at_lte",
-                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
-            )
-        }
-        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
-        this.disputeStage?.let { queryParams.put("dispute_stage", listOf(it.toString())) }
-        this.disputeStatus?.let { queryParams.put("dispute_status", listOf(it.toString())) }
-        this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
-        this.pageSize?.let { queryParams.put("page_size", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -86,7 +60,6 @@ private constructor(
     }
 
     /** A builder for [DisputeListParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var createdAtGte: OffsetDateTime? = null
@@ -115,27 +88,27 @@ private constructor(
         /** Get events after this created time */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
 
-        /** Get events after this created time */
+        /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
         fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
             createdAtGte(createdAtGte.getOrNull())
 
         /** Get events created before this time */
         fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
 
-        /** Get events created before this time */
+        /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer_id */
         fun customerId(customerId: String?) = apply { this.customerId = customerId }
 
-        /** Filter by customer_id */
+        /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Filter by dispute stage */
         fun disputeStage(disputeStage: DisputeStage?) = apply { this.disputeStage = disputeStage }
 
-        /** Filter by dispute stage */
+        /** Alias for calling [Builder.disputeStage] with `disputeStage.orElse(null)`. */
         fun disputeStage(disputeStage: Optional<DisputeStage>) =
             disputeStage(disputeStage.getOrNull())
 
@@ -144,26 +117,34 @@ private constructor(
             this.disputeStatus = disputeStatus
         }
 
-        /** Filter by dispute status */
+        /** Alias for calling [Builder.disputeStatus] with `disputeStatus.orElse(null)`. */
         fun disputeStatus(disputeStatus: Optional<DisputeStatus>) =
             disputeStatus(disputeStatus.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Long?) = apply { this.pageNumber = pageNumber }
 
-        /** Page number default is 0 */
+        /**
+         * Alias for [Builder.pageNumber].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageNumber(pageNumber: Long) = pageNumber(pageNumber as Long?)
 
-        /** Page number default is 0 */
+        /** Alias for calling [Builder.pageNumber] with `pageNumber.orElse(null)`. */
         fun pageNumber(pageNumber: Optional<Long>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
-        /** Page size default is 10 max is 100 */
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
-        /** Page size default is 10 max is 100 */
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -264,6 +245,11 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        /**
+         * Returns an immutable instance of [DisputeListParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): DisputeListParams =
             DisputeListParams(
                 createdAtGte,
@@ -277,6 +263,26 @@ private constructor(
                 additionalQueryParams.build(),
             )
     }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                createdAtGte?.let {
+                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLte?.let {
+                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                customerId?.let { put("customer_id", it) }
+                disputeStage?.let { put("dispute_stage", it.toString()) }
+                disputeStatus?.let { put("dispute_status", it.toString()) }
+                pageNumber?.let { put("page_number", it.toString()) }
+                pageSize?.let { put("page_size", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

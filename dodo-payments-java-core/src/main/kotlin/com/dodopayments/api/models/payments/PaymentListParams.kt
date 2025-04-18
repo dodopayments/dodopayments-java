@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.payments
 
-import com.dodopayments.api.core.NoAutoDetect
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
@@ -50,31 +49,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.createdAtGte?.let {
-            queryParams.put(
-                "created_at_gte",
-                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
-            )
-        }
-        this.createdAtLte?.let {
-            queryParams.put(
-                "created_at_lte",
-                listOf(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)),
-            )
-        }
-        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
-        this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
-        this.pageSize?.let { queryParams.put("page_size", listOf(it.toString())) }
-        this.status?.let { queryParams.put("status", listOf(it.toString())) }
-        this.subscriptionId?.let { queryParams.put("subscription_id", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -86,7 +60,6 @@ private constructor(
     }
 
     /** A builder for [PaymentListParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var createdAtGte: OffsetDateTime? = null
@@ -115,51 +88,59 @@ private constructor(
         /** Get events after this created time */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
 
-        /** Get events after this created time */
+        /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
         fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
             createdAtGte(createdAtGte.getOrNull())
 
         /** Get events created before this time */
         fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
 
-        /** Get events created before this time */
+        /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
         fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
             createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer id */
         fun customerId(customerId: String?) = apply { this.customerId = customerId }
 
-        /** Filter by customer id */
+        /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Long?) = apply { this.pageNumber = pageNumber }
 
-        /** Page number default is 0 */
+        /**
+         * Alias for [Builder.pageNumber].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageNumber(pageNumber: Long) = pageNumber(pageNumber as Long?)
 
-        /** Page number default is 0 */
+        /** Alias for calling [Builder.pageNumber] with `pageNumber.orElse(null)`. */
         fun pageNumber(pageNumber: Optional<Long>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
-        /** Page size default is 10 max is 100 */
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
-        /** Page size default is 10 max is 100 */
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         /** Filter by status */
         fun status(status: IntentStatus?) = apply { this.status = status }
 
-        /** Filter by status */
+        /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<IntentStatus>) = status(status.getOrNull())
 
         /** Filter by subscription id */
         fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
 
-        /** Filter by subscription id */
+        /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
         fun subscriptionId(subscriptionId: Optional<String>) =
             subscriptionId(subscriptionId.getOrNull())
 
@@ -261,6 +242,11 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        /**
+         * Returns an immutable instance of [PaymentListParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): PaymentListParams =
             PaymentListParams(
                 createdAtGte,
@@ -274,6 +260,26 @@ private constructor(
                 additionalQueryParams.build(),
             )
     }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                createdAtGte?.let {
+                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLte?.let {
+                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                customerId?.let { put("customer_id", it) }
+                pageNumber?.let { put("page_number", it.toString()) }
+                pageSize?.let { put("page_size", it.toString()) }
+                status?.let { put("status", it.toString()) }
+                subscriptionId?.let { put("subscription_id", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

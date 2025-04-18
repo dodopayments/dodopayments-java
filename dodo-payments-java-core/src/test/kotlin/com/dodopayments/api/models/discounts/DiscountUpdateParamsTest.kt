@@ -3,11 +3,11 @@
 package com.dodopayments.api.models.discounts
 
 import java.time.OffsetDateTime
-import kotlin.test.assertNotNull
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class DiscountUpdateParamsTest {
+internal class DiscountUpdateParamsTest {
 
     @Test
     fun create() {
@@ -21,6 +21,15 @@ class DiscountUpdateParamsTest {
             .type(DiscountType.PERCENTAGE)
             .usageLimit(0L)
             .build()
+    }
+
+    @Test
+    fun pathParams() {
+        val params = DiscountUpdateParams.builder().discountId("discount_id").build()
+
+        assertThat(params._pathParam(0)).isEqualTo("discount_id")
+        // out-of-bound path param
+        assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
@@ -39,12 +48,11 @@ class DiscountUpdateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.amount()).contains(0L)
         assertThat(body.code()).contains("code")
         assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.name()).contains("name")
-        assertThat(body.restrictedTo()).contains(listOf("string"))
+        assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
         assertThat(body.type()).contains(DiscountType.PERCENTAGE)
         assertThat(body.usageLimit()).contains(0L)
     }
@@ -54,17 +62,5 @@ class DiscountUpdateParamsTest {
         val params = DiscountUpdateParams.builder().discountId("discount_id").build()
 
         val body = params._body()
-
-        assertNotNull(body)
-    }
-
-    @Test
-    fun getPathParam() {
-        val params = DiscountUpdateParams.builder().discountId("discount_id").build()
-        assertThat(params).isNotNull
-        // path param "discountId"
-        assertThat(params.getPathParam(0)).isEqualTo("discount_id")
-        // out-of-bound path param
-        assertThat(params.getPathParam(1)).isEqualTo("")
     }
 }

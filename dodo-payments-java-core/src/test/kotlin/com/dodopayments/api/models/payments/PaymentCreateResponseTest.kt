@@ -3,13 +3,16 @@
 package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.core.jsonMapper
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class PaymentCreateResponseTest {
+internal class PaymentCreateResponseTest {
 
     @Test
-    fun createPaymentCreateResponse() {
+    fun create() {
         val paymentCreateResponse =
             PaymentCreateResponse.builder()
                 .clientSecret("client_secret")
@@ -37,7 +40,7 @@ class PaymentCreateResponseTest {
                         .build()
                 )
                 .build()
-        assertThat(paymentCreateResponse).isNotNull
+
         assertThat(paymentCreateResponse.clientSecret()).isEqualTo("client_secret")
         assertThat(paymentCreateResponse.customer())
             .isEqualTo(
@@ -57,7 +60,7 @@ class PaymentCreateResponseTest {
         assertThat(paymentCreateResponse.totalAmount()).isEqualTo(0L)
         assertThat(paymentCreateResponse.discountId()).contains("discount_id")
         assertThat(paymentCreateResponse.paymentLink()).contains("payment_link")
-        assertThat(paymentCreateResponse.productCart().get())
+        assertThat(paymentCreateResponse.productCart().getOrNull())
             .containsExactly(
                 OneTimeProductCartItem.builder()
                     .productId("product_id")
@@ -65,5 +68,45 @@ class PaymentCreateResponseTest {
                     .amount(0L)
                     .build()
             )
+    }
+
+    @Test
+    fun roundtrip() {
+        val jsonMapper = jsonMapper()
+        val paymentCreateResponse =
+            PaymentCreateResponse.builder()
+                .clientSecret("client_secret")
+                .customer(
+                    CustomerLimitedDetails.builder()
+                        .customerId("customer_id")
+                        .email("email")
+                        .name("name")
+                        .build()
+                )
+                .metadata(
+                    PaymentCreateResponse.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .build()
+                )
+                .paymentId("payment_id")
+                .totalAmount(0L)
+                .discountId("discount_id")
+                .paymentLink("payment_link")
+                .addProductCart(
+                    OneTimeProductCartItem.builder()
+                        .productId("product_id")
+                        .quantity(0L)
+                        .amount(0L)
+                        .build()
+                )
+                .build()
+
+        val roundtrippedPaymentCreateResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(paymentCreateResponse),
+                jacksonTypeRef<PaymentCreateResponse>(),
+            )
+
+        assertThat(roundtrippedPaymentCreateResponse).isEqualTo(paymentCreateResponse)
     }
 }
