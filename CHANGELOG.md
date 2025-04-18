@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.16.1 (2025-04-18)
+
+Full Changelog: [v1.14.2...v1.16.1](https://github.com/dodopayments/dodopayments-java/compare/v1.14.2...v1.16.1)
+
+### Features
+
+* **api:** manual updates ([acfb3ad](https://github.com/dodopayments/dodopayments-java/commit/acfb3ad0e9804bcd3b4ef17070afebf574653d04))
+
+
+### Chores
+
+* **internal:** codegen related update ([bfb8df9](https://github.com/dodopayments/dodopayments-java/commit/bfb8df98e0a675259f59d5c712ef22d7a03ab764))
+* **internal:** version bump ([3cdab9d](https://github.com/dodopayments/dodopayments-java/commit/3cdab9d7751cd65cbd3460f7258a9c17c84665ab))
+
 ## 1.14.2 (2025-04-17)
 
 Full Changelog: [v1.14.1...v1.14.2](https://github.com/dodopayments/dodopayments-java/compare/v1.14.1...v1.14.2)
