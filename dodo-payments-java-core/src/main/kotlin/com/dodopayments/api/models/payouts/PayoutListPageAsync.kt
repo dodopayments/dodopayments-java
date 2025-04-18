@@ -2,152 +2,115 @@
 
 package com.dodopayments.api.models.payouts
 
-import com.dodopayments.api.core.ExcludeMissing
-import com.dodopayments.api.core.JsonField
-import com.dodopayments.api.core.JsonMissing
-import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.NoAutoDetect
-import com.dodopayments.api.core.immutableEmptyMap
-import com.dodopayments.api.core.toImmutable
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.async.PayoutServiceAsync
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.function.Predicate
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.jvm.optionals.getOrNull
 
+/** @see [PayoutServiceAsync.list] */
 class PayoutListPageAsync
 private constructor(
-    private val payoutsService: PayoutServiceAsync,
+    private val service: PayoutServiceAsync,
     private val params: PayoutListParams,
-    private val response: Response,
+    private val response: PayoutListPageResponse,
 ) {
 
-    fun response(): Response = response
+    /**
+     * Delegates to [PayoutListPageResponse], but gracefully handles missing data.
+     *
+     * @see [PayoutListPageResponse.items]
+     */
+    fun items(): List<PayoutListResponse> =
+        response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun items(): List<PayoutListResponse> = response().items()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
-        return /* spotless:off */ other is PayoutListPageAsync && payoutsService == other.payoutsService && params == other.params && response == other.response /* spotless:on */
-    }
-
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(payoutsService, params, response) /* spotless:on */
-
-    override fun toString() =
-        "PayoutListPageAsync{payoutsService=$payoutsService, params=$params, response=$response}"
-
-    fun hasNextPage(): Boolean {
-        return !items().isEmpty()
-    }
+    fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun getNextPageParams(): Optional<PayoutListParams> {
         if (!hasNextPage()) {
             return Optional.empty()
         }
 
-        return Optional.of(
-            PayoutListParams.builder()
-                .from(params)
-                .pageNumber(params.pageNumber().orElse(0) + 1)
-                .build()
-        )
+        val pageNumber = params.pageNumber().getOrDefault(1)
+        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
     }
 
-    fun getNextPage(): CompletableFuture<Optional<PayoutListPageAsync>> {
-        return getNextPageParams()
-            .map { payoutsService.list(it).thenApply { Optional.of(it) } }
+    fun getNextPage(): CompletableFuture<Optional<PayoutListPageAsync>> =
+        getNextPageParams()
+            .map { service.list(it).thenApply { Optional.of(it) } }
             .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
-    }
 
     fun autoPager(): AutoPager = AutoPager(this)
 
+    /** The parameters that were used to request this page. */
+    fun params(): PayoutListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): PayoutListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
     companion object {
 
-        @JvmStatic
-        fun of(payoutsService: PayoutServiceAsync, params: PayoutListParams, response: Response) =
-            PayoutListPageAsync(payoutsService, params, response)
+        /**
+         * Returns a mutable builder for constructing an instance of [PayoutListPageAsync].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
     }
 
-    @NoAutoDetect
-    class Response
-    @JsonCreator
-    constructor(
-        @JsonProperty("items")
-        private val items: JsonField<List<PayoutListResponse>> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
-    ) {
+    /** A builder for [PayoutListPageAsync]. */
+    class Builder internal constructor() {
 
-        fun items(): List<PayoutListResponse> = items.getNullable("items") ?: listOf()
+        private var service: PayoutServiceAsync? = null
+        private var params: PayoutListParams? = null
+        private var response: PayoutListPageResponse? = null
 
-        @JsonProperty("items")
-        fun _items(): Optional<JsonField<List<PayoutListResponse>>> = Optional.ofNullable(items)
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Response = apply {
-            if (validated) {
-                return@apply
-            }
-
-            items().map { it.validate() }
-            validated = true
+        @JvmSynthetic
+        internal fun from(payoutListPageAsync: PayoutListPageAsync) = apply {
+            service = payoutListPageAsync.service
+            params = payoutListPageAsync.params
+            response = payoutListPageAsync.response
         }
 
-        fun toBuilder() = Builder().from(this)
+        fun service(service: PayoutServiceAsync) = apply { this.service = service }
 
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+        /** The parameters that were used to request this page. */
+        fun params(params: PayoutListParams) = apply { this.params = params }
 
-            return /* spotless:off */ other is Response && items == other.items && additionalProperties == other.additionalProperties /* spotless:on */
-        }
+        /** The response that this page was parsed from. */
+        fun response(response: PayoutListPageResponse) = apply { this.response = response }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(items, additionalProperties) /* spotless:on */
-
-        override fun toString() =
-            "Response{items=$items, additionalProperties=$additionalProperties}"
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [PayoutListPageAsync]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        class Builder {
-
-            private var items: JsonField<List<PayoutListResponse>> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(page: Response) = apply {
-                this.items = page.items
-                this.additionalProperties.putAll(page.additionalProperties)
-            }
-
-            fun items(items: List<PayoutListResponse>) = items(JsonField.of(items))
-
-            fun items(items: JsonField<List<PayoutListResponse>>) = apply { this.items = items }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
-            }
-
-            fun build() = Response(items, additionalProperties.toImmutable())
-        }
+        /**
+         * Returns an immutable instance of [PayoutListPageAsync].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): PayoutListPageAsync =
+            PayoutListPageAsync(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
     }
 
     class AutoPager(private val firstPage: PayoutListPageAsync) {
@@ -178,4 +141,17 @@ private constructor(
             return forEach(values::add, executor).thenApply { values }
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return /* spotless:off */ other is PayoutListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+    }
+
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+
+    override fun toString() =
+        "PayoutListPageAsync{service=$service, params=$params, response=$response}"
 }

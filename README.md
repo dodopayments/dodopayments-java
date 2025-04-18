@@ -7,13 +7,17 @@
 
 <!-- x-release-please-end -->
 
-The Dodo Payments Java SDK provides convenient access to the Dodo Payments REST API from applications written in Java.
+The Dodo Payments Java SDK provides convenient access to the [Dodo Payments REST API](https://docs.dodopayments.com) from applications written in Java.
 
 The Dodo Payments Java SDK is similar to the Dodo Payments Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.14.2).
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.14.2).
+
+<!-- x-release-please-end -->
 
 ## Installation
 
@@ -29,9 +33,9 @@ implementation("com.dodopayments.api:dodo-payments-java:1.14.2")
 
 ```xml
 <dependency>
-    <groupId>com.dodopayments.api</groupId>
-    <artifactId>dodo-payments-java</artifactId>
-    <version>1.14.2</version>
+  <groupId>com.dodopayments.api</groupId>
+  <artifactId>dodo-payments-java</artifactId>
+  <version>1.14.2</version>
 </dependency>
 ```
 
@@ -53,7 +57,7 @@ import com.dodopayments.api.models.payments.OneTimeProductCartItem;
 import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` environment variable
+// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
@@ -83,7 +87,7 @@ Configure the client using environment variables:
 import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` environment variable
+// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 ```
 
@@ -105,7 +109,7 @@ import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
-    // Configures using the `DODO_PAYMENTS_API_KEY` environment variable
+    // Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
     .fromEnv()
     .bearerToken("My Bearer Token")
     .build();
@@ -113,9 +117,10 @@ DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter        | Environment variable    | Required | Default value |
-| ------------- | ----------------------- | -------- | ------------- |
-| `bearerToken` | `DODO_PAYMENTS_API_KEY` | true     | -             |
+| Setter        | Environment variable     | Required | Default value                     |
+| ------------- | ------------------------ | -------- | --------------------------------- |
+| `bearerToken` | `DODO_PAYMENTS_API_KEY`  | true     | -                                 |
+| `baseUrl`     | `DODO_PAYMENTS_BASE_URL` | true     | `"https://live.dodopayments.com"` |
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -150,7 +155,7 @@ import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` environment variable
+// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
@@ -185,7 +190,7 @@ import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` environment variable
+// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
@@ -261,16 +266,16 @@ The SDK throws custom unchecked exception types:
 
 - [`DodoPaymentsServiceException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                       |
-  | ------ | ------------------------------- |
-  | 400    | `BadRequestException`           |
-  | 401    | `AuthenticationException`       |
-  | 403    | `PermissionDeniedException`     |
-  | 404    | `NotFoundException`             |
-  | 422    | `UnprocessableEntityException`  |
-  | 429    | `RateLimitException`            |
-  | 5xx    | `InternalServerException`       |
-  | others | `UnexpectedStatusCodeException` |
+  | Status | Exception                                                                                                                               |
+  | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/UnexpectedStatusCodeException.kt) |
 
 - [`DodoPaymentsIoException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsIoException.kt): I/O networking errors.
 
@@ -345,6 +350,17 @@ Or to `debug` for more verbose logging:
 ```sh
 $ export DODO_PAYMENTS_LOG=debug
 ```
+
+## Jackson
+
+The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It is compatible with version 2.13.4 or higher, but depends on version 2.18.2 by default.
+
+The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
+
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`DodoPaymentsOkHttpClient`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClient.kt) or [`DodoPaymentsOkHttpClientAsync`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClientAsync.kt).
+
+> [!CAUTION]
+> We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
 
 ## Network options
 
@@ -439,6 +455,42 @@ DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
     .testMode()
     .build();
 ```
+
+### Custom HTTP client
+
+The SDK consists of three artifacts:
+
+- `dodo-payments-java-core`
+  - Contains core SDK logic
+  - Does not depend on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`DodoPaymentsClient`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClient.kt), [`DodoPaymentsClientAsync`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientAsync.kt), [`DodoPaymentsClientImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientImpl.kt), and [`DodoPaymentsClientAsyncImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientAsyncImpl.kt), all of which can work with any HTTP client
+- `dodo-payments-java-client-okhttp`
+  - Depends on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`DodoPaymentsOkHttpClient`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClient.kt) and [`DodoPaymentsOkHttpClientAsync`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClientAsync.kt), which provide a way to construct [`DodoPaymentsClientImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientImpl.kt) and [`DodoPaymentsClientAsyncImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientAsyncImpl.kt), respectively, using OkHttp
+- `dodo-payments-java`
+  - Depends on and exposes the APIs of both `dodo-payments-java-core` and `dodo-payments-java-client-okhttp`
+  - Does not have its own logic
+
+This structure allows replacing the SDK's default HTTP client without pulling in unnecessary dependencies.
+
+#### Customized [`OkHttpClient`](https://square.github.io/okhttp/3.x/okhttp/okhttp3/OkHttpClient.html)
+
+> [!TIP]
+> Try the available [network options](#network-options) before replacing the default client.
+
+To use a customized `OkHttpClient`:
+
+1. Replace your [`dodo-payments-java` dependency](#installation) with `dodo-payments-java-core`
+2. Copy `dodo-payments-java-client-okhttp`'s [`OkHttpClient`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`DodoPaymentsClientImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientImpl.kt) or [`DodoPaymentsClientAsyncImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientAsyncImpl.kt), similarly to [`DodoPaymentsOkHttpClient`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClient.kt) or [`DodoPaymentsOkHttpClientAsync`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClientAsync.kt), using your customized client
+
+### Completely custom HTTP client
+
+To use a completely custom HTTP client:
+
+1. Replace your [`dodo-payments-java` dependency](#installation) with `dodo-payments-java-core`
+2. Write a class that implements the [`HttpClient`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/core/http/HttpClient.kt) interface
+3. Construct [`DodoPaymentsClientImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientImpl.kt) or [`DodoPaymentsClientAsyncImpl`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/client/DodoPaymentsClientAsyncImpl.kt), similarly to [`DodoPaymentsOkHttpClient`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClient.kt) or [`DodoPaymentsOkHttpClientAsync`](dodo-payments-java-client-okhttp/src/main/kotlin/com/dodopayments/api/client/okhttp/DodoPaymentsOkHttpClientAsync.kt), using your new client class
 
 ## Undocumented API functionality
 
@@ -541,6 +593,28 @@ JsonValue complexValue = JsonValue.from(Map.of(
     3, 4
   )
 ));
+```
+
+Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
+
+To forcibly omit a required parameter or property, pass [`JsonMissing`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/core/Values.kt):
+
+```java
+import com.dodopayments.api.core.JsonMissing;
+import com.dodopayments.api.models.payments.AttachExistingCustomer;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+
+PaymentCreateParams params = PaymentCreateParams.builder()
+    .customer(AttachExistingCustomer.builder()
+        .customerId("customer_id")
+        .build())
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
+    .billing(JsonMissing.of())
+    .build();
 ```
 
 ### Response properties
