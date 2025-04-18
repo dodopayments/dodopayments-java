@@ -2,157 +2,115 @@
 
 package com.dodopayments.api.models.subscriptions
 
-import com.dodopayments.api.core.ExcludeMissing
-import com.dodopayments.api.core.JsonField
-import com.dodopayments.api.core.JsonMissing
-import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.NoAutoDetect
-import com.dodopayments.api.core.immutableEmptyMap
-import com.dodopayments.api.core.toImmutable
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.async.SubscriptionServiceAsync
-import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import java.util.function.Predicate
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.jvm.optionals.getOrNull
 
+/** @see [SubscriptionServiceAsync.list] */
 class SubscriptionListPageAsync
 private constructor(
-    private val subscriptionsService: SubscriptionServiceAsync,
+    private val service: SubscriptionServiceAsync,
     private val params: SubscriptionListParams,
-    private val response: Response,
+    private val response: SubscriptionListPageResponse,
 ) {
 
-    fun response(): Response = response
+    /**
+     * Delegates to [SubscriptionListPageResponse], but gracefully handles missing data.
+     *
+     * @see [SubscriptionListPageResponse.items]
+     */
+    fun items(): List<Subscription> =
+        response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun items(): List<Subscription> = response().items()
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-
-        return /* spotless:off */ other is SubscriptionListPageAsync && subscriptionsService == other.subscriptionsService && params == other.params && response == other.response /* spotless:on */
-    }
-
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(subscriptionsService, params, response) /* spotless:on */
-
-    override fun toString() =
-        "SubscriptionListPageAsync{subscriptionsService=$subscriptionsService, params=$params, response=$response}"
-
-    fun hasNextPage(): Boolean {
-        return !items().isEmpty()
-    }
+    fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun getNextPageParams(): Optional<SubscriptionListParams> {
         if (!hasNextPage()) {
             return Optional.empty()
         }
 
-        return Optional.of(
-            SubscriptionListParams.builder()
-                .from(params)
-                .pageNumber(params.pageNumber().orElse(0) + 1)
-                .build()
-        )
+        val pageNumber = params.pageNumber().getOrDefault(1)
+        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
     }
 
-    fun getNextPage(): CompletableFuture<Optional<SubscriptionListPageAsync>> {
-        return getNextPageParams()
-            .map { subscriptionsService.list(it).thenApply { Optional.of(it) } }
+    fun getNextPage(): CompletableFuture<Optional<SubscriptionListPageAsync>> =
+        getNextPageParams()
+            .map { service.list(it).thenApply { Optional.of(it) } }
             .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
-    }
 
     fun autoPager(): AutoPager = AutoPager(this)
 
+    /** The parameters that were used to request this page. */
+    fun params(): SubscriptionListParams = params
+
+    /** The response that this page was parsed from. */
+    fun response(): SubscriptionListPageResponse = response
+
+    fun toBuilder() = Builder().from(this)
+
     companion object {
 
-        @JvmStatic
-        fun of(
-            subscriptionsService: SubscriptionServiceAsync,
-            params: SubscriptionListParams,
-            response: Response,
-        ) = SubscriptionListPageAsync(subscriptionsService, params, response)
+        /**
+         * Returns a mutable builder for constructing an instance of [SubscriptionListPageAsync].
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         */
+        @JvmStatic fun builder() = Builder()
     }
 
-    @NoAutoDetect
-    class Response
-    @JsonCreator
-    constructor(
-        @JsonProperty("items") private val items: JsonField<List<Subscription>> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
-    ) {
+    /** A builder for [SubscriptionListPageAsync]. */
+    class Builder internal constructor() {
 
-        fun items(): List<Subscription> = items.getNullable("items") ?: listOf()
+        private var service: SubscriptionServiceAsync? = null
+        private var params: SubscriptionListParams? = null
+        private var response: SubscriptionListPageResponse? = null
 
-        @JsonProperty("items")
-        fun _items(): Optional<JsonField<List<Subscription>>> = Optional.ofNullable(items)
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Response = apply {
-            if (validated) {
-                return@apply
-            }
-
-            items().map { it.validate() }
-            validated = true
+        @JvmSynthetic
+        internal fun from(subscriptionListPageAsync: SubscriptionListPageAsync) = apply {
+            service = subscriptionListPageAsync.service
+            params = subscriptionListPageAsync.params
+            response = subscriptionListPageAsync.response
         }
 
-        fun toBuilder() = Builder().from(this)
+        fun service(service: SubscriptionServiceAsync) = apply { this.service = service }
 
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+        /** The parameters that were used to request this page. */
+        fun params(params: SubscriptionListParams) = apply { this.params = params }
 
-            return /* spotless:off */ other is Response && items == other.items && additionalProperties == other.additionalProperties /* spotless:on */
-        }
+        /** The response that this page was parsed from. */
+        fun response(response: SubscriptionListPageResponse) = apply { this.response = response }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(items, additionalProperties) /* spotless:on */
-
-        override fun toString() =
-            "Response{items=$items, additionalProperties=$additionalProperties}"
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of
-             * [SubscriptionListPageAsync].
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        class Builder {
-
-            private var items: JsonField<List<Subscription>> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(page: Response) = apply {
-                this.items = page.items
-                this.additionalProperties.putAll(page.additionalProperties)
-            }
-
-            fun items(items: List<Subscription>) = items(JsonField.of(items))
-
-            fun items(items: JsonField<List<Subscription>>) = apply { this.items = items }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                this.additionalProperties.put(key, value)
-            }
-
-            fun build() = Response(items, additionalProperties.toImmutable())
-        }
+        /**
+         * Returns an immutable instance of [SubscriptionListPageAsync].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .service()
+         * .params()
+         * .response()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
+        fun build(): SubscriptionListPageAsync =
+            SubscriptionListPageAsync(
+                checkRequired("service", service),
+                checkRequired("params", params),
+                checkRequired("response", response),
+            )
     }
 
     class AutoPager(private val firstPage: SubscriptionListPageAsync) {
@@ -180,4 +138,17 @@ private constructor(
             return forEach(values::add, executor).thenApply { values }
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+
+        return /* spotless:off */ other is SubscriptionListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+    }
+
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+
+    override fun toString() =
+        "SubscriptionListPageAsync{service=$service, params=$params, response=$response}"
 }

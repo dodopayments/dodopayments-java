@@ -3,7 +3,6 @@
 package com.dodopayments.api.models.products.images
 
 import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.NoAutoDetect
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
@@ -26,31 +25,11 @@ private constructor(
 
     fun forceUpdate(): Optional<Boolean> = Optional.ofNullable(forceUpdate)
 
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
-
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
-
-    @JvmSynthetic
-    internal fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.forceUpdate?.let { queryParams.put("force_update", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
-
-    fun getPathParam(index: Int): String {
-        return when (index) {
-            0 -> id
-            else -> ""
-        }
-    }
 
     fun toBuilder() = Builder().from(this)
 
@@ -68,7 +47,6 @@ private constructor(
     }
 
     /** A builder for [ImageUpdateParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var id: String? = null
@@ -90,8 +68,14 @@ private constructor(
 
         fun forceUpdate(forceUpdate: Boolean?) = apply { this.forceUpdate = forceUpdate }
 
+        /**
+         * Alias for [Builder.forceUpdate].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun forceUpdate(forceUpdate: Boolean) = forceUpdate(forceUpdate as Boolean?)
 
+        /** Alias for calling [Builder.forceUpdate] with `forceUpdate.orElse(null)`. */
         fun forceUpdate(forceUpdate: Optional<Boolean>) = forceUpdate(forceUpdate.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -214,6 +198,18 @@ private constructor(
             keys.forEach(::removeAdditionalBodyProperty)
         }
 
+        /**
+         * Returns an immutable instance of [ImageUpdateParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): ImageUpdateParams =
             ImageUpdateParams(
                 checkRequired("id", id),
@@ -223,6 +219,25 @@ private constructor(
                 additionalBodyProperties.toImmutable(),
             )
     }
+
+    fun _body(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> id
+            else -> ""
+        }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                forceUpdate?.let { put("force_update", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

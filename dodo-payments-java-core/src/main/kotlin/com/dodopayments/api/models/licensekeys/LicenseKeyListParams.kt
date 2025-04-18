@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.licensekeys
 
-import com.dodopayments.api.core.NoAutoDetect
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
@@ -40,19 +39,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.customerId?.let { queryParams.put("customer_id", listOf(it.toString())) }
-        this.pageNumber?.let { queryParams.put("page_number", listOf(it.toString())) }
-        this.pageSize?.let { queryParams.put("page_size", listOf(it.toString())) }
-        this.productId?.let { queryParams.put("product_id", listOf(it.toString())) }
-        this.status?.let { queryParams.put("status", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -64,7 +50,6 @@ private constructor(
     }
 
     /** A builder for [LicenseKeyListParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var customerId: String? = null
@@ -89,37 +74,45 @@ private constructor(
         /** Filter by customer ID */
         fun customerId(customerId: String?) = apply { this.customerId = customerId }
 
-        /** Filter by customer ID */
+        /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Long?) = apply { this.pageNumber = pageNumber }
 
-        /** Page number default is 0 */
+        /**
+         * Alias for [Builder.pageNumber].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageNumber(pageNumber: Long) = pageNumber(pageNumber as Long?)
 
-        /** Page number default is 0 */
+        /** Alias for calling [Builder.pageNumber] with `pageNumber.orElse(null)`. */
         fun pageNumber(pageNumber: Optional<Long>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
         fun pageSize(pageSize: Long?) = apply { this.pageSize = pageSize }
 
-        /** Page size default is 10 max is 100 */
+        /**
+         * Alias for [Builder.pageSize].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun pageSize(pageSize: Long) = pageSize(pageSize as Long?)
 
-        /** Page size default is 10 max is 100 */
+        /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Long>) = pageSize(pageSize.getOrNull())
 
         /** Filter by product ID */
         fun productId(productId: String?) = apply { this.productId = productId }
 
-        /** Filter by product ID */
+        /** Alias for calling [Builder.productId] with `productId.orElse(null)`. */
         fun productId(productId: Optional<String>) = productId(productId.getOrNull())
 
         /** Filter by license key status */
         fun status(status: LicenseKeyStatus?) = apply { this.status = status }
 
-        /** Filter by license key status */
+        /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<LicenseKeyStatus>) = status(status.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -220,6 +213,11 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
+        /**
+         * Returns an immutable instance of [LicenseKeyListParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): LicenseKeyListParams =
             LicenseKeyListParams(
                 customerId,
@@ -231,6 +229,20 @@ private constructor(
                 additionalQueryParams.build(),
             )
     }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                customerId?.let { put("customer_id", it) }
+                pageNumber?.let { put("page_number", it.toString()) }
+                pageSize?.let { put("page_size", it.toString()) }
+                productId?.let { put("product_id", it) }
+                status?.let { put("status", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

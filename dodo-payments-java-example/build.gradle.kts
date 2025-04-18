@@ -1,7 +1,10 @@
 plugins {
-    id("dodo-payments.kotlin")
-    id("java")
+    id("dodo-payments.java")
     application
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {

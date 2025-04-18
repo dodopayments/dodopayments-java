@@ -3,11 +3,11 @@
 package com.dodopayments.api.models.products
 
 import com.dodopayments.api.models.subscriptions.TimeInterval
-import kotlin.test.assertNotNull
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ProductUpdateParamsTest {
+internal class ProductUpdateParamsTest {
 
     @Test
     fun create() {
@@ -37,6 +37,15 @@ class ProductUpdateParamsTest {
             )
             .taxCategory(ProductUpdateParams.TaxCategory.DIGITAL_PRODUCTS)
             .build()
+    }
+
+    @Test
+    fun pathParams() {
+        val params = ProductUpdateParams.builder().id("id").build()
+
+        assertThat(params._pathParam(0)).isEqualTo("id")
+        // out-of-bound path param
+        assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
@@ -71,8 +80,7 @@ class ProductUpdateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
-        assertThat(body.addons()).contains(listOf("string"))
+        assertThat(body.addons().getOrNull()).containsExactly("string")
         assertThat(body.description()).contains("description")
         assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
         assertThat(body.licenseKeyActivationMessage()).contains("license_key_activation_message")
@@ -104,17 +112,5 @@ class ProductUpdateParamsTest {
         val params = ProductUpdateParams.builder().id("id").build()
 
         val body = params._body()
-
-        assertNotNull(body)
-    }
-
-    @Test
-    fun getPathParam() {
-        val params = ProductUpdateParams.builder().id("id").build()
-        assertThat(params).isNotNull
-        // path param "id"
-        assertThat(params.getPathParam(0)).isEqualTo("id")
-        // out-of-bound path param
-        assertThat(params.getPathParam(1)).isEqualTo("")
     }
 }

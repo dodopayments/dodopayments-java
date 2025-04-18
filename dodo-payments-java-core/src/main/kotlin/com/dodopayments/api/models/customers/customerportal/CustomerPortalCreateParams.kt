@@ -3,7 +3,6 @@
 package com.dodopayments.api.models.customers.customerportal
 
 import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.NoAutoDetect
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
@@ -27,31 +26,11 @@ private constructor(
     /** If true, will send link to user. */
     fun sendEmail(): Optional<Boolean> = Optional.ofNullable(sendEmail)
 
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
-
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
-
-    @JvmSynthetic
-    internal fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams {
-        val queryParams = QueryParams.builder()
-        this.sendEmail?.let { queryParams.put("send_email", listOf(it.toString())) }
-        queryParams.putAll(additionalQueryParams)
-        return queryParams.build()
-    }
-
-    fun getPathParam(index: Int): String {
-        return when (index) {
-            0 -> customerId
-            else -> ""
-        }
-    }
 
     fun toBuilder() = Builder().from(this)
 
@@ -69,7 +48,6 @@ private constructor(
     }
 
     /** A builder for [CustomerPortalCreateParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var customerId: String? = null
@@ -93,10 +71,14 @@ private constructor(
         /** If true, will send link to user. */
         fun sendEmail(sendEmail: Boolean?) = apply { this.sendEmail = sendEmail }
 
-        /** If true, will send link to user. */
+        /**
+         * Alias for [Builder.sendEmail].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
         fun sendEmail(sendEmail: Boolean) = sendEmail(sendEmail as Boolean?)
 
-        /** If true, will send link to user. */
+        /** Alias for calling [Builder.sendEmail] with `sendEmail.orElse(null)`. */
         fun sendEmail(sendEmail: Optional<Boolean>) = sendEmail(sendEmail.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -219,6 +201,18 @@ private constructor(
             keys.forEach(::removeAdditionalBodyProperty)
         }
 
+        /**
+         * Returns an immutable instance of [CustomerPortalCreateParams].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .customerId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): CustomerPortalCreateParams =
             CustomerPortalCreateParams(
                 checkRequired("customerId", customerId),
@@ -228,6 +222,25 @@ private constructor(
                 additionalBodyProperties.toImmutable(),
             )
     }
+
+    fun _body(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+
+    fun _pathParam(index: Int): String =
+        when (index) {
+            0 -> customerId
+            else -> ""
+        }
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                sendEmail?.let { put("send_email", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

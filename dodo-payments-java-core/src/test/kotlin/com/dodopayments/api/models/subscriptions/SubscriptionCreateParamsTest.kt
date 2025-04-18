@@ -7,11 +7,11 @@ import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomerRequest
-import kotlin.test.assertNotNull
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class SubscriptionCreateParamsTest {
+internal class SubscriptionCreateParamsTest {
 
     @Test
     fun create() {
@@ -91,7 +91,6 @@ class SubscriptionCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.billing())
             .isEqualTo(
                 BillingAddress.builder()
@@ -110,8 +109,8 @@ class SubscriptionCreateParamsTest {
             )
         assertThat(body.productId()).isEqualTo("product_id")
         assertThat(body.quantity()).isEqualTo(0L)
-        assertThat(body.allowedPaymentMethodTypes())
-            .contains(listOf(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT))
+        assertThat(body.allowedPaymentMethodTypes().getOrNull())
+            .containsExactly(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT)
         assertThat(body.billingCurrency()).contains(SubscriptionCreateParams.BillingCurrency.AED)
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.metadata())
@@ -154,7 +153,6 @@ class SubscriptionCreateParamsTest {
 
         val body = params._body()
 
-        assertNotNull(body)
         assertThat(body.billing())
             .isEqualTo(
                 BillingAddress.builder()
