@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.18.0 (2025-04-23)
+
+Full Changelog: [v1.17.0...v1.18.0](https://github.com/dodopayments/dodopayments-java/compare/v1.17.0...v1.18.0)
+
+### Features
+
+* **api:** added change plan api ([c77af04](https://github.com/dodopayments/dodopayments-java/commit/c77af0497c6f6b10cd25975c474075e87ce7cf1f))
+* **api:** manual updates ([21c8f31](https://github.com/dodopayments/dodopayments-java/commit/21c8f3189a8348c6f026dfbb66b08902f6c977a9))
+
+
+### Chores
+
+* **ci:** add timeout thresholds for CI jobs ([6d7203f](https://github.com/dodopayments/dodopayments-java/commit/6d7203f9f2cfc8775915cf5f3765aba4a5b17aa6))
+
 ## 1.17.0 (2025-04-22)
 
 Full Changelog: [v1.16.1...v1.17.0](https://github.com/dodopayments/dodopayments-java/compare/v1.16.1...v1.17.0)
