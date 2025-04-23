@@ -3,8 +3,10 @@
 package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.subscriptions.Subscription
+import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
@@ -64,6 +66,14 @@ interface SubscriptionService {
     /** @see [list] */
     fun list(requestOptions: RequestOptions): SubscriptionListPage =
         list(SubscriptionListParams.none(), requestOptions)
+
+    fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
+
+    /** @see [changePlan] */
+    fun changePlan(
+        params: SubscriptionChangePlanParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    )
 
     fun charge(params: SubscriptionChargeParams): SubscriptionChargeResponse =
         charge(params, RequestOptions.none())
@@ -148,6 +158,21 @@ interface SubscriptionService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<SubscriptionListPage> =
             list(SubscriptionListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but
+         * is otherwise the same as [SubscriptionService.changePlan].
+         */
+        @MustBeClosed
+        fun changePlan(params: SubscriptionChangePlanParams): HttpResponse =
+            changePlan(params, RequestOptions.none())
+
+        /** @see [changePlan] */
+        @MustBeClosed
+        fun changePlan(
+            params: SubscriptionChangePlanParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
