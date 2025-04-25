@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.18.3 (2025-04-25)
+
+Full Changelog: [v1.18.1...v1.18.3](https://github.com/dodopayments/dodopayments-java/compare/v1.18.1...v1.18.3)
+
+### Features
+
+* **api:** manual updates ([d12f587](https://github.com/dodopayments/dodopayments-java/commit/d12f587a8dfa23adfb30ab9eeb69d9071bf8c8b4))
+
 ## 1.18.1 (2025-04-24)
 
 Full Changelog: [v1.18.0...v1.18.1](https://github.com/dodopayments/dodopayments-java/compare/v1.18.0...v1.18.1)
