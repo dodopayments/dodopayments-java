@@ -4,6 +4,7 @@ package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.CountryCode
+import com.dodopayments.api.models.misc.Currency
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -31,7 +32,7 @@ internal class PaymentCreateParamsTest {
                     .build()
             )
             .addAllowedPaymentMethodType(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
-            .billingCurrency(PaymentCreateParams.BillingCurrency.AED)
+            .billingCurrency(Currency.AED)
             .discountCode("discount_code")
             .metadata(
                 PaymentCreateParams.Metadata.builder()
@@ -67,7 +68,7 @@ internal class PaymentCreateParamsTest {
                         .build()
                 )
                 .addAllowedPaymentMethodType(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
-                .billingCurrency(PaymentCreateParams.BillingCurrency.AED)
+                .billingCurrency(Currency.AED)
                 .discountCode("discount_code")
                 .metadata(
                     PaymentCreateParams.Metadata.builder()
@@ -108,7 +109,7 @@ internal class PaymentCreateParamsTest {
             )
         assertThat(body.allowedPaymentMethodTypes().getOrNull())
             .containsExactly(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
-        assertThat(body.billingCurrency()).contains(PaymentCreateParams.BillingCurrency.AED)
+        assertThat(body.billingCurrency()).contains(Currency.AED)
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.metadata())
             .contains(

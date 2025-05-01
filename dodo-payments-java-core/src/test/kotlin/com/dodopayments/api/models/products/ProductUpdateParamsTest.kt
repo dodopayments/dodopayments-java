@@ -2,6 +2,8 @@
 
 package com.dodopayments.api.models.products
 
+import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +27,7 @@ internal class ProductUpdateParamsTest {
             .name("name")
             .price(
                 Price.OneTimePrice.builder()
-                    .currency(Price.OneTimePrice.Currency.AED)
+                    .currency(Currency.AED)
                     .discount(0.0)
                     .price(0L)
                     .purchasingPowerParity(true)
@@ -35,7 +37,7 @@ internal class ProductUpdateParamsTest {
                     .taxInclusive(true)
                     .build()
             )
-            .taxCategory(ProductUpdateParams.TaxCategory.DIGITAL_PRODUCTS)
+            .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
             .build()
     }
 
@@ -65,7 +67,7 @@ internal class ProductUpdateParamsTest {
                 .name("name")
                 .price(
                     Price.OneTimePrice.builder()
-                        .currency(Price.OneTimePrice.Currency.AED)
+                        .currency(Currency.AED)
                         .discount(0.0)
                         .price(0L)
                         .purchasingPowerParity(true)
@@ -75,7 +77,7 @@ internal class ProductUpdateParamsTest {
                         .taxInclusive(true)
                         .build()
                 )
-                .taxCategory(ProductUpdateParams.TaxCategory.DIGITAL_PRODUCTS)
+                .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                 .build()
 
         val body = params._body()
@@ -93,7 +95,7 @@ internal class ProductUpdateParamsTest {
             .contains(
                 Price.ofOneTime(
                     Price.OneTimePrice.builder()
-                        .currency(Price.OneTimePrice.Currency.AED)
+                        .currency(Currency.AED)
                         .discount(0.0)
                         .price(0L)
                         .purchasingPowerParity(true)
@@ -104,7 +106,7 @@ internal class ProductUpdateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.taxCategory()).contains(ProductUpdateParams.TaxCategory.DIGITAL_PRODUCTS)
+        assertThat(body.taxCategory()).contains(TaxCategory.DIGITAL_PRODUCTS)
     }
 
     @Test

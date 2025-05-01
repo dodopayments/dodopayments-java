@@ -4,6 +4,8 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.products.Price
 import com.dodopayments.api.models.products.ProductCreateParams
@@ -23,7 +25,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 
@@ -32,7 +34,7 @@ internal class ProductServiceAsyncTest {
                 ProductCreateParams.builder()
                     .price(
                         Price.OneTimePrice.builder()
-                            .currency(Price.OneTimePrice.Currency.AED)
+                            .currency(Currency.AED)
                             .discount(0.0)
                             .price(0L)
                             .purchasingPowerParity(true)
@@ -42,7 +44,7 @@ internal class ProductServiceAsyncTest {
                             .taxInclusive(true)
                             .build()
                     )
-                    .taxCategory(ProductCreateParams.TaxCategory.DIGITAL_PRODUCTS)
+                    .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                     .addAddon("string")
                     .description("description")
                     .licenseKeyActivationMessage("license_key_activation_message")
@@ -64,7 +66,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 
@@ -80,7 +82,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 
@@ -100,7 +102,7 @@ internal class ProductServiceAsyncTest {
                     .name("name")
                     .price(
                         Price.OneTimePrice.builder()
-                            .currency(Price.OneTimePrice.Currency.AED)
+                            .currency(Currency.AED)
                             .discount(0.0)
                             .price(0L)
                             .purchasingPowerParity(true)
@@ -110,7 +112,7 @@ internal class ProductServiceAsyncTest {
                             .taxInclusive(true)
                             .build()
                     )
-                    .taxCategory(ProductUpdateParams.TaxCategory.DIGITAL_PRODUCTS)
+                    .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                     .build()
             )
 
@@ -122,7 +124,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 
@@ -137,7 +139,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 
@@ -151,7 +153,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val productServiceAsync = client.products()
 

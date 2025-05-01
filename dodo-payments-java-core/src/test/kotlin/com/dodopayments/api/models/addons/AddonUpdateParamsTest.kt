@@ -1,0 +1,63 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.dodopayments.api.models.addons
+
+import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.TaxCategory
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+internal class AddonUpdateParamsTest {
+
+    @Test
+    fun create() {
+        AddonUpdateParams.builder()
+            .id("id")
+            .currency(Currency.AED)
+            .description("description")
+            .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+            .name("name")
+            .price(0L)
+            .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+            .build()
+    }
+
+    @Test
+    fun pathParams() {
+        val params = AddonUpdateParams.builder().id("id").build()
+
+        assertThat(params._pathParam(0)).isEqualTo("id")
+        // out-of-bound path param
+        assertThat(params._pathParam(1)).isEqualTo("")
+    }
+
+    @Test
+    fun body() {
+        val params =
+            AddonUpdateParams.builder()
+                .id("id")
+                .currency(Currency.AED)
+                .description("description")
+                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                .name("name")
+                .price(0L)
+                .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.currency()).contains(Currency.AED)
+        assertThat(body.description()).contains("description")
+        assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+        assertThat(body.name()).contains("name")
+        assertThat(body.price()).contains(0L)
+        assertThat(body.taxCategory()).contains(TaxCategory.DIGITAL_PRODUCTS)
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
+        val params = AddonUpdateParams.builder().id("id").build()
+
+        val body = params._body()
+    }
+}
