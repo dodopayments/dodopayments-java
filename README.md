@@ -53,13 +53,14 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
 // Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .billing(BillingAddress.builder()
         .city("city")
         .country(CountryCode.AF)
@@ -70,10 +71,12 @@ SubscriptionCreateParams params = SubscriptionCreateParams.builder()
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
-    .productId("product_id")
-    .quantity(0L)
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
     .build();
-SubscriptionCreateResponse subscription = client.subscriptions().create(params);
+PaymentCreateResponse payment = client.payments().create(params);
 ```
 
 ## Client configuration
@@ -127,7 +130,7 @@ See this table for the available options:
 
 To send a request to the Dodo Payments API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.subscriptions().create(...)` should be called with an instance of `SubscriptionCreateParams`, and it will return an instance of `SubscriptionCreateResponse`.
+For example, `client.payments().create(...)` should be called with an instance of `PaymentCreateParams`, and it will return an instance of `PaymentCreateResponse`.
 
 ## Immutability
 
@@ -147,14 +150,15 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .billing(BillingAddress.builder()
         .city("city")
         .country(CountryCode.AF)
@@ -165,10 +169,12 @@ SubscriptionCreateParams params = SubscriptionCreateParams.builder()
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
-    .productId("product_id")
-    .quantity(0L)
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
     .build();
-CompletableFuture<SubscriptionCreateResponse> subscription = client.async().subscriptions().create(params);
+CompletableFuture<PaymentCreateResponse> payment = client.async().payments().create(params);
 ```
 
 Or create an asynchronous client from the beginning:
@@ -179,14 +185,15 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync;
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .billing(BillingAddress.builder()
         .city("city")
         .country(CountryCode.AF)
@@ -197,10 +204,12 @@ SubscriptionCreateParams params = SubscriptionCreateParams.builder()
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
-    .productId("product_id")
-    .quantity(0L)
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
     .build();
-CompletableFuture<SubscriptionCreateResponse> subscription = client.subscriptions().create(params);
+CompletableFuture<PaymentCreateResponse> payment = client.payments().create(params);
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -391,10 +400,11 @@ To set a custom timeout, configure the method call using the `timeout` method:
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
-SubscriptionCreateResponse subscription = client.subscriptions().create(
+PaymentCreateResponse payment = client.payments().create(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
 );
 ```
@@ -492,9 +502,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import com.dodopayments.api.core.JsonValue;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -508,9 +518,9 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 ```java
 import com.dodopayments.api.core.JsonValue;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .billing(BillingAddress.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
@@ -525,9 +535,10 @@ To set a documented parameter or property to an undocumented or not yet supporte
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .billing(BillingAddress.builder()
         .city("city")
         .country(CountryCode.AF)
@@ -538,8 +549,10 @@ SubscriptionCreateParams params = SubscriptionCreateParams.builder()
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
-    .productId("product_id")
-    .quantity(0L)
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
     .build();
 ```
 
@@ -589,14 +602,17 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](dodo-pay
 ```java
 import com.dodopayments.api.core.JsonMissing;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+PaymentCreateParams params = PaymentCreateParams.builder()
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
-    .productId("product_id")
-    .quantity(0L)
+    .addProductCart(OneTimeProductCartItem.builder()
+        .productId("product_id")
+        .quantity(0L)
+        .build())
     .billing(JsonMissing.of())
     .build();
 ```
@@ -609,7 +625,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import com.dodopayments.api.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.subscriptions().create(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.payments().create(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -640,7 +656,7 @@ import com.dodopayments.api.core.JsonField;
 import com.dodopayments.api.models.payments.BillingAddress;
 import java.util.Optional;
 
-JsonField<BillingAddress> billing = client.subscriptions().create(params)._billing();
+JsonField<BillingAddress> billing = client.payments().create(params)._billing();
 
 if (billing.isMissing()) {
   // The property is absent from the JSON response
@@ -665,9 +681,9 @@ By default, the SDK will not throw an exception in this case. It will throw [`Do
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
-SubscriptionCreateResponse subscription = client.subscriptions().create(params).validate();
+PaymentCreateResponse payment = client.payments().create(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
@@ -676,10 +692,11 @@ Or configure the method call to validate the response using the `responseValidat
 import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
 import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams;
-import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse;
+import com.dodopayments.api.models.payments.OneTimeProductCartItem;
+import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
-SubscriptionCreateResponse subscription = client.subscriptions().create(
+PaymentCreateResponse payment = client.payments().create(
   params, RequestOptions.builder().responseValidation(true).build()
 );
 ```
