@@ -6,6 +6,7 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.CountryCode
+import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
@@ -26,7 +27,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
@@ -45,10 +46,16 @@ internal class SubscriptionServiceAsyncTest {
                     .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                     .productId("product_id")
                     .quantity(0L)
+                    .addAddon(
+                        SubscriptionCreateParams.Addon.builder()
+                            .addonId("addon_id")
+                            .quantity(0L)
+                            .build()
+                    )
                     .addAllowedPaymentMethodType(
                         SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT
                     )
-                    .billingCurrency(SubscriptionCreateParams.BillingCurrency.AED)
+                    .billingCurrency(Currency.AED)
                     .discountCode("discount_code")
                     .metadata(
                         SubscriptionCreateParams.Metadata.builder()
@@ -78,7 +85,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
@@ -96,7 +103,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
@@ -137,7 +144,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
@@ -152,7 +159,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
@@ -176,7 +183,7 @@ internal class SubscriptionServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
+                .apiKey("My API Key")
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 

@@ -25,7 +25,7 @@ private constructor(
      *
      * @see [SubscriptionListPageResponse.items]
      */
-    fun items(): List<Subscription> =
+    fun items(): List<SubscriptionListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -115,9 +115,12 @@ private constructor(
 
     class AutoPager(private val firstPage: SubscriptionListPageAsync) {
 
-        fun forEach(action: Predicate<Subscription>, executor: Executor): CompletableFuture<Void> {
+        fun forEach(
+            action: Predicate<SubscriptionListResponse>,
+            executor: Executor,
+        ): CompletableFuture<Void> {
             fun CompletableFuture<Optional<SubscriptionListPageAsync>>.forEach(
-                action: (Subscription) -> Boolean,
+                action: (SubscriptionListResponse) -> Boolean,
                 executor: Executor,
             ): CompletableFuture<Void> =
                 thenComposeAsync(
@@ -133,8 +136,8 @@ private constructor(
                 .forEach(action::test, executor)
         }
 
-        fun toList(executor: Executor): CompletableFuture<List<Subscription>> {
-            val values = mutableListOf<Subscription>()
+        fun toList(executor: Executor): CompletableFuture<List<SubscriptionListResponse>> {
+            val values = mutableListOf<SubscriptionListResponse>()
             return forEach(values::add, executor).thenApply { values }
         }
     }
