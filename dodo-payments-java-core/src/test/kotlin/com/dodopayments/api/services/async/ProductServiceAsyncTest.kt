@@ -25,7 +25,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 
@@ -66,7 +66,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 
@@ -82,7 +82,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 
@@ -124,7 +124,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 
@@ -139,7 +139,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 
@@ -153,7 +153,7 @@ internal class ProductServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val productServiceAsync = client.products()
 

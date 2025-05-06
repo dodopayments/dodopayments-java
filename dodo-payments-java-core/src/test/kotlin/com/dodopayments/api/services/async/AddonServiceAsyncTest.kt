@@ -21,7 +21,7 @@ internal class AddonServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val addonServiceAsync = client.addons()
 
@@ -45,7 +45,7 @@ internal class AddonServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val addonServiceAsync = client.addons()
 
@@ -61,7 +61,7 @@ internal class AddonServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val addonServiceAsync = client.addons()
 
@@ -87,7 +87,7 @@ internal class AddonServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val addonServiceAsync = client.addons()
 
@@ -102,7 +102,7 @@ internal class AddonServiceAsyncTest {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
+                .bearerToken("My Bearer Token")
                 .build()
         val addonServiceAsync = client.addons()
 
