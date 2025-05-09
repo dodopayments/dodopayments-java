@@ -73,7 +73,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .build();
 PaymentCreateResponse payment = client.payments().create(params);
@@ -171,7 +171,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .build();
 CompletableFuture<PaymentCreateResponse> payment = client.async().payments().create(params);
@@ -206,7 +206,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .build();
 CompletableFuture<PaymentCreateResponse> payment = client.payments().create(params);
@@ -291,7 +291,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .build();
 HttpResponseFor<PaymentCreateResponse> payment = client.payments().withRawResponse().create(params);
@@ -635,7 +635,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .build();
 ```
@@ -695,7 +695,7 @@ PaymentCreateParams params = PaymentCreateParams.builder()
         .build())
     .addProductCart(OneTimeProductCartItem.builder()
         .productId("product_id")
-        .quantity(0L)
+        .quantity(0)
         .build())
     .billing(JsonMissing.of())
     .build();

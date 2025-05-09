@@ -26,7 +26,7 @@ private constructor(
     private val paymentId: JsonField<String>,
     private val refundId: JsonField<String>,
     private val status: JsonField<RefundStatus>,
-    private val amount: JsonField<Long>,
+    private val amount: JsonField<Int>,
     private val currency: JsonField<Currency>,
     private val reason: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -43,7 +43,7 @@ private constructor(
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("refund_id") @ExcludeMissing refundId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<RefundStatus> = JsonMissing.of(),
-        @JsonProperty("amount") @ExcludeMissing amount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("amount") @ExcludeMissing amount: JsonField<Int> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
         @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
     ) : this(
@@ -102,7 +102,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun amount(): Optional<Long> = amount.getOptional("amount")
+    fun amount(): Optional<Int> = amount.getOptional("amount")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -160,7 +160,7 @@ private constructor(
      *
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Long> = amount
+    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Int> = amount
 
     /**
      * Returns the raw JSON value of [currency].
@@ -213,7 +213,7 @@ private constructor(
         private var paymentId: JsonField<String>? = null
         private var refundId: JsonField<String>? = null
         private var status: JsonField<RefundStatus>? = null
-        private var amount: JsonField<Long> = JsonMissing.of()
+        private var amount: JsonField<Int> = JsonMissing.of()
         private var currency: JsonField<Currency> = JsonMissing.of()
         private var reason: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -290,25 +290,25 @@ private constructor(
         fun status(status: JsonField<RefundStatus>) = apply { this.status = status }
 
         /** The refunded amount. */
-        fun amount(amount: Long?) = amount(JsonField.ofNullable(amount))
+        fun amount(amount: Int?) = amount(JsonField.ofNullable(amount))
 
         /**
          * Alias for [Builder.amount].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun amount(amount: Long) = amount(amount as Long?)
+        fun amount(amount: Int) = amount(amount as Int?)
 
         /** Alias for calling [Builder.amount] with `amount.orElse(null)`. */
-        fun amount(amount: Optional<Long>) = amount(amount.getOrNull())
+        fun amount(amount: Optional<Int>) = amount(amount.getOrNull())
 
         /**
          * Sets [Builder.amount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.amount] with a well-typed [Int] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun amount(amount: JsonField<Long>) = apply { this.amount = amount }
+        fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
 
         fun currency(currency: Currency?) = currency(JsonField.ofNullable(currency))
 

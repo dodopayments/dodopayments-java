@@ -67,7 +67,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun price(): Optional<Long> = body.price()
+    fun price(): Optional<Int> = body.price()
 
     /**
      * Represents the different categories of taxation applicable to various products and services.
@@ -110,7 +110,7 @@ private constructor(
      *
      * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _price(): JsonField<Long> = body._price()
+    fun _price(): JsonField<Int> = body._price()
 
     /**
      * Returns the raw JSON value of [taxCategory].
@@ -228,25 +228,25 @@ private constructor(
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /** Amount of the addon */
-        fun price(price: Long?) = apply { body.price(price) }
+        fun price(price: Int?) = apply { body.price(price) }
 
         /**
          * Alias for [Builder.price].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun price(price: Long) = price(price as Long?)
+        fun price(price: Int) = price(price as Int?)
 
         /** Alias for calling [Builder.price] with `price.orElse(null)`. */
-        fun price(price: Optional<Long>) = price(price.getOrNull())
+        fun price(price: Optional<Int>) = price(price.getOrNull())
 
         /**
          * Sets [Builder.price] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.price] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.price] with a well-typed [Int] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun price(price: JsonField<Long>) = apply { body.price(price) }
+        fun price(price: JsonField<Int>) = apply { body.price(price) }
 
         /**
          * Represents the different categories of taxation applicable to various products and
@@ -417,7 +417,7 @@ private constructor(
         private val description: JsonField<String>,
         private val imageId: JsonField<String>,
         private val name: JsonField<String>,
-        private val price: JsonField<Long>,
+        private val price: JsonField<Int>,
         private val taxCategory: JsonField<TaxCategory>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -432,7 +432,7 @@ private constructor(
             description: JsonField<String> = JsonMissing.of(),
             @JsonProperty("image_id") @ExcludeMissing imageId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("price") @ExcludeMissing price: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("price") @ExcludeMissing price: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("tax_category")
             @ExcludeMissing
             taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
@@ -474,7 +474,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun price(): Optional<Long> = price.getOptional("price")
+        fun price(): Optional<Int> = price.getOptional("price")
 
         /**
          * Represents the different categories of taxation applicable to various products and
@@ -520,7 +520,7 @@ private constructor(
          *
          * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Long> = price
+        @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Int> = price
 
         /**
          * Returns the raw JSON value of [taxCategory].
@@ -556,7 +556,7 @@ private constructor(
             private var description: JsonField<String> = JsonMissing.of()
             private var imageId: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
-            private var price: JsonField<Long> = JsonMissing.of()
+            private var price: JsonField<Int> = JsonMissing.of()
             private var taxCategory: JsonField<TaxCategory> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -633,26 +633,26 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Amount of the addon */
-            fun price(price: Long?) = price(JsonField.ofNullable(price))
+            fun price(price: Int?) = price(JsonField.ofNullable(price))
 
             /**
              * Alias for [Builder.price].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun price(price: Long) = price(price as Long?)
+            fun price(price: Int) = price(price as Int?)
 
             /** Alias for calling [Builder.price] with `price.orElse(null)`. */
-            fun price(price: Optional<Long>) = price(price.getOrNull())
+            fun price(price: Optional<Int>) = price(price.getOrNull())
 
             /**
              * Sets [Builder.price] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.price] with a well-typed [Long] value instead. This
+             * You should usually call [Builder.price] with a well-typed [Int] value instead. This
              * method is primarily for setting the field to an undocumented or not yet supported
              * value.
              */
-            fun price(price: JsonField<Long>) = apply { this.price = price }
+            fun price(price: JsonField<Int>) = apply { this.price = price }
 
             /**
              * Represents the different categories of taxation applicable to various products and
