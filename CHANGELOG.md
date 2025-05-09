@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.21.0 (2025-05-09)
+
+Full Changelog: [v1.20.0...v1.21.0](https://github.com/dodopayments/dodopayments-java/compare/v1.20.0...v1.21.0)
+
+### Features
+
+* **api:** fixed api key schema to bearer ([7b89fda](https://github.com/dodopayments/dodopayments-java/commit/7b89fda45087ba237be4ec72fd56398b2d7869b0))
+* **api:** manual updates ([5a30d88](https://github.com/dodopayments/dodopayments-java/commit/5a30d8808f075845dbfc1030b620bdc65b7789e2))
+* **api:** updated openapi spec ([9a9dd90](https://github.com/dodopayments/dodopayments-java/commit/9a9dd905334f74fc1433cc6d2af9e0d66359afd1))
+
+
+### Chores
+
+* **internal:** codegen related update ([664eec5](https://github.com/dodopayments/dodopayments-java/commit/664eec52e2dc409a3b51ff759622582b165a5ff2))
+* **internal:** remove flaky `-Xbackend-threads=0` option ([4b12d25](https://github.com/dodopayments/dodopayments-java/commit/4b12d256f4f05bec9fc11d479b6bdee5d84445b3))
+* **internal:** update java toolchain ([470538e](https://github.com/dodopayments/dodopayments-java/commit/470538ee1d2f98139238890f9ad3279ab95ac2ee))
+
 ## 1.20.0 (2025-05-01)
 
 Full Changelog: [v1.19.0...v1.20.0](https://github.com/dodopayments/dodopayments-java/compare/v1.19.0...v1.20.0)
