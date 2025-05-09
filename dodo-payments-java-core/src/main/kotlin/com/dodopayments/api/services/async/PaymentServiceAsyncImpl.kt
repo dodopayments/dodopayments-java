@@ -153,6 +153,7 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
                             .let {
                                 PaymentListPageAsync.builder()
                                     .service(PaymentServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

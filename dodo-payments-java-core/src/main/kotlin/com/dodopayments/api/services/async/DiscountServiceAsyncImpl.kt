@@ -202,6 +202,7 @@ class DiscountServiceAsyncImpl internal constructor(private val clientOptions: C
                             .let {
                                 DiscountListPageAsync.builder()
                                     .service(DiscountServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

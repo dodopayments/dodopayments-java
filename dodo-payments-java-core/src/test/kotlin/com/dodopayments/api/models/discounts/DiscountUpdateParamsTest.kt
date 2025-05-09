@@ -13,13 +13,13 @@ internal class DiscountUpdateParamsTest {
     fun create() {
         DiscountUpdateParams.builder()
             .discountId("discount_id")
-            .amount(0L)
+            .amount(0)
             .code("code")
             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .name("name")
             .addRestrictedTo("string")
             .type(DiscountType.PERCENTAGE)
-            .usageLimit(0L)
+            .usageLimit(0)
             .build()
     }
 
@@ -37,24 +37,24 @@ internal class DiscountUpdateParamsTest {
         val params =
             DiscountUpdateParams.builder()
                 .discountId("discount_id")
-                .amount(0L)
+                .amount(0)
                 .code("code")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .name("name")
                 .addRestrictedTo("string")
                 .type(DiscountType.PERCENTAGE)
-                .usageLimit(0L)
+                .usageLimit(0)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.amount()).contains(0L)
+        assertThat(body.amount()).contains(0)
         assertThat(body.code()).contains("code")
         assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.name()).contains("name")
         assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
         assertThat(body.type()).contains(DiscountType.PERCENTAGE)
-        assertThat(body.usageLimit()).contains(0L)
+        assertThat(body.usageLimit()).contains(0)
     }
 
     @Test

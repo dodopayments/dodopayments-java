@@ -61,7 +61,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun quantity(): Long = body.quantity()
+    fun quantity(): Int = body.quantity()
 
     /**
      * Attach addons to this subscription
@@ -149,7 +149,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun trialPeriodDays(): Optional<Long> = body.trialPeriodDays()
+    fun trialPeriodDays(): Optional<Int> = body.trialPeriodDays()
 
     /**
      * Returns the raw JSON value of [billing].
@@ -177,7 +177,7 @@ private constructor(
      *
      * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _quantity(): JsonField<Long> = body._quantity()
+    fun _quantity(): JsonField<Int> = body._quantity()
 
     /**
      * Returns the raw JSON value of [addons].
@@ -257,7 +257,7 @@ private constructor(
      *
      * Unlike [trialPeriodDays], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _trialPeriodDays(): JsonField<Long> = body._trialPeriodDays()
+    fun _trialPeriodDays(): JsonField<Int> = body._trialPeriodDays()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -362,15 +362,15 @@ private constructor(
         fun productId(productId: JsonField<String>) = apply { body.productId(productId) }
 
         /** Number of units to subscribe for. Must be at least 1. */
-        fun quantity(quantity: Long) = apply { body.quantity(quantity) }
+        fun quantity(quantity: Int) = apply { body.quantity(quantity) }
 
         /**
          * Sets [Builder.quantity] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.quantity] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun quantity(quantity: JsonField<Long>) = apply { body.quantity(quantity) }
+        fun quantity(quantity: JsonField<Int>) = apply { body.quantity(quantity) }
 
         /** Attach addons to this subscription */
         fun addons(addons: List<Addon>?) = apply { body.addons(addons) }
@@ -570,29 +570,27 @@ private constructor(
          * Optional trial period in days If specified, this value overrides the trial period set in
          * the product's price Must be between 0 and 10000 days
          */
-        fun trialPeriodDays(trialPeriodDays: Long?) = apply {
-            body.trialPeriodDays(trialPeriodDays)
-        }
+        fun trialPeriodDays(trialPeriodDays: Int?) = apply { body.trialPeriodDays(trialPeriodDays) }
 
         /**
          * Alias for [Builder.trialPeriodDays].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun trialPeriodDays(trialPeriodDays: Long) = trialPeriodDays(trialPeriodDays as Long?)
+        fun trialPeriodDays(trialPeriodDays: Int) = trialPeriodDays(trialPeriodDays as Int?)
 
         /** Alias for calling [Builder.trialPeriodDays] with `trialPeriodDays.orElse(null)`. */
-        fun trialPeriodDays(trialPeriodDays: Optional<Long>) =
+        fun trialPeriodDays(trialPeriodDays: Optional<Int>) =
             trialPeriodDays(trialPeriodDays.getOrNull())
 
         /**
          * Sets [Builder.trialPeriodDays] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.trialPeriodDays] with a well-typed [Long] value instead.
+         * You should usually call [Builder.trialPeriodDays] with a well-typed [Int] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun trialPeriodDays(trialPeriodDays: JsonField<Long>) = apply {
+        fun trialPeriodDays(trialPeriodDays: JsonField<Int>) = apply {
             body.trialPeriodDays(trialPeriodDays)
         }
 
@@ -753,7 +751,7 @@ private constructor(
         private val billing: JsonField<BillingAddress>,
         private val customer: JsonField<CustomerRequest>,
         private val productId: JsonField<String>,
-        private val quantity: JsonField<Long>,
+        private val quantity: JsonField<Int>,
         private val addons: JsonField<List<Addon>>,
         private val allowedPaymentMethodTypes: JsonField<List<AllowedPaymentMethodType>>,
         private val billingCurrency: JsonField<Currency>,
@@ -764,7 +762,7 @@ private constructor(
         private val returnUrl: JsonField<String>,
         private val showSavedPaymentMethods: JsonField<Boolean>,
         private val taxId: JsonField<String>,
-        private val trialPeriodDays: JsonField<Long>,
+        private val trialPeriodDays: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -779,7 +777,7 @@ private constructor(
             @JsonProperty("product_id")
             @ExcludeMissing
             productId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("addons")
             @ExcludeMissing
             addons: JsonField<List<Addon>> = JsonMissing.of(),
@@ -810,7 +808,7 @@ private constructor(
             @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("trial_period_days")
             @ExcludeMissing
-            trialPeriodDays: JsonField<Long> = JsonMissing.of(),
+            trialPeriodDays: JsonField<Int> = JsonMissing.of(),
         ) : this(
             billing,
             customer,
@@ -856,7 +854,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun quantity(): Long = quantity.getRequired("quantity")
+        fun quantity(): Int = quantity.getRequired("quantity")
 
         /**
          * Attach addons to this subscription
@@ -946,7 +944,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun trialPeriodDays(): Optional<Long> = trialPeriodDays.getOptional("trial_period_days")
+        fun trialPeriodDays(): Optional<Int> = trialPeriodDays.getOptional("trial_period_days")
 
         /**
          * Returns the raw JSON value of [billing].
@@ -976,7 +974,7 @@ private constructor(
          *
          * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Long> = quantity
+        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
 
         /**
          * Returns the raw JSON value of [addons].
@@ -1071,7 +1069,7 @@ private constructor(
          */
         @JsonProperty("trial_period_days")
         @ExcludeMissing
-        fun _trialPeriodDays(): JsonField<Long> = trialPeriodDays
+        fun _trialPeriodDays(): JsonField<Int> = trialPeriodDays
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1107,7 +1105,7 @@ private constructor(
             private var billing: JsonField<BillingAddress>? = null
             private var customer: JsonField<CustomerRequest>? = null
             private var productId: JsonField<String>? = null
-            private var quantity: JsonField<Long>? = null
+            private var quantity: JsonField<Int>? = null
             private var addons: JsonField<MutableList<Addon>>? = null
             private var allowedPaymentMethodTypes:
                 JsonField<MutableList<AllowedPaymentMethodType>>? =
@@ -1120,7 +1118,7 @@ private constructor(
             private var returnUrl: JsonField<String> = JsonMissing.of()
             private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
-            private var trialPeriodDays: JsonField<Long> = JsonMissing.of()
+            private var trialPeriodDays: JsonField<Int> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1193,16 +1191,16 @@ private constructor(
             fun productId(productId: JsonField<String>) = apply { this.productId = productId }
 
             /** Number of units to subscribe for. Must be at least 1. */
-            fun quantity(quantity: Long) = quantity(JsonField.of(quantity))
+            fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
             /**
              * Sets [Builder.quantity] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.quantity] with a well-typed [Long] value instead.
+             * You should usually call [Builder.quantity] with a well-typed [Int] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun quantity(quantity: JsonField<Long>) = apply { this.quantity = quantity }
+            fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
 
             /** Attach addons to this subscription */
             fun addons(addons: List<Addon>?) = addons(JsonField.ofNullable(addons))
@@ -1418,7 +1416,7 @@ private constructor(
              * Optional trial period in days If specified, this value overrides the trial period set
              * in the product's price Must be between 0 and 10000 days
              */
-            fun trialPeriodDays(trialPeriodDays: Long?) =
+            fun trialPeriodDays(trialPeriodDays: Int?) =
                 trialPeriodDays(JsonField.ofNullable(trialPeriodDays))
 
             /**
@@ -1426,20 +1424,20 @@ private constructor(
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun trialPeriodDays(trialPeriodDays: Long) = trialPeriodDays(trialPeriodDays as Long?)
+            fun trialPeriodDays(trialPeriodDays: Int) = trialPeriodDays(trialPeriodDays as Int?)
 
             /** Alias for calling [Builder.trialPeriodDays] with `trialPeriodDays.orElse(null)`. */
-            fun trialPeriodDays(trialPeriodDays: Optional<Long>) =
+            fun trialPeriodDays(trialPeriodDays: Optional<Int>) =
                 trialPeriodDays(trialPeriodDays.getOrNull())
 
             /**
              * Sets [Builder.trialPeriodDays] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.trialPeriodDays] with a well-typed [Long] value
+             * You should usually call [Builder.trialPeriodDays] with a well-typed [Int] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun trialPeriodDays(trialPeriodDays: JsonField<Long>) = apply {
+            fun trialPeriodDays(trialPeriodDays: JsonField<Int>) = apply {
                 this.trialPeriodDays = trialPeriodDays
             }
 
@@ -1577,14 +1575,14 @@ private constructor(
     class Addon
     private constructor(
         private val addonId: JsonField<String>,
-        private val quantity: JsonField<Long>,
+        private val quantity: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("addon_id") @ExcludeMissing addonId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
         ) : this(addonId, quantity, mutableMapOf())
 
         /**
@@ -1597,7 +1595,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun quantity(): Long = quantity.getRequired("quantity")
+        fun quantity(): Int = quantity.getRequired("quantity")
 
         /**
          * Returns the raw JSON value of [addonId].
@@ -1611,7 +1609,7 @@ private constructor(
          *
          * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Long> = quantity
+        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1643,7 +1641,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var addonId: JsonField<String>? = null
-            private var quantity: JsonField<Long>? = null
+            private var quantity: JsonField<Int>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1664,16 +1662,16 @@ private constructor(
              */
             fun addonId(addonId: JsonField<String>) = apply { this.addonId = addonId }
 
-            fun quantity(quantity: Long) = quantity(JsonField.of(quantity))
+            fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
             /**
              * Sets [Builder.quantity] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.quantity] with a well-typed [Long] value instead.
+             * You should usually call [Builder.quantity] with a well-typed [Int] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun quantity(quantity: JsonField<Long>) = apply { this.quantity = quantity }
+            fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -2101,7 +2099,7 @@ private constructor(
     class OnDemand
     private constructor(
         private val mandateOnly: JsonField<Boolean>,
-        private val productPrice: JsonField<Long>,
+        private val productPrice: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -2112,7 +2110,7 @@ private constructor(
             mandateOnly: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("product_price")
             @ExcludeMissing
-            productPrice: JsonField<Long> = JsonMissing.of(),
+            productPrice: JsonField<Int> = JsonMissing.of(),
         ) : this(mandateOnly, productPrice, mutableMapOf())
 
         /**
@@ -2132,7 +2130,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun productPrice(): Optional<Long> = productPrice.getOptional("product_price")
+        fun productPrice(): Optional<Int> = productPrice.getOptional("product_price")
 
         /**
          * Returns the raw JSON value of [mandateOnly].
@@ -2151,7 +2149,7 @@ private constructor(
          */
         @JsonProperty("product_price")
         @ExcludeMissing
-        fun _productPrice(): JsonField<Long> = productPrice
+        fun _productPrice(): JsonField<Int> = productPrice
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2182,7 +2180,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var mandateOnly: JsonField<Boolean>? = null
-            private var productPrice: JsonField<Long> = JsonMissing.of()
+            private var productPrice: JsonField<Int> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2214,26 +2212,26 @@ private constructor(
              * the product will be used Represented in the lowest denomination of the currency
              * (e.g., cents for USD). For example, to charge $1.00, pass `100`.
              */
-            fun productPrice(productPrice: Long?) = productPrice(JsonField.ofNullable(productPrice))
+            fun productPrice(productPrice: Int?) = productPrice(JsonField.ofNullable(productPrice))
 
             /**
              * Alias for [Builder.productPrice].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun productPrice(productPrice: Long) = productPrice(productPrice as Long?)
+            fun productPrice(productPrice: Int) = productPrice(productPrice as Int?)
 
             /** Alias for calling [Builder.productPrice] with `productPrice.orElse(null)`. */
-            fun productPrice(productPrice: Optional<Long>) = productPrice(productPrice.getOrNull())
+            fun productPrice(productPrice: Optional<Int>) = productPrice(productPrice.getOrNull())
 
             /**
              * Sets [Builder.productPrice] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.productPrice] with a well-typed [Long] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.productPrice] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun productPrice(productPrice: JsonField<Long>) = apply {
+            fun productPrice(productPrice: JsonField<Int>) = apply {
                 this.productPrice = productPrice
             }
 

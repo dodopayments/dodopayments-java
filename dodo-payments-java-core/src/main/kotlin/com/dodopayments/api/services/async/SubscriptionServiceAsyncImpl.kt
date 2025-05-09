@@ -213,6 +213,7 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
                             .let {
                                 SubscriptionListPageAsync.builder()
                                     .service(SubscriptionServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

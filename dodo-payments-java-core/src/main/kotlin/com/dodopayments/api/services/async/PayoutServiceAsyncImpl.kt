@@ -69,6 +69,7 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             .let {
                                 PayoutListPageAsync.builder()
                                     .service(PayoutServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

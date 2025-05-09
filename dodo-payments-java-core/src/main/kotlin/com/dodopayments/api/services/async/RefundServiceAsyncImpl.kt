@@ -151,6 +151,7 @@ class RefundServiceAsyncImpl internal constructor(private val clientOptions: Cli
                             .let {
                                 RefundListPageAsync.builder()
                                     .service(RefundServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

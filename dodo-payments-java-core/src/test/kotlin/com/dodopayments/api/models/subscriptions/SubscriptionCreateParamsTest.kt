@@ -28,9 +28,9 @@ internal class SubscriptionCreateParamsTest {
             )
             .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
             .productId("product_id")
-            .quantity(0L)
+            .quantity(0)
             .addAddon(
-                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0L).build()
+                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
             )
             .addAllowedPaymentMethodType(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT)
             .billingCurrency(Currency.AED)
@@ -43,14 +43,14 @@ internal class SubscriptionCreateParamsTest {
             .onDemand(
                 SubscriptionCreateParams.OnDemand.builder()
                     .mandateOnly(true)
-                    .productPrice(0L)
+                    .productPrice(0)
                     .build()
             )
             .paymentLink(true)
             .returnUrl("return_url")
             .showSavedPaymentMethods(true)
             .taxId("tax_id")
-            .trialPeriodDays(0L)
+            .trialPeriodDays(0)
             .build()
     }
 
@@ -69,12 +69,9 @@ internal class SubscriptionCreateParamsTest {
                 )
                 .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                 .productId("product_id")
-                .quantity(0L)
+                .quantity(0)
                 .addAddon(
-                    SubscriptionCreateParams.Addon.builder()
-                        .addonId("addon_id")
-                        .quantity(0L)
-                        .build()
+                    SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
                 )
                 .addAllowedPaymentMethodType(
                     SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT
@@ -89,14 +86,14 @@ internal class SubscriptionCreateParamsTest {
                 .onDemand(
                     SubscriptionCreateParams.OnDemand.builder()
                         .mandateOnly(true)
-                        .productPrice(0L)
+                        .productPrice(0)
                         .build()
                 )
                 .paymentLink(true)
                 .returnUrl("return_url")
                 .showSavedPaymentMethods(true)
                 .taxId("tax_id")
-                .trialPeriodDays(0L)
+                .trialPeriodDays(0)
                 .build()
 
         val body = params._body()
@@ -118,10 +115,10 @@ internal class SubscriptionCreateParamsTest {
                 )
             )
         assertThat(body.productId()).isEqualTo("product_id")
-        assertThat(body.quantity()).isEqualTo(0L)
+        assertThat(body.quantity()).isEqualTo(0)
         assertThat(body.addons().getOrNull())
             .containsExactly(
-                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0L).build()
+                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
             )
         assertThat(body.allowedPaymentMethodTypes().getOrNull())
             .containsExactly(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT)
@@ -137,14 +134,14 @@ internal class SubscriptionCreateParamsTest {
             .contains(
                 SubscriptionCreateParams.OnDemand.builder()
                     .mandateOnly(true)
-                    .productPrice(0L)
+                    .productPrice(0)
                     .build()
             )
         assertThat(body.paymentLink()).contains(true)
         assertThat(body.returnUrl()).contains("return_url")
         assertThat(body.showSavedPaymentMethods()).contains(true)
         assertThat(body.taxId()).contains("tax_id")
-        assertThat(body.trialPeriodDays()).contains(0L)
+        assertThat(body.trialPeriodDays()).contains(0)
     }
 
     @Test
@@ -162,7 +159,7 @@ internal class SubscriptionCreateParamsTest {
                 )
                 .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                 .productId("product_id")
-                .quantity(0L)
+                .quantity(0)
                 .build()
 
         val body = params._body()
@@ -184,6 +181,6 @@ internal class SubscriptionCreateParamsTest {
                 )
             )
         assertThat(body.productId()).isEqualTo("product_id")
-        assertThat(body.quantity()).isEqualTo(0L)
+        assertThat(body.quantity()).isEqualTo(0)
     }
 }

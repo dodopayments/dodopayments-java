@@ -37,14 +37,14 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun productPrice(): Long = body.productPrice()
+    fun productPrice(): Int = body.productPrice()
 
     /**
      * Returns the raw JSON value of [productPrice].
      *
      * Unlike [productPrice], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _productPrice(): JsonField<Long> = body._productPrice()
+    fun _productPrice(): JsonField<Int> = body._productPrice()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -102,16 +102,16 @@ private constructor(
          * The product price. Represented in the lowest denomination of the currency (e.g., cents
          * for USD). For example, to charge $1.00, pass `100`.
          */
-        fun productPrice(productPrice: Long) = apply { body.productPrice(productPrice) }
+        fun productPrice(productPrice: Int) = apply { body.productPrice(productPrice) }
 
         /**
          * Sets [Builder.productPrice] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productPrice] with a well-typed [Long] value instead.
+         * You should usually call [Builder.productPrice] with a well-typed [Int] value instead.
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        fun productPrice(productPrice: JsonField<Long>) = apply { body.productPrice(productPrice) }
+        fun productPrice(productPrice: JsonField<Int>) = apply { body.productPrice(productPrice) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -265,7 +265,7 @@ private constructor(
 
     class Body
     private constructor(
-        private val productPrice: JsonField<Long>,
+        private val productPrice: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -273,7 +273,7 @@ private constructor(
         private constructor(
             @JsonProperty("product_price")
             @ExcludeMissing
-            productPrice: JsonField<Long> = JsonMissing.of()
+            productPrice: JsonField<Int> = JsonMissing.of()
         ) : this(productPrice, mutableMapOf())
 
         /**
@@ -283,7 +283,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun productPrice(): Long = productPrice.getRequired("product_price")
+        fun productPrice(): Int = productPrice.getRequired("product_price")
 
         /**
          * Returns the raw JSON value of [productPrice].
@@ -293,7 +293,7 @@ private constructor(
          */
         @JsonProperty("product_price")
         @ExcludeMissing
-        fun _productPrice(): JsonField<Long> = productPrice
+        fun _productPrice(): JsonField<Int> = productPrice
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -323,7 +323,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var productPrice: JsonField<Long>? = null
+            private var productPrice: JsonField<Int>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -336,16 +336,16 @@ private constructor(
              * The product price. Represented in the lowest denomination of the currency (e.g.,
              * cents for USD). For example, to charge $1.00, pass `100`.
              */
-            fun productPrice(productPrice: Long) = productPrice(JsonField.of(productPrice))
+            fun productPrice(productPrice: Int) = productPrice(JsonField.of(productPrice))
 
             /**
              * Sets [Builder.productPrice] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.productPrice] with a well-typed [Long] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.productPrice] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun productPrice(productPrice: JsonField<Long>) = apply {
+            fun productPrice(productPrice: JsonField<Int>) = apply {
                 this.productPrice = productPrice
             }
 

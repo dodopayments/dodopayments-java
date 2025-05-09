@@ -154,6 +154,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
                             .let {
                                 LicenseKeyListPageAsync.builder()
                                     .service(LicenseKeyServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

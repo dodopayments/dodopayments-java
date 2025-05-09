@@ -2,13 +2,13 @@
 
 package com.dodopayments.api.models.products
 
+import com.dodopayments.api.core.AutoPagerAsync
+import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.async.ProductServiceAsync
 import java.util.Objects
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -16,35 +16,31 @@ import kotlin.jvm.optionals.getOrNull
 class ProductListPageAsync
 private constructor(
     private val service: ProductServiceAsync,
+    private val streamHandlerExecutor: Executor,
     private val params: ProductListParams,
     private val response: ProductListPageResponse,
-) {
+) : PageAsync<ProductListResponse> {
 
     /**
      * Delegates to [ProductListPageResponse], but gracefully handles missing data.
      *
      * @see [ProductListPageResponse.items]
      */
-    fun items(): List<ProductListResponse> =
+    override fun items(): List<ProductListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun hasNextPage(): Boolean = items().isNotEmpty()
+    override fun hasNextPage(): Boolean = items().isNotEmpty()
 
-    fun getNextPageParams(): Optional<ProductListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
-
+    fun nextPageParams(): ProductListParams {
         val pageNumber = params.pageNumber().getOrDefault(1)
-        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
+        return params.toBuilder().pageNumber(pageNumber + 1).build()
     }
 
-    fun getNextPage(): CompletableFuture<Optional<ProductListPageAsync>> =
-        getNextPageParams()
-            .map { service.list(it).thenApply { Optional.of(it) } }
-            .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
+    override fun nextPage(): CompletableFuture<ProductListPageAsync> =
+        service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPagerAsync<ProductListResponse> =
+        AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): ProductListParams = params
@@ -62,6 +58,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -73,17 +70,23 @@ private constructor(
     class Builder internal constructor() {
 
         private var service: ProductServiceAsync? = null
+        private var streamHandlerExecutor: Executor? = null
         private var params: ProductListParams? = null
         private var response: ProductListPageResponse? = null
 
         @JvmSynthetic
         internal fun from(productListPageAsync: ProductListPageAsync) = apply {
             service = productListPageAsync.service
+            streamHandlerExecutor = productListPageAsync.streamHandlerExecutor
             params = productListPageAsync.params
             response = productListPageAsync.response
         }
 
         fun service(service: ProductServiceAsync) = apply { this.service = service }
+
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor = streamHandlerExecutor
+        }
 
         /** The parameters that were used to request this page. */
         fun params(params: ProductListParams) = apply { this.params = params }
@@ -99,6 +102,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -108,38 +112,10 @@ private constructor(
         fun build(): ProductListPageAsync =
             ProductListPageAsync(
                 checkRequired("service", service),
+                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: ProductListPageAsync) {
-
-        fun forEach(
-            action: Predicate<ProductListResponse>,
-            executor: Executor,
-        ): CompletableFuture<Void> {
-            fun CompletableFuture<Optional<ProductListPageAsync>>.forEach(
-                action: (ProductListResponse) -> Boolean,
-                executor: Executor,
-            ): CompletableFuture<Void> =
-                thenComposeAsync(
-                    { page ->
-                        page
-                            .filter { it.items().all(action) }
-                            .map { it.getNextPage().forEach(action, executor) }
-                            .orElseGet { CompletableFuture.completedFuture(null) }
-                    },
-                    executor,
-                )
-            return CompletableFuture.completedFuture(Optional.of(firstPage))
-                .forEach(action::test, executor)
-        }
-
-        fun toList(executor: Executor): CompletableFuture<List<ProductListResponse>> {
-            val values = mutableListOf<ProductListResponse>()
-            return forEach(values::add, executor).thenApply { values }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -147,11 +123,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ProductListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+        return /* spotless:off */ other is ProductListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, streamHandlerExecutor, params, response) /* spotless:on */
 
     override fun toString() =
-        "ProductListPageAsync{service=$service, params=$params, response=$response}"
+        "ProductListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }
