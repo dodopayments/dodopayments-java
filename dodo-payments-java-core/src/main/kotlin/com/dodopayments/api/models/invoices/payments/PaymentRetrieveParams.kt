@@ -3,20 +3,19 @@
 package com.dodopayments.api.models.invoices.payments
 
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class PaymentRetrieveParams
 private constructor(
-    private val paymentId: String?,
+    private val paymentId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun paymentId(): Optional<String> = Optional.ofNullable(paymentId)
+    fun paymentId(): String = paymentId
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -26,9 +25,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): PaymentRetrieveParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [PaymentRetrieveParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [PaymentRetrieveParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .paymentId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -46,10 +50,7 @@ private constructor(
             additionalQueryParams = paymentRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        fun paymentId(paymentId: String?) = apply { this.paymentId = paymentId }
-
-        /** Alias for calling [Builder.paymentId] with `paymentId.orElse(null)`. */
-        fun paymentId(paymentId: Optional<String>) = paymentId(paymentId.getOrNull())
+        fun paymentId(paymentId: String) = apply { this.paymentId = paymentId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -153,10 +154,17 @@ private constructor(
          * Returns an immutable instance of [PaymentRetrieveParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .paymentId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): PaymentRetrieveParams =
             PaymentRetrieveParams(
-                paymentId,
+                checkRequired("paymentId", paymentId),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -164,7 +172,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> paymentId ?: ""
+            0 -> paymentId
             else -> ""
         }
 

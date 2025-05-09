@@ -8,6 +8,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.checkKnown
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
@@ -24,13 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 
 class ProductUpdateParams
 private constructor(
-    private val id: String?,
+    private val id: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): Optional<String> = Optional.ofNullable(id)
+    fun id(): String = id
 
     /**
      * Available Addons for subscription products
@@ -201,9 +202,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ProductUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [ProductUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [ProductUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -223,10 +229,7 @@ private constructor(
             additionalQueryParams = productUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: String?) = apply { this.id = id }
-
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<String>) = id(id.getOrNull())
+        fun id(id: String) = apply { this.id = id }
 
         /**
          * Sets the entire request body.
@@ -585,10 +588,17 @@ private constructor(
          * Returns an immutable instance of [ProductUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ProductUpdateParams =
             ProductUpdateParams(
-                id,
+                checkRequired("id", id),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -599,7 +609,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id ?: ""
+            0 -> id
             else -> ""
         }
 

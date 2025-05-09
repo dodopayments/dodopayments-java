@@ -35,21 +35,8 @@ interface ProductServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Product>
 
-    fun retrieve(id: String): CompletableFuture<Product> =
-        retrieve(id, ProductRetrieveParams.none())
-
-    /** @see [retrieve] */
-    fun retrieve(
-        id: String,
-        params: ProductRetrieveParams = ProductRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Product> = retrieve(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see [retrieve] */
-    fun retrieve(
-        id: String,
-        params: ProductRetrieveParams = ProductRetrieveParams.none(),
-    ): CompletableFuture<Product> = retrieve(id, params, RequestOptions.none())
+    fun retrieve(params: ProductRetrieveParams): CompletableFuture<Product> =
+        retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -57,42 +44,14 @@ interface ProductServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Product>
 
-    /** @see [retrieve] */
-    fun retrieve(params: ProductRetrieveParams): CompletableFuture<Product> =
-        retrieve(params, RequestOptions.none())
-
-    /** @see [retrieve] */
-    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Product> =
-        retrieve(id, ProductRetrieveParams.none(), requestOptions)
-
-    fun update(id: String): CompletableFuture<Void?> = update(id, ProductUpdateParams.none())
-
-    /** @see [update] */
-    fun update(
-        id: String,
-        params: ProductUpdateParams = ProductUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> = update(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see [update] */
-    fun update(
-        id: String,
-        params: ProductUpdateParams = ProductUpdateParams.none(),
-    ): CompletableFuture<Void?> = update(id, params, RequestOptions.none())
+    fun update(params: ProductUpdateParams): CompletableFuture<Void?> =
+        update(params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: ProductUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
-
-    /** @see [update] */
-    fun update(params: ProductUpdateParams): CompletableFuture<Void?> =
-        update(params, RequestOptions.none())
-
-    /** @see [update] */
-    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        update(id, ProductUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<ProductListPageAsync> = list(ProductListParams.none())
 
@@ -111,20 +70,8 @@ interface ProductServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<ProductListPageAsync> =
         list(ProductListParams.none(), requestOptions)
 
-    fun delete(id: String): CompletableFuture<Void?> = delete(id, ProductDeleteParams.none())
-
-    /** @see [delete] */
-    fun delete(
-        id: String,
-        params: ProductDeleteParams = ProductDeleteParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> = delete(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see [delete] */
-    fun delete(
-        id: String,
-        params: ProductDeleteParams = ProductDeleteParams.none(),
-    ): CompletableFuture<Void?> = delete(id, params, RequestOptions.none())
+    fun delete(params: ProductDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
 
     /** @see [delete] */
     fun delete(
@@ -132,43 +79,14 @@ interface ProductServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
 
-    /** @see [delete] */
-    fun delete(params: ProductDeleteParams): CompletableFuture<Void?> =
-        delete(params, RequestOptions.none())
-
-    /** @see [delete] */
-    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        delete(id, ProductDeleteParams.none(), requestOptions)
-
-    fun unarchive(id: String): CompletableFuture<Void?> =
-        unarchive(id, ProductUnarchiveParams.none())
-
-    /** @see [unarchive] */
-    fun unarchive(
-        id: String,
-        params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> = unarchive(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see [unarchive] */
-    fun unarchive(
-        id: String,
-        params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-    ): CompletableFuture<Void?> = unarchive(id, params, RequestOptions.none())
+    fun unarchive(params: ProductUnarchiveParams): CompletableFuture<Void?> =
+        unarchive(params, RequestOptions.none())
 
     /** @see [unarchive] */
     fun unarchive(
         params: ProductUnarchiveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
-
-    /** @see [unarchive] */
-    fun unarchive(params: ProductUnarchiveParams): CompletableFuture<Void?> =
-        unarchive(params, RequestOptions.none())
-
-    /** @see [unarchive] */
-    fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        unarchive(id, ProductUnarchiveParams.none(), requestOptions)
 
     /**
      * A view of [ProductServiceAsync] that provides access to raw HTTP responses for each method.
@@ -197,24 +115,8 @@ interface ProductServiceAsync {
          * [ProductServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<Product>> =
-            retrieve(id, ProductRetrieveParams.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: ProductRetrieveParams = ProductRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Product>> =
-            retrieve(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: ProductRetrieveParams = ProductRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<Product>> = retrieve(id, params, RequestOptions.none())
+        fun retrieve(params: ProductRetrieveParams): CompletableFuture<HttpResponseFor<Product>> =
+            retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -223,42 +125,13 @@ interface ProductServiceAsync {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Product>>
 
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(params: ProductRetrieveParams): CompletableFuture<HttpResponseFor<Product>> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Product>> =
-            retrieve(id, ProductRetrieveParams.none(), requestOptions)
-
         /**
          * Returns a raw HTTP response for `patch /products/{id}`, but is otherwise the same as
          * [ProductServiceAsync.update].
          */
         @MustBeClosed
-        fun update(id: String): CompletableFuture<HttpResponse> =
-            update(id, ProductUpdateParams.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            id: String,
-            params: ProductUpdateParams = ProductUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            update(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            id: String,
-            params: ProductUpdateParams = ProductUpdateParams.none(),
-        ): CompletableFuture<HttpResponse> = update(id, params, RequestOptions.none())
+        fun update(params: ProductUpdateParams): CompletableFuture<HttpResponse> =
+            update(params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
@@ -266,16 +139,6 @@ interface ProductServiceAsync {
             params: ProductUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(params: ProductUpdateParams): CompletableFuture<HttpResponse> =
-            update(params, RequestOptions.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            update(id, ProductUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /products`, but is otherwise the same as
@@ -311,24 +174,8 @@ interface ProductServiceAsync {
          * [ProductServiceAsync.delete].
          */
         @MustBeClosed
-        fun delete(id: String): CompletableFuture<HttpResponse> =
-            delete(id, ProductDeleteParams.none())
-
-        /** @see [delete] */
-        @MustBeClosed
-        fun delete(
-            id: String,
-            params: ProductDeleteParams = ProductDeleteParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            delete(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see [delete] */
-        @MustBeClosed
-        fun delete(
-            id: String,
-            params: ProductDeleteParams = ProductDeleteParams.none(),
-        ): CompletableFuture<HttpResponse> = delete(id, params, RequestOptions.none())
+        fun delete(params: ProductDeleteParams): CompletableFuture<HttpResponse> =
+            delete(params, RequestOptions.none())
 
         /** @see [delete] */
         @MustBeClosed
@@ -337,39 +184,13 @@ interface ProductServiceAsync {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
 
-        /** @see [delete] */
-        @MustBeClosed
-        fun delete(params: ProductDeleteParams): CompletableFuture<HttpResponse> =
-            delete(params, RequestOptions.none())
-
-        /** @see [delete] */
-        @MustBeClosed
-        fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            delete(id, ProductDeleteParams.none(), requestOptions)
-
         /**
          * Returns a raw HTTP response for `post /products/{id}/unarchive`, but is otherwise the
          * same as [ProductServiceAsync.unarchive].
          */
         @MustBeClosed
-        fun unarchive(id: String): CompletableFuture<HttpResponse> =
-            unarchive(id, ProductUnarchiveParams.none())
-
-        /** @see [unarchive] */
-        @MustBeClosed
-        fun unarchive(
-            id: String,
-            params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            unarchive(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see [unarchive] */
-        @MustBeClosed
-        fun unarchive(
-            id: String,
-            params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-        ): CompletableFuture<HttpResponse> = unarchive(id, params, RequestOptions.none())
+        fun unarchive(params: ProductUnarchiveParams): CompletableFuture<HttpResponse> =
+            unarchive(params, RequestOptions.none())
 
         /** @see [unarchive] */
         @MustBeClosed
@@ -377,15 +198,5 @@ interface ProductServiceAsync {
             params: ProductUnarchiveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
-
-        /** @see [unarchive] */
-        @MustBeClosed
-        fun unarchive(params: ProductUnarchiveParams): CompletableFuture<HttpResponse> =
-            unarchive(params, RequestOptions.none())
-
-        /** @see [unarchive] */
-        @MustBeClosed
-        fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            unarchive(id, ProductUnarchiveParams.none(), requestOptions)
     }
 }

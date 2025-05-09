@@ -17,36 +17,14 @@ interface DisputeService {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(disputeId: String): DisputeRetrieveResponse =
-        retrieve(disputeId, DisputeRetrieveParams.none())
-
-    /** @see [retrieve] */
-    fun retrieve(
-        disputeId: String,
-        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): DisputeRetrieveResponse =
-        retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
-
-    /** @see [retrieve] */
-    fun retrieve(
-        disputeId: String,
-        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-    ): DisputeRetrieveResponse = retrieve(disputeId, params, RequestOptions.none())
+    fun retrieve(params: DisputeRetrieveParams): DisputeRetrieveResponse =
+        retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): DisputeRetrieveResponse
-
-    /** @see [retrieve] */
-    fun retrieve(params: DisputeRetrieveParams): DisputeRetrieveResponse =
-        retrieve(params, RequestOptions.none())
-
-    /** @see [retrieve] */
-    fun retrieve(disputeId: String, requestOptions: RequestOptions): DisputeRetrieveResponse =
-        retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
     fun list(): DisputeListPage = list(DisputeListParams.none())
 
@@ -72,25 +50,8 @@ interface DisputeService {
          * as [DisputeService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(disputeId: String): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(disputeId, DisputeRetrieveParams.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            disputeId: String,
-            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            disputeId: String,
-            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-        ): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(disputeId, params, RequestOptions.none())
+        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<DisputeRetrieveResponse> =
+            retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -98,19 +59,6 @@ interface DisputeService {
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<DisputeRetrieveResponse>
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            disputeId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as

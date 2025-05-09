@@ -25,13 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionChangePlanParams
 private constructor(
-    private val subscriptionId: String?,
+    private val subscriptionId: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
+    fun subscriptionId(): String = subscriptionId
 
     /**
      * Unique identifier of the product to subscribe to
@@ -107,6 +107,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .subscriptionId()
          * .productId()
          * .prorationBillingMode()
          * .quantity()
@@ -131,11 +132,7 @@ private constructor(
             additionalQueryParams = subscriptionChangePlanParams.additionalQueryParams.toBuilder()
         }
 
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
-
-        /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: String) = apply { this.subscriptionId = subscriptionId }
 
         /**
          * Sets the entire request body.
@@ -333,6 +330,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .subscriptionId()
          * .productId()
          * .prorationBillingMode()
          * .quantity()
@@ -342,7 +340,7 @@ private constructor(
          */
         fun build(): SubscriptionChangePlanParams =
             SubscriptionChangePlanParams(
-                subscriptionId,
+                checkRequired("subscriptionId", subscriptionId),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -353,7 +351,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> subscriptionId ?: ""
+            0 -> subscriptionId
             else -> ""
         }
 

@@ -5,6 +5,8 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.models.discounts.DiscountCreateParams
+import com.dodopayments.api.models.discounts.DiscountDeleteParams
+import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountType
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.time.OffsetDateTime
@@ -49,7 +51,10 @@ internal class DiscountServiceAsyncTest {
                 .build()
         val discountServiceAsync = client.discounts()
 
-        val discountFuture = discountServiceAsync.retrieve("discount_id")
+        val discountFuture =
+            discountServiceAsync.retrieve(
+                DiscountRetrieveParams.builder().discountId("discount_id").build()
+            )
 
         val discount = discountFuture.get()
         discount.validate()
@@ -106,7 +111,10 @@ internal class DiscountServiceAsyncTest {
                 .build()
         val discountServiceAsync = client.discounts()
 
-        val future = discountServiceAsync.delete("discount_id")
+        val future =
+            discountServiceAsync.delete(
+                DiscountDeleteParams.builder().discountId("discount_id").build()
+            )
 
         val response = future.get()
     }
