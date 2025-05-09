@@ -3,20 +3,19 @@
 package com.dodopayments.api.models.webhookevents
 
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class WebhookEventRetrieveParams
 private constructor(
-    private val webhookEventId: String?,
+    private val webhookEventId: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun webhookEventId(): Optional<String> = Optional.ofNullable(webhookEventId)
+    fun webhookEventId(): String = webhookEventId
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -26,10 +25,13 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): WebhookEventRetrieveParams = builder().build()
-
         /**
          * Returns a mutable builder for constructing an instance of [WebhookEventRetrieveParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .webhookEventId()
+         * ```
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -48,11 +50,7 @@ private constructor(
             additionalQueryParams = webhookEventRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        fun webhookEventId(webhookEventId: String?) = apply { this.webhookEventId = webhookEventId }
-
-        /** Alias for calling [Builder.webhookEventId] with `webhookEventId.orElse(null)`. */
-        fun webhookEventId(webhookEventId: Optional<String>) =
-            webhookEventId(webhookEventId.getOrNull())
+        fun webhookEventId(webhookEventId: String) = apply { this.webhookEventId = webhookEventId }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -156,10 +154,17 @@ private constructor(
          * Returns an immutable instance of [WebhookEventRetrieveParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .webhookEventId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): WebhookEventRetrieveParams =
             WebhookEventRetrieveParams(
-                webhookEventId,
+                checkRequired("webhookEventId", webhookEventId),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -167,7 +172,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> webhookEventId ?: ""
+            0 -> webhookEventId
             else -> ""
         }
 

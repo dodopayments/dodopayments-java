@@ -3,20 +3,19 @@
 package com.dodopayments.api.models.licensekeys
 
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyRetrieveParams
 private constructor(
-    private val id: String?,
+    private val id: String,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): Optional<String> = Optional.ofNullable(id)
+    fun id(): String = id
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -26,9 +25,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): LicenseKeyRetrieveParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [LicenseKeyRetrieveParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [LicenseKeyRetrieveParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -46,10 +50,7 @@ private constructor(
             additionalQueryParams = licenseKeyRetrieveParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: String?) = apply { this.id = id }
-
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<String>) = id(id.getOrNull())
+        fun id(id: String) = apply { this.id = id }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -153,14 +154,25 @@ private constructor(
          * Returns an immutable instance of [LicenseKeyRetrieveParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): LicenseKeyRetrieveParams =
-            LicenseKeyRetrieveParams(id, additionalHeaders.build(), additionalQueryParams.build())
+            LicenseKeyRetrieveParams(
+                checkRequired("id", id),
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id ?: ""
+            0 -> id
             else -> ""
         }
 

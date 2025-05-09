@@ -26,33 +26,13 @@ interface RefundService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Refund
 
-    fun retrieve(refundId: String): Refund = retrieve(refundId, RefundRetrieveParams.none())
-
-    /** @see [retrieve] */
-    fun retrieve(
-        refundId: String,
-        params: RefundRetrieveParams = RefundRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Refund = retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
-
-    /** @see [retrieve] */
-    fun retrieve(
-        refundId: String,
-        params: RefundRetrieveParams = RefundRetrieveParams.none(),
-    ): Refund = retrieve(refundId, params, RequestOptions.none())
+    fun retrieve(params: RefundRetrieveParams): Refund = retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: RefundRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Refund
-
-    /** @see [retrieve] */
-    fun retrieve(params: RefundRetrieveParams): Refund = retrieve(params, RequestOptions.none())
-
-    /** @see [retrieve] */
-    fun retrieve(refundId: String, requestOptions: RequestOptions): Refund =
-        retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
     fun list(): RefundListPage = list(RefundListParams.none())
 
@@ -93,24 +73,8 @@ interface RefundService {
          * [RefundService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(refundId: String): HttpResponseFor<Refund> =
-            retrieve(refundId, RefundRetrieveParams.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            refundId: String,
-            params: RefundRetrieveParams = RefundRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Refund> =
-            retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            refundId: String,
-            params: RefundRetrieveParams = RefundRetrieveParams.none(),
-        ): HttpResponseFor<Refund> = retrieve(refundId, params, RequestOptions.none())
+        fun retrieve(params: RefundRetrieveParams): HttpResponseFor<Refund> =
+            retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -118,16 +82,6 @@ interface RefundService {
             params: RefundRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Refund>
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(params: RefundRetrieveParams): HttpResponseFor<Refund> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(refundId: String, requestOptions: RequestOptions): HttpResponseFor<Refund> =
-            retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /refunds`, but is otherwise the same as

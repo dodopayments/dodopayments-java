@@ -9,6 +9,9 @@ import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.products.Price
 import com.dodopayments.api.models.products.ProductCreateParams
+import com.dodopayments.api.models.products.ProductDeleteParams
+import com.dodopayments.api.models.products.ProductRetrieveParams
+import com.dodopayments.api.models.products.ProductUnarchiveParams
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import org.junit.jupiter.api.Test
@@ -67,7 +70,8 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val productFuture = productServiceAsync.retrieve("id")
+        val productFuture =
+            productServiceAsync.retrieve(ProductRetrieveParams.builder().id("id").build())
 
         val product = productFuture.get()
         product.validate()
@@ -139,7 +143,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val future = productServiceAsync.delete("id")
+        val future = productServiceAsync.delete(ProductDeleteParams.builder().id("id").build())
 
         val response = future.get()
     }
@@ -153,7 +157,8 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val future = productServiceAsync.unarchive("id")
+        val future =
+            productServiceAsync.unarchive(ProductUnarchiveParams.builder().id("id").build())
 
         val response = future.get()
     }

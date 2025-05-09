@@ -4,6 +4,7 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.disputes.DisputeRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -19,7 +20,10 @@ internal class DisputeServiceAsyncTest {
                 .build()
         val disputeServiceAsync = client.disputes()
 
-        val disputeFuture = disputeServiceAsync.retrieve("dispute_id")
+        val disputeFuture =
+            disputeServiceAsync.retrieve(
+                DisputeRetrieveParams.builder().disputeId("dispute_id").build()
+            )
 
         val dispute = disputeFuture.get()
         dispute.validate()

@@ -224,7 +224,10 @@ These methods return [`HttpResponse`](dodo-payments-java-core/src/main/kotlin/co
 import com.dodopayments.api.core.http.HttpResponse;
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams;
 
-HttpResponse payment = client.invoices().payments().retrieve("payment_id");
+PaymentRetrieveParams params = PaymentRetrieveParams.builder()
+    .paymentId("payment_id")
+    .build();
+HttpResponse payment = client.invoices().payments().retrieve(params);
 ```
 
 To save the response content to a file, use the [`Files.copy(...)`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#copy-java.io.InputStream-java.nio.file.Path-java.nio.file.CopyOption...-) method:
@@ -580,13 +583,20 @@ These properties can be accessed on the nested built object later using the `_ad
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/core/Values.kt) object to its setter:
 
 ```java
-import com.dodopayments.api.core.JsonValue;
+import com.dodopayments.api.models.misc.CountryCode;
 import com.dodopayments.api.models.payments.AttachExistingCustomer;
+import com.dodopayments.api.models.payments.BillingAddress;
 import com.dodopayments.api.models.payments.OneTimeProductCartItem;
 import com.dodopayments.api.models.payments.PaymentCreateParams;
 
 PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(JsonValue.from(42))
+    .billing(BillingAddress.builder()
+        .city("city")
+        .country(CountryCode.AF)
+        .state("state")
+        .street("street")
+        .zipcode("zipcode")
+        .build())
     .customer(AttachExistingCustomer.builder()
         .customerId("customer_id")
         .build())
