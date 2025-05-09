@@ -333,53 +333,101 @@ The SDK throws custom unchecked exception types:
 
 ## Pagination
 
-For methods that return a paginated list of results, this library provides convenient ways access the results either one page at a time, or item-by-item across all pages.
+The SDK defines methods that return a paginated lists of results. It provides convenient ways to access the results either one page at a time or item-by-item across all pages.
 
 ### Auto-pagination
 
-To iterate through all results across all pages, you can use `autoPager`, which automatically handles fetching more pages for you:
+To iterate through all results across all pages, use the `autoPager()` method, which automatically fetches more pages as needed.
 
-### Synchronous
+When using the synchronous client, the method returns an [`Iterable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html)
 
 ```java
 import com.dodopayments.api.models.payments.PaymentListPage;
 import com.dodopayments.api.models.payments.PaymentListResponse;
 
-// As an Iterable:
-PaymentListPage page = client.payments().list(params);
+PaymentListPage page = client.payments().list();
+
+// Process as an Iterable
 for (PaymentListResponse payment : page.autoPager()) {
     System.out.println(payment);
-};
+}
 
-// As a Stream:
-client.payments().list(params).autoPager().stream()
+// Process as a Stream
+page.autoPager()
+    .stream()
     .limit(50)
     .forEach(payment -> System.out.println(payment));
 ```
 
-### Asynchronous
+When using the asynchronous client, the method returns an [`AsyncStreamResponse`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/core/http/AsyncStreamResponse.kt):
 
 ```java
-// Using forEach, which returns CompletableFuture<Void>:
-asyncClient.payments().list(params).autoPager()
-    .forEach(payment -> System.out.println(payment), executor);
+import com.dodopayments.api.core.http.AsyncStreamResponse;
+import com.dodopayments.api.models.payments.PaymentListPageAsync;
+import com.dodopayments.api.models.payments.PaymentListResponse;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+CompletableFuture<PaymentListPageAsync> pageFuture = client.async().payments().list();
+
+pageFuture.thenRun(page -> page.autoPager().subscribe(payment -> {
+    System.out.println(payment);
+}));
+
+// If you need to handle errors or completion of the stream
+pageFuture.thenRun(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
+    @Override
+    public void onNext(PaymentListResponse payment) {
+        System.out.println(payment);
+    }
+
+    @Override
+    public void onComplete(Optional<Throwable> error) {
+        if (error.isPresent()) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error.get());
+        } else {
+            System.out.println("No more!");
+        }
+    }
+}));
+
+// Or use futures
+pageFuture.thenRun(page -> page.autoPager()
+    .subscribe(payment -> {
+        System.out.println(payment);
+    })
+    .onCompleteFuture()
+    .whenComplete((unused, error) -> {
+        if (error != null) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error);
+        } else {
+            System.out.println("No more!");
+        }
+    }));
 ```
 
 ### Manual pagination
 
-If none of the above helpers meet your needs, you can also manually request pages one-by-one. A page of results has a `data()` method to fetch the list of objects, as well as top-level `response` and other methods to fetch top-level data about the page. It also has methods `hasNextPage`, `getNextPage`, and `getNextPageParams` methods to help with pagination.
+To access individual page items and manually request the next page, use the `items()`,
+`hasNextPage()`, and `nextPage()` methods:
 
 ```java
 import com.dodopayments.api.models.payments.PaymentListPage;
 import com.dodopayments.api.models.payments.PaymentListResponse;
 
-PaymentListPage page = client.payments().list(params);
-while (page != null) {
+PaymentListPage page = client.payments().list();
+while (true) {
     for (PaymentListResponse payment : page.items()) {
         System.out.println(payment);
     }
 
-    page = page.getNextPage().orElse(null);
+    if (!page.hasNextPage()) {
+        break;
+    }
+
+    page = page.nextPage();
 }
 ```
 
@@ -445,11 +493,6 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
 PaymentCreateResponse payment = client.payments().create(
@@ -730,11 +773,6 @@ PaymentCreateResponse payment = client.payments().create(params).validate();
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
 PaymentCreateResponse payment = client.payments().create(

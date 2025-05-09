@@ -2,12 +2,11 @@
 
 package com.dodopayments.api.models.disputes
 
+import com.dodopayments.api.core.AutoPager
+import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.blocking.DisputeService
 import java.util.Objects
-import java.util.Optional
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -17,30 +16,26 @@ private constructor(
     private val service: DisputeService,
     private val params: DisputeListParams,
     private val response: DisputeListPageResponse,
-) {
+) : Page<DisputeListResponse> {
 
     /**
      * Delegates to [DisputeListPageResponse], but gracefully handles missing data.
      *
      * @see [DisputeListPageResponse.items]
      */
-    fun items(): List<DisputeListResponse> =
+    override fun items(): List<DisputeListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun hasNextPage(): Boolean = items().isNotEmpty()
+    override fun hasNextPage(): Boolean = items().isNotEmpty()
 
-    fun getNextPageParams(): Optional<DisputeListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
-
+    fun nextPageParams(): DisputeListParams {
         val pageNumber = params.pageNumber().getOrDefault(1)
-        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
+        return params.toBuilder().pageNumber(pageNumber + 1).build()
     }
 
-    fun getNextPage(): Optional<DisputeListPage> = getNextPageParams().map { service.list(it) }
+    override fun nextPage(): DisputeListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPager<DisputeListResponse> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): DisputeListParams = params
@@ -107,25 +102,6 @@ private constructor(
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: DisputeListPage) : Iterable<DisputeListResponse> {
-
-        override fun iterator(): Iterator<DisputeListResponse> = iterator {
-            var page = firstPage
-            var index = 0
-            while (true) {
-                while (index < page.items().size) {
-                    yield(page.items()[index++])
-                }
-                page = page.getNextPage().getOrNull() ?: break
-                index = 0
-            }
-        }
-
-        fun stream(): Stream<DisputeListResponse> {
-            return StreamSupport.stream(spliterator(), false)
-        }
     }
 
     override fun equals(other: Any?): Boolean {
