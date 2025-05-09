@@ -29,14 +29,36 @@ interface PaymentServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PaymentCreateResponse>
 
-    fun retrieve(params: PaymentRetrieveParams): CompletableFuture<Payment> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(paymentId: String): CompletableFuture<Payment> =
+        retrieve(paymentId, PaymentRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        paymentId: String,
+        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Payment> =
+        retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        paymentId: String,
+        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+    ): CompletableFuture<Payment> = retrieve(paymentId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: PaymentRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Payment>
+
+    /** @see [retrieve] */
+    fun retrieve(params: PaymentRetrieveParams): CompletableFuture<Payment> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(paymentId: String, requestOptions: RequestOptions): CompletableFuture<Payment> =
+        retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
 
     fun list(): CompletableFuture<PaymentListPageAsync> = list(PaymentListParams.none())
 
@@ -82,8 +104,25 @@ interface PaymentServiceAsync {
          * as [PaymentServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponseFor<Payment>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(paymentId: String): CompletableFuture<HttpResponseFor<Payment>> =
+            retrieve(paymentId, PaymentRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            paymentId: String,
+            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Payment>> =
+            retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            paymentId: String,
+            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<Payment>> =
+            retrieve(paymentId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -91,6 +130,19 @@ interface PaymentServiceAsync {
             params: PaymentRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Payment>>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponseFor<Payment>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            paymentId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Payment>> =
+            retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /payments`, but is otherwise the same as

@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async.customers
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -18,6 +19,7 @@ import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.customers.CustomerPortalSession
 import com.dodopayments.api.models.customers.customerportal.CustomerPortalCreateParams
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 class CustomerPortalServiceAsyncImpl
 internal constructor(private val clientOptions: ClientOptions) : CustomerPortalServiceAsync {
@@ -48,6 +50,9 @@ internal constructor(private val clientOptions: ClientOptions) : CustomerPortalS
             params: CustomerPortalCreateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("customerId", params.customerId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

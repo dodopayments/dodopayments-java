@@ -4,7 +4,6 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
-import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
 import java.time.OffsetDateTime
 import org.junit.jupiter.api.Test
@@ -22,10 +21,7 @@ internal class LicenseKeyServiceAsyncTest {
                 .build()
         val licenseKeyServiceAsync = client.licenseKeys()
 
-        val licenseKeyFuture =
-            licenseKeyServiceAsync.retrieve(
-                LicenseKeyRetrieveParams.builder().id("lic_123").build()
-            )
+        val licenseKeyFuture = licenseKeyServiceAsync.retrieve("lic_123")
 
         val licenseKey = licenseKeyFuture.get()
         licenseKey.validate()

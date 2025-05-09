@@ -5,6 +5,7 @@ package com.dodopayments.api.services.blocking
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -21,6 +22,7 @@ import com.dodopayments.api.models.refunds.RefundListPage
 import com.dodopayments.api.models.refunds.RefundListPageResponse
 import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.models.refunds.RefundRetrieveParams
+import kotlin.jvm.optionals.getOrNull
 
 class RefundServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     RefundService {
@@ -82,6 +84,9 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
             params: RefundRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<Refund> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("refundId", params.refundId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
