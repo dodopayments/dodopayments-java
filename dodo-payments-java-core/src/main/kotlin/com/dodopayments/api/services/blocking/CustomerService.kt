@@ -30,7 +30,20 @@ interface CustomerService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Customer
 
-    fun retrieve(params: CustomerRetrieveParams): Customer = retrieve(params, RequestOptions.none())
+    fun retrieve(customerId: String): Customer = retrieve(customerId, CustomerRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        customerId: String,
+        params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Customer = retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        customerId: String,
+        params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+    ): Customer = retrieve(customerId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -38,13 +51,40 @@ interface CustomerService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Customer
 
-    fun update(params: CustomerUpdateParams): Customer = update(params, RequestOptions.none())
+    /** @see [retrieve] */
+    fun retrieve(params: CustomerRetrieveParams): Customer = retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(customerId: String, requestOptions: RequestOptions): Customer =
+        retrieve(customerId, CustomerRetrieveParams.none(), requestOptions)
+
+    fun update(customerId: String): Customer = update(customerId, CustomerUpdateParams.none())
+
+    /** @see [update] */
+    fun update(
+        customerId: String,
+        params: CustomerUpdateParams = CustomerUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Customer = update(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see [update] */
+    fun update(
+        customerId: String,
+        params: CustomerUpdateParams = CustomerUpdateParams.none(),
+    ): Customer = update(customerId, params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: CustomerUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Customer
+
+    /** @see [update] */
+    fun update(params: CustomerUpdateParams): Customer = update(params, RequestOptions.none())
+
+    /** @see [update] */
+    fun update(customerId: String, requestOptions: RequestOptions): Customer =
+        update(customerId, CustomerUpdateParams.none(), requestOptions)
 
     fun list(): CustomerListPage = list(CustomerListParams.none())
 
@@ -87,8 +127,24 @@ interface CustomerService {
          * as [CustomerService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: CustomerRetrieveParams): HttpResponseFor<Customer> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(customerId: String): HttpResponseFor<Customer> =
+            retrieve(customerId, CustomerRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Customer> =
+            retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+        ): HttpResponseFor<Customer> = retrieve(customerId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -97,13 +153,42 @@ interface CustomerService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Customer>
 
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: CustomerRetrieveParams): HttpResponseFor<Customer> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Customer> =
+            retrieve(customerId, CustomerRetrieveParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `patch /customers/{customer_id}`, but is otherwise the
          * same as [CustomerService.update].
          */
         @MustBeClosed
-        fun update(params: CustomerUpdateParams): HttpResponseFor<Customer> =
-            update(params, RequestOptions.none())
+        fun update(customerId: String): HttpResponseFor<Customer> =
+            update(customerId, CustomerUpdateParams.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            customerId: String,
+            params: CustomerUpdateParams = CustomerUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Customer> =
+            update(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            customerId: String,
+            params: CustomerUpdateParams = CustomerUpdateParams.none(),
+        ): HttpResponseFor<Customer> = update(customerId, params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
@@ -111,6 +196,16 @@ interface CustomerService {
             params: CustomerUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Customer>
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(params: CustomerUpdateParams): HttpResponseFor<Customer> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(customerId: String, requestOptions: RequestOptions): HttpResponseFor<Customer> =
+            update(customerId, CustomerUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /customers`, but is otherwise the same as

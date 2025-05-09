@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -22,6 +23,7 @@ import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPar
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyInstanceServiceAsyncImpl
 internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInstanceServiceAsync {
@@ -65,6 +67,9 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             params: LicenseKeyInstanceRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -94,6 +99,9 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             params: LicenseKeyInstanceUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)

@@ -18,8 +18,21 @@ interface LicenseKeyInstanceService {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: LicenseKeyInstanceRetrieveParams): LicenseKeyInstance =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(id: String): LicenseKeyInstance =
+        retrieve(id, LicenseKeyInstanceRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        id: String,
+        params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): LicenseKeyInstance = retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        id: String,
+        params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
+    ): LicenseKeyInstance = retrieve(id, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -27,6 +40,25 @@ interface LicenseKeyInstanceService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstance
 
+    /** @see [retrieve] */
+    fun retrieve(params: LicenseKeyInstanceRetrieveParams): LicenseKeyInstance =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(id: String, requestOptions: RequestOptions): LicenseKeyInstance =
+        retrieve(id, LicenseKeyInstanceRetrieveParams.none(), requestOptions)
+
+    fun update(id: String, params: LicenseKeyInstanceUpdateParams): LicenseKeyInstance =
+        update(id, params, RequestOptions.none())
+
+    /** @see [update] */
+    fun update(
+        id: String,
+        params: LicenseKeyInstanceUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): LicenseKeyInstance = update(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [update] */
     fun update(params: LicenseKeyInstanceUpdateParams): LicenseKeyInstance =
         update(params, RequestOptions.none())
 
@@ -64,9 +96,24 @@ interface LicenseKeyInstanceService {
          * same as [LicenseKeyInstanceService.retrieve].
          */
         @MustBeClosed
+        fun retrieve(id: String): HttpResponseFor<LicenseKeyInstance> =
+            retrieve(id, LicenseKeyInstanceRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
         fun retrieve(
-            params: LicenseKeyInstanceRetrieveParams
-        ): HttpResponseFor<LicenseKeyInstance> = retrieve(params, RequestOptions.none())
+            id: String,
+            params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<LicenseKeyInstance> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
+        ): HttpResponseFor<LicenseKeyInstance> = retrieve(id, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -75,10 +122,40 @@ interface LicenseKeyInstanceService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<LicenseKeyInstance>
 
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            params: LicenseKeyInstanceRetrieveParams
+        ): HttpResponseFor<LicenseKeyInstance> = retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<LicenseKeyInstance> =
+            retrieve(id, LicenseKeyInstanceRetrieveParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `patch /license_key_instances/{id}`, but is otherwise the
          * same as [LicenseKeyInstanceService.update].
          */
+        @MustBeClosed
+        fun update(
+            id: String,
+            params: LicenseKeyInstanceUpdateParams,
+        ): HttpResponseFor<LicenseKeyInstance> = update(id, params, RequestOptions.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            id: String,
+            params: LicenseKeyInstanceUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<LicenseKeyInstance> =
+            update(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [update] */
         @MustBeClosed
         fun update(params: LicenseKeyInstanceUpdateParams): HttpResponseFor<LicenseKeyInstance> =
             update(params, RequestOptions.none())

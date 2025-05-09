@@ -16,14 +16,39 @@ interface CustomerPortalServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun create(params: CustomerPortalCreateParams): CompletableFuture<CustomerPortalSession> =
-        create(params, RequestOptions.none())
+    fun create(customerId: String): CompletableFuture<CustomerPortalSession> =
+        create(customerId, CustomerPortalCreateParams.none())
+
+    /** @see [create] */
+    fun create(
+        customerId: String,
+        params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerPortalSession> =
+        create(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see [create] */
+    fun create(
+        customerId: String,
+        params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
+    ): CompletableFuture<CustomerPortalSession> = create(customerId, params, RequestOptions.none())
 
     /** @see [create] */
     fun create(
         params: CustomerPortalCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CustomerPortalSession>
+
+    /** @see [create] */
+    fun create(params: CustomerPortalCreateParams): CompletableFuture<CustomerPortalSession> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
+    fun create(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerPortalSession> =
+        create(customerId, CustomerPortalCreateParams.none(), requestOptions)
 
     /**
      * A view of [CustomerPortalServiceAsync] that provides access to raw HTTP responses for each
@@ -36,6 +61,35 @@ interface CustomerPortalServiceAsync {
          * but is otherwise the same as [CustomerPortalServiceAsync.create].
          */
         @MustBeClosed
+        fun create(customerId: String): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
+            create(customerId, CustomerPortalCreateParams.none())
+
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            customerId: String,
+            params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
+            create(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            customerId: String,
+            params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
+            create(customerId, params, RequestOptions.none())
+
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            params: CustomerPortalCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>>
+
+        /** @see [create] */
+        @MustBeClosed
         fun create(
             params: CustomerPortalCreateParams
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
@@ -44,8 +98,9 @@ interface CustomerPortalServiceAsync {
         /** @see [create] */
         @MustBeClosed
         fun create(
-            params: CustomerPortalCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>>
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
+            create(customerId, CustomerPortalCreateParams.none(), requestOptions)
     }
 }
