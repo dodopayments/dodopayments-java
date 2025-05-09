@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.subscriptions
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,6 +17,12 @@ internal class SubscriptionChangePlanParamsTest {
                 SubscriptionChangePlanParams.ProrationBillingMode.PRORATED_IMMEDIATELY
             )
             .quantity(0L)
+            .addAddon(
+                SubscriptionChangePlanParams.Addon.builder()
+                    .addonId("addon_id")
+                    .quantity(0L)
+                    .build()
+            )
             .build()
     }
 
@@ -38,6 +45,39 @@ internal class SubscriptionChangePlanParamsTest {
 
     @Test
     fun body() {
+        val params =
+            SubscriptionChangePlanParams.builder()
+                .subscriptionId("subscription_id")
+                .productId("product_id")
+                .prorationBillingMode(
+                    SubscriptionChangePlanParams.ProrationBillingMode.PRORATED_IMMEDIATELY
+                )
+                .quantity(0L)
+                .addAddon(
+                    SubscriptionChangePlanParams.Addon.builder()
+                        .addonId("addon_id")
+                        .quantity(0L)
+                        .build()
+                )
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.productId()).isEqualTo("product_id")
+        assertThat(body.prorationBillingMode())
+            .isEqualTo(SubscriptionChangePlanParams.ProrationBillingMode.PRORATED_IMMEDIATELY)
+        assertThat(body.quantity()).isEqualTo(0L)
+        assertThat(body.addons().getOrNull())
+            .containsExactly(
+                SubscriptionChangePlanParams.Addon.builder()
+                    .addonId("addon_id")
+                    .quantity(0L)
+                    .build()
+            )
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
         val params =
             SubscriptionChangePlanParams.builder()
                 .subscriptionId("subscription_id")

@@ -4,10 +4,10 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
-import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeListPageAsync
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
+import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
@@ -18,14 +18,14 @@ interface DisputeServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: DisputeRetrieveParams): CompletableFuture<Dispute> =
+    fun retrieve(params: DisputeRetrieveParams): CompletableFuture<DisputeRetrieveResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Dispute>
+    ): CompletableFuture<DisputeRetrieveResponse>
 
     fun list(): CompletableFuture<DisputeListPageAsync> = list(DisputeListParams.none())
 
@@ -54,7 +54,9 @@ interface DisputeServiceAsync {
          * as [DisputeServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: DisputeRetrieveParams): CompletableFuture<HttpResponseFor<Dispute>> =
+        fun retrieve(
+            params: DisputeRetrieveParams
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
@@ -62,7 +64,7 @@ interface DisputeServiceAsync {
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Dispute>>
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>>
 
         /**
          * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as

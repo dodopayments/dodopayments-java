@@ -4,10 +4,10 @@ package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
-import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeListPage
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
+import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
 import com.google.errorprone.annotations.MustBeClosed
 
 interface DisputeService {
@@ -17,13 +17,14 @@ interface DisputeService {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: DisputeRetrieveParams): Dispute = retrieve(params, RequestOptions.none())
+    fun retrieve(params: DisputeRetrieveParams): DisputeRetrieveResponse =
+        retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): Dispute
+    ): DisputeRetrieveResponse
 
     fun list(): DisputeListPage = list(DisputeListParams.none())
 
@@ -49,7 +50,7 @@ interface DisputeService {
          * as [DisputeService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<Dispute> =
+        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<DisputeRetrieveResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
@@ -57,7 +58,7 @@ interface DisputeService {
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Dispute>
+        ): HttpResponseFor<DisputeRetrieveResponse>
 
         /**
          * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as

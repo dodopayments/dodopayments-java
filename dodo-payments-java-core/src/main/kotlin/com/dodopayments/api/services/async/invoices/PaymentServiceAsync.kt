@@ -15,14 +15,16 @@ interface PaymentServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: PaymentRetrieveParams): CompletableFuture<Void?> =
+    @MustBeClosed
+    fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
+    @MustBeClosed
     fun retrieve(
         params: PaymentRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    ): CompletableFuture<HttpResponse>
 
     /**
      * A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method.
