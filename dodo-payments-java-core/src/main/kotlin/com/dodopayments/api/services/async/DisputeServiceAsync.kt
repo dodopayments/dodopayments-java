@@ -18,14 +18,40 @@ interface DisputeServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: DisputeRetrieveParams): CompletableFuture<DisputeRetrieveResponse> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(disputeId: String): CompletableFuture<DisputeRetrieveResponse> =
+        retrieve(disputeId, DisputeRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        disputeId: String,
+        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<DisputeRetrieveResponse> =
+        retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        disputeId: String,
+        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
+    ): CompletableFuture<DisputeRetrieveResponse> =
+        retrieve(disputeId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<DisputeRetrieveResponse>
+
+    /** @see [retrieve] */
+    fun retrieve(params: DisputeRetrieveParams): CompletableFuture<DisputeRetrieveResponse> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        disputeId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<DisputeRetrieveResponse> =
+        retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
     fun list(): CompletableFuture<DisputeListPageAsync> = list(DisputeListParams.none())
 
@@ -55,9 +81,26 @@ interface DisputeServiceAsync {
          */
         @MustBeClosed
         fun retrieve(
-            params: DisputeRetrieveParams
+            disputeId: String
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
+            retrieve(disputeId, DisputeRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            disputeId: String,
+            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
+            retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            disputeId: String,
+            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
+            retrieve(disputeId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -65,6 +108,21 @@ interface DisputeServiceAsync {
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            params: DisputeRetrieveParams
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            disputeId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
+            retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as

@@ -31,8 +31,22 @@ interface AddonServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddonResponse>
 
-    fun retrieve(params: AddonRetrieveParams): CompletableFuture<AddonResponse> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(id: String): CompletableFuture<AddonResponse> =
+        retrieve(id, AddonRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        id: String,
+        params: AddonRetrieveParams = AddonRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AddonResponse> =
+        retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        id: String,
+        params: AddonRetrieveParams = AddonRetrieveParams.none(),
+    ): CompletableFuture<AddonResponse> = retrieve(id, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -40,14 +54,42 @@ interface AddonServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddonResponse>
 
-    fun update(params: AddonUpdateParams): CompletableFuture<AddonResponse> =
-        update(params, RequestOptions.none())
+    /** @see [retrieve] */
+    fun retrieve(params: AddonRetrieveParams): CompletableFuture<AddonResponse> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<AddonResponse> =
+        retrieve(id, AddonRetrieveParams.none(), requestOptions)
+
+    fun update(id: String): CompletableFuture<AddonResponse> = update(id, AddonUpdateParams.none())
+
+    /** @see [update] */
+    fun update(
+        id: String,
+        params: AddonUpdateParams = AddonUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AddonResponse> = update(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [update] */
+    fun update(
+        id: String,
+        params: AddonUpdateParams = AddonUpdateParams.none(),
+    ): CompletableFuture<AddonResponse> = update(id, params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: AddonUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddonResponse>
+
+    /** @see [update] */
+    fun update(params: AddonUpdateParams): CompletableFuture<AddonResponse> =
+        update(params, RequestOptions.none())
+
+    /** @see [update] */
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<AddonResponse> =
+        update(id, AddonUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<AddonListPageAsync> = list(AddonListParams.none())
 
@@ -66,15 +108,41 @@ interface AddonServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<AddonListPageAsync> =
         list(AddonListParams.none(), requestOptions)
 
+    fun updateImages(id: String): CompletableFuture<AddonUpdateImagesResponse> =
+        updateImages(id, AddonUpdateImagesParams.none())
+
+    /** @see [updateImages] */
     fun updateImages(
-        params: AddonUpdateImagesParams
-    ): CompletableFuture<AddonUpdateImagesResponse> = updateImages(params, RequestOptions.none())
+        id: String,
+        params: AddonUpdateImagesParams = AddonUpdateImagesParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AddonUpdateImagesResponse> =
+        updateImages(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [updateImages] */
+    fun updateImages(
+        id: String,
+        params: AddonUpdateImagesParams = AddonUpdateImagesParams.none(),
+    ): CompletableFuture<AddonUpdateImagesResponse> =
+        updateImages(id, params, RequestOptions.none())
 
     /** @see [updateImages] */
     fun updateImages(
         params: AddonUpdateImagesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddonUpdateImagesResponse>
+
+    /** @see [updateImages] */
+    fun updateImages(
+        params: AddonUpdateImagesParams
+    ): CompletableFuture<AddonUpdateImagesResponse> = updateImages(params, RequestOptions.none())
+
+    /** @see [updateImages] */
+    fun updateImages(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<AddonUpdateImagesResponse> =
+        updateImages(id, AddonUpdateImagesParams.none(), requestOptions)
 
     /** A view of [AddonServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -99,10 +167,25 @@ interface AddonServiceAsync {
          * [AddonServiceAsync.retrieve].
          */
         @MustBeClosed
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            retrieve(id, AddonRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
         fun retrieve(
-            params: AddonRetrieveParams
+            id: String,
+            params: AddonRetrieveParams = AddonRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddonResponse>> =
-            retrieve(params, RequestOptions.none())
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: AddonRetrieveParams = AddonRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            retrieve(id, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -111,13 +194,45 @@ interface AddonServiceAsync {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddonResponse>>
 
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            params: AddonRetrieveParams
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            retrieve(id, AddonRetrieveParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `patch /addons/{id}`, but is otherwise the same as
          * [AddonServiceAsync.update].
          */
         @MustBeClosed
-        fun update(params: AddonUpdateParams): CompletableFuture<HttpResponseFor<AddonResponse>> =
-            update(params, RequestOptions.none())
+        fun update(id: String): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            update(id, AddonUpdateParams.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            id: String,
+            params: AddonUpdateParams = AddonUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            update(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            id: String,
+            params: AddonUpdateParams = AddonUpdateParams.none(),
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            update(id, params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
@@ -125,6 +240,19 @@ interface AddonServiceAsync {
             params: AddonUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddonResponse>>
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(params: AddonUpdateParams): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddonResponse>> =
+            update(id, AddonUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /addons`, but is otherwise the same as
@@ -161,9 +289,26 @@ interface AddonServiceAsync {
          */
         @MustBeClosed
         fun updateImages(
-            params: AddonUpdateImagesParams
+            id: String
         ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>> =
-            updateImages(params, RequestOptions.none())
+            updateImages(id, AddonUpdateImagesParams.none())
+
+        /** @see [updateImages] */
+        @MustBeClosed
+        fun updateImages(
+            id: String,
+            params: AddonUpdateImagesParams = AddonUpdateImagesParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>> =
+            updateImages(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [updateImages] */
+        @MustBeClosed
+        fun updateImages(
+            id: String,
+            params: AddonUpdateImagesParams = AddonUpdateImagesParams.none(),
+        ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>> =
+            updateImages(id, params, RequestOptions.none())
 
         /** @see [updateImages] */
         @MustBeClosed
@@ -171,5 +316,20 @@ interface AddonServiceAsync {
             params: AddonUpdateImagesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>>
+
+        /** @see [updateImages] */
+        @MustBeClosed
+        fun updateImages(
+            params: AddonUpdateImagesParams
+        ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>> =
+            updateImages(params, RequestOptions.none())
+
+        /** @see [updateImages] */
+        @MustBeClosed
+        fun updateImages(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddonUpdateImagesResponse>> =
+            updateImages(id, AddonUpdateImagesParams.none(), requestOptions)
     }
 }

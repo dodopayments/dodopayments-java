@@ -32,8 +32,22 @@ interface CustomerServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Customer>
 
-    fun retrieve(params: CustomerRetrieveParams): CompletableFuture<Customer> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(customerId: String): CompletableFuture<Customer> =
+        retrieve(customerId, CustomerRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        customerId: String,
+        params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Customer> =
+        retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        customerId: String,
+        params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+    ): CompletableFuture<Customer> = retrieve(customerId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -41,14 +55,44 @@ interface CustomerServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Customer>
 
-    fun update(params: CustomerUpdateParams): CompletableFuture<Customer> =
-        update(params, RequestOptions.none())
+    /** @see [retrieve] */
+    fun retrieve(params: CustomerRetrieveParams): CompletableFuture<Customer> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(customerId: String, requestOptions: RequestOptions): CompletableFuture<Customer> =
+        retrieve(customerId, CustomerRetrieveParams.none(), requestOptions)
+
+    fun update(customerId: String): CompletableFuture<Customer> =
+        update(customerId, CustomerUpdateParams.none())
+
+    /** @see [update] */
+    fun update(
+        customerId: String,
+        params: CustomerUpdateParams = CustomerUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Customer> =
+        update(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see [update] */
+    fun update(
+        customerId: String,
+        params: CustomerUpdateParams = CustomerUpdateParams.none(),
+    ): CompletableFuture<Customer> = update(customerId, params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: CustomerUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Customer>
+
+    /** @see [update] */
+    fun update(params: CustomerUpdateParams): CompletableFuture<Customer> =
+        update(params, RequestOptions.none())
+
+    /** @see [update] */
+    fun update(customerId: String, requestOptions: RequestOptions): CompletableFuture<Customer> =
+        update(customerId, CustomerUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<CustomerListPageAsync> = list(CustomerListParams.none())
 
@@ -94,8 +138,25 @@ interface CustomerServiceAsync {
          * as [CustomerServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: CustomerRetrieveParams): CompletableFuture<HttpResponseFor<Customer>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
+            retrieve(customerId, CustomerRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            retrieve(customerId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -104,13 +165,43 @@ interface CustomerServiceAsync {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
 
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: CustomerRetrieveParams): CompletableFuture<HttpResponseFor<Customer>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            retrieve(customerId, CustomerRetrieveParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `patch /customers/{customer_id}`, but is otherwise the
          * same as [CustomerServiceAsync.update].
          */
         @MustBeClosed
-        fun update(params: CustomerUpdateParams): CompletableFuture<HttpResponseFor<Customer>> =
-            update(params, RequestOptions.none())
+        fun update(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
+            update(customerId, CustomerUpdateParams.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            customerId: String,
+            params: CustomerUpdateParams = CustomerUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            update(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            customerId: String,
+            params: CustomerUpdateParams = CustomerUpdateParams.none(),
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            update(customerId, params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
@@ -118,6 +209,19 @@ interface CustomerServiceAsync {
             params: CustomerUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(params: CustomerUpdateParams): CompletableFuture<HttpResponseFor<Customer>> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Customer>> =
+            update(customerId, CustomerUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /customers`, but is otherwise the same as
