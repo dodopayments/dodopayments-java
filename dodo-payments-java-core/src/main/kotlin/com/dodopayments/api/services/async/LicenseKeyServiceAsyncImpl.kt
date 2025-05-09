@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -22,6 +23,7 @@ import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
 import java.util.concurrent.CompletableFuture
+import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     LicenseKeyServiceAsync {
@@ -65,6 +67,9 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             params: LicenseKeyRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LicenseKey>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -94,6 +99,9 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             params: LicenseKeyUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<LicenseKey>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
