@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.22.0 (2025-05-09)
+
+Full Changelog: [v1.21.0...v1.22.0](https://github.com/dodopayments/dodopayments-java/compare/v1.21.0...v1.22.0)
+
+### Features
+
+* **client:** allow providing some params positionally ([9160e5e](https://github.com/dodopayments/dodopayments-java/commit/9160e5e268d164c098a0e425da98b8a1f7046415))
+
 ## 1.21.0 (2025-05-09)
 
 Full Changelog: [v1.20.0...v1.21.0](https://github.com/dodopayments/dodopayments-java/compare/v1.20.0...v1.21.0)
