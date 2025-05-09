@@ -17,7 +17,7 @@ internal class AddonUpdateParamsTest {
             .description("description")
             .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
             .name("name")
-            .price(0L)
+            .price(0)
             .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
             .build()
     }
@@ -40,7 +40,7 @@ internal class AddonUpdateParamsTest {
                 .description("description")
                 .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                 .name("name")
-                .price(0L)
+                .price(0)
                 .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                 .build()
 
@@ -50,7 +50,7 @@ internal class AddonUpdateParamsTest {
         assertThat(body.description()).contains("description")
         assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
         assertThat(body.name()).contains("name")
-        assertThat(body.price()).contains(0L)
+        assertThat(body.price()).contains(0)
         assertThat(body.taxCategory()).contains(TaxCategory.DIGITAL_PRODUCTS)
     }
 

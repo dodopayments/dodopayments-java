@@ -12,13 +12,13 @@ internal class DiscountCreateParamsTest {
     @Test
     fun create() {
         DiscountCreateParams.builder()
-            .amount(0L)
+            .amount(0)
             .type(DiscountType.PERCENTAGE)
             .code("code")
             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .name("name")
             .addRestrictedTo("string")
-            .usageLimit(0L)
+            .usageLimit(0)
             .build()
     }
 
@@ -26,33 +26,33 @@ internal class DiscountCreateParamsTest {
     fun body() {
         val params =
             DiscountCreateParams.builder()
-                .amount(0L)
+                .amount(0)
                 .type(DiscountType.PERCENTAGE)
                 .code("code")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .name("name")
                 .addRestrictedTo("string")
-                .usageLimit(0L)
+                .usageLimit(0)
                 .build()
 
         val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(0L)
+        assertThat(body.amount()).isEqualTo(0)
         assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
         assertThat(body.code()).contains("code")
         assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.name()).contains("name")
         assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
-        assertThat(body.usageLimit()).contains(0L)
+        assertThat(body.usageLimit()).contains(0)
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = DiscountCreateParams.builder().amount(0L).type(DiscountType.PERCENTAGE).build()
+        val params = DiscountCreateParams.builder().amount(0).type(DiscountType.PERCENTAGE).build()
 
         val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(0L)
+        assertThat(body.amount()).isEqualTo(0)
         assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
     }
 }
