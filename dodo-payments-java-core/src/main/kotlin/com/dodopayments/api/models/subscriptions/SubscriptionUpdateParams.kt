@@ -25,13 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionUpdateParams
 private constructor(
-    private val subscriptionId: String?,
+    private val subscriptionId: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
+    fun subscriptionId(): String = subscriptionId
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -108,9 +108,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SubscriptionUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [SubscriptionUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [SubscriptionUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .subscriptionId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -130,11 +135,7 @@ private constructor(
             additionalQueryParams = subscriptionUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
-
-        /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: String) = apply { this.subscriptionId = subscriptionId }
 
         /**
          * Sets the entire request body.
@@ -345,10 +346,17 @@ private constructor(
          * Returns an immutable instance of [SubscriptionUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .subscriptionId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): SubscriptionUpdateParams =
             SubscriptionUpdateParams(
-                subscriptionId,
+                checkRequired("subscriptionId", subscriptionId),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -359,7 +367,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> subscriptionId ?: ""
+            0 -> subscriptionId
             else -> ""
         }
 

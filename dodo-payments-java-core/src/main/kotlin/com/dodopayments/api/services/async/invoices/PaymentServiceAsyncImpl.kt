@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async.invoices
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.http.HttpMethod
 import com.dodopayments.api.core.http.HttpRequest
@@ -14,7 +13,6 @@ import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
 import java.util.concurrent.CompletableFuture
-import kotlin.jvm.optionals.getOrNull
 
 class PaymentServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     PaymentServiceAsync {
@@ -41,9 +39,6 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: PaymentRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("paymentId", params.paymentId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

@@ -5,7 +5,6 @@ package com.dodopayments.api.services.blocking
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -20,7 +19,6 @@ import com.dodopayments.api.models.webhookevents.WebhookEventListPage
 import com.dodopayments.api.models.webhookevents.WebhookEventListPageResponse
 import com.dodopayments.api.models.webhookevents.WebhookEventListParams
 import com.dodopayments.api.models.webhookevents.WebhookEventRetrieveParams
-import kotlin.jvm.optionals.getOrNull
 
 class WebhookEventServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     WebhookEventService {
@@ -57,9 +55,6 @@ class WebhookEventServiceImpl internal constructor(private val clientOptions: Cl
             params: WebhookEventRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<WebhookEvent> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("webhookEventId", params.webhookEventId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

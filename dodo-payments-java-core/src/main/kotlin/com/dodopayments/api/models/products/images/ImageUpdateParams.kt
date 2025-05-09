@@ -4,6 +4,7 @@ package com.dodopayments.api.models.products.images
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
@@ -13,14 +14,14 @@ import kotlin.jvm.optionals.getOrNull
 
 class ImageUpdateParams
 private constructor(
-    private val id: String?,
+    private val id: String,
     private val forceUpdate: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun id(): Optional<String> = Optional.ofNullable(id)
+    fun id(): String = id
 
     fun forceUpdate(): Optional<Boolean> = Optional.ofNullable(forceUpdate)
 
@@ -34,9 +35,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ImageUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [ImageUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [ImageUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -58,10 +64,7 @@ private constructor(
             additionalBodyProperties = imageUpdateParams.additionalBodyProperties.toMutableMap()
         }
 
-        fun id(id: String?) = apply { this.id = id }
-
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<String>) = id(id.getOrNull())
+        fun id(id: String) = apply { this.id = id }
 
         fun forceUpdate(forceUpdate: Boolean?) = apply { this.forceUpdate = forceUpdate }
 
@@ -199,10 +202,17 @@ private constructor(
          * Returns an immutable instance of [ImageUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ImageUpdateParams =
             ImageUpdateParams(
-                id,
+                checkRequired("id", id),
                 forceUpdate,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -215,7 +225,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id ?: ""
+            0 -> id
             else -> ""
         }
 

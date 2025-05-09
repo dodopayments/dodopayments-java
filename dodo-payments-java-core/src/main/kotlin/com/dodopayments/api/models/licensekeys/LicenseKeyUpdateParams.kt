@@ -7,6 +7,7 @@ import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
@@ -22,13 +23,13 @@ import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyUpdateParams
 private constructor(
-    private val id: String?,
+    private val id: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): Optional<String> = Optional.ofNullable(id)
+    fun id(): String = id
 
     /**
      * The updated activation limit for the license key. Use `null` to remove the limit, or omit
@@ -89,9 +90,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): LicenseKeyUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [LicenseKeyUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [LicenseKeyUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -111,10 +117,7 @@ private constructor(
             additionalQueryParams = licenseKeyUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: String?) = apply { this.id = id }
-
-        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
-        fun id(id: Optional<String>) = id(id.getOrNull())
+        fun id(id: String) = apply { this.id = id }
 
         /**
          * Sets the entire request body.
@@ -321,10 +324,17 @@ private constructor(
          * Returns an immutable instance of [LicenseKeyUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): LicenseKeyUpdateParams =
             LicenseKeyUpdateParams(
-                id,
+                checkRequired("id", id),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -335,7 +345,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id ?: ""
+            0 -> id
             else -> ""
         }
 

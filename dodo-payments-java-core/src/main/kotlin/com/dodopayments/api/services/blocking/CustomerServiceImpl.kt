@@ -5,7 +5,6 @@ package com.dodopayments.api.services.blocking
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -25,7 +24,6 @@ import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
 import com.dodopayments.api.services.blocking.customers.CustomerPortalServiceImpl
-import kotlin.jvm.optionals.getOrNull
 
 class CustomerServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     CustomerService {
@@ -109,9 +107,6 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             params: CustomerRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<Customer> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -138,9 +133,6 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             params: CustomerUpdateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<Customer> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)

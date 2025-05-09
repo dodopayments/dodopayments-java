@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -21,7 +20,6 @@ import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
 import java.util.concurrent.CompletableFuture
-import kotlin.jvm.optionals.getOrNull
 
 class DisputeServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     DisputeServiceAsync {
@@ -59,9 +57,6 @@ class DisputeServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("disputeId", params.disputeId().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

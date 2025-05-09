@@ -16,36 +16,14 @@ interface ImageServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun update(id: String): CompletableFuture<ImageUpdateResponse> =
-        update(id, ImageUpdateParams.none())
-
-    /** @see [update] */
-    fun update(
-        id: String,
-        params: ImageUpdateParams = ImageUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<ImageUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
-
-    /** @see [update] */
-    fun update(
-        id: String,
-        params: ImageUpdateParams = ImageUpdateParams.none(),
-    ): CompletableFuture<ImageUpdateResponse> = update(id, params, RequestOptions.none())
+    fun update(params: ImageUpdateParams): CompletableFuture<ImageUpdateResponse> =
+        update(params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: ImageUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ImageUpdateResponse>
-
-    /** @see [update] */
-    fun update(params: ImageUpdateParams): CompletableFuture<ImageUpdateResponse> =
-        update(params, RequestOptions.none())
-
-    /** @see [update] */
-    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<ImageUpdateResponse> =
-        update(id, ImageUpdateParams.none(), requestOptions)
 
     /** A view of [ImageServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -55,35 +33,6 @@ interface ImageServiceAsync {
          * [ImageServiceAsync.update].
          */
         @MustBeClosed
-        fun update(id: String): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
-            update(id, ImageUpdateParams.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            id: String,
-            params: ImageUpdateParams = ImageUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
-            update(params.toBuilder().id(id).build(), requestOptions)
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            id: String,
-            params: ImageUpdateParams = ImageUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
-            update(id, params, RequestOptions.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            params: ImageUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>>
-
-        /** @see [update] */
-        @MustBeClosed
         fun update(
             params: ImageUpdateParams
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
@@ -92,9 +41,8 @@ interface ImageServiceAsync {
         /** @see [update] */
         @MustBeClosed
         fun update(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
-            update(id, ImageUpdateParams.none(), requestOptions)
+            params: ImageUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>>
     }
 }

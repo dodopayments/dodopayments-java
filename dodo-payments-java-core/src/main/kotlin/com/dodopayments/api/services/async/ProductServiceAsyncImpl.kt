@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.emptyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
@@ -30,7 +29,6 @@ import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.ImageServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
-import kotlin.jvm.optionals.getOrNull
 
 class ProductServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ProductServiceAsync {
@@ -135,9 +133,6 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: ProductRetrieveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Product>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -166,9 +161,6 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: ProductUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
@@ -227,9 +219,6 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: ProductDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
@@ -251,9 +240,6 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             params: ProductUnarchiveParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

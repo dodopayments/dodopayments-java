@@ -5,7 +5,6 @@ package com.dodopayments.api.services.blocking
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -22,7 +21,6 @@ import com.dodopayments.api.models.licensekeys.LicenseKeyListPageResponse
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
-import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     LicenseKeyService {
@@ -66,9 +64,6 @@ class LicenseKeyServiceImpl internal constructor(private val clientOptions: Clie
             params: LicenseKeyRetrieveParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<LicenseKey> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -95,9 +90,6 @@ class LicenseKeyServiceImpl internal constructor(private val clientOptions: Clie
             params: LicenseKeyUpdateParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<LicenseKey> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)

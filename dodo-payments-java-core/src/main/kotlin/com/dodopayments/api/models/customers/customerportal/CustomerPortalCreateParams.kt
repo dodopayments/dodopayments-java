@@ -4,6 +4,7 @@ package com.dodopayments.api.models.customers.customerportal
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.Params
+import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
@@ -13,14 +14,14 @@ import kotlin.jvm.optionals.getOrNull
 
 class CustomerPortalCreateParams
 private constructor(
-    private val customerId: String?,
+    private val customerId: String,
     private val sendEmail: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
-    fun customerId(): Optional<String> = Optional.ofNullable(customerId)
+    fun customerId(): String = customerId
 
     /** If true, will send link to user. */
     fun sendEmail(): Optional<Boolean> = Optional.ofNullable(sendEmail)
@@ -35,10 +36,13 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): CustomerPortalCreateParams = builder().build()
-
         /**
          * Returns a mutable builder for constructing an instance of [CustomerPortalCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .customerId()
+         * ```
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -62,10 +66,7 @@ private constructor(
                 customerPortalCreateParams.additionalBodyProperties.toMutableMap()
         }
 
-        fun customerId(customerId: String?) = apply { this.customerId = customerId }
-
-        /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
-        fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
+        fun customerId(customerId: String) = apply { this.customerId = customerId }
 
         /** If true, will send link to user. */
         fun sendEmail(sendEmail: Boolean?) = apply { this.sendEmail = sendEmail }
@@ -204,10 +205,17 @@ private constructor(
          * Returns an immutable instance of [CustomerPortalCreateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .customerId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): CustomerPortalCreateParams =
             CustomerPortalCreateParams(
-                customerId,
+                checkRequired("customerId", customerId),
                 sendEmail,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -220,7 +228,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> customerId ?: ""
+            0 -> customerId
             else -> ""
         }
 

@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async.products
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.handlers.withErrorHandler
@@ -19,7 +18,6 @@ import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.products.images.ImageUpdateParams
 import com.dodopayments.api.models.products.images.ImageUpdateResponse
 import java.util.concurrent.CompletableFuture
-import kotlin.jvm.optionals.getOrNull
 
 class ImageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     ImageServiceAsync {
@@ -50,9 +48,6 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
             params: ImageUpdateParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)

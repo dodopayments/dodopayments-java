@@ -34,22 +34,8 @@ interface SubscriptionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionCreateResponse>
 
-    fun retrieve(subscriptionId: String): CompletableFuture<Subscription> =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none())
-
-    /** @see [retrieve] */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription> =
-        retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-    /** @see [retrieve] */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-    ): CompletableFuture<Subscription> = retrieve(subscriptionId, params, RequestOptions.none())
+    fun retrieve(params: SubscriptionRetrieveParams): CompletableFuture<Subscription> =
+        retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
@@ -57,50 +43,14 @@ interface SubscriptionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Subscription>
 
-    /** @see [retrieve] */
-    fun retrieve(params: SubscriptionRetrieveParams): CompletableFuture<Subscription> =
-        retrieve(params, RequestOptions.none())
-
-    /** @see [retrieve] */
-    fun retrieve(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
-
-    fun update(subscriptionId: String): CompletableFuture<Subscription> =
-        update(subscriptionId, SubscriptionUpdateParams.none())
-
-    /** @see [update] */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription> =
-        update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-    /** @see [update] */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-    ): CompletableFuture<Subscription> = update(subscriptionId, params, RequestOptions.none())
+    fun update(params: SubscriptionUpdateParams): CompletableFuture<Subscription> =
+        update(params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: SubscriptionUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Subscription>
-
-    /** @see [update] */
-    fun update(params: SubscriptionUpdateParams): CompletableFuture<Subscription> =
-        update(params, RequestOptions.none())
-
-    /** @see [update] */
-    fun update(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
-        update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<SubscriptionListPageAsync> = list(SubscriptionListParams.none())
 
@@ -119,20 +69,6 @@ interface SubscriptionServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<SubscriptionListPageAsync> =
         list(SubscriptionListParams.none(), requestOptions)
 
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-    ): CompletableFuture<Void?> = changePlan(subscriptionId, params, RequestOptions.none())
-
-    /** @see [changePlan] */
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-    /** @see [changePlan] */
     fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<Void?> =
         changePlan(params, RequestOptions.none())
 
@@ -142,21 +78,6 @@ interface SubscriptionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
 
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-    ): CompletableFuture<SubscriptionChargeResponse> =
-        charge(subscriptionId, params, RequestOptions.none())
-
-    /** @see [charge] */
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionChargeResponse> =
-        charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-    /** @see [charge] */
     fun charge(params: SubscriptionChargeParams): CompletableFuture<SubscriptionChargeResponse> =
         charge(params, RequestOptions.none())
 
@@ -194,35 +115,6 @@ interface SubscriptionServiceAsync {
          * the same as [SubscriptionServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(subscriptionId: String): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, params, RequestOptions.none())
-
-        /** @see [retrieve] */
-        @MustBeClosed
-        fun retrieve(
-            params: SubscriptionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>>
-
-        /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: SubscriptionRetrieveParams
         ): CompletableFuture<HttpResponseFor<Subscription>> =
@@ -231,44 +123,14 @@ interface SubscriptionServiceAsync {
         /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
+            params: SubscriptionRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Subscription>>
 
         /**
          * Returns a raw HTTP response for `patch /subscriptions/{subscription_id}`, but is
          * otherwise the same as [SubscriptionServiceAsync.update].
          */
-        @MustBeClosed
-        fun update(subscriptionId: String): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, SubscriptionUpdateParams.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, params, RequestOptions.none())
-
-        /** @see [update] */
-        @MustBeClosed
-        fun update(
-            params: SubscriptionUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>>
-
-        /** @see [update] */
         @MustBeClosed
         fun update(
             params: SubscriptionUpdateParams
@@ -277,10 +139,9 @@ interface SubscriptionServiceAsync {
         /** @see [update] */
         @MustBeClosed
         fun update(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
+            params: SubscriptionUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Subscription>>
 
         /**
          * Returns a raw HTTP response for `get /subscriptions`, but is otherwise the same as
@@ -316,23 +177,6 @@ interface SubscriptionServiceAsync {
          * is otherwise the same as [SubscriptionServiceAsync.changePlan].
          */
         @MustBeClosed
-        fun changePlan(
-            subscriptionId: String,
-            params: SubscriptionChangePlanParams,
-        ): CompletableFuture<HttpResponse> =
-            changePlan(subscriptionId, params, RequestOptions.none())
-
-        /** @see [changePlan] */
-        @MustBeClosed
-        fun changePlan(
-            subscriptionId: String,
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-        /** @see [changePlan] */
-        @MustBeClosed
         fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<HttpResponse> =
             changePlan(params, RequestOptions.none())
 
@@ -347,23 +191,6 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
          * otherwise the same as [SubscriptionServiceAsync.charge].
          */
-        @MustBeClosed
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
-            charge(subscriptionId, params, RequestOptions.none())
-
-        /** @see [charge] */
-        @MustBeClosed
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
-            charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
-
-        /** @see [charge] */
         @MustBeClosed
         fun charge(
             params: SubscriptionChargeParams

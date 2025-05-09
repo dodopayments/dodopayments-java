@@ -17,18 +17,16 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionChargeParams
 private constructor(
-    private val subscriptionId: String?,
+    private val subscriptionId: String,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
+    fun subscriptionId(): String = subscriptionId
 
     /**
      * The product price. Represented in the lowest denomination of the currency (e.g., cents for
@@ -61,6 +59,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .subscriptionId()
          * .productPrice()
          * ```
          */
@@ -83,11 +82,7 @@ private constructor(
             additionalQueryParams = subscriptionChargeParams.additionalQueryParams.toBuilder()
         }
 
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
-
-        /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: String) = apply { this.subscriptionId = subscriptionId }
 
         /**
          * Sets the entire request body.
@@ -237,6 +232,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .subscriptionId()
          * .productPrice()
          * ```
          *
@@ -244,7 +240,7 @@ private constructor(
          */
         fun build(): SubscriptionChargeParams =
             SubscriptionChargeParams(
-                subscriptionId,
+                checkRequired("subscriptionId", subscriptionId),
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -255,7 +251,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> subscriptionId ?: ""
+            0 -> subscriptionId
             else -> ""
         }
 
