@@ -24,7 +24,8 @@ private constructor(
      *
      * @see [DisputeListPageResponse.items]
      */
-    fun items(): List<Dispute> = response._items().getOptional("items").getOrNull() ?: emptyList()
+    fun items(): List<DisputeListResponse> =
+        response._items().getOptional("items").getOrNull() ?: emptyList()
 
     fun hasNextPage(): Boolean = items().isNotEmpty()
 
@@ -108,9 +109,9 @@ private constructor(
             )
     }
 
-    class AutoPager(private val firstPage: DisputeListPage) : Iterable<Dispute> {
+    class AutoPager(private val firstPage: DisputeListPage) : Iterable<DisputeListResponse> {
 
-        override fun iterator(): Iterator<Dispute> = iterator {
+        override fun iterator(): Iterator<DisputeListResponse> = iterator {
             var page = firstPage
             var index = 0
             while (true) {
@@ -122,7 +123,7 @@ private constructor(
             }
         }
 
-        fun stream(): Stream<Dispute> {
+        fun stream(): Stream<DisputeListResponse> {
             return StreamSupport.stream(spliterator(), false)
         }
     }
