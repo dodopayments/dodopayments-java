@@ -112,6 +112,7 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
                             .let {
                                 WebhookEventListPageAsync.builder()
                                     .service(WebhookEventServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

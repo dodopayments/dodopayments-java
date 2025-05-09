@@ -2,12 +2,11 @@
 
 package com.dodopayments.api.models.products
 
+import com.dodopayments.api.core.AutoPager
+import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.blocking.ProductService
 import java.util.Objects
-import java.util.Optional
-import java.util.stream.Stream
-import java.util.stream.StreamSupport
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -17,30 +16,26 @@ private constructor(
     private val service: ProductService,
     private val params: ProductListParams,
     private val response: ProductListPageResponse,
-) {
+) : Page<ProductListResponse> {
 
     /**
      * Delegates to [ProductListPageResponse], but gracefully handles missing data.
      *
      * @see [ProductListPageResponse.items]
      */
-    fun items(): List<ProductListResponse> =
+    override fun items(): List<ProductListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun hasNextPage(): Boolean = items().isNotEmpty()
+    override fun hasNextPage(): Boolean = items().isNotEmpty()
 
-    fun getNextPageParams(): Optional<ProductListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
-
+    fun nextPageParams(): ProductListParams {
         val pageNumber = params.pageNumber().getOrDefault(1)
-        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
+        return params.toBuilder().pageNumber(pageNumber + 1).build()
     }
 
-    fun getNextPage(): Optional<ProductListPage> = getNextPageParams().map { service.list(it) }
+    override fun nextPage(): ProductListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPager<ProductListResponse> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): ProductListParams = params
@@ -107,25 +102,6 @@ private constructor(
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: ProductListPage) : Iterable<ProductListResponse> {
-
-        override fun iterator(): Iterator<ProductListResponse> = iterator {
-            var page = firstPage
-            var index = 0
-            while (true) {
-                while (index < page.items().size) {
-                    yield(page.items()[index++])
-                }
-                page = page.getNextPage().getOrNull() ?: break
-                index = 0
-            }
-        }
-
-        fun stream(): Stream<ProductListResponse> {
-            return StreamSupport.stream(spliterator(), false)
-        }
     }
 
     override fun equals(other: Any?): Boolean {

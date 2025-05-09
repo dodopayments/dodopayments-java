@@ -2,13 +2,13 @@
 
 package com.dodopayments.api.models.payouts
 
+import com.dodopayments.api.core.AutoPagerAsync
+import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.async.PayoutServiceAsync
 import java.util.Objects
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -16,35 +16,30 @@ import kotlin.jvm.optionals.getOrNull
 class PayoutListPageAsync
 private constructor(
     private val service: PayoutServiceAsync,
+    private val streamHandlerExecutor: Executor,
     private val params: PayoutListParams,
     private val response: PayoutListPageResponse,
-) {
+) : PageAsync<PayoutListResponse> {
 
     /**
      * Delegates to [PayoutListPageResponse], but gracefully handles missing data.
      *
      * @see [PayoutListPageResponse.items]
      */
-    fun items(): List<PayoutListResponse> =
+    override fun items(): List<PayoutListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun hasNextPage(): Boolean = items().isNotEmpty()
+    override fun hasNextPage(): Boolean = items().isNotEmpty()
 
-    fun getNextPageParams(): Optional<PayoutListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
-
+    fun nextPageParams(): PayoutListParams {
         val pageNumber = params.pageNumber().getOrDefault(1)
-        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
+        return params.toBuilder().pageNumber(pageNumber + 1).build()
     }
 
-    fun getNextPage(): CompletableFuture<Optional<PayoutListPageAsync>> =
-        getNextPageParams()
-            .map { service.list(it).thenApply { Optional.of(it) } }
-            .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
+    override fun nextPage(): CompletableFuture<PayoutListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPagerAsync<PayoutListResponse> =
+        AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): PayoutListParams = params
@@ -62,6 +57,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -73,17 +69,23 @@ private constructor(
     class Builder internal constructor() {
 
         private var service: PayoutServiceAsync? = null
+        private var streamHandlerExecutor: Executor? = null
         private var params: PayoutListParams? = null
         private var response: PayoutListPageResponse? = null
 
         @JvmSynthetic
         internal fun from(payoutListPageAsync: PayoutListPageAsync) = apply {
             service = payoutListPageAsync.service
+            streamHandlerExecutor = payoutListPageAsync.streamHandlerExecutor
             params = payoutListPageAsync.params
             response = payoutListPageAsync.response
         }
 
         fun service(service: PayoutServiceAsync) = apply { this.service = service }
+
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor = streamHandlerExecutor
+        }
 
         /** The parameters that were used to request this page. */
         fun params(params: PayoutListParams) = apply { this.params = params }
@@ -99,6 +101,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -108,38 +111,10 @@ private constructor(
         fun build(): PayoutListPageAsync =
             PayoutListPageAsync(
                 checkRequired("service", service),
+                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: PayoutListPageAsync) {
-
-        fun forEach(
-            action: Predicate<PayoutListResponse>,
-            executor: Executor,
-        ): CompletableFuture<Void> {
-            fun CompletableFuture<Optional<PayoutListPageAsync>>.forEach(
-                action: (PayoutListResponse) -> Boolean,
-                executor: Executor,
-            ): CompletableFuture<Void> =
-                thenComposeAsync(
-                    { page ->
-                        page
-                            .filter { it.items().all(action) }
-                            .map { it.getNextPage().forEach(action, executor) }
-                            .orElseGet { CompletableFuture.completedFuture(null) }
-                    },
-                    executor,
-                )
-            return CompletableFuture.completedFuture(Optional.of(firstPage))
-                .forEach(action::test, executor)
-        }
-
-        fun toList(executor: Executor): CompletableFuture<List<PayoutListResponse>> {
-            val values = mutableListOf<PayoutListResponse>()
-            return forEach(values::add, executor).thenApply { values }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -147,11 +122,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is PayoutListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+        return /* spotless:off */ other is PayoutListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, streamHandlerExecutor, params, response) /* spotless:on */
 
     override fun toString() =
-        "PayoutListPageAsync{service=$service, params=$params, response=$response}"
+        "PayoutListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

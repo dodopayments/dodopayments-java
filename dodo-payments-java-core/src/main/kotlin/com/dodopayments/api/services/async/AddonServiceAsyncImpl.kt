@@ -201,6 +201,7 @@ class AddonServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .let {
                                 AddonListPageAsync.builder()
                                     .service(AddonServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
                                     .response(it)
                                     .build()

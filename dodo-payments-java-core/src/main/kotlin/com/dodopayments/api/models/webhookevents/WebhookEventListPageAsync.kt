@@ -2,13 +2,13 @@
 
 package com.dodopayments.api.models.webhookevents
 
+import com.dodopayments.api.core.AutoPagerAsync
+import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.services.async.WebhookEventServiceAsync
 import java.util.Objects
-import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
-import java.util.function.Predicate
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
@@ -16,35 +16,30 @@ import kotlin.jvm.optionals.getOrNull
 class WebhookEventListPageAsync
 private constructor(
     private val service: WebhookEventServiceAsync,
+    private val streamHandlerExecutor: Executor,
     private val params: WebhookEventListParams,
     private val response: WebhookEventListPageResponse,
-) {
+) : PageAsync<WebhookEvent> {
 
     /**
      * Delegates to [WebhookEventListPageResponse], but gracefully handles missing data.
      *
      * @see [WebhookEventListPageResponse.items]
      */
-    fun items(): List<WebhookEvent> =
+    override fun items(): List<WebhookEvent> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
-    fun hasNextPage(): Boolean = items().isNotEmpty()
+    override fun hasNextPage(): Boolean = items().isNotEmpty()
 
-    fun getNextPageParams(): Optional<WebhookEventListParams> {
-        if (!hasNextPage()) {
-            return Optional.empty()
-        }
-
+    fun nextPageParams(): WebhookEventListParams {
         val pageNumber = params.pageNumber().getOrDefault(1)
-        return Optional.of(params.toBuilder().pageNumber(pageNumber + 1).build())
+        return params.toBuilder().pageNumber(pageNumber + 1).build()
     }
 
-    fun getNextPage(): CompletableFuture<Optional<WebhookEventListPageAsync>> =
-        getNextPageParams()
-            .map { service.list(it).thenApply { Optional.of(it) } }
-            .orElseGet { CompletableFuture.completedFuture(Optional.empty()) }
+    override fun nextPage(): CompletableFuture<WebhookEventListPageAsync> =
+        service.list(nextPageParams())
 
-    fun autoPager(): AutoPager = AutoPager(this)
+    fun autoPager(): AutoPagerAsync<WebhookEvent> = AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): WebhookEventListParams = params
@@ -62,6 +57,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -73,17 +69,23 @@ private constructor(
     class Builder internal constructor() {
 
         private var service: WebhookEventServiceAsync? = null
+        private var streamHandlerExecutor: Executor? = null
         private var params: WebhookEventListParams? = null
         private var response: WebhookEventListPageResponse? = null
 
         @JvmSynthetic
         internal fun from(webhookEventListPageAsync: WebhookEventListPageAsync) = apply {
             service = webhookEventListPageAsync.service
+            streamHandlerExecutor = webhookEventListPageAsync.streamHandlerExecutor
             params = webhookEventListPageAsync.params
             response = webhookEventListPageAsync.response
         }
 
         fun service(service: WebhookEventServiceAsync) = apply { this.service = service }
+
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor = streamHandlerExecutor
+        }
 
         /** The parameters that were used to request this page. */
         fun params(params: WebhookEventListParams) = apply { this.params = params }
@@ -99,6 +101,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .service()
+         * .streamHandlerExecutor()
          * .params()
          * .response()
          * ```
@@ -108,35 +111,10 @@ private constructor(
         fun build(): WebhookEventListPageAsync =
             WebhookEventListPageAsync(
                 checkRequired("service", service),
+                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
                 checkRequired("params", params),
                 checkRequired("response", response),
             )
-    }
-
-    class AutoPager(private val firstPage: WebhookEventListPageAsync) {
-
-        fun forEach(action: Predicate<WebhookEvent>, executor: Executor): CompletableFuture<Void> {
-            fun CompletableFuture<Optional<WebhookEventListPageAsync>>.forEach(
-                action: (WebhookEvent) -> Boolean,
-                executor: Executor,
-            ): CompletableFuture<Void> =
-                thenComposeAsync(
-                    { page ->
-                        page
-                            .filter { it.items().all(action) }
-                            .map { it.getNextPage().forEach(action, executor) }
-                            .orElseGet { CompletableFuture.completedFuture(null) }
-                    },
-                    executor,
-                )
-            return CompletableFuture.completedFuture(Optional.of(firstPage))
-                .forEach(action::test, executor)
-        }
-
-        fun toList(executor: Executor): CompletableFuture<List<WebhookEvent>> {
-            val values = mutableListOf<WebhookEvent>()
-            return forEach(values::add, executor).thenApply { values }
-        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -144,11 +122,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is WebhookEventListPageAsync && service == other.service && params == other.params && response == other.response /* spotless:on */
+        return /* spotless:off */ other is WebhookEventListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, params, response) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(service, streamHandlerExecutor, params, response) /* spotless:on */
 
     override fun toString() =
-        "WebhookEventListPageAsync{service=$service, params=$params, response=$response}"
+        "WebhookEventListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }
