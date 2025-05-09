@@ -8,7 +8,6 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.checkKnown
-import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
@@ -26,13 +25,13 @@ import kotlin.jvm.optionals.getOrNull
 /** PATCH /discounts/{discount_id} */
 class DiscountUpdateParams
 private constructor(
-    private val discountId: String,
+    private val discountId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun discountId(): String = discountId
+    fun discountId(): Optional<String> = Optional.ofNullable(discountId)
 
     /**
      * If present, update the discount amount:
@@ -147,14 +146,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [DiscountUpdateParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .discountId()
-         * ```
-         */
+        @JvmStatic fun none(): DiscountUpdateParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [DiscountUpdateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -174,7 +168,10 @@ private constructor(
             additionalQueryParams = discountUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun discountId(discountId: String) = apply { this.discountId = discountId }
+        fun discountId(discountId: String?) = apply { this.discountId = discountId }
+
+        /** Alias for calling [Builder.discountId] with `discountId.orElse(null)`. */
+        fun discountId(discountId: Optional<String>) = discountId(discountId.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -442,17 +439,10 @@ private constructor(
          * Returns an immutable instance of [DiscountUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .discountId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): DiscountUpdateParams =
             DiscountUpdateParams(
-                checkRequired("discountId", discountId),
+                discountId,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -463,7 +453,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> discountId
+            0 -> discountId ?: ""
             else -> ""
         }
 

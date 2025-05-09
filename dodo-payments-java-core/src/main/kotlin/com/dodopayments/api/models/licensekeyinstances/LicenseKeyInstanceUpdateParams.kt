@@ -17,16 +17,18 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyInstanceUpdateParams
 private constructor(
-    private val id: String,
+    private val id: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    fun id(): String = id
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -57,7 +59,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .id()
          * .name()
          * ```
          */
@@ -80,7 +81,10 @@ private constructor(
             additionalQueryParams = licenseKeyInstanceUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        fun id(id: String) = apply { this.id = id }
+        fun id(id: String?) = apply { this.id = id }
+
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -225,7 +229,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .id()
          * .name()
          * ```
          *
@@ -233,7 +236,7 @@ private constructor(
          */
         fun build(): LicenseKeyInstanceUpdateParams =
             LicenseKeyInstanceUpdateParams(
-                checkRequired("id", id),
+                id,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -244,7 +247,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id
+            0 -> id ?: ""
             else -> ""
         }
 
