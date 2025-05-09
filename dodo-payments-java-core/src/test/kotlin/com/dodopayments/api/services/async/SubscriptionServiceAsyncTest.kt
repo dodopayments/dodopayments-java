@@ -12,7 +12,6 @@ import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
-import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import java.time.OffsetDateTime
@@ -89,10 +88,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture =
-            subscriptionServiceAsync.retrieve(
-                SubscriptionRetrieveParams.builder().subscriptionId("subscription_id").build()
-            )
+        val subscriptionFuture = subscriptionServiceAsync.retrieve("subscription_id")
 
         val subscription = subscriptionFuture.get()
         subscription.validate()

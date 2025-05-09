@@ -28,13 +28,33 @@ interface PaymentService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): PaymentCreateResponse
 
-    fun retrieve(params: PaymentRetrieveParams): Payment = retrieve(params, RequestOptions.none())
+    fun retrieve(paymentId: String): Payment = retrieve(paymentId, PaymentRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        paymentId: String,
+        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): Payment = retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        paymentId: String,
+        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+    ): Payment = retrieve(paymentId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: PaymentRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Payment
+
+    /** @see [retrieve] */
+    fun retrieve(params: PaymentRetrieveParams): Payment = retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(paymentId: String, requestOptions: RequestOptions): Payment =
+        retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
 
     fun list(): PaymentListPage = list(PaymentListParams.none())
 
@@ -75,8 +95,24 @@ interface PaymentService {
          * as [PaymentService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: PaymentRetrieveParams): HttpResponseFor<Payment> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(paymentId: String): HttpResponseFor<Payment> =
+            retrieve(paymentId, PaymentRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            paymentId: String,
+            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<Payment> =
+            retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            paymentId: String,
+            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
+        ): HttpResponseFor<Payment> = retrieve(paymentId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -84,6 +120,16 @@ interface PaymentService {
             params: PaymentRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Payment>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: PaymentRetrieveParams): HttpResponseFor<Payment> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(paymentId: String, requestOptions: RequestOptions): HttpResponseFor<Payment> =
+            retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /payments`, but is otherwise the same as

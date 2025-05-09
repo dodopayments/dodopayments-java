@@ -28,14 +28,36 @@ interface RefundServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Refund>
 
-    fun retrieve(params: RefundRetrieveParams): CompletableFuture<Refund> =
-        retrieve(params, RequestOptions.none())
+    fun retrieve(refundId: String): CompletableFuture<Refund> =
+        retrieve(refundId, RefundRetrieveParams.none())
+
+    /** @see [retrieve] */
+    fun retrieve(
+        refundId: String,
+        params: RefundRetrieveParams = RefundRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Refund> =
+        retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
+
+    /** @see [retrieve] */
+    fun retrieve(
+        refundId: String,
+        params: RefundRetrieveParams = RefundRetrieveParams.none(),
+    ): CompletableFuture<Refund> = retrieve(refundId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: RefundRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Refund>
+
+    /** @see [retrieve] */
+    fun retrieve(params: RefundRetrieveParams): CompletableFuture<Refund> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see [retrieve] */
+    fun retrieve(refundId: String, requestOptions: RequestOptions): CompletableFuture<Refund> =
+        retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
     fun list(): CompletableFuture<RefundListPageAsync> = list(RefundListParams.none())
 
@@ -79,8 +101,25 @@ interface RefundServiceAsync {
          * [RefundServiceAsync.retrieve].
          */
         @MustBeClosed
-        fun retrieve(params: RefundRetrieveParams): CompletableFuture<HttpResponseFor<Refund>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(refundId: String): CompletableFuture<HttpResponseFor<Refund>> =
+            retrieve(refundId, RefundRetrieveParams.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            refundId: String,
+            params: RefundRetrieveParams = RefundRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Refund>> =
+            retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            refundId: String,
+            params: RefundRetrieveParams = RefundRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<Refund>> =
+            retrieve(refundId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
@@ -88,6 +127,19 @@ interface RefundServiceAsync {
             params: RefundRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Refund>>
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(params: RefundRetrieveParams): CompletableFuture<HttpResponseFor<Refund>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see [retrieve] */
+        @MustBeClosed
+        fun retrieve(
+            refundId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Refund>> =
+            retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /refunds`, but is otherwise the same as
