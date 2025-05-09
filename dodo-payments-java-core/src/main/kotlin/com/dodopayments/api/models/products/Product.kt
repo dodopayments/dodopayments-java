@@ -35,7 +35,7 @@ private constructor(
     private val description: JsonField<String>,
     private val image: JsonField<String>,
     private val licenseKeyActivationMessage: JsonField<String>,
-    private val licenseKeyActivationsLimit: JsonField<Long>,
+    private val licenseKeyActivationsLimit: JsonField<Int>,
     private val licenseKeyDuration: JsonField<LicenseKeyDuration>,
     private val name: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -73,7 +73,7 @@ private constructor(
         licenseKeyActivationMessage: JsonField<String> = JsonMissing.of(),
         @JsonProperty("license_key_activations_limit")
         @ExcludeMissing
-        licenseKeyActivationsLimit: JsonField<Long> = JsonMissing.of(),
+        licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of(),
         @JsonProperty("license_key_duration")
         @ExcludeMissing
         licenseKeyDuration: JsonField<LicenseKeyDuration> = JsonMissing.of(),
@@ -198,7 +198,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun licenseKeyActivationsLimit(): Optional<Long> =
+    fun licenseKeyActivationsLimit(): Optional<Int> =
         licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
 
     /**
@@ -322,7 +322,7 @@ private constructor(
      */
     @JsonProperty("license_key_activations_limit")
     @ExcludeMissing
-    fun _licenseKeyActivationsLimit(): JsonField<Long> = licenseKeyActivationsLimit
+    fun _licenseKeyActivationsLimit(): JsonField<Int> = licenseKeyActivationsLimit
 
     /**
      * Returns the raw JSON value of [licenseKeyDuration].
@@ -388,7 +388,7 @@ private constructor(
         private var description: JsonField<String> = JsonMissing.of()
         private var image: JsonField<String> = JsonMissing.of()
         private var licenseKeyActivationMessage: JsonField<String> = JsonMissing.of()
-        private var licenseKeyActivationsLimit: JsonField<Long> = JsonMissing.of()
+        private var licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of()
         private var licenseKeyDuration: JsonField<LicenseKeyDuration> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -602,7 +602,7 @@ private constructor(
         }
 
         /** Limit on the number of activations for the license key, if enabled. */
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Long?) =
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int?) =
             licenseKeyActivationsLimit(JsonField.ofNullable(licenseKeyActivationsLimit))
 
         /**
@@ -610,24 +610,24 @@ private constructor(
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Long) =
-            licenseKeyActivationsLimit(licenseKeyActivationsLimit as Long?)
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int) =
+            licenseKeyActivationsLimit(licenseKeyActivationsLimit as Int?)
 
         /**
          * Alias for calling [Builder.licenseKeyActivationsLimit] with
          * `licenseKeyActivationsLimit.orElse(null)`.
          */
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Optional<Long>) =
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Optional<Int>) =
             licenseKeyActivationsLimit(licenseKeyActivationsLimit.getOrNull())
 
         /**
          * Sets [Builder.licenseKeyActivationsLimit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyActivationsLimit] with a well-typed [Long]
+         * You should usually call [Builder.licenseKeyActivationsLimit] with a well-typed [Int]
          * value instead. This method is primarily for setting the field to an undocumented or not
          * yet supported value.
          */
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: JsonField<Long>) = apply {
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: JsonField<Int>) = apply {
             this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
         }
 

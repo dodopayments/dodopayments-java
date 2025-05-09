@@ -20,16 +20,16 @@ import kotlin.jvm.optionals.getOrNull
 class OneTimeProductCartItem
 private constructor(
     private val productId: JsonField<String>,
-    private val quantity: JsonField<Long>,
-    private val amount: JsonField<Long>,
+    private val quantity: JsonField<Int>,
+    private val amount: JsonField<Int>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("amount") @ExcludeMissing amount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("amount") @ExcludeMissing amount: JsonField<Int> = JsonMissing.of(),
     ) : this(productId, quantity, amount, mutableMapOf())
 
     /**
@@ -42,7 +42,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun quantity(): Long = quantity.getRequired("quantity")
+    fun quantity(): Int = quantity.getRequired("quantity")
 
     /**
      * Amount the customer pays if pay_what_you_want is enabled. If disabled then amount will be
@@ -52,7 +52,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun amount(): Optional<Long> = amount.getOptional("amount")
+    fun amount(): Optional<Int> = amount.getOptional("amount")
 
     /**
      * Returns the raw JSON value of [productId].
@@ -66,14 +66,14 @@ private constructor(
      *
      * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Long> = quantity
+    @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
 
     /**
      * Returns the raw JSON value of [amount].
      *
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Long> = amount
+    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Int> = amount
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -105,8 +105,8 @@ private constructor(
     class Builder internal constructor() {
 
         private var productId: JsonField<String>? = null
-        private var quantity: JsonField<Long>? = null
-        private var amount: JsonField<Long> = JsonMissing.of()
+        private var quantity: JsonField<Int>? = null
+        private var amount: JsonField<Int> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -128,40 +128,40 @@ private constructor(
          */
         fun productId(productId: JsonField<String>) = apply { this.productId = productId }
 
-        fun quantity(quantity: Long) = quantity(JsonField.of(quantity))
+        fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
         /**
          * Sets [Builder.quantity] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.quantity] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun quantity(quantity: JsonField<Long>) = apply { this.quantity = quantity }
+        fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
 
         /**
          * Amount the customer pays if pay_what_you_want is enabled. If disabled then amount will be
          * ignored Represented in the lowest denomination of the currency (e.g., cents for USD). For
          * example, to charge $1.00, pass `100`.
          */
-        fun amount(amount: Long?) = amount(JsonField.ofNullable(amount))
+        fun amount(amount: Int?) = amount(JsonField.ofNullable(amount))
 
         /**
          * Alias for [Builder.amount].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun amount(amount: Long) = amount(amount as Long?)
+        fun amount(amount: Int) = amount(amount as Int?)
 
         /** Alias for calling [Builder.amount] with `amount.orElse(null)`. */
-        fun amount(amount: Optional<Long>) = amount(amount.getOrNull())
+        fun amount(amount: Optional<Int>) = amount(amount.getOrNull())
 
         /**
          * Sets [Builder.amount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [Long] value instead. This
+         * You should usually call [Builder.amount] with a well-typed [Int] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun amount(amount: JsonField<Long>) = apply { this.amount = amount }
+        fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
