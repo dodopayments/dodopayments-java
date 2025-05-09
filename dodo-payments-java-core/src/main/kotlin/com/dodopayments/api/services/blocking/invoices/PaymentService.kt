@@ -14,13 +14,16 @@ interface PaymentService {
      */
     fun withRawResponse(): WithRawResponse
 
-    fun retrieve(params: PaymentRetrieveParams) = retrieve(params, RequestOptions.none())
+    @MustBeClosed
+    fun retrieve(params: PaymentRetrieveParams): HttpResponse =
+        retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
+    @MustBeClosed
     fun retrieve(
         params: PaymentRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    ): HttpResponse
 
     /** A view of [PaymentService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {

@@ -25,7 +25,8 @@ private constructor(
      *
      * @see [DisputeListPageResponse.items]
      */
-    fun items(): List<Dispute> = response._items().getOptional("items").getOrNull() ?: emptyList()
+    fun items(): List<DisputeListResponse> =
+        response._items().getOptional("items").getOrNull() ?: emptyList()
 
     fun hasNextPage(): Boolean = items().isNotEmpty()
 
@@ -114,9 +115,12 @@ private constructor(
 
     class AutoPager(private val firstPage: DisputeListPageAsync) {
 
-        fun forEach(action: Predicate<Dispute>, executor: Executor): CompletableFuture<Void> {
+        fun forEach(
+            action: Predicate<DisputeListResponse>,
+            executor: Executor,
+        ): CompletableFuture<Void> {
             fun CompletableFuture<Optional<DisputeListPageAsync>>.forEach(
-                action: (Dispute) -> Boolean,
+                action: (DisputeListResponse) -> Boolean,
                 executor: Executor,
             ): CompletableFuture<Void> =
                 thenComposeAsync(
@@ -132,8 +136,8 @@ private constructor(
                 .forEach(action::test, executor)
         }
 
-        fun toList(executor: Executor): CompletableFuture<List<Dispute>> {
-            val values = mutableListOf<Dispute>()
+        fun toList(executor: Executor): CompletableFuture<List<DisputeListResponse>> {
+            val values = mutableListOf<DisputeListResponse>()
             return forEach(values::add, executor).thenApply { values }
         }
     }

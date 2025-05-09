@@ -8,6 +8,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -18,16 +19,18 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class Dispute
+class DisputeRetrieveResponse
 private constructor(
     private val amount: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<String>,
+    private val customer: JsonField<CustomerLimitedDetails>,
     private val disputeId: JsonField<String>,
     private val disputeStage: JsonField<DisputeStage>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val paymentId: JsonField<String>,
+    private val reason: JsonField<String>,
     private val remarks: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -42,6 +45,9 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("customer")
+        @ExcludeMissing
+        customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
         @JsonProperty("dispute_id") @ExcludeMissing disputeId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dispute_stage")
         @ExcludeMissing
@@ -50,16 +56,19 @@ private constructor(
         @ExcludeMissing
         disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
         @JsonProperty("remarks") @ExcludeMissing remarks: JsonField<String> = JsonMissing.of(),
     ) : this(
         amount,
         businessId,
         createdAt,
         currency,
+        customer,
         disputeId,
         disputeStage,
         disputeStatus,
         paymentId,
+        reason,
         remarks,
         mutableMapOf(),
     )
@@ -97,6 +106,12 @@ private constructor(
     fun currency(): String = currency.getRequired("currency")
 
     /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
+
+    /**
      * The unique identifier of the dispute.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -123,6 +138,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = paymentId.getRequired("payment_id")
+
+    /**
+     * Reason for the dispute
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun reason(): Optional<String> = reason.getOptional("reason")
 
     /**
      * Remarks
@@ -163,6 +186,15 @@ private constructor(
     @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<String> = currency
 
     /**
+     * Returns the raw JSON value of [customer].
+     *
+     * Unlike [customer], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("customer")
+    @ExcludeMissing
+    fun _customer(): JsonField<CustomerLimitedDetails> = customer
+
+    /**
      * Returns the raw JSON value of [disputeId].
      *
      * Unlike [disputeId], this method doesn't throw if the JSON field has an unexpected type.
@@ -195,6 +227,13 @@ private constructor(
     @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
 
     /**
+     * Returns the raw JSON value of [reason].
+     *
+     * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<String> = reason
+
+    /**
      * Returns the raw JSON value of [remarks].
      *
      * Unlike [remarks], this method doesn't throw if the JSON field has an unexpected type.
@@ -216,7 +255,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [Dispute].
+         * Returns a mutable builder for constructing an instance of [DisputeRetrieveResponse].
          *
          * The following fields are required:
          * ```java
@@ -224,6 +263,7 @@ private constructor(
          * .businessId()
          * .createdAt()
          * .currency()
+         * .customer()
          * .disputeId()
          * .disputeStage()
          * .disputeStatus()
@@ -233,32 +273,36 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [Dispute]. */
+    /** A builder for [DisputeRetrieveResponse]. */
     class Builder internal constructor() {
 
         private var amount: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<String>? = null
+        private var customer: JsonField<CustomerLimitedDetails>? = null
         private var disputeId: JsonField<String>? = null
         private var disputeStage: JsonField<DisputeStage>? = null
         private var disputeStatus: JsonField<DisputeStatus>? = null
         private var paymentId: JsonField<String>? = null
+        private var reason: JsonField<String> = JsonMissing.of()
         private var remarks: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(dispute: Dispute) = apply {
-            amount = dispute.amount
-            businessId = dispute.businessId
-            createdAt = dispute.createdAt
-            currency = dispute.currency
-            disputeId = dispute.disputeId
-            disputeStage = dispute.disputeStage
-            disputeStatus = dispute.disputeStatus
-            paymentId = dispute.paymentId
-            remarks = dispute.remarks
-            additionalProperties = dispute.additionalProperties.toMutableMap()
+        internal fun from(disputeRetrieveResponse: DisputeRetrieveResponse) = apply {
+            amount = disputeRetrieveResponse.amount
+            businessId = disputeRetrieveResponse.businessId
+            createdAt = disputeRetrieveResponse.createdAt
+            currency = disputeRetrieveResponse.currency
+            customer = disputeRetrieveResponse.customer
+            disputeId = disputeRetrieveResponse.disputeId
+            disputeStage = disputeRetrieveResponse.disputeStage
+            disputeStatus = disputeRetrieveResponse.disputeStatus
+            paymentId = disputeRetrieveResponse.paymentId
+            reason = disputeRetrieveResponse.reason
+            remarks = disputeRetrieveResponse.remarks
+            additionalProperties = disputeRetrieveResponse.additionalProperties.toMutableMap()
         }
 
         /** The amount involved in the dispute, represented as a string to accommodate precision. */
@@ -306,6 +350,19 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun currency(currency: JsonField<String>) = apply { this.currency = currency }
+
+        fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
+
+        /**
+         * Sets [Builder.customer] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customer] with a well-typed [CustomerLimitedDetails]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
+            this.customer = customer
+        }
 
         /** The unique identifier of the dispute. */
         fun disputeId(disputeId: String) = disputeId(JsonField.of(disputeId))
@@ -357,6 +414,20 @@ private constructor(
          */
         fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
+        /** Reason for the dispute */
+        fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
+
+        /** Alias for calling [Builder.reason] with `reason.orElse(null)`. */
+        fun reason(reason: Optional<String>) = reason(reason.getOrNull())
+
+        /**
+         * Sets [Builder.reason] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reason] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun reason(reason: JsonField<String>) = apply { this.reason = reason }
+
         /** Remarks */
         fun remarks(remarks: String?) = remarks(JsonField.ofNullable(remarks))
 
@@ -391,7 +462,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [Dispute].
+         * Returns an immutable instance of [DisputeRetrieveResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -401,6 +472,7 @@ private constructor(
          * .businessId()
          * .createdAt()
          * .currency()
+         * .customer()
          * .disputeId()
          * .disputeStage()
          * .disputeStatus()
@@ -409,16 +481,18 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): Dispute =
-            Dispute(
+        fun build(): DisputeRetrieveResponse =
+            DisputeRetrieveResponse(
                 checkRequired("amount", amount),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
+                checkRequired("customer", customer),
                 checkRequired("disputeId", disputeId),
                 checkRequired("disputeStage", disputeStage),
                 checkRequired("disputeStatus", disputeStatus),
                 checkRequired("paymentId", paymentId),
+                reason,
                 remarks,
                 additionalProperties.toMutableMap(),
             )
@@ -426,7 +500,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): Dispute = apply {
+    fun validate(): DisputeRetrieveResponse = apply {
         if (validated) {
             return@apply
         }
@@ -435,10 +509,12 @@ private constructor(
         businessId()
         createdAt()
         currency()
+        customer().validate()
         disputeId()
         disputeStage().validate()
         disputeStatus().validate()
         paymentId()
+        reason()
         remarks()
         validated = true
     }
@@ -462,10 +538,12 @@ private constructor(
             (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (currency.asKnown().isPresent) 1 else 0) +
+            (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (if (disputeId.asKnown().isPresent) 1 else 0) +
             (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
+            (if (reason.asKnown().isPresent) 1 else 0) +
             (if (remarks.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -473,15 +551,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Dispute && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && remarks == other.remarks && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is DisputeRetrieveResponse && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && reason == other.reason && remarks == other.remarks && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(amount, businessId, createdAt, currency, disputeId, disputeStage, disputeStatus, paymentId, remarks, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(amount, businessId, createdAt, currency, customer, disputeId, disputeStage, disputeStatus, paymentId, reason, remarks, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, remarks=$remarks, additionalProperties=$additionalProperties}"
+        "DisputeRetrieveResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
 }
