@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.25.0 (2025-05-17)
+
+Full Changelog: [v1.22.0...v1.25.0](https://github.com/dodopayments/dodopayments-java/compare/v1.22.0...v1.25.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** change precision of some numeric types
+* **client:** extract auto pagination to shared classes
+* **client:** **Migration:** - If you were referencing the `AutoPager` class on a specific `*Page` or `*PageAsync` type, then you should instead reference the shared `AutoPager` and `AutoPagerAsync` types, under the `core` package
+    - `AutoPagerAsync` now has different usage. You can call `.subscribe(...)` on the returned object instead to get called back each page item. You can also call `onCompleteFuture()` to get a future that completes when all items have been processed. Finally, you can call `.close()` on the returned object to stop auto-paginating early
+    - If you were referencing `getNextPage` or `getNextPageParams`:
+       - Swap to `nextPage()` and `nextPageParams()`
+       - Note that these both now return non-optional types (use `hasNextPage()` before calling these, since they will throw if it's impossible to get another page)
+
+### Features
+
+* **api:** updated openapi spec ([a51ef84](https://github.com/dodopayments/dodopayments-java/commit/a51ef845b7a65092d7c913d9c55f394d606d0624))
+* **client:** extract auto pagination to shared classes ([c6f0eb5](https://github.com/dodopayments/dodopayments-java/commit/c6f0eb551c8b15312f027f4a00987dbdf83d532f))
+
+
+### Chores
+
+* **internal:** codegen related update ([e1eaedb](https://github.com/dodopayments/dodopayments-java/commit/e1eaedbe58c7690a302737d2420724856bddbd09))
+* **internal:** version bump ([5fc1e93](https://github.com/dodopayments/dodopayments-java/commit/5fc1e9325d728a35c3bc3bea363c3bceb52e69c0))
+
+
+### Documentation
+
+* remove or fix invalid readme examples ([640f15f](https://github.com/dodopayments/dodopayments-java/commit/640f15f8574b59efb1e6d80a51600a1e78b49154))
+
+
+### Refactors
+
+* **client:** change precision of some numeric types ([ccd614c](https://github.com/dodopayments/dodopayments-java/commit/ccd614cc543fdd215723a74f94dab16420e7c308))
+
 ## 1.22.0 (2025-05-09)
 
 Full Changelog: [v1.21.0...v1.22.0](https://github.com/dodopayments/dodopayments-java/compare/v1.21.0...v1.22.0)
