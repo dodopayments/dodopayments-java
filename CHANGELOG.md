@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.25.1 (2025-05-22)
+
+Full Changelog: [v1.25.0...v1.25.1](https://github.com/dodopayments/dodopayments-java/compare/v1.25.0...v1.25.1)
+
+### Chores
+
+* **docs:** grammar improvements ([3a8afcf](https://github.com/dodopayments/dodopayments-java/commit/3a8afcffd565a7ce985ab2d801d2c0e6bb9f5115))
+
 ## 1.25.0 (2025-05-17)
 
 Full Changelog: [v1.22.0...v1.25.0](https://github.com/dodopayments/dodopayments-java/compare/v1.22.0...v1.25.0)
