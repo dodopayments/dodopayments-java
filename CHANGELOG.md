@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.27.0 (2025-05-26)
+
+Full Changelog: [v1.25.0...v1.27.0](https://github.com/dodopayments/dodopayments-java/compare/v1.25.0...v1.27.0)
+
+### Features
+
+* **api:** added brands api in our sdk ([b65e702](https://github.com/dodopayments/dodopayments-java/commit/b65e702174a3007d6f8655f7864c2390ac9a0275))
+* **api:** updated openapi spec to 1.27.0 ([38ada5f](https://github.com/dodopayments/dodopayments-java/commit/38ada5f486987710617ad7213985bea9d962afe9))
+
+
+### Chores
+
+* **docs:** grammar improvements ([3a8afcf](https://github.com/dodopayments/dodopayments-java/commit/3a8afcffd565a7ce985ab2d801d2c0e6bb9f5115))
+
 ## 1.25.0 (2025-05-17)
 
 Full Changelog: [v1.22.0...v1.25.0](https://github.com/dodopayments/dodopayments-java/compare/v1.22.0...v1.25.0)
