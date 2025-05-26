@@ -23,6 +23,7 @@ class Refund
 private constructor(
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
+    private val isPartial: JsonField<Boolean>,
     private val paymentId: JsonField<String>,
     private val refundId: JsonField<String>,
     private val status: JsonField<RefundStatus>,
@@ -40,6 +41,9 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("is_partial")
+        @ExcludeMissing
+        isPartial: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("refund_id") @ExcludeMissing refundId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<RefundStatus> = JsonMissing.of(),
@@ -49,6 +53,7 @@ private constructor(
     ) : this(
         businessId,
         createdAt,
+        isPartial,
         paymentId,
         refundId,
         status,
@@ -73,6 +78,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /**
+     * If true the refund is a partial refund
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun isPartial(): Boolean = isPartial.getRequired("is_partial")
 
     /**
      * The unique identifier of the payment associated with the refund.
@@ -133,6 +146,13 @@ private constructor(
     @JsonProperty("created_at")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [isPartial].
+     *
+     * Unlike [isPartial], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("is_partial") @ExcludeMissing fun _isPartial(): JsonField<Boolean> = isPartial
 
     /**
      * Returns the raw JSON value of [paymentId].
@@ -197,6 +217,7 @@ private constructor(
          * ```java
          * .businessId()
          * .createdAt()
+         * .isPartial()
          * .paymentId()
          * .refundId()
          * .status()
@@ -210,6 +231,7 @@ private constructor(
 
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
+        private var isPartial: JsonField<Boolean>? = null
         private var paymentId: JsonField<String>? = null
         private var refundId: JsonField<String>? = null
         private var status: JsonField<RefundStatus>? = null
@@ -222,6 +244,7 @@ private constructor(
         internal fun from(refund: Refund) = apply {
             businessId = refund.businessId
             createdAt = refund.createdAt
+            isPartial = refund.isPartial
             paymentId = refund.paymentId
             refundId = refund.refundId
             status = refund.status
@@ -254,6 +277,18 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /** If true the refund is a partial refund */
+        fun isPartial(isPartial: Boolean) = isPartial(JsonField.of(isPartial))
+
+        /**
+         * Sets [Builder.isPartial] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isPartial] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun isPartial(isPartial: JsonField<Boolean>) = apply { this.isPartial = isPartial }
 
         /** The unique identifier of the payment associated with the refund. */
         fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
@@ -366,6 +401,7 @@ private constructor(
          * ```java
          * .businessId()
          * .createdAt()
+         * .isPartial()
          * .paymentId()
          * .refundId()
          * .status()
@@ -377,6 +413,7 @@ private constructor(
             Refund(
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
+                checkRequired("isPartial", isPartial),
                 checkRequired("paymentId", paymentId),
                 checkRequired("refundId", refundId),
                 checkRequired("status", status),
@@ -396,6 +433,7 @@ private constructor(
 
         businessId()
         createdAt()
+        isPartial()
         paymentId()
         refundId()
         status().validate()
@@ -422,6 +460,7 @@ private constructor(
     internal fun validity(): Int =
         (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (isPartial.asKnown().isPresent) 1 else 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
             (if (refundId.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
@@ -434,15 +473,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Refund && businessId == other.businessId && createdAt == other.createdAt && paymentId == other.paymentId && refundId == other.refundId && status == other.status && amount == other.amount && currency == other.currency && reason == other.reason && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Refund && businessId == other.businessId && createdAt == other.createdAt && isPartial == other.isPartial && paymentId == other.paymentId && refundId == other.refundId && status == other.status && amount == other.amount && currency == other.currency && reason == other.reason && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(businessId, createdAt, paymentId, refundId, status, amount, currency, reason, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(businessId, createdAt, isPartial, paymentId, refundId, status, amount, currency, reason, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Refund{businessId=$businessId, createdAt=$createdAt, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
+        "Refund{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
 }

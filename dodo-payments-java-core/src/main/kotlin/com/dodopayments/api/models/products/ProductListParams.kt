@@ -12,6 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 class ProductListParams
 private constructor(
     private val archived: Boolean?,
+    private val brandId: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val recurring: Boolean?,
@@ -21,6 +22,9 @@ private constructor(
 
     /** List archived products */
     fun archived(): Optional<Boolean> = Optional.ofNullable(archived)
+
+    /** filter by Brand id */
+    fun brandId(): Optional<String> = Optional.ofNullable(brandId)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -54,6 +58,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var archived: Boolean? = null
+        private var brandId: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var recurring: Boolean? = null
@@ -63,6 +68,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(productListParams: ProductListParams) = apply {
             archived = productListParams.archived
+            brandId = productListParams.brandId
             pageNumber = productListParams.pageNumber
             pageSize = productListParams.pageSize
             recurring = productListParams.recurring
@@ -82,6 +88,12 @@ private constructor(
 
         /** Alias for calling [Builder.archived] with `archived.orElse(null)`. */
         fun archived(archived: Optional<Boolean>) = archived(archived.getOrNull())
+
+        /** filter by Brand id */
+        fun brandId(brandId: String?) = apply { this.brandId = brandId }
+
+        /** Alias for calling [Builder.brandId] with `brandId.orElse(null)`. */
+        fun brandId(brandId: Optional<String>) = brandId(brandId.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -233,6 +245,7 @@ private constructor(
         fun build(): ProductListParams =
             ProductListParams(
                 archived,
+                brandId,
                 pageNumber,
                 pageSize,
                 recurring,
@@ -247,6 +260,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 archived?.let { put("archived", it.toString()) }
+                brandId?.let { put("brand_id", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 recurring?.let { put("recurring", it.toString()) }
@@ -259,11 +273,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ProductListParams && archived == other.archived && pageNumber == other.pageNumber && pageSize == other.pageSize && recurring == other.recurring && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is ProductListParams && archived == other.archived && brandId == other.brandId && pageNumber == other.pageNumber && pageSize == other.pageSize && recurring == other.recurring && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(archived, pageNumber, pageSize, recurring, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(archived, brandId, pageNumber, pageSize, recurring, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "ProductListParams{archived=$archived, pageNumber=$pageNumber, pageSize=$pageSize, recurring=$recurring, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ProductListParams{archived=$archived, brandId=$brandId, pageNumber=$pageNumber, pageSize=$pageSize, recurring=$recurring, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
