@@ -9,6 +9,8 @@ import com.dodopayments.api.models.payments.PaymentCreateParams
 import com.dodopayments.api.models.payments.PaymentCreateResponse
 import com.dodopayments.api.models.payments.PaymentListPageAsync
 import com.dodopayments.api.models.payments.PaymentListParams
+import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
+import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsResponse
 import com.dodopayments.api.models.payments.PaymentRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
@@ -76,6 +78,43 @@ interface PaymentServiceAsync {
     /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<PaymentListPageAsync> =
         list(PaymentListParams.none(), requestOptions)
+
+    fun retrieveLineItems(paymentId: String): CompletableFuture<PaymentRetrieveLineItemsResponse> =
+        retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none())
+
+    /** @see [retrieveLineItems] */
+    fun retrieveLineItems(
+        paymentId: String,
+        params: PaymentRetrieveLineItemsParams = PaymentRetrieveLineItemsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
+        retrieveLineItems(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+    /** @see [retrieveLineItems] */
+    fun retrieveLineItems(
+        paymentId: String,
+        params: PaymentRetrieveLineItemsParams = PaymentRetrieveLineItemsParams.none(),
+    ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
+        retrieveLineItems(paymentId, params, RequestOptions.none())
+
+    /** @see [retrieveLineItems] */
+    fun retrieveLineItems(
+        params: PaymentRetrieveLineItemsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<PaymentRetrieveLineItemsResponse>
+
+    /** @see [retrieveLineItems] */
+    fun retrieveLineItems(
+        params: PaymentRetrieveLineItemsParams
+    ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
+        retrieveLineItems(params, RequestOptions.none())
+
+    /** @see [retrieveLineItems] */
+    fun retrieveLineItems(
+        paymentId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
+        retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none(), requestOptions)
 
     /**
      * A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method.
@@ -172,5 +211,54 @@ interface PaymentServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<PaymentListPageAsync>> =
             list(PaymentListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /payments/{payment_id}/line-items`, but is otherwise
+         * the same as [PaymentServiceAsync.retrieveLineItems].
+         */
+        @MustBeClosed
+        fun retrieveLineItems(
+            paymentId: String
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
+            retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none())
+
+        /** @see [retrieveLineItems] */
+        @MustBeClosed
+        fun retrieveLineItems(
+            paymentId: String,
+            params: PaymentRetrieveLineItemsParams = PaymentRetrieveLineItemsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
+            retrieveLineItems(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+        /** @see [retrieveLineItems] */
+        @MustBeClosed
+        fun retrieveLineItems(
+            paymentId: String,
+            params: PaymentRetrieveLineItemsParams = PaymentRetrieveLineItemsParams.none(),
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
+            retrieveLineItems(paymentId, params, RequestOptions.none())
+
+        /** @see [retrieveLineItems] */
+        @MustBeClosed
+        fun retrieveLineItems(
+            params: PaymentRetrieveLineItemsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>>
+
+        /** @see [retrieveLineItems] */
+        @MustBeClosed
+        fun retrieveLineItems(
+            params: PaymentRetrieveLineItemsParams
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
+            retrieveLineItems(params, RequestOptions.none())
+
+        /** @see [retrieveLineItems] */
+        @MustBeClosed
+        fun retrieveLineItems(
+            paymentId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
+            retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none(), requestOptions)
     }
 }
