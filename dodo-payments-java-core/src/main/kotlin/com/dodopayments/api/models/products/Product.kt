@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 
 class Product
 private constructor(
+    private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val isRecurring: JsonField<Boolean>,
@@ -43,6 +44,7 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("business_id")
         @ExcludeMissing
         businessId: JsonField<String> = JsonMissing.of(),
@@ -79,6 +81,7 @@ private constructor(
         licenseKeyDuration: JsonField<LicenseKeyDuration> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
     ) : this(
+        brandId,
         businessId,
         createdAt,
         isRecurring,
@@ -96,6 +99,12 @@ private constructor(
         name,
         mutableMapOf(),
     )
+
+    /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun brandId(): String = brandId.getRequired("brand_id")
 
     /**
      * Unique identifier for the business to which the product belongs.
@@ -215,6 +224,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
+
+    /**
+     * Returns the raw JSON value of [brandId].
+     *
+     * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
     /**
      * Returns the raw JSON value of [businessId].
@@ -360,6 +376,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .isRecurring()
@@ -376,6 +393,7 @@ private constructor(
     /** A builder for [Product]. */
     class Builder internal constructor() {
 
+        private var brandId: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var isRecurring: JsonField<Boolean>? = null
@@ -395,6 +413,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(product: Product) = apply {
+            brandId = product.brandId
             businessId = product.businessId
             createdAt = product.createdAt
             isRecurring = product.isRecurring
@@ -412,6 +431,16 @@ private constructor(
             name = product.name
             additionalProperties = product.additionalProperties.toMutableMap()
         }
+
+        fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+        /**
+         * Sets [Builder.brandId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
         /** Unique identifier for the business to which the product belongs. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -691,6 +720,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .isRecurring()
@@ -705,6 +735,7 @@ private constructor(
          */
         fun build(): Product =
             Product(
+                checkRequired("brandId", brandId),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("isRecurring", isRecurring),
@@ -731,6 +762,7 @@ private constructor(
             return@apply
         }
 
+        brandId()
         businessId()
         createdAt()
         isRecurring()
@@ -764,7 +796,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (businessId.asKnown().isPresent) 1 else 0) +
+        (if (brandId.asKnown().isPresent) 1 else 0) +
+            (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (isRecurring.asKnown().isPresent) 1 else 0) +
             (if (licenseKeyEnabled.asKnown().isPresent) 1 else 0) +
@@ -785,15 +818,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Product && businessId == other.businessId && createdAt == other.createdAt && isRecurring == other.isRecurring && licenseKeyEnabled == other.licenseKeyEnabled && price == other.price && productId == other.productId && taxCategory == other.taxCategory && updatedAt == other.updatedAt && addons == other.addons && description == other.description && image == other.image && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Product && brandId == other.brandId && businessId == other.businessId && createdAt == other.createdAt && isRecurring == other.isRecurring && licenseKeyEnabled == other.licenseKeyEnabled && price == other.price && productId == other.productId && taxCategory == other.taxCategory && updatedAt == other.updatedAt && addons == other.addons && description == other.description && image == other.image && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(businessId, createdAt, isRecurring, licenseKeyEnabled, price, productId, taxCategory, updatedAt, addons, description, image, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, name, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(brandId, businessId, createdAt, isRecurring, licenseKeyEnabled, price, productId, taxCategory, updatedAt, addons, description, image, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, name, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Product{businessId=$businessId, createdAt=$createdAt, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, price=$price, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, addons=$addons, description=$description, image=$image, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, name=$name, additionalProperties=$additionalProperties}"
+        "Product{brandId=$brandId, businessId=$businessId, createdAt=$createdAt, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, price=$price, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, addons=$addons, description=$description, image=$image, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, name=$name, additionalProperties=$additionalProperties}"
 }

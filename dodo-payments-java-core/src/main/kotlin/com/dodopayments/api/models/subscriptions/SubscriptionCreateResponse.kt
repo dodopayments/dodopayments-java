@@ -25,6 +25,7 @@ private constructor(
     private val addons: JsonField<List<AddonCartResponseItem>>,
     private val customer: JsonField<CustomerLimitedDetails>,
     private val metadata: JsonField<Metadata>,
+    private val paymentId: JsonField<String>,
     private val recurringPreTaxAmount: JsonField<Int>,
     private val subscriptionId: JsonField<String>,
     private val clientSecret: JsonField<String>,
@@ -42,6 +43,7 @@ private constructor(
         @ExcludeMissing
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+        @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("recurring_pre_tax_amount")
         @ExcludeMissing
         recurringPreTaxAmount: JsonField<Int> = JsonMissing.of(),
@@ -61,6 +63,7 @@ private constructor(
         addons,
         customer,
         metadata,
+        paymentId,
         recurringPreTaxAmount,
         subscriptionId,
         clientSecret,
@@ -88,6 +91,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
+
+    /**
+     * First payment id for the subscription
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
      * Tax will be added to the amount and charged to the customer on each billing cycle
@@ -155,6 +166,13 @@ private constructor(
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
     /**
+     * Returns the raw JSON value of [paymentId].
+     *
+     * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+
+    /**
      * Returns the raw JSON value of [recurringPreTaxAmount].
      *
      * Unlike [recurringPreTaxAmount], this method doesn't throw if the JSON field has an unexpected
@@ -220,6 +238,7 @@ private constructor(
          * .addons()
          * .customer()
          * .metadata()
+         * .paymentId()
          * .recurringPreTaxAmount()
          * .subscriptionId()
          * ```
@@ -233,6 +252,7 @@ private constructor(
         private var addons: JsonField<MutableList<AddonCartResponseItem>>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
         private var metadata: JsonField<Metadata>? = null
+        private var paymentId: JsonField<String>? = null
         private var recurringPreTaxAmount: JsonField<Int>? = null
         private var subscriptionId: JsonField<String>? = null
         private var clientSecret: JsonField<String> = JsonMissing.of()
@@ -245,6 +265,7 @@ private constructor(
             addons = subscriptionCreateResponse.addons.map { it.toMutableList() }
             customer = subscriptionCreateResponse.customer
             metadata = subscriptionCreateResponse.metadata
+            paymentId = subscriptionCreateResponse.paymentId
             recurringPreTaxAmount = subscriptionCreateResponse.recurringPreTaxAmount
             subscriptionId = subscriptionCreateResponse.subscriptionId
             clientSecret = subscriptionCreateResponse.clientSecret
@@ -302,6 +323,18 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+        /** First payment id for the subscription */
+        fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
+
+        /**
+         * Sets [Builder.paymentId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
         /** Tax will be added to the amount and charged to the customer on each billing cycle */
         fun recurringPreTaxAmount(recurringPreTaxAmount: Int) =
@@ -410,6 +443,7 @@ private constructor(
          * .addons()
          * .customer()
          * .metadata()
+         * .paymentId()
          * .recurringPreTaxAmount()
          * .subscriptionId()
          * ```
@@ -421,6 +455,7 @@ private constructor(
                 checkRequired("addons", addons).map { it.toImmutable() },
                 checkRequired("customer", customer),
                 checkRequired("metadata", metadata),
+                checkRequired("paymentId", paymentId),
                 checkRequired("recurringPreTaxAmount", recurringPreTaxAmount),
                 checkRequired("subscriptionId", subscriptionId),
                 clientSecret,
@@ -440,6 +475,7 @@ private constructor(
         addons().forEach { it.validate() }
         customer().validate()
         metadata().validate()
+        paymentId()
         recurringPreTaxAmount()
         subscriptionId()
         clientSecret()
@@ -466,6 +502,7 @@ private constructor(
         (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (paymentId.asKnown().isPresent) 1 else 0) +
             (if (recurringPreTaxAmount.asKnown().isPresent) 1 else 0) +
             (if (subscriptionId.asKnown().isPresent) 1 else 0) +
             (if (clientSecret.asKnown().isPresent) 1 else 0) +
@@ -578,15 +615,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is SubscriptionCreateResponse && addons == other.addons && customer == other.customer && metadata == other.metadata && recurringPreTaxAmount == other.recurringPreTaxAmount && subscriptionId == other.subscriptionId && clientSecret == other.clientSecret && discountId == other.discountId && paymentLink == other.paymentLink && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is SubscriptionCreateResponse && addons == other.addons && customer == other.customer && metadata == other.metadata && paymentId == other.paymentId && recurringPreTaxAmount == other.recurringPreTaxAmount && subscriptionId == other.subscriptionId && clientSecret == other.clientSecret && discountId == other.discountId && paymentLink == other.paymentLink && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(addons, customer, metadata, recurringPreTaxAmount, subscriptionId, clientSecret, discountId, paymentLink, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(addons, customer, metadata, paymentId, recurringPreTaxAmount, subscriptionId, clientSecret, discountId, paymentLink, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
+        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
 }
