@@ -10,7 +10,6 @@ import com.dodopayments.api.models.licenses.LicenseActivateParams
 import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface LicenseServiceAsync {
@@ -56,14 +55,12 @@ interface LicenseServiceAsync {
          * Returns a raw HTTP response for `post /licenses/activate`, but is otherwise the same as
          * [LicenseServiceAsync.activate].
          */
-        @MustBeClosed
         fun activate(
             params: LicenseActivateParams
         ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
             activate(params, RequestOptions.none())
 
         /** @see [activate] */
-        @MustBeClosed
         fun activate(
             params: LicenseActivateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -73,12 +70,10 @@ interface LicenseServiceAsync {
          * Returns a raw HTTP response for `post /licenses/deactivate`, but is otherwise the same as
          * [LicenseServiceAsync.deactivate].
          */
-        @MustBeClosed
         fun deactivate(params: LicenseDeactivateParams): CompletableFuture<HttpResponse> =
             deactivate(params, RequestOptions.none())
 
         /** @see [deactivate] */
-        @MustBeClosed
         fun deactivate(
             params: LicenseDeactivateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -88,14 +83,12 @@ interface LicenseServiceAsync {
          * Returns a raw HTTP response for `post /licenses/validate`, but is otherwise the same as
          * [LicenseServiceAsync.validate].
          */
-        @MustBeClosed
         fun validate(
             params: LicenseValidateParams
         ): CompletableFuture<HttpResponseFor<LicenseValidateResponse>> =
             validate(params, RequestOptions.none())
 
         /** @see [validate] */
-        @MustBeClosed
         fun validate(
             params: LicenseValidateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
