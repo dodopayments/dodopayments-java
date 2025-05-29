@@ -8,7 +8,6 @@ import com.dodopayments.api.models.webhookevents.WebhookEvent
 import com.dodopayments.api.models.webhookevents.WebhookEventListPageAsync
 import com.dodopayments.api.models.webhookevents.WebhookEventListParams
 import com.dodopayments.api.models.webhookevents.WebhookEventRetrieveParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface WebhookEventServiceAsync {
@@ -79,12 +78,10 @@ interface WebhookEventServiceAsync {
          * Returns a raw HTTP response for `get /webhook_events/{webhook_event_id}`, but is
          * otherwise the same as [WebhookEventServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(webhookEventId: String): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             webhookEventId: String,
             params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
@@ -93,7 +90,6 @@ interface WebhookEventServiceAsync {
             retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             webhookEventId: String,
             params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
@@ -101,21 +97,18 @@ interface WebhookEventServiceAsync {
             retrieve(webhookEventId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: WebhookEventRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<WebhookEvent>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: WebhookEventRetrieveParams
         ): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             webhookEventId: String,
             requestOptions: RequestOptions,
@@ -126,26 +119,22 @@ interface WebhookEventServiceAsync {
          * Returns a raw HTTP response for `get /webhook_events`, but is otherwise the same as
          * [WebhookEventServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =
             list(WebhookEventListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none()
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =

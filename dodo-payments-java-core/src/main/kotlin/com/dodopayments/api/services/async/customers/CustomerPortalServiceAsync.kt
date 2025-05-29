@@ -6,7 +6,6 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.customers.CustomerPortalSession
 import com.dodopayments.api.models.customers.customerportal.CustomerPortalCreateParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface CustomerPortalServiceAsync {
@@ -60,12 +59,10 @@ interface CustomerPortalServiceAsync {
          * Returns a raw HTTP response for `post /customers/{customer_id}/customer-portal/session`,
          * but is otherwise the same as [CustomerPortalServiceAsync.create].
          */
-        @MustBeClosed
         fun create(customerId: String): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(customerId, CustomerPortalCreateParams.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             customerId: String,
             params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
@@ -74,7 +71,6 @@ interface CustomerPortalServiceAsync {
             create(params.toBuilder().customerId(customerId).build(), requestOptions)
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             customerId: String,
             params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
@@ -82,21 +78,18 @@ interface CustomerPortalServiceAsync {
             create(customerId, params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: CustomerPortalCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>>
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: CustomerPortalCreateParams
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             customerId: String,
             requestOptions: RequestOptions,
