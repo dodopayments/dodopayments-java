@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.27.1 (2025-05-29)
+
+Full Changelog: [v1.27.0...v1.27.1](https://github.com/dodopayments/dodopayments-java/compare/v1.27.0...v1.27.1)
+
+### Bug Fixes
+
+* **client:** remove `@MustBeClosed` for future returning methods ([e8e4ad3](https://github.com/dodopayments/dodopayments-java/commit/e8e4ad3c317b690412acbba55ed5037ff666809b))
+
+
+### Chores
+
+* configure new SDK language ([15416a9](https://github.com/dodopayments/dodopayments-java/commit/15416a95857414d25d2ab74b37ca4056f97f4c29))
+
 ## 1.27.0 (2025-05-26)
 
 Full Changelog: [v1.25.0...v1.27.0](https://github.com/dodopayments/dodopayments-java/compare/v1.25.0...v1.27.0)
