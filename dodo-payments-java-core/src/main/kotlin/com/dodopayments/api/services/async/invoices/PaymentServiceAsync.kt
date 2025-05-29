@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async.invoices
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface PaymentServiceAsync {
@@ -15,12 +14,10 @@ interface PaymentServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
-    @MustBeClosed
     fun retrieve(paymentId: String): CompletableFuture<HttpResponse> =
         retrieve(paymentId, PaymentRetrieveParams.none())
 
     /** @see [retrieve] */
-    @MustBeClosed
     fun retrieve(
         paymentId: String,
         params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
@@ -29,26 +26,22 @@ interface PaymentServiceAsync {
         retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
 
     /** @see [retrieve] */
-    @MustBeClosed
     fun retrieve(
         paymentId: String,
         params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
     ): CompletableFuture<HttpResponse> = retrieve(paymentId, params, RequestOptions.none())
 
     /** @see [retrieve] */
-    @MustBeClosed
     fun retrieve(
         params: PaymentRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<HttpResponse>
 
     /** @see [retrieve] */
-    @MustBeClosed
     fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
-    @MustBeClosed
     fun retrieve(
         paymentId: String,
         requestOptions: RequestOptions,
@@ -64,12 +57,10 @@ interface PaymentServiceAsync {
          * Returns a raw HTTP response for `get /invoices/payments/{payment_id}`, but is otherwise
          * the same as [PaymentServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(paymentId: String): CompletableFuture<HttpResponse> =
             retrieve(paymentId, PaymentRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             paymentId: String,
             params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
@@ -78,26 +69,22 @@ interface PaymentServiceAsync {
             retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             paymentId: String,
             params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
         ): CompletableFuture<HttpResponse> = retrieve(paymentId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: PaymentRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             paymentId: String,
             requestOptions: RequestOptions,

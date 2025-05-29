@@ -11,7 +11,6 @@ import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.async.customers.CustomerPortalServiceAsync
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface CustomerServiceAsync {
@@ -122,12 +121,10 @@ interface CustomerServiceAsync {
          * Returns a raw HTTP response for `post /customers`, but is otherwise the same as
          * [CustomerServiceAsync.create].
          */
-        @MustBeClosed
         fun create(params: CustomerCreateParams): CompletableFuture<HttpResponseFor<Customer>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: CustomerCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -137,12 +134,10 @@ interface CustomerServiceAsync {
          * Returns a raw HTTP response for `get /customers/{customer_id}`, but is otherwise the same
          * as [CustomerServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(customerId, CustomerRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             customerId: String,
             params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
@@ -151,7 +146,6 @@ interface CustomerServiceAsync {
             retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             customerId: String,
             params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
@@ -159,19 +153,16 @@ interface CustomerServiceAsync {
             retrieve(customerId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: CustomerRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(params: CustomerRetrieveParams): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             customerId: String,
             requestOptions: RequestOptions,
@@ -182,12 +173,10 @@ interface CustomerServiceAsync {
          * Returns a raw HTTP response for `patch /customers/{customer_id}`, but is otherwise the
          * same as [CustomerServiceAsync.update].
          */
-        @MustBeClosed
         fun update(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
             update(customerId, CustomerUpdateParams.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             customerId: String,
             params: CustomerUpdateParams = CustomerUpdateParams.none(),
@@ -196,7 +185,6 @@ interface CustomerServiceAsync {
             update(params.toBuilder().customerId(customerId).build(), requestOptions)
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             customerId: String,
             params: CustomerUpdateParams = CustomerUpdateParams.none(),
@@ -204,19 +192,16 @@ interface CustomerServiceAsync {
             update(customerId, params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: CustomerUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
 
         /** @see [update] */
-        @MustBeClosed
         fun update(params: CustomerUpdateParams): CompletableFuture<HttpResponseFor<Customer>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             customerId: String,
             requestOptions: RequestOptions,
@@ -227,26 +212,22 @@ interface CustomerServiceAsync {
          * Returns a raw HTTP response for `get /customers`, but is otherwise the same as
          * [CustomerServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(CustomerListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: CustomerListParams = CustomerListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: CustomerListParams = CustomerListParams.none()
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =

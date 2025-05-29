@@ -6,7 +6,6 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.payouts.PayoutListPageAsync
 import com.dodopayments.api.models.payouts.PayoutListParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface PayoutServiceAsync {
@@ -42,26 +41,22 @@ interface PayoutServiceAsync {
          * Returns a raw HTTP response for `get /payouts`, but is otherwise the same as
          * [PayoutServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
             list(PayoutListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: PayoutListParams = PayoutListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: PayoutListParams = PayoutListParams.none()
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =

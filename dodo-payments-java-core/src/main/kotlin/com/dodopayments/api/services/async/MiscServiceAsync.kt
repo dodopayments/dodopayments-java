@@ -6,7 +6,6 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface MiscServiceAsync {
@@ -43,26 +42,22 @@ interface MiscServiceAsync {
          * Returns a raw HTTP response for `get /checkout/supported_countries`, but is otherwise the
          * same as [MiscServiceAsync.listSupportedCountries].
          */
-        @MustBeClosed
         fun listSupportedCountries(): CompletableFuture<HttpResponseFor<List<CountryCode>>> =
             listSupportedCountries(MiscListSupportedCountriesParams.none())
 
         /** @see [listSupportedCountries] */
-        @MustBeClosed
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>>
 
         /** @see [listSupportedCountries] */
-        @MustBeClosed
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>> =
             listSupportedCountries(params, RequestOptions.none())
 
         /** @see [listSupportedCountries] */
-        @MustBeClosed
         fun listSupportedCountries(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>> =

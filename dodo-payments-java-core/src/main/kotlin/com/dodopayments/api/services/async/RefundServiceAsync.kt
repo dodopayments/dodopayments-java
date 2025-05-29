@@ -9,7 +9,6 @@ import com.dodopayments.api.models.refunds.RefundCreateParams
 import com.dodopayments.api.models.refunds.RefundListPageAsync
 import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.models.refunds.RefundRetrieveParams
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface RefundServiceAsync {
@@ -85,12 +84,10 @@ interface RefundServiceAsync {
          * Returns a raw HTTP response for `post /refunds`, but is otherwise the same as
          * [RefundServiceAsync.create].
          */
-        @MustBeClosed
         fun create(params: RefundCreateParams): CompletableFuture<HttpResponseFor<Refund>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: RefundCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -100,12 +97,10 @@ interface RefundServiceAsync {
          * Returns a raw HTTP response for `get /refunds/{refund_id}`, but is otherwise the same as
          * [RefundServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(refundId: String): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(refundId, RefundRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             refundId: String,
             params: RefundRetrieveParams = RefundRetrieveParams.none(),
@@ -114,7 +109,6 @@ interface RefundServiceAsync {
             retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             refundId: String,
             params: RefundRetrieveParams = RefundRetrieveParams.none(),
@@ -122,19 +116,16 @@ interface RefundServiceAsync {
             retrieve(refundId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: RefundRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Refund>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(params: RefundRetrieveParams): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             refundId: String,
             requestOptions: RequestOptions,
@@ -145,26 +136,22 @@ interface RefundServiceAsync {
          * Returns a raw HTTP response for `get /refunds`, but is otherwise the same as
          * [RefundServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =
             list(RefundListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: RefundListParams = RefundListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: RefundListParams = RefundListParams.none()
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =

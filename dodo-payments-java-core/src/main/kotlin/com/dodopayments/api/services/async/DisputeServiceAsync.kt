@@ -8,7 +8,6 @@ import com.dodopayments.api.models.disputes.DisputeListPageAsync
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface DisputeServiceAsync {
@@ -79,14 +78,12 @@ interface DisputeServiceAsync {
          * Returns a raw HTTP response for `get /disputes/{dispute_id}`, but is otherwise the same
          * as [DisputeServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(
             disputeId: String
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
             retrieve(disputeId, DisputeRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
@@ -95,7 +92,6 @@ interface DisputeServiceAsync {
             retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
@@ -103,21 +99,18 @@ interface DisputeServiceAsync {
             retrieve(disputeId, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: DisputeRetrieveParams
         ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             disputeId: String,
             requestOptions: RequestOptions,
@@ -128,26 +121,22 @@ interface DisputeServiceAsync {
          * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as
          * [DisputeServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
             list(DisputeListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: DisputeListParams = DisputeListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: DisputeListParams = DisputeListParams.none()
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
