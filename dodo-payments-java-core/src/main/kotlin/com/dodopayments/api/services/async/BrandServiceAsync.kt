@@ -14,7 +14,6 @@ import com.dodopayments.api.models.brands.BrandUpdateImagesParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
 import com.dodopayments.api.models.brands.BrandUpdateResponse
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 
 interface BrandServiceAsync {
@@ -167,26 +166,22 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `post /brands`, but is otherwise the same as
          * [BrandServiceAsync.create].
          */
-        @MustBeClosed
         fun create(): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
             create(BrandCreateParams.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: BrandCreateParams = BrandCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandCreateResponse>>
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: BrandCreateParams = BrandCreateParams.none()
         ): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
@@ -196,12 +191,10 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `get /brands/{id}`, but is otherwise the same as
          * [BrandServiceAsync.retrieve].
          */
-        @MustBeClosed
         fun retrieve(id: String): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
             retrieve(id, BrandRetrieveParams.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
@@ -210,7 +203,6 @@ interface BrandServiceAsync {
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
@@ -218,21 +210,18 @@ interface BrandServiceAsync {
             retrieve(id, params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: BrandRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>>
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             params: BrandRetrieveParams
         ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
-        @MustBeClosed
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
@@ -243,12 +232,10 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `patch /brands/{id}`, but is otherwise the same as
          * [BrandServiceAsync.update].
          */
-        @MustBeClosed
         fun update(id: String): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
             update(id, BrandUpdateParams.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
@@ -257,7 +244,6 @@ interface BrandServiceAsync {
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
@@ -265,21 +251,18 @@ interface BrandServiceAsync {
             update(id, params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: BrandUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>>
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: BrandUpdateParams
         ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             requestOptions: RequestOptions,
@@ -290,26 +273,22 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `get /brands`, but is otherwise the same as
          * [BrandServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<BrandListResponse>> =
             list(BrandListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: BrandListParams = BrandListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: BrandListParams = BrandListParams.none()
         ): CompletableFuture<HttpResponseFor<BrandListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<BrandListResponse>> =
@@ -319,14 +298,12 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `put /brands/{id}/images`, but is otherwise the same as
          * [BrandServiceAsync.updateImages].
          */
-        @MustBeClosed
         fun updateImages(
             id: String
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(id, BrandUpdateImagesParams.none())
 
         /** @see [updateImages] */
-        @MustBeClosed
         fun updateImages(
             id: String,
             params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
@@ -335,7 +312,6 @@ interface BrandServiceAsync {
             updateImages(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [updateImages] */
-        @MustBeClosed
         fun updateImages(
             id: String,
             params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
@@ -343,21 +319,18 @@ interface BrandServiceAsync {
             updateImages(id, params, RequestOptions.none())
 
         /** @see [updateImages] */
-        @MustBeClosed
         fun updateImages(
             params: BrandUpdateImagesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>>
 
         /** @see [updateImages] */
-        @MustBeClosed
         fun updateImages(
             params: BrandUpdateImagesParams
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(params, RequestOptions.none())
 
         /** @see [updateImages] */
-        @MustBeClosed
         fun updateImages(
             id: String,
             requestOptions: RequestOptions,
