@@ -118,18 +118,28 @@ interface SubscriptionServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<SubscriptionListPageAsync> =
         list(SubscriptionListParams.none(), requestOptions)
 
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-    ): CompletableFuture<Void?> = changePlan(subscriptionId, params, RequestOptions.none())
+    fun changePlan(subscriptionId: String): CompletableFuture<Void?> =
+        changePlan(subscriptionId, SubscriptionChangePlanParams.none())
 
     /** @see [changePlan] */
     fun changePlan(
         subscriptionId: String,
-        params: SubscriptionChangePlanParams,
+        params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?> =
         changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+
+    /** @see [changePlan] */
+    fun changePlan(
+        subscriptionId: String,
+        params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
+    ): CompletableFuture<Void?> = changePlan(subscriptionId, params, RequestOptions.none())
+
+    /** @see [changePlan] */
+    fun changePlan(
+        params: SubscriptionChangePlanParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
 
     /** @see [changePlan] */
     fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<Void?> =
@@ -137,9 +147,10 @@ interface SubscriptionServiceAsync {
 
     /** @see [changePlan] */
     fun changePlan(
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+        subscriptionId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        changePlan(subscriptionId, SubscriptionChangePlanParams.none(), requestOptions)
 
     fun charge(
         subscriptionId: String,
@@ -296,19 +307,29 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but
          * is otherwise the same as [SubscriptionServiceAsync.changePlan].
          */
+        fun changePlan(subscriptionId: String): CompletableFuture<HttpResponse> =
+            changePlan(subscriptionId, SubscriptionChangePlanParams.none())
+
+        /** @see [changePlan] */
         fun changePlan(
             subscriptionId: String,
-            params: SubscriptionChangePlanParams,
+            params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+
+        /** @see [changePlan] */
+        fun changePlan(
+            subscriptionId: String,
+            params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
         ): CompletableFuture<HttpResponse> =
             changePlan(subscriptionId, params, RequestOptions.none())
 
         /** @see [changePlan] */
         fun changePlan(
-            subscriptionId: String,
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        ): CompletableFuture<HttpResponse>
 
         /** @see [changePlan] */
         fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<HttpResponse> =
@@ -316,9 +337,10 @@ interface SubscriptionServiceAsync {
 
         /** @see [changePlan] */
         fun changePlan(
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+            subscriptionId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            changePlan(subscriptionId, SubscriptionChangePlanParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
