@@ -111,24 +111,34 @@ interface SubscriptionService {
     fun list(requestOptions: RequestOptions): SubscriptionListPage =
         list(SubscriptionListParams.none(), requestOptions)
 
-    fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams) =
-        changePlan(subscriptionId, params, RequestOptions.none())
+    fun changePlan(subscriptionId: String) =
+        changePlan(subscriptionId, SubscriptionChangePlanParams.none())
 
     /** @see [changePlan] */
     fun changePlan(
         subscriptionId: String,
-        params: SubscriptionChangePlanParams,
+        params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ) = changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
     /** @see [changePlan] */
-    fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
+    fun changePlan(
+        subscriptionId: String,
+        params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
+    ) = changePlan(subscriptionId, params, RequestOptions.none())
 
     /** @see [changePlan] */
     fun changePlan(
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     )
+
+    /** @see [changePlan] */
+    fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
+
+    /** @see [changePlan] */
+    fun changePlan(subscriptionId: String, requestOptions: RequestOptions) =
+        changePlan(subscriptionId, SubscriptionChangePlanParams.none(), requestOptions)
 
     fun charge(
         subscriptionId: String,
@@ -291,17 +301,31 @@ interface SubscriptionService {
          * is otherwise the same as [SubscriptionService.changePlan].
          */
         @MustBeClosed
-        fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): HttpResponse =
-            changePlan(subscriptionId, params, RequestOptions.none())
+        fun changePlan(subscriptionId: String): HttpResponse =
+            changePlan(subscriptionId, SubscriptionChangePlanParams.none())
 
         /** @see [changePlan] */
         @MustBeClosed
         fun changePlan(
             subscriptionId: String,
-            params: SubscriptionChangePlanParams,
+            params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse =
             changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+
+        /** @see [changePlan] */
+        @MustBeClosed
+        fun changePlan(
+            subscriptionId: String,
+            params: SubscriptionChangePlanParams = SubscriptionChangePlanParams.none(),
+        ): HttpResponse = changePlan(subscriptionId, params, RequestOptions.none())
+
+        /** @see [changePlan] */
+        @MustBeClosed
+        fun changePlan(
+            params: SubscriptionChangePlanParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
 
         /** @see [changePlan] */
         @MustBeClosed
@@ -310,10 +334,8 @@ interface SubscriptionService {
 
         /** @see [changePlan] */
         @MustBeClosed
-        fun changePlan(
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun changePlan(subscriptionId: String, requestOptions: RequestOptions): HttpResponse =
+            changePlan(subscriptionId, SubscriptionChangePlanParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
