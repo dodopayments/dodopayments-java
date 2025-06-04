@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.30.2 (2025-06-04)
+
+Full Changelog: [v1.30.0...v1.30.2](https://github.com/dodopayments/dodopayments-java/compare/v1.30.0...v1.30.2)
+
+### Features
+
+* **api:** fixed openapi spec ([f4139fb](https://github.com/dodopayments/dodopayments-java/commit/f4139fbaeefa00ca57289f6d6348468a7523b7d4))
+
 ## 1.30.0 (2025-06-02)
 
 Full Changelog: [v1.27.0...v1.30.0](https://github.com/dodopayments/dodopayments-java/compare/v1.27.0...v1.30.0)
