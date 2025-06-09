@@ -28,6 +28,7 @@ class Subscription
 private constructor(
     private val addons: JsonField<List<AddonCartResponseItem>>,
     private val billing: JsonField<BillingAddress>,
+    private val cancelAtNextBillingDate: JsonField<Boolean>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<Currency>,
     private val customer: JsonField<CustomerLimitedDetails>,
@@ -59,6 +60,9 @@ private constructor(
         @JsonProperty("billing")
         @ExcludeMissing
         billing: JsonField<BillingAddress> = JsonMissing.of(),
+        @JsonProperty("cancel_at_next_billing_date")
+        @ExcludeMissing
+        cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -112,6 +116,7 @@ private constructor(
     ) : this(
         addons,
         billing,
+        cancelAtNextBillingDate,
         createdAt,
         currency,
         customer,
@@ -148,6 +153,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun billing(): BillingAddress = billing.getRequired("billing")
+
+    /**
+     * Indicates if the subscription will cancel at the next billing date
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun cancelAtNextBillingDate(): Boolean =
+        cancelAtNextBillingDate.getRequired("cancel_at_next_billing_date")
 
     /**
      * Timestamp when the subscription was created
@@ -316,6 +330,16 @@ private constructor(
      * Unlike [billing], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("billing") @ExcludeMissing fun _billing(): JsonField<BillingAddress> = billing
+
+    /**
+     * Returns the raw JSON value of [cancelAtNextBillingDate].
+     *
+     * Unlike [cancelAtNextBillingDate], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("cancel_at_next_billing_date")
+    @ExcludeMissing
+    fun _cancelAtNextBillingDate(): JsonField<Boolean> = cancelAtNextBillingDate
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -510,6 +534,7 @@ private constructor(
          * ```java
          * .addons()
          * .billing()
+         * .cancelAtNextBillingDate()
          * .createdAt()
          * .currency()
          * .customer()
@@ -538,6 +563,7 @@ private constructor(
 
         private var addons: JsonField<MutableList<AddonCartResponseItem>>? = null
         private var billing: JsonField<BillingAddress>? = null
+        private var cancelAtNextBillingDate: JsonField<Boolean>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<Currency>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
@@ -564,6 +590,7 @@ private constructor(
         internal fun from(subscription: Subscription) = apply {
             addons = subscription.addons.map { it.toMutableList() }
             billing = subscription.billing
+            cancelAtNextBillingDate = subscription.cancelAtNextBillingDate
             createdAt = subscription.createdAt
             currency = subscription.currency
             customer = subscription.customer
@@ -623,6 +650,21 @@ private constructor(
          * supported value.
          */
         fun billing(billing: JsonField<BillingAddress>) = apply { this.billing = billing }
+
+        /** Indicates if the subscription will cancel at the next billing date */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) =
+            cancelAtNextBillingDate(JsonField.of(cancelAtNextBillingDate))
+
+        /**
+         * Sets [Builder.cancelAtNextBillingDate] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cancelAtNextBillingDate] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) = apply {
+            this.cancelAtNextBillingDate = cancelAtNextBillingDate
+        }
 
         /** Timestamp when the subscription was created */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -928,6 +970,7 @@ private constructor(
          * ```java
          * .addons()
          * .billing()
+         * .cancelAtNextBillingDate()
          * .createdAt()
          * .currency()
          * .customer()
@@ -954,6 +997,7 @@ private constructor(
             Subscription(
                 checkRequired("addons", addons).map { it.toImmutable() },
                 checkRequired("billing", billing),
+                checkRequired("cancelAtNextBillingDate", cancelAtNextBillingDate),
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
                 checkRequired("customer", customer),
@@ -987,6 +1031,7 @@ private constructor(
 
         addons().forEach { it.validate() }
         billing().validate()
+        cancelAtNextBillingDate()
         createdAt()
         currency().validate()
         customer().validate()
@@ -1027,6 +1072,7 @@ private constructor(
     internal fun validity(): Int =
         (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (billing.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1154,15 +1200,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Subscription && addons == other.addons && billing == other.billing && createdAt == other.createdAt && currency == other.currency && customer == other.customer && metadata == other.metadata && nextBillingDate == other.nextBillingDate && onDemand == other.onDemand && paymentFrequencyCount == other.paymentFrequencyCount && paymentFrequencyInterval == other.paymentFrequencyInterval && previousBillingDate == other.previousBillingDate && productId == other.productId && quantity == other.quantity && recurringPreTaxAmount == other.recurringPreTaxAmount && status == other.status && subscriptionId == other.subscriptionId && subscriptionPeriodCount == other.subscriptionPeriodCount && subscriptionPeriodInterval == other.subscriptionPeriodInterval && taxInclusive == other.taxInclusive && trialPeriodDays == other.trialPeriodDays && cancelledAt == other.cancelledAt && discountId == other.discountId && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Subscription && addons == other.addons && billing == other.billing && cancelAtNextBillingDate == other.cancelAtNextBillingDate && createdAt == other.createdAt && currency == other.currency && customer == other.customer && metadata == other.metadata && nextBillingDate == other.nextBillingDate && onDemand == other.onDemand && paymentFrequencyCount == other.paymentFrequencyCount && paymentFrequencyInterval == other.paymentFrequencyInterval && previousBillingDate == other.previousBillingDate && productId == other.productId && quantity == other.quantity && recurringPreTaxAmount == other.recurringPreTaxAmount && status == other.status && subscriptionId == other.subscriptionId && subscriptionPeriodCount == other.subscriptionPeriodCount && subscriptionPeriodInterval == other.subscriptionPeriodInterval && taxInclusive == other.taxInclusive && trialPeriodDays == other.trialPeriodDays && cancelledAt == other.cancelledAt && discountId == other.discountId && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(addons, billing, createdAt, currency, customer, metadata, nextBillingDate, onDemand, paymentFrequencyCount, paymentFrequencyInterval, previousBillingDate, productId, quantity, recurringPreTaxAmount, status, subscriptionId, subscriptionPeriodCount, subscriptionPeriodInterval, taxInclusive, trialPeriodDays, cancelledAt, discountId, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(addons, billing, cancelAtNextBillingDate, createdAt, currency, customer, metadata, nextBillingDate, onDemand, paymentFrequencyCount, paymentFrequencyInterval, previousBillingDate, productId, quantity, recurringPreTaxAmount, status, subscriptionId, subscriptionPeriodCount, subscriptionPeriodInterval, taxInclusive, trialPeriodDays, cancelledAt, discountId, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Subscription{addons=$addons, billing=$billing, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountId=$discountId, additionalProperties=$additionalProperties}"
+        "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountId=$discountId, additionalProperties=$additionalProperties}"
 }
