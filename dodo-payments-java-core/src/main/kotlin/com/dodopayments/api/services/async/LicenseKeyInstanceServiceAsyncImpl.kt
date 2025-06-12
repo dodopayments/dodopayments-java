@@ -73,6 +73,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -105,6 +106,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -136,6 +138,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances")
                     .build()
                     .prepareAsync(clientOptions, params)
