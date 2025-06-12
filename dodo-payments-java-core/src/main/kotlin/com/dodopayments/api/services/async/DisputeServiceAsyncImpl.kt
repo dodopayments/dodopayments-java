@@ -65,6 +65,7 @@ class DisputeServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("disputes", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -95,6 +96,7 @@ class DisputeServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("disputes")
                     .build()
                     .prepareAsync(clientOptions, params)

@@ -61,6 +61,7 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("disputes", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -88,6 +89,7 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("disputes")
                     .build()
                     .prepare(clientOptions, params)
