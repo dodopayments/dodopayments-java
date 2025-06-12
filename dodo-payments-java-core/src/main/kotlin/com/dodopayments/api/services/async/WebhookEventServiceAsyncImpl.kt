@@ -64,6 +64,7 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("webhook_events", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -94,6 +95,7 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("webhook_events")
                     .build()
                     .prepareAsync(clientOptions, params)
