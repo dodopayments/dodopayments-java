@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.33.0 (2025-06-13)
+
+Full Changelog: [v1.32.0...v1.33.0](https://github.com/dodopayments/dodopayments-java/compare/v1.32.0...v1.33.0)
+
+### Features
+
+* **client:** add a `withOptions` method ([85f49ac](https://github.com/dodopayments/dodopayments-java/commit/85f49ac38b881742f7597197a06553831aafee77))
+* **client:** implement per-endpoint base URL support ([23c6df7](https://github.com/dodopayments/dodopayments-java/commit/23c6df7a5b16418294b589c7046208c82d667f36))
+
 ## 1.32.0 (2025-06-09)
 
 Full Changelog: [v1.30.2...v1.32.0](https://github.com/dodopayments/dodopayments-java/compare/v1.30.2...v1.32.0)
