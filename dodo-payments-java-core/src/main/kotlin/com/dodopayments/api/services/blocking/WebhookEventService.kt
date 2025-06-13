@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.services.blocking
 
+import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.webhookevents.WebhookEvent
@@ -9,6 +10,7 @@ import com.dodopayments.api.models.webhookevents.WebhookEventListPage
 import com.dodopayments.api.models.webhookevents.WebhookEventListParams
 import com.dodopayments.api.models.webhookevents.WebhookEventRetrieveParams
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
 
 interface WebhookEventService {
 
@@ -16,6 +18,13 @@ interface WebhookEventService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService
 
     fun retrieve(webhookEventId: String): WebhookEvent =
         retrieve(webhookEventId, WebhookEventRetrieveParams.none())
@@ -68,6 +77,15 @@ interface WebhookEventService {
      * A view of [WebhookEventService] that provides access to raw HTTP responses for each method.
      */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): WebhookEventService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /webhook_events/{webhook_event_id}`, but is

@@ -25,6 +25,7 @@ import com.dodopayments.api.models.addons.AddonRetrieveParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesResponse
 import com.dodopayments.api.models.addons.AddonUpdateParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class AddonServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -35,6 +36,9 @@ class AddonServiceImpl internal constructor(private val clientOptions: ClientOpt
     }
 
     override fun withRawResponse(): AddonService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonService =
+        AddonServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: AddonCreateParams, requestOptions: RequestOptions): AddonResponse =
         // post /addons
@@ -66,6 +70,13 @@ class AddonServiceImpl internal constructor(private val clientOptions: ClientOpt
         AddonService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AddonService.WithRawResponse =
+            AddonServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<AddonResponse> =
             jsonHandler<AddonResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

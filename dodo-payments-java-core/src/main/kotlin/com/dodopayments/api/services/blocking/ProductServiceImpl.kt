@@ -29,6 +29,7 @@ import com.dodopayments.api.models.products.ProductUnarchiveParams
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.ImageServiceImpl
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ProductServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -41,6 +42,9 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
     private val images: ImageService by lazy { ImageServiceImpl(clientOptions) }
 
     override fun withRawResponse(): ProductService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService =
+        ProductServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageService = images
 
@@ -79,6 +83,13 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
         private val images: ImageService.WithRawResponse by lazy {
             ImageServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProductService.WithRawResponse =
+            ProductServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun images(): ImageService.WithRawResponse = images
 

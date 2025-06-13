@@ -18,6 +18,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.products.images.ImageUpdateParams
 import com.dodopayments.api.models.products.images.ImageUpdateResponse
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ImageServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -28,6 +29,9 @@ class ImageServiceImpl internal constructor(private val clientOptions: ClientOpt
     }
 
     override fun withRawResponse(): ImageService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ImageService =
+        ImageServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun update(
         params: ImageUpdateParams,
@@ -40,6 +44,13 @@ class ImageServiceImpl internal constructor(private val clientOptions: ClientOpt
         ImageService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ImageService.WithRawResponse =
+            ImageServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val updateHandler: Handler<ImageUpdateResponse> =
             jsonHandler<ImageUpdateResponse>(clientOptions.jsonMapper)

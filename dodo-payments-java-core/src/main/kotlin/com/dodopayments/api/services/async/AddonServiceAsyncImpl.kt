@@ -26,6 +26,7 @@ import com.dodopayments.api.models.addons.AddonUpdateImagesParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesResponse
 import com.dodopayments.api.models.addons.AddonUpdateParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class AddonServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -36,6 +37,9 @@ class AddonServiceAsyncImpl internal constructor(private val clientOptions: Clie
     }
 
     override fun withRawResponse(): AddonServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonServiceAsync =
+        AddonServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: AddonCreateParams,
@@ -76,6 +80,13 @@ class AddonServiceAsyncImpl internal constructor(private val clientOptions: Clie
         AddonServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AddonServiceAsync.WithRawResponse =
+            AddonServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<AddonResponse> =
             jsonHandler<AddonResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

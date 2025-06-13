@@ -25,6 +25,7 @@ import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
 import com.dodopayments.api.services.blocking.customers.CustomerPortalServiceImpl
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class CustomerServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -39,6 +40,9 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
     }
 
     override fun withRawResponse(): CustomerService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService =
+        CustomerServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun customerPortal(): CustomerPortalService = customerPortal
 
@@ -72,6 +76,13 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
         private val customerPortal: CustomerPortalService.WithRawResponse by lazy {
             CustomerPortalServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CustomerService.WithRawResponse =
+            CustomerServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun customerPortal(): CustomerPortalService.WithRawResponse = customerPortal
 

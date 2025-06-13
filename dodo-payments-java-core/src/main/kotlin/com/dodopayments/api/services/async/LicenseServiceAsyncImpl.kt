@@ -23,6 +23,7 @@ import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class LicenseServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     LicenseServiceAsync {
@@ -32,6 +33,9 @@ class LicenseServiceAsyncImpl internal constructor(private val clientOptions: Cl
     }
 
     override fun withRawResponse(): LicenseServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseServiceAsync =
+        LicenseServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun activate(
         params: LicenseActivateParams,
@@ -58,6 +62,13 @@ class LicenseServiceAsyncImpl internal constructor(private val clientOptions: Cl
         LicenseServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): LicenseServiceAsync.WithRawResponse =
+            LicenseServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val activateHandler: Handler<LicenseKeyInstance> =
             jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
