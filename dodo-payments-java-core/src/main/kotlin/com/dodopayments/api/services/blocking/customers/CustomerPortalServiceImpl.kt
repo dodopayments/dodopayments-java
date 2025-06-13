@@ -18,6 +18,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.customers.CustomerPortalSession
 import com.dodopayments.api.models.customers.customerportal.CustomerPortalCreateParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class CustomerPortalServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -28,6 +29,9 @@ class CustomerPortalServiceImpl internal constructor(private val clientOptions: 
     }
 
     override fun withRawResponse(): CustomerPortalService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalService =
+        CustomerPortalServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: CustomerPortalCreateParams,
@@ -40,6 +44,13 @@ class CustomerPortalServiceImpl internal constructor(private val clientOptions: 
         CustomerPortalService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CustomerPortalService.WithRawResponse =
+            CustomerPortalServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<CustomerPortalSession> =
             jsonHandler<CustomerPortalSession>(clientOptions.jsonMapper)

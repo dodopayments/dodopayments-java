@@ -20,6 +20,7 @@ import com.dodopayments.api.models.disputes.DisputeListPageResponse
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class DisputeServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -30,6 +31,9 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
     }
 
     override fun withRawResponse(): DisputeService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DisputeService =
+        DisputeServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun retrieve(
         params: DisputeRetrieveParams,
@@ -46,6 +50,13 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
         DisputeService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): DisputeService.WithRawResponse =
+            DisputeServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val retrieveHandler: Handler<DisputeRetrieveResponse> =
             jsonHandler<DisputeRetrieveResponse>(clientOptions.jsonMapper)

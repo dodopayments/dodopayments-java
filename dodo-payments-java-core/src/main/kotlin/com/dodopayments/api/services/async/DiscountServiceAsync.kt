@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.services.async
 
+import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
@@ -13,6 +14,7 @@ import com.dodopayments.api.models.discounts.DiscountListParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface DiscountServiceAsync {
 
@@ -20,6 +22,13 @@ interface DiscountServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): DiscountServiceAsync
 
     /** If `code` is omitted or empty, a random 16-char uppercase code is generated. */
     fun create(params: DiscountCreateParams): CompletableFuture<Discount> =
@@ -149,6 +158,15 @@ interface DiscountServiceAsync {
      * A view of [DiscountServiceAsync] that provides access to raw HTTP responses for each method.
      */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): DiscountServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /discounts`, but is otherwise the same as

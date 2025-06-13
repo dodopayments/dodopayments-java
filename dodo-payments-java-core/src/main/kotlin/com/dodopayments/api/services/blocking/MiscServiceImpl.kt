@@ -16,6 +16,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
+import java.util.function.Consumer
 
 class MiscServiceImpl internal constructor(private val clientOptions: ClientOptions) : MiscService {
 
@@ -24,6 +25,9 @@ class MiscServiceImpl internal constructor(private val clientOptions: ClientOpti
     }
 
     override fun withRawResponse(): MiscService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscService =
+        MiscServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun listSupportedCountries(
         params: MiscListSupportedCountriesParams,
@@ -36,6 +40,13 @@ class MiscServiceImpl internal constructor(private val clientOptions: ClientOpti
         MiscService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): MiscService.WithRawResponse =
+            MiscServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val listSupportedCountriesHandler: Handler<List<CountryCode>> =
             jsonHandler<List<CountryCode>>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

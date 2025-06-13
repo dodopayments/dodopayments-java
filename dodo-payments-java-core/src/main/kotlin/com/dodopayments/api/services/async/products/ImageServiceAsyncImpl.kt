@@ -19,6 +19,7 @@ import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.products.images.ImageUpdateParams
 import com.dodopayments.api.models.products.images.ImageUpdateResponse
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ImageServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -29,6 +30,9 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
     }
 
     override fun withRawResponse(): ImageServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ImageServiceAsync =
+        ImageServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun update(
         params: ImageUpdateParams,
@@ -41,6 +45,13 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
         ImageServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ImageServiceAsync.WithRawResponse =
+            ImageServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val updateHandler: Handler<ImageUpdateResponse> =
             jsonHandler<ImageUpdateResponse>(clientOptions.jsonMapper)
