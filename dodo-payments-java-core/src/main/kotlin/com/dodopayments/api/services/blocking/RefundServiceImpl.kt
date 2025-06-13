@@ -22,6 +22,7 @@ import com.dodopayments.api.models.refunds.RefundListPage
 import com.dodopayments.api.models.refunds.RefundListPageResponse
 import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.models.refunds.RefundRetrieveParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class RefundServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -32,6 +33,9 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
     }
 
     override fun withRawResponse(): RefundService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): RefundService =
+        RefundServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: RefundCreateParams, requestOptions: RequestOptions): Refund =
         // post /refunds
@@ -50,6 +54,13 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): RefundService.WithRawResponse =
+            RefundServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<Refund> =
             jsonHandler<Refund>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -60,6 +71,7 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("refunds")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -90,6 +102,7 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("refunds", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -117,6 +130,7 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("refunds")
                     .build()
                     .prepare(clientOptions, params)

@@ -16,6 +16,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
+import java.util.function.Consumer
 
 class MiscServiceImpl internal constructor(private val clientOptions: ClientOptions) : MiscService {
 
@@ -24,6 +25,9 @@ class MiscServiceImpl internal constructor(private val clientOptions: ClientOpti
     }
 
     override fun withRawResponse(): MiscService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscService =
+        MiscServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun listSupportedCountries(
         params: MiscListSupportedCountriesParams,
@@ -37,6 +41,13 @@ class MiscServiceImpl internal constructor(private val clientOptions: ClientOpti
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): MiscService.WithRawResponse =
+            MiscServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val listSupportedCountriesHandler: Handler<List<CountryCode>> =
             jsonHandler<List<CountryCode>>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -47,6 +58,7 @@ class MiscServiceImpl internal constructor(private val clientOptions: ClientOpti
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("checkout", "supported_countries")
                     .build()
                     .prepare(clientOptions, params)

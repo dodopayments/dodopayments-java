@@ -26,6 +26,7 @@ import com.dodopayments.api.models.brands.BrandUpdateImagesParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
 import com.dodopayments.api.models.brands.BrandUpdateResponse
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class BrandServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -36,6 +37,9 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
     }
 
     override fun withRawResponse(): BrandService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandService =
+        BrandServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: BrandCreateParams,
@@ -74,6 +78,13 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BrandService.WithRawResponse =
+            BrandServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<BrandCreateResponse> =
             jsonHandler<BrandCreateResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -85,6 +96,7 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -116,6 +128,7 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -146,6 +159,7 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -173,6 +187,7 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands")
                     .build()
                     .prepare(clientOptions, params)
@@ -203,6 +218,7 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0), "images")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

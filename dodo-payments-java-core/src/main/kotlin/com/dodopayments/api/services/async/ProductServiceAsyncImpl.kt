@@ -30,6 +30,7 @@ import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.ImageServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ProductServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -42,6 +43,9 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
     private val images: ImageServiceAsync by lazy { ImageServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): ProductServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync =
+        ProductServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageServiceAsync = images
 
@@ -96,6 +100,13 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             ImageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProductServiceAsync.WithRawResponse =
+            ProductServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         override fun images(): ImageServiceAsync.WithRawResponse = images
 
         private val createHandler: Handler<Product> =
@@ -108,6 +119,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -141,6 +153,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -172,6 +185,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -195,6 +209,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products")
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -234,6 +249,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products", params._pathParam(0))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -258,6 +274,7 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("products", params._pathParam(0), "unarchive")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

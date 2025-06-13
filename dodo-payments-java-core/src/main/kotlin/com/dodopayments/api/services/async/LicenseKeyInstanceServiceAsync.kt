@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.services.async
 
+import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
@@ -10,6 +11,7 @@ import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPar
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 interface LicenseKeyInstanceServiceAsync {
 
@@ -17,6 +19,13 @@ interface LicenseKeyInstanceServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceServiceAsync
 
     fun retrieve(id: String): CompletableFuture<LicenseKeyInstance> =
         retrieve(id, LicenseKeyInstanceRetrieveParams.none())
@@ -98,6 +107,15 @@ interface LicenseKeyInstanceServiceAsync {
      * each method.
      */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): LicenseKeyInstanceServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /license_key_instances/{id}`, but is otherwise the

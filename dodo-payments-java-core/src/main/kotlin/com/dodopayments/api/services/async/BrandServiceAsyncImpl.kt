@@ -27,6 +27,7 @@ import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
 import com.dodopayments.api.models.brands.BrandUpdateResponse
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class BrandServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -37,6 +38,9 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
     }
 
     override fun withRawResponse(): BrandServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandServiceAsync =
+        BrandServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: BrandCreateParams,
@@ -78,6 +82,13 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BrandServiceAsync.WithRawResponse =
+            BrandServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<BrandCreateResponse> =
             jsonHandler<BrandCreateResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -89,6 +100,7 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -123,6 +135,7 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -156,6 +169,7 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -186,6 +200,7 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands")
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -219,6 +234,7 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("brands", params._pathParam(0), "images")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()

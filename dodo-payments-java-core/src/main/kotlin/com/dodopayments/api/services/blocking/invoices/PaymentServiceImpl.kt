@@ -13,6 +13,7 @@ import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class PaymentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -23,6 +24,9 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
     }
 
     override fun withRawResponse(): PaymentService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService =
+        PaymentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun retrieve(
         params: PaymentRetrieveParams,
@@ -36,6 +40,13 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): PaymentService.WithRawResponse =
+            PaymentServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         override fun retrieve(
             params: PaymentRetrieveParams,
             requestOptions: RequestOptions,
@@ -46,6 +57,7 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("invoices", "payments", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)

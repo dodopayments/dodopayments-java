@@ -25,6 +25,7 @@ import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
 import com.dodopayments.api.services.blocking.customers.CustomerPortalServiceImpl
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class CustomerServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -39,6 +40,9 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
     }
 
     override fun withRawResponse(): CustomerService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService =
+        CustomerServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun customerPortal(): CustomerPortalService = customerPortal
 
@@ -73,6 +77,13 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             CustomerPortalServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CustomerService.WithRawResponse =
+            CustomerServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         override fun customerPortal(): CustomerPortalService.WithRawResponse = customerPortal
 
         private val createHandler: Handler<Customer> =
@@ -85,6 +96,7 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("customers")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -115,6 +127,7 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("customers", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -144,6 +157,7 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("customers", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -172,6 +186,7 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("customers")
                     .build()
                     .prepare(clientOptions, params)

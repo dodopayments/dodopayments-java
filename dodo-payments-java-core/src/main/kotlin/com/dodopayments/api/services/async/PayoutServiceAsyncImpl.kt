@@ -18,6 +18,7 @@ import com.dodopayments.api.models.payouts.PayoutListPageAsync
 import com.dodopayments.api.models.payouts.PayoutListPageResponse
 import com.dodopayments.api.models.payouts.PayoutListParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 
 class PayoutServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     PayoutServiceAsync {
@@ -27,6 +28,9 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
     }
 
     override fun withRawResponse(): PayoutServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync =
+        PayoutServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(
         params: PayoutListParams,
@@ -40,6 +44,13 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): PayoutServiceAsync.WithRawResponse =
+            PayoutServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val listHandler: Handler<PayoutListPageResponse> =
             jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -51,6 +62,7 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("payouts")
                     .build()
                     .prepareAsync(clientOptions, params)

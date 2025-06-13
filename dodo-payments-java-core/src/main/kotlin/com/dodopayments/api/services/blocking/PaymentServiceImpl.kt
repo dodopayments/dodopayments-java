@@ -25,6 +25,7 @@ import com.dodopayments.api.models.payments.PaymentListParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsResponse
 import com.dodopayments.api.models.payments.PaymentRetrieveParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class PaymentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -35,6 +36,9 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
     }
 
     override fun withRawResponse(): PaymentService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService =
+        PaymentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: PaymentCreateParams,
@@ -63,6 +67,13 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): PaymentService.WithRawResponse =
+            PaymentServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<PaymentCreateResponse> =
             jsonHandler<PaymentCreateResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -74,6 +85,7 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("payments")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -104,6 +116,7 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("payments", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
@@ -131,6 +144,7 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("payments")
                     .build()
                     .prepare(clientOptions, params)
@@ -168,6 +182,7 @@ class PaymentServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("payments", params._pathParam(0), "line-items")
                     .build()
                     .prepare(clientOptions, params)

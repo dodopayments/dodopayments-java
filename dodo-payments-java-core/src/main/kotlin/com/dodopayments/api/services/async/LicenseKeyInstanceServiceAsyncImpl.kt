@@ -23,6 +23,7 @@ import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPar
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyInstanceServiceAsyncImpl
@@ -33,6 +34,13 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
     }
 
     override fun withRawResponse(): LicenseKeyInstanceServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(
+        modifier: Consumer<ClientOptions.Builder>
+    ): LicenseKeyInstanceServiceAsync =
+        LicenseKeyInstanceServiceAsyncImpl(
+            clientOptions.toBuilder().apply(modifier::accept).build()
+        )
 
     override fun retrieve(
         params: LicenseKeyInstanceRetrieveParams,
@@ -60,6 +68,13 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): LicenseKeyInstanceServiceAsync.WithRawResponse =
+            LicenseKeyInstanceServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val retrieveHandler: Handler<LicenseKeyInstance> =
             jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -73,6 +88,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -105,6 +121,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -136,6 +153,7 @@ internal constructor(private val clientOptions: ClientOptions) : LicenseKeyInsta
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("license_key_instances")
                     .build()
                     .prepareAsync(clientOptions, params)

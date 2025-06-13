@@ -21,6 +21,7 @@ import com.dodopayments.api.models.webhookevents.WebhookEventListPageResponse
 import com.dodopayments.api.models.webhookevents.WebhookEventListParams
 import com.dodopayments.api.models.webhookevents.WebhookEventRetrieveParams
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class WebhookEventServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -31,6 +32,9 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
     }
 
     override fun withRawResponse(): WebhookEventServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventServiceAsync =
+        WebhookEventServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun retrieve(
         params: WebhookEventRetrieveParams,
@@ -51,6 +55,13 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): WebhookEventServiceAsync.WithRawResponse =
+            WebhookEventServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val retrieveHandler: Handler<WebhookEvent> =
             jsonHandler<WebhookEvent>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -64,6 +75,7 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("webhook_events", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -94,6 +106,7 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("webhook_events")
                     .build()
                     .prepareAsync(clientOptions, params)

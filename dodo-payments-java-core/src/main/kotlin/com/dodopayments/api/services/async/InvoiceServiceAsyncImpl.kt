@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.services.async.invoices.PaymentServiceAsync
 import com.dodopayments.api.services.async.invoices.PaymentServiceAsyncImpl
+import java.util.function.Consumer
 
 class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     InvoiceServiceAsync {
@@ -17,6 +18,9 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun withRawResponse(): InvoiceServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): InvoiceServiceAsync =
+        InvoiceServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun payments(): PaymentServiceAsync = payments
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -25,6 +29,13 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val payments: PaymentServiceAsync.WithRawResponse by lazy {
             PaymentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): InvoiceServiceAsync.WithRawResponse =
+            InvoiceServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun payments(): PaymentServiceAsync.WithRawResponse = payments
     }

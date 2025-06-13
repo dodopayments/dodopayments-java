@@ -22,6 +22,7 @@ import com.dodopayments.api.models.licenses.LicenseActivateParams
 import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
+import java.util.function.Consumer
 
 class LicenseServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     LicenseService {
@@ -31,6 +32,9 @@ class LicenseServiceImpl internal constructor(private val clientOptions: ClientO
     }
 
     override fun withRawResponse(): LicenseService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseService =
+        LicenseServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun activate(
         params: LicenseActivateParams,
@@ -56,6 +60,13 @@ class LicenseServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): LicenseService.WithRawResponse =
+            LicenseServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val activateHandler: Handler<LicenseKeyInstance> =
             jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -66,6 +77,7 @@ class LicenseServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("licenses", "activate")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -93,6 +105,7 @@ class LicenseServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("licenses", "deactivate")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -113,6 +126,7 @@ class LicenseServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("licenses", "validate")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
