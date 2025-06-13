@@ -36,6 +36,7 @@ import com.dodopayments.api.services.async.SubscriptionServiceAsync
 import com.dodopayments.api.services.async.SubscriptionServiceAsyncImpl
 import com.dodopayments.api.services.async.WebhookEventServiceAsync
 import com.dodopayments.api.services.async.WebhookEventServiceAsyncImpl
+import java.util.function.Consumer
 
 class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     DodoPaymentsClientAsync {
@@ -120,6 +121,9 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun sync(): DodoPaymentsClient = sync
 
     override fun withRawResponse(): DodoPaymentsClientAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClientAsync =
+        DodoPaymentsClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun payments(): PaymentServiceAsync = payments
 
@@ -221,6 +225,13 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         private val brands: BrandServiceAsync.WithRawResponse by lazy {
             BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): DodoPaymentsClientAsync.WithRawResponse =
+            DodoPaymentsClientAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun payments(): PaymentServiceAsync.WithRawResponse = payments
 

@@ -26,6 +26,7 @@ import com.dodopayments.api.models.discounts.DiscountListPageResponse
 import com.dodopayments.api.models.discounts.DiscountListParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class DiscountServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -36,6 +37,9 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
     }
 
     override fun withRawResponse(): DiscountService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DiscountService =
+        DiscountServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: DiscountCreateParams, requestOptions: RequestOptions): Discount =
         // post /discounts
@@ -68,6 +72,13 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
         DiscountService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): DiscountService.WithRawResponse =
+            DiscountServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<Discount> =
             jsonHandler<Discount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

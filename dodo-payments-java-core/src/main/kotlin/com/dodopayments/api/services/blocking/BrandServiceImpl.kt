@@ -26,6 +26,7 @@ import com.dodopayments.api.models.brands.BrandUpdateImagesParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
 import com.dodopayments.api.models.brands.BrandUpdateResponse
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class BrandServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -36,6 +37,9 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
     }
 
     override fun withRawResponse(): BrandService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandService =
+        BrandServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: BrandCreateParams,
@@ -73,6 +77,13 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
         BrandService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): BrandService.WithRawResponse =
+            BrandServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<BrandCreateResponse> =
             jsonHandler<BrandCreateResponse>(clientOptions.jsonMapper)

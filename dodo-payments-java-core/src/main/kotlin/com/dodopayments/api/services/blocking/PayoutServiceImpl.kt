@@ -17,6 +17,7 @@ import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.payouts.PayoutListPage
 import com.dodopayments.api.models.payouts.PayoutListPageResponse
 import com.dodopayments.api.models.payouts.PayoutListParams
+import java.util.function.Consumer
 
 class PayoutServiceImpl internal constructor(private val clientOptions: ClientOptions) :
     PayoutService {
@@ -27,6 +28,9 @@ class PayoutServiceImpl internal constructor(private val clientOptions: ClientOp
 
     override fun withRawResponse(): PayoutService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutService =
+        PayoutServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun list(params: PayoutListParams, requestOptions: RequestOptions): PayoutListPage =
         // get /payouts
         withRawResponse().list(params, requestOptions).parse()
@@ -35,6 +39,13 @@ class PayoutServiceImpl internal constructor(private val clientOptions: ClientOp
         PayoutService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): PayoutService.WithRawResponse =
+            PayoutServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val listHandler: Handler<PayoutListPageResponse> =
             jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)

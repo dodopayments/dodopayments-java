@@ -22,6 +22,7 @@ import com.dodopayments.api.models.refunds.RefundListPage
 import com.dodopayments.api.models.refunds.RefundListPageResponse
 import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.models.refunds.RefundRetrieveParams
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class RefundServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -32,6 +33,9 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
     }
 
     override fun withRawResponse(): RefundService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): RefundService =
+        RefundServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: RefundCreateParams, requestOptions: RequestOptions): Refund =
         // post /refunds
@@ -49,6 +53,13 @@ class RefundServiceImpl internal constructor(private val clientOptions: ClientOp
         RefundService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): RefundService.WithRawResponse =
+            RefundServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<Refund> =
             jsonHandler<Refund>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

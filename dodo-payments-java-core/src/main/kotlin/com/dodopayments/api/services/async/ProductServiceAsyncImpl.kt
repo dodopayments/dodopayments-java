@@ -30,6 +30,7 @@ import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.ImageServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
 class ProductServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -42,6 +43,9 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
     private val images: ImageServiceAsync by lazy { ImageServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): ProductServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync =
+        ProductServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageServiceAsync = images
 
@@ -95,6 +99,13 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
         private val images: ImageServiceAsync.WithRawResponse by lazy {
             ImageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProductServiceAsync.WithRawResponse =
+            ProductServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun images(): ImageServiceAsync.WithRawResponse = images
 
