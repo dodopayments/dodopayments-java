@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.34.0 (2025-06-18)
+
+Full Changelog: [v1.32.0...v1.34.0](https://github.com/dodopayments/dodopayments-java/compare/v1.32.0...v1.34.0)
+
+### Features
+
+* **api:** updated to version 1.34.0 ([6e4dd77](https://github.com/dodopayments/dodopayments-java/commit/6e4dd773e2f58c4007381756cafc38b68dea744c))
+* **client:** add a `withOptions` method ([85f49ac](https://github.com/dodopayments/dodopayments-java/commit/85f49ac38b881742f7597197a06553831aafee77))
+* **client:** implement per-endpoint base URL support ([23c6df7](https://github.com/dodopayments/dodopayments-java/commit/23c6df7a5b16418294b589c7046208c82d667f36))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([85dd42d](https://github.com/dodopayments/dodopayments-java/commit/85dd42deb628340de3e9a403bd6d962bd265b499))
+
 ## 1.32.0 (2025-06-09)
 
 Full Changelog: [v1.30.2...v1.32.0](https://github.com/dodopayments/dodopayments-java/compare/v1.30.2...v1.32.0)
