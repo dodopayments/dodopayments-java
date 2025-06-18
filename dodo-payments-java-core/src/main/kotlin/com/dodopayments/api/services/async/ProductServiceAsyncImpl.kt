@@ -26,6 +26,8 @@ import com.dodopayments.api.models.products.ProductListPageResponse
 import com.dodopayments.api.models.products.ProductListParams
 import com.dodopayments.api.models.products.ProductRetrieveParams
 import com.dodopayments.api.models.products.ProductUnarchiveParams
+import com.dodopayments.api.models.products.ProductUpdateFilesParams
+import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.ImageServiceAsyncImpl
@@ -90,6 +92,13 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<Void?> =
         // post /products/{id}/unarchive
         withRawResponse().unarchive(params, requestOptions).thenAccept {}
+
+    override fun updateFiles(
+        params: ProductUpdateFilesParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ProductUpdateFilesResponse> =
+        // put /products/{id}/files
+        withRawResponse().updateFiles(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProductServiceAsync.WithRawResponse {
@@ -284,6 +293,41 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     response.parseable { response.use { unarchiveHandler.handle(it) } }
+                }
+        }
+
+        private val updateFilesHandler: Handler<ProductUpdateFilesResponse> =
+            jsonHandler<ProductUpdateFilesResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun updateFiles(
+            params: ProductUpdateFilesParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ProductUpdateFilesResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("products", params._pathParam(0), "files")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { updateFilesHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
                 }
         }
     }

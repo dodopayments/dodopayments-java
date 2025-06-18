@@ -26,6 +26,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<Currency>,
     private val customer: JsonField<CustomerLimitedDetails>,
+    private val digitalProductsDelivered: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
     private val totalAmount: JsonField<Int>,
@@ -46,6 +47,9 @@ private constructor(
         @JsonProperty("customer")
         @ExcludeMissing
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
+        @JsonProperty("digital_products_delivered")
+        @ExcludeMissing
+        digitalProductsDelivered: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("total_amount")
@@ -66,6 +70,7 @@ private constructor(
         createdAt,
         currency,
         customer,
+        digitalProductsDelivered,
         metadata,
         paymentId,
         totalAmount,
@@ -99,6 +104,13 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
+
+    /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun digitalProductsDelivered(): Boolean =
+        digitalProductsDelivered.getRequired("digital_products_delivered")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -173,6 +185,16 @@ private constructor(
     @JsonProperty("customer")
     @ExcludeMissing
     fun _customer(): JsonField<CustomerLimitedDetails> = customer
+
+    /**
+     * Returns the raw JSON value of [digitalProductsDelivered].
+     *
+     * Unlike [digitalProductsDelivered], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("digital_products_delivered")
+    @ExcludeMissing
+    fun _digitalProductsDelivered(): JsonField<Boolean> = digitalProductsDelivered
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -253,6 +275,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .digitalProductsDelivered()
          * .metadata()
          * .paymentId()
          * .totalAmount()
@@ -268,6 +291,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<Currency>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
+        private var digitalProductsDelivered: JsonField<Boolean>? = null
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
         private var totalAmount: JsonField<Int>? = null
@@ -283,6 +307,7 @@ private constructor(
             createdAt = paymentListResponse.createdAt
             currency = paymentListResponse.currency
             customer = paymentListResponse.customer
+            digitalProductsDelivered = paymentListResponse.digitalProductsDelivered
             metadata = paymentListResponse.metadata
             paymentId = paymentListResponse.paymentId
             totalAmount = paymentListResponse.totalAmount
@@ -336,6 +361,20 @@ private constructor(
          */
         fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
             this.customer = customer
+        }
+
+        fun digitalProductsDelivered(digitalProductsDelivered: Boolean) =
+            digitalProductsDelivered(JsonField.of(digitalProductsDelivered))
+
+        /**
+         * Sets [Builder.digitalProductsDelivered] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.digitalProductsDelivered] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun digitalProductsDelivered(digitalProductsDelivered: JsonField<Boolean>) = apply {
+            this.digitalProductsDelivered = digitalProductsDelivered
         }
 
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -468,6 +507,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .digitalProductsDelivered()
          * .metadata()
          * .paymentId()
          * .totalAmount()
@@ -481,6 +521,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
                 checkRequired("customer", customer),
+                checkRequired("digitalProductsDelivered", digitalProductsDelivered),
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
                 checkRequired("totalAmount", totalAmount),
@@ -503,6 +544,7 @@ private constructor(
         createdAt()
         currency().validate()
         customer().validate()
+        digitalProductsDelivered()
         metadata().validate()
         paymentId()
         totalAmount()
@@ -532,6 +574,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (digitalProductsDelivered.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
             (if (totalAmount.asKnown().isPresent) 1 else 0) +
@@ -646,15 +689,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is PaymentListResponse && brandId == other.brandId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && metadata == other.metadata && paymentId == other.paymentId && totalAmount == other.totalAmount && paymentMethod == other.paymentMethod && paymentMethodType == other.paymentMethodType && status == other.status && subscriptionId == other.subscriptionId && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is PaymentListResponse && brandId == other.brandId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && digitalProductsDelivered == other.digitalProductsDelivered && metadata == other.metadata && paymentId == other.paymentId && totalAmount == other.totalAmount && paymentMethod == other.paymentMethod && paymentMethodType == other.paymentMethodType && status == other.status && subscriptionId == other.subscriptionId && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(brandId, createdAt, currency, customer, metadata, paymentId, totalAmount, paymentMethod, paymentMethodType, status, subscriptionId, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(brandId, createdAt, currency, customer, digitalProductsDelivered, metadata, paymentId, totalAmount, paymentMethod, paymentMethodType, status, subscriptionId, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, paymentId=$paymentId, totalAmount=$totalAmount, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, metadata=$metadata, paymentId=$paymentId, totalAmount=$totalAmount, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }

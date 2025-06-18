@@ -9,6 +9,7 @@ import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.products.Price
 import com.dodopayments.api.models.products.ProductCreateParams
+import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import org.junit.jupiter.api.Test
@@ -45,6 +46,12 @@ internal class ProductServiceAsyncTest {
                     .addAddon("string")
                     .brandId("brand_id")
                     .description("description")
+                    .digitalProductDelivery(
+                        ProductCreateParams.DigitalProductDelivery.builder()
+                            .externalUrl("external_url")
+                            .instructions("instructions")
+                            .build()
+                    )
                     .licenseKeyActivationMessage("license_key_activation_message")
                     .licenseKeyActivationsLimit(0)
                     .licenseKeyDuration(
@@ -90,6 +97,13 @@ internal class ProductServiceAsyncTest {
                     .addAddon("string")
                     .brandId("brand_id")
                     .description("description")
+                    .digitalProductDelivery(
+                        ProductUpdateParams.DigitalProductDelivery.builder()
+                            .externalUrl("external_url")
+                            .addFile("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+                            .instructions("instructions")
+                            .build()
+                    )
                     .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .licenseKeyActivationMessage("license_key_activation_message")
                     .licenseKeyActivationsLimit(0)
@@ -158,5 +172,23 @@ internal class ProductServiceAsyncTest {
         val future = productServiceAsync.unarchive("id")
 
         val response = future.get()
+    }
+
+    @Test
+    fun updateFiles() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val productServiceAsync = client.products()
+
+        val responseFuture =
+            productServiceAsync.updateFiles(
+                ProductUpdateFilesParams.builder().id("id").fileName("file_name").build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
     }
 }
