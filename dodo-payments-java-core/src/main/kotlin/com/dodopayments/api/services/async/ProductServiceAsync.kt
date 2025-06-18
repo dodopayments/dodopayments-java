@@ -13,6 +13,8 @@ import com.dodopayments.api.models.products.ProductListPageAsync
 import com.dodopayments.api.models.products.ProductListParams
 import com.dodopayments.api.models.products.ProductRetrieveParams
 import com.dodopayments.api.models.products.ProductUnarchiveParams
+import com.dodopayments.api.models.products.ProductUpdateFilesParams
+import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -177,6 +179,31 @@ interface ProductServiceAsync {
     /** @see [unarchive] */
     fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
         unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+
+    fun updateFiles(
+        id: String,
+        params: ProductUpdateFilesParams,
+    ): CompletableFuture<ProductUpdateFilesResponse> =
+        updateFiles(id, params, RequestOptions.none())
+
+    /** @see [updateFiles] */
+    fun updateFiles(
+        id: String,
+        params: ProductUpdateFilesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProductUpdateFilesResponse> =
+        updateFiles(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [updateFiles] */
+    fun updateFiles(
+        params: ProductUpdateFilesParams
+    ): CompletableFuture<ProductUpdateFilesResponse> = updateFiles(params, RequestOptions.none())
+
+    /** @see [updateFiles] */
+    fun updateFiles(
+        params: ProductUpdateFilesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProductUpdateFilesResponse>
 
     /**
      * A view of [ProductServiceAsync] that provides access to raw HTTP responses for each method.
@@ -374,5 +401,35 @@ interface ProductServiceAsync {
         /** @see [unarchive] */
         fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
             unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /products/{id}/files`, but is otherwise the same as
+         * [ProductServiceAsync.updateFiles].
+         */
+        fun updateFiles(
+            id: String,
+            params: ProductUpdateFilesParams,
+        ): CompletableFuture<HttpResponseFor<ProductUpdateFilesResponse>> =
+            updateFiles(id, params, RequestOptions.none())
+
+        /** @see [updateFiles] */
+        fun updateFiles(
+            id: String,
+            params: ProductUpdateFilesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProductUpdateFilesResponse>> =
+            updateFiles(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [updateFiles] */
+        fun updateFiles(
+            params: ProductUpdateFilesParams
+        ): CompletableFuture<HttpResponseFor<ProductUpdateFilesResponse>> =
+            updateFiles(params, RequestOptions.none())
+
+        /** @see [updateFiles] */
+        fun updateFiles(
+            params: ProductUpdateFilesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProductUpdateFilesResponse>>
     }
 }

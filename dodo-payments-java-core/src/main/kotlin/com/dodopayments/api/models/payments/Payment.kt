@@ -32,6 +32,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<Currency>,
     private val customer: JsonField<CustomerLimitedDetails>,
+    private val digitalProductsDelivered: JsonField<Boolean>,
     private val disputes: JsonField<List<Dispute>>,
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
@@ -74,6 +75,9 @@ private constructor(
         @JsonProperty("customer")
         @ExcludeMissing
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
+        @JsonProperty("digital_products_delivered")
+        @ExcludeMissing
+        digitalProductsDelivered: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("disputes")
         @ExcludeMissing
         disputes: JsonField<List<Dispute>> = JsonMissing.of(),
@@ -138,6 +142,7 @@ private constructor(
         createdAt,
         currency,
         customer,
+        digitalProductsDelivered,
         disputes,
         metadata,
         paymentId,
@@ -205,6 +210,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
+
+    /**
+     * brand id this payment belongs to
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun digitalProductsDelivered(): Boolean =
+        digitalProductsDelivered.getRequired("digital_products_delivered")
 
     /**
      * List of disputes associated with this payment
@@ -436,6 +450,16 @@ private constructor(
     fun _customer(): JsonField<CustomerLimitedDetails> = customer
 
     /**
+     * Returns the raw JSON value of [digitalProductsDelivered].
+     *
+     * Unlike [digitalProductsDelivered], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("digital_products_delivered")
+    @ExcludeMissing
+    fun _digitalProductsDelivered(): JsonField<Boolean> = digitalProductsDelivered
+
+    /**
      * Returns the raw JSON value of [disputes].
      *
      * Unlike [disputes], this method doesn't throw if the JSON field has an unexpected type.
@@ -651,6 +675,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .digitalProductsDelivered()
          * .disputes()
          * .metadata()
          * .paymentId()
@@ -672,6 +697,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<Currency>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
+        private var digitalProductsDelivered: JsonField<Boolean>? = null
         private var disputes: JsonField<MutableList<Dispute>>? = null
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
@@ -705,6 +731,7 @@ private constructor(
             createdAt = payment.createdAt
             currency = payment.currency
             customer = payment.customer
+            digitalProductsDelivered = payment.digitalProductsDelivered
             disputes = payment.disputes.map { it.toMutableList() }
             metadata = payment.metadata
             paymentId = payment.paymentId
@@ -799,6 +826,21 @@ private constructor(
          */
         fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
             this.customer = customer
+        }
+
+        /** brand id this payment belongs to */
+        fun digitalProductsDelivered(digitalProductsDelivered: Boolean) =
+            digitalProductsDelivered(JsonField.of(digitalProductsDelivered))
+
+        /**
+         * Sets [Builder.digitalProductsDelivered] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.digitalProductsDelivered] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun digitalProductsDelivered(digitalProductsDelivered: JsonField<Boolean>) = apply {
+            this.digitalProductsDelivered = digitalProductsDelivered
         }
 
         /** List of disputes associated with this payment */
@@ -1250,6 +1292,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .digitalProductsDelivered()
          * .disputes()
          * .metadata()
          * .paymentId()
@@ -1269,6 +1312,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
                 checkRequired("customer", customer),
+                checkRequired("digitalProductsDelivered", digitalProductsDelivered),
                 checkRequired("disputes", disputes).map { it.toImmutable() },
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
@@ -1309,6 +1353,7 @@ private constructor(
         createdAt()
         currency().validate()
         customer().validate()
+        digitalProductsDelivered()
         disputes().forEach { it.validate() }
         metadata().validate()
         paymentId()
@@ -1356,6 +1401,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (digitalProductsDelivered.asKnown().isPresent) 1 else 0) +
             (disputes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
@@ -1678,15 +1724,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Payment && billing == other.billing && brandId == other.brandId && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputes == other.disputes && metadata == other.metadata && paymentId == other.paymentId && refunds == other.refunds && settlementAmount == other.settlementAmount && settlementCurrency == other.settlementCurrency && totalAmount == other.totalAmount && cardIssuingCountry == other.cardIssuingCountry && cardLastFour == other.cardLastFour && cardNetwork == other.cardNetwork && cardType == other.cardType && discountId == other.discountId && errorCode == other.errorCode && errorMessage == other.errorMessage && paymentLink == other.paymentLink && paymentMethod == other.paymentMethod && paymentMethodType == other.paymentMethodType && productCart == other.productCart && settlementTax == other.settlementTax && status == other.status && subscriptionId == other.subscriptionId && tax == other.tax && updatedAt == other.updatedAt && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Payment && billing == other.billing && brandId == other.brandId && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && digitalProductsDelivered == other.digitalProductsDelivered && disputes == other.disputes && metadata == other.metadata && paymentId == other.paymentId && refunds == other.refunds && settlementAmount == other.settlementAmount && settlementCurrency == other.settlementCurrency && totalAmount == other.totalAmount && cardIssuingCountry == other.cardIssuingCountry && cardLastFour == other.cardLastFour && cardNetwork == other.cardNetwork && cardType == other.cardType && discountId == other.discountId && errorCode == other.errorCode && errorMessage == other.errorMessage && paymentLink == other.paymentLink && paymentMethod == other.paymentMethod && paymentMethodType == other.paymentMethodType && productCart == other.productCart && settlementTax == other.settlementTax && status == other.status && subscriptionId == other.subscriptionId && tax == other.tax && updatedAt == other.updatedAt && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(billing, brandId, businessId, createdAt, currency, customer, disputes, metadata, paymentId, refunds, settlementAmount, settlementCurrency, totalAmount, cardIssuingCountry, cardLastFour, cardNetwork, cardType, discountId, errorCode, errorMessage, paymentLink, paymentMethod, paymentMethodType, productCart, settlementTax, status, subscriptionId, tax, updatedAt, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(billing, brandId, businessId, createdAt, currency, customer, digitalProductsDelivered, disputes, metadata, paymentId, refunds, settlementAmount, settlementCurrency, totalAmount, cardIssuingCountry, cardLastFour, cardNetwork, cardType, discountId, errorCode, errorMessage, paymentLink, paymentMethod, paymentMethodType, productCart, settlementTax, status, subscriptionId, tax, updatedAt, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
