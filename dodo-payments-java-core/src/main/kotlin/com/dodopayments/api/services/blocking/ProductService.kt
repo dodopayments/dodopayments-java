@@ -13,6 +13,8 @@ import com.dodopayments.api.models.products.ProductListPage
 import com.dodopayments.api.models.products.ProductListParams
 import com.dodopayments.api.models.products.ProductRetrieveParams
 import com.dodopayments.api.models.products.ProductUnarchiveParams
+import com.dodopayments.api.models.products.ProductUpdateFilesParams
+import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.google.errorprone.annotations.MustBeClosed
@@ -157,6 +159,26 @@ interface ProductService {
     /** @see [unarchive] */
     fun unarchive(id: String, requestOptions: RequestOptions) =
         unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+
+    fun updateFiles(id: String, params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
+        updateFiles(id, params, RequestOptions.none())
+
+    /** @see [updateFiles] */
+    fun updateFiles(
+        id: String,
+        params: ProductUpdateFilesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProductUpdateFilesResponse = updateFiles(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [updateFiles] */
+    fun updateFiles(params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
+        updateFiles(params, RequestOptions.none())
+
+    /** @see [updateFiles] */
+    fun updateFiles(
+        params: ProductUpdateFilesParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProductUpdateFilesResponse
 
     /** A view of [ProductService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -363,5 +385,38 @@ interface ProductService {
         @MustBeClosed
         fun unarchive(id: String, requestOptions: RequestOptions): HttpResponse =
             unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /products/{id}/files`, but is otherwise the same as
+         * [ProductService.updateFiles].
+         */
+        @MustBeClosed
+        fun updateFiles(
+            id: String,
+            params: ProductUpdateFilesParams,
+        ): HttpResponseFor<ProductUpdateFilesResponse> =
+            updateFiles(id, params, RequestOptions.none())
+
+        /** @see [updateFiles] */
+        @MustBeClosed
+        fun updateFiles(
+            id: String,
+            params: ProductUpdateFilesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProductUpdateFilesResponse> =
+            updateFiles(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [updateFiles] */
+        @MustBeClosed
+        fun updateFiles(
+            params: ProductUpdateFilesParams
+        ): HttpResponseFor<ProductUpdateFilesResponse> = updateFiles(params, RequestOptions.none())
+
+        /** @see [updateFiles] */
+        @MustBeClosed
+        fun updateFiles(
+            params: ProductUpdateFilesParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProductUpdateFilesResponse>
     }
 }

@@ -675,12 +675,15 @@ private constructor(
 
             @JvmField val PRORATED_IMMEDIATELY = of("prorated_immediately")
 
+            @JvmField val FULL_IMMEDIATELY = of("full_immediately")
+
             @JvmStatic fun of(value: String) = ProrationBillingMode(JsonField.of(value))
         }
 
         /** An enum containing [ProrationBillingMode]'s known values. */
         enum class Known {
-            PRORATED_IMMEDIATELY
+            PRORATED_IMMEDIATELY,
+            FULL_IMMEDIATELY,
         }
 
         /**
@@ -695,6 +698,7 @@ private constructor(
          */
         enum class Value {
             PRORATED_IMMEDIATELY,
+            FULL_IMMEDIATELY,
             /**
              * An enum member indicating that [ProrationBillingMode] was instantiated with an
              * unknown value.
@@ -712,6 +716,7 @@ private constructor(
         fun value(): Value =
             when (this) {
                 PRORATED_IMMEDIATELY -> Value.PRORATED_IMMEDIATELY
+                FULL_IMMEDIATELY -> Value.FULL_IMMEDIATELY
                 else -> Value._UNKNOWN
             }
 
@@ -727,6 +732,7 @@ private constructor(
         fun known(): Known =
             when (this) {
                 PRORATED_IMMEDIATELY -> Known.PRORATED_IMMEDIATELY
+                FULL_IMMEDIATELY -> Known.FULL_IMMEDIATELY
                 else ->
                     throw DodoPaymentsInvalidDataException("Unknown ProrationBillingMode: $value")
             }

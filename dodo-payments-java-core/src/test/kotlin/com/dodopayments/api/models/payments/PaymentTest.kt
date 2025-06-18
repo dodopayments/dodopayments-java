@@ -43,6 +43,7 @@ internal class PaymentTest {
                         .name("name")
                         .build()
                 )
+                .digitalProductsDelivered(true)
                 .addDispute(
                     Dispute.builder()
                         .amount("amount")
@@ -120,6 +121,7 @@ internal class PaymentTest {
                     .name("name")
                     .build()
             )
+        assertThat(payment.digitalProductsDelivered()).isEqualTo(true)
         assertThat(payment.disputes())
             .containsExactly(
                 Dispute.builder()
@@ -204,6 +206,7 @@ internal class PaymentTest {
                         .name("name")
                         .build()
                 )
+                .digitalProductsDelivered(true)
                 .addDispute(
                     Dispute.builder()
                         .amount("amount")
