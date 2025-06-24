@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.34.2 (2025-06-24)
+
+Full Changelog: [v1.34.1...v1.34.2](https://github.com/dodopayments/dodopayments-java/compare/v1.34.1...v1.34.2)
+
+### Bug Fixes
+
+* **client:** bump max requests per host to max requests (5 -&gt; 64) ([9f56229](https://github.com/dodopayments/dodopayments-java/commit/9f5622933af9576c7a5e9124438d425f8a88c98c))
+
 ## 1.34.1 (2025-06-21)
 
 Full Changelog: [v1.34.0...v1.34.1](https://github.com/dodopayments/dodopayments-java/compare/v1.34.0...v1.34.1)
