@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.37.0 (2025-07-02)
+
+Full Changelog: [v1.34.2...v1.37.0](https://github.com/dodopayments/dodopayments-java/compare/v1.34.2...v1.37.0)
+
+### Features
+
+* **api:** updated openapi spec for v1.37.0 ([2c6be21](https://github.com/dodopayments/dodopayments-java/commit/2c6be2152780923553e59189bd88de0a75bee344))
+
+
+### Bug Fixes
+
+* **ci:** release-doctor — report correct token name ([363bf6c](https://github.com/dodopayments/dodopayments-java/commit/363bf6c891f1c5818a7a4620cb04a557438a5b8a))
+* **client:** don't close client on `withOptions` usage when original is gc'd ([4fa8683](https://github.com/dodopayments/dodopayments-java/commit/4fa8683935d28b44bee7595b024d96cfe41a8447))
+
+
+### Chores
+
+* **ci:** only run for pushes and fork pull requests ([f6f1229](https://github.com/dodopayments/dodopayments-java/commit/f6f1229ac2bca47b283182c264c2e363bea5d44f))
+
+
+### Refactors
+
+* **internal:** minor `ClientOptionsTest` change ([149b8a3](https://github.com/dodopayments/dodopayments-java/commit/149b8a35c19ff2dc29470c86543fcc8b199b5e54))
+
 ## 1.34.2 (2025-06-24)
 
 Full Changelog: [v1.34.1...v1.34.2](https://github.com/dodopayments/dodopayments-java/compare/v1.34.1...v1.34.2)
