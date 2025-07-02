@@ -149,6 +149,8 @@ private constructor(
     fun addons(): List<AddonCartResponseItem> = addons.getRequired("addons")
 
     /**
+     * Billing address details for payments
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -172,18 +174,24 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * Currency used for the subscription payments
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currency(): Currency = currency.getRequired("currency")
 
     /**
+     * Customer details associated with the subscription
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
 
     /**
+     * Additional custom data associated with the subscription
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -214,6 +222,8 @@ private constructor(
     fun paymentFrequencyCount(): Int = paymentFrequencyCount.getRequired("payment_frequency_count")
 
     /**
+     * Time interval for payment frequency (e.g. month, year)
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -254,6 +264,8 @@ private constructor(
     fun recurringPreTaxAmount(): Int = recurringPreTaxAmount.getRequired("recurring_pre_tax_amount")
 
     /**
+     * Current status of the subscription
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -277,6 +289,8 @@ private constructor(
         subscriptionPeriodCount.getRequired("subscription_period_count")
 
     /**
+     * Time interval for the subscription period (e.g. month, year)
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -640,6 +654,7 @@ private constructor(
                 }
         }
 
+        /** Billing address details for payments */
         fun billing(billing: BillingAddress) = billing(JsonField.of(billing))
 
         /**
@@ -678,6 +693,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** Currency used for the subscription payments */
         fun currency(currency: Currency) = currency(JsonField.of(currency))
 
         /**
@@ -689,6 +705,7 @@ private constructor(
          */
         fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
 
+        /** Customer details associated with the subscription */
         fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
 
         /**
@@ -702,6 +719,7 @@ private constructor(
             this.customer = customer
         }
 
+        /** Additional custom data associated with the subscription */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
         /**
@@ -755,6 +773,7 @@ private constructor(
             this.paymentFrequencyCount = paymentFrequencyCount
         }
 
+        /** Time interval for payment frequency (e.g. month, year) */
         fun paymentFrequencyInterval(paymentFrequencyInterval: TimeInterval) =
             paymentFrequencyInterval(JsonField.of(paymentFrequencyInterval))
 
@@ -825,6 +844,7 @@ private constructor(
             this.recurringPreTaxAmount = recurringPreTaxAmount
         }
 
+        /** Current status of the subscription */
         fun status(status: SubscriptionStatus) = status(JsonField.of(status))
 
         /**
@@ -865,6 +885,7 @@ private constructor(
             this.subscriptionPeriodCount = subscriptionPeriodCount
         }
 
+        /** Time interval for the subscription period (e.g. month, year) */
         fun subscriptionPeriodInterval(subscriptionPeriodInterval: TimeInterval) =
             subscriptionPeriodInterval(JsonField.of(subscriptionPeriodInterval))
 
@@ -1094,6 +1115,7 @@ private constructor(
             (if (cancelledAt.asKnown().isPresent) 1 else 0) +
             (if (discountId.asKnown().isPresent) 1 else 0)
 
+    /** Additional custom data associated with the subscription */
     class Metadata
     @JsonCreator
     private constructor(

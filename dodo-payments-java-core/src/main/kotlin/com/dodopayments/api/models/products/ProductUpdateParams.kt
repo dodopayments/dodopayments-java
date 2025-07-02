@@ -55,6 +55,8 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
+     * Choose how you would like you digital product delivered
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -91,6 +93,11 @@ private constructor(
     fun licenseKeyActivationsLimit(): Optional<Int> = body.licenseKeyActivationsLimit()
 
     /**
+     * Duration of the license key if enabled.
+     *
+     * Only applicable if `license_key_enabled` is `true`. Represents the duration in days for which
+     * the license key is valid.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -116,13 +123,15 @@ private constructor(
     fun name(): Optional<String> = body.name()
 
     /**
+     * Price details of the product.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun price(): Optional<Price> = body.price()
 
     /**
-     * Represents the different categories of taxation applicable to various products and services.
+     * Tax category of the product.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -320,6 +329,7 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
+        /** Choose how you would like you digital product delivered */
         fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) = apply {
             body.digitalProductDelivery(digitalProductDelivery)
         }
@@ -421,6 +431,12 @@ private constructor(
             body.licenseKeyActivationsLimit(licenseKeyActivationsLimit)
         }
 
+        /**
+         * Duration of the license key if enabled.
+         *
+         * Only applicable if `license_key_enabled` is `true`. Represents the duration in days for
+         * which the license key is valid.
+         */
         fun licenseKeyDuration(licenseKeyDuration: LicenseKeyDuration?) = apply {
             body.licenseKeyDuration(licenseKeyDuration)
         }
@@ -489,6 +505,7 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
+        /** Price details of the product. */
         fun price(price: Price?) = apply { body.price(price) }
 
         /** Alias for calling [Builder.price] with `price.orElse(null)`. */
@@ -508,10 +525,7 @@ private constructor(
         /** Alias for calling [price] with `Price.ofRecurring(recurring)`. */
         fun price(recurring: Price.RecurringPrice) = apply { body.price(recurring) }
 
-        /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
-         */
+        /** Tax category of the product. */
         fun taxCategory(taxCategory: TaxCategory?) = apply { body.taxCategory(taxCategory) }
 
         /** Alias for calling [Builder.taxCategory] with `taxCategory.orElse(null)`. */
@@ -757,6 +771,8 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
+         * Choose how you would like you digital product delivered
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -796,6 +812,11 @@ private constructor(
             licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
 
         /**
+         * Duration of the license key if enabled.
+         *
+         * Only applicable if `license_key_enabled` is `true`. Represents the duration in days for
+         * which the license key is valid.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -823,14 +844,15 @@ private constructor(
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
+         * Price details of the product.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
         fun price(): Optional<Price> = price.getOptional("price")
 
         /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
+         * Tax category of the product.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -1052,6 +1074,7 @@ private constructor(
                 this.description = description
             }
 
+            /** Choose how you would like you digital product delivered */
             fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) =
                 digitalProductDelivery(JsonField.ofNullable(digitalProductDelivery))
 
@@ -1152,6 +1175,12 @@ private constructor(
                 this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
             }
 
+            /**
+             * Duration of the license key if enabled.
+             *
+             * Only applicable if `license_key_enabled` is `true`. Represents the duration in days
+             * for which the license key is valid.
+             */
             fun licenseKeyDuration(licenseKeyDuration: LicenseKeyDuration?) =
                 licenseKeyDuration(JsonField.ofNullable(licenseKeyDuration))
 
@@ -1222,6 +1251,7 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
+            /** Price details of the product. */
             fun price(price: Price?) = price(JsonField.ofNullable(price))
 
             /** Alias for calling [Builder.price] with `price.orElse(null)`. */
@@ -1242,10 +1272,7 @@ private constructor(
             /** Alias for calling [price] with `Price.ofRecurring(recurring)`. */
             fun price(recurring: Price.RecurringPrice) = price(Price.ofRecurring(recurring))
 
-            /**
-             * Represents the different categories of taxation applicable to various products and
-             * services.
-             */
+            /** Tax category of the product. */
             fun taxCategory(taxCategory: TaxCategory?) =
                 taxCategory(JsonField.ofNullable(taxCategory))
 
@@ -1375,6 +1402,7 @@ private constructor(
             "Body{addons=$addons, brandId=$brandId, description=$description, digitalProductDelivery=$digitalProductDelivery, imageId=$imageId, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, licenseKeyEnabled=$licenseKeyEnabled, name=$name, price=$price, taxCategory=$taxCategory, additionalProperties=$additionalProperties}"
     }
 
+    /** Choose how you would like you digital product delivered */
     class DigitalProductDelivery
     private constructor(
         private val externalUrl: JsonField<String>,

@@ -119,7 +119,7 @@ private constructor(
     fun productId(): String = productId.getRequired("product_id")
 
     /**
-     * Represents the different categories of taxation applicable to various products and services.
+     * Tax category associated with the product.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -135,6 +135,8 @@ private constructor(
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
+     * Currency of the price
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -180,6 +182,8 @@ private constructor(
     fun price(): Optional<Int> = price.getOptional("price")
 
     /**
+     * Details of the price
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -408,10 +412,7 @@ private constructor(
          */
         fun productId(productId: JsonField<String>) = apply { this.productId = productId }
 
-        /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
-         */
+        /** Tax category associated with the product. */
         fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
 
         /**
@@ -437,6 +438,7 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        /** Currency of the price */
         fun currency(currency: Currency?) = currency(JsonField.ofNullable(currency))
 
         /** Alias for calling [Builder.currency] with `currency.orElse(null)`. */
@@ -524,6 +526,7 @@ private constructor(
          */
         fun price(price: JsonField<Int>) = apply { this.price = price }
 
+        /** Details of the price */
         fun priceDetail(priceDetail: Price?) = priceDetail(JsonField.ofNullable(priceDetail))
 
         /** Alias for calling [Builder.priceDetail] with `priceDetail.orElse(null)`. */

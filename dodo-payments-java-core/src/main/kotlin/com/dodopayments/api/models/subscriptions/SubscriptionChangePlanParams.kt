@@ -42,6 +42,8 @@ private constructor(
     fun productId(): String = body.productId()
 
     /**
+     * Proration Billing Mode
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -161,6 +163,7 @@ private constructor(
          */
         fun productId(productId: JsonField<String>) = apply { body.productId(productId) }
 
+        /** Proration Billing Mode */
         fun prorationBillingMode(prorationBillingMode: ProrationBillingMode) = apply {
             body.prorationBillingMode(prorationBillingMode)
         }
@@ -393,6 +396,8 @@ private constructor(
         fun productId(): String = productId.getRequired("product_id")
 
         /**
+         * Proration Billing Mode
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -503,6 +508,7 @@ private constructor(
              */
             fun productId(productId: JsonField<String>) = apply { this.productId = productId }
 
+            /** Proration Billing Mode */
             fun prorationBillingMode(prorationBillingMode: ProrationBillingMode) =
                 prorationBillingMode(JsonField.of(prorationBillingMode))
 
@@ -657,6 +663,7 @@ private constructor(
             "Body{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, addons=$addons, additionalProperties=$additionalProperties}"
     }
 
+    /** Proration Billing Mode */
     class ProrationBillingMode
     @JsonCreator
     private constructor(private val value: JsonField<String>) : Enum {
