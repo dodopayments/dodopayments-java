@@ -170,6 +170,8 @@ private constructor(
     )
 
     /**
+     * Billing address details for payments
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -200,12 +202,16 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * Currency used for the payment
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currency(): Currency = currency.getRequired("currency")
 
     /**
+     * Details about the customer who made the payment
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -229,6 +235,8 @@ private constructor(
     fun disputes(): List<Dispute> = disputes.getRequired("disputes")
 
     /**
+     * Additional custom data associated with the payment
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -261,6 +269,9 @@ private constructor(
     fun settlementAmount(): Int = settlementAmount.getRequired("settlement_amount")
 
     /**
+     * The currency in which the settlement_amount will be credited to your Dodo balance. This may
+     * differ from the customer's payment currency in adaptive pricing scenarios.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -275,7 +286,7 @@ private constructor(
     fun totalAmount(): Int = totalAmount.getRequired("total_amount")
 
     /**
-     * ISO country code alpha2 variant
+     * ISO2 country code of the card
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -374,6 +385,8 @@ private constructor(
     fun settlementTax(): Optional<Int> = settlementTax.getOptional("settlement_tax")
 
     /**
+     * Current status of the payment intent
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -758,6 +771,7 @@ private constructor(
             additionalProperties = payment.additionalProperties.toMutableMap()
         }
 
+        /** Billing address details for payments */
         fun billing(billing: BillingAddress) = billing(JsonField.of(billing))
 
         /**
@@ -804,6 +818,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** Currency used for the payment */
         fun currency(currency: Currency) = currency(JsonField.of(currency))
 
         /**
@@ -815,6 +830,7 @@ private constructor(
          */
         fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
 
+        /** Details about the customer who made the payment */
         fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
 
         /**
@@ -869,6 +885,7 @@ private constructor(
                 }
         }
 
+        /** Additional custom data associated with the payment */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
         /**
@@ -937,6 +954,10 @@ private constructor(
             this.settlementAmount = settlementAmount
         }
 
+        /**
+         * The currency in which the settlement_amount will be credited to your Dodo balance. This
+         * may differ from the customer's payment currency in adaptive pricing scenarios.
+         */
         fun settlementCurrency(settlementCurrency: Currency) =
             settlementCurrency(JsonField.of(settlementCurrency))
 
@@ -965,7 +986,7 @@ private constructor(
          */
         fun totalAmount(totalAmount: JsonField<Int>) = apply { this.totalAmount = totalAmount }
 
-        /** ISO country code alpha2 variant */
+        /** ISO2 country code of the card */
         fun cardIssuingCountry(cardIssuingCountry: CountryCode?) =
             cardIssuingCountry(JsonField.ofNullable(cardIssuingCountry))
 
@@ -1191,6 +1212,7 @@ private constructor(
             this.settlementTax = settlementTax
         }
 
+        /** Current status of the payment intent */
         fun status(status: IntentStatus?) = status(JsonField.ofNullable(status))
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
@@ -1426,6 +1448,7 @@ private constructor(
             (if (tax.asKnown().isPresent) 1 else 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
+    /** Additional custom data associated with the payment */
     class Metadata
     @JsonCreator
     private constructor(

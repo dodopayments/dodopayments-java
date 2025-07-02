@@ -30,7 +30,9 @@ interface DiscountServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DiscountServiceAsync
 
-    /** If `code` is omitted or empty, a random 16-char uppercase code is generated. */
+    /**
+     * POST /discounts If `code` is omitted or empty, a random 16-char uppercase code is generated.
+     */
     fun create(params: DiscountCreateParams): CompletableFuture<Discount> =
         create(params, RequestOptions.none())
 

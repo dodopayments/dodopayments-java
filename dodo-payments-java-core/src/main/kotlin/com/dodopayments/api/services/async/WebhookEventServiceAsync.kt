@@ -26,10 +26,12 @@ interface WebhookEventServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventServiceAsync
 
+    @Deprecated("deprecated")
     fun retrieve(webhookEventId: String): CompletableFuture<WebhookEvent> =
         retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
     /** @see [retrieve] */
+    @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
         params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
@@ -38,22 +40,26 @@ interface WebhookEventServiceAsync {
         retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
     /** @see [retrieve] */
+    @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
         params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
     ): CompletableFuture<WebhookEvent> = retrieve(webhookEventId, params, RequestOptions.none())
 
     /** @see [retrieve] */
+    @Deprecated("deprecated")
     fun retrieve(
         params: WebhookEventRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<WebhookEvent>
 
     /** @see [retrieve] */
+    @Deprecated("deprecated")
     fun retrieve(params: WebhookEventRetrieveParams): CompletableFuture<WebhookEvent> =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
+    @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
         requestOptions: RequestOptions,
@@ -96,10 +102,12 @@ interface WebhookEventServiceAsync {
          * Returns a raw HTTP response for `get /webhook_events/{webhook_event_id}`, but is
          * otherwise the same as [WebhookEventServiceAsync.retrieve].
          */
+        @Deprecated("deprecated")
         fun retrieve(webhookEventId: String): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
         /** @see [retrieve] */
+        @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
             params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
@@ -108,6 +116,7 @@ interface WebhookEventServiceAsync {
             retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
         /** @see [retrieve] */
+        @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
             params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
@@ -115,18 +124,21 @@ interface WebhookEventServiceAsync {
             retrieve(webhookEventId, params, RequestOptions.none())
 
         /** @see [retrieve] */
+        @Deprecated("deprecated")
         fun retrieve(
             params: WebhookEventRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<WebhookEvent>>
 
         /** @see [retrieve] */
+        @Deprecated("deprecated")
         fun retrieve(
             params: WebhookEventRetrieveParams
         ): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
+        @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
             requestOptions: RequestOptions,

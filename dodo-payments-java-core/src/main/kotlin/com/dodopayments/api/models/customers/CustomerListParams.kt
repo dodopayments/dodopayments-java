@@ -11,11 +11,15 @@ import kotlin.jvm.optionals.getOrNull
 
 class CustomerListParams
 private constructor(
+    private val email: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Filter by customer email */
+    fun email(): Optional<String> = Optional.ofNullable(email)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -40,6 +44,7 @@ private constructor(
     /** A builder for [CustomerListParams]. */
     class Builder internal constructor() {
 
+        private var email: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -47,11 +52,18 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(customerListParams: CustomerListParams) = apply {
+            email = customerListParams.email
             pageNumber = customerListParams.pageNumber
             pageSize = customerListParams.pageSize
             additionalHeaders = customerListParams.additionalHeaders.toBuilder()
             additionalQueryParams = customerListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Filter by customer email */
+        fun email(email: String?) = apply { this.email = email }
+
+        /** Alias for calling [Builder.email] with `email.orElse(null)`. */
+        fun email(email: Optional<String>) = email(email.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -184,6 +196,7 @@ private constructor(
          */
         fun build(): CustomerListParams =
             CustomerListParams(
+                email,
                 pageNumber,
                 pageSize,
                 additionalHeaders.build(),
@@ -196,6 +209,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                email?.let { put("email", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -207,11 +221,11 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CustomerListParams && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is CustomerListParams && email == other.email && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(pageNumber, pageSize, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(email, pageNumber, pageSize, additionalHeaders, additionalQueryParams) /* spotless:on */
 
     override fun toString() =
-        "CustomerListParams{pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CustomerListParams{email=$email, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -121,6 +121,8 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * The currency of the payout, represented as an ISO 4217 currency code.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -159,6 +161,8 @@ private constructor(
     fun refunds(): Long = refunds.getRequired("refunds")
 
     /**
+     * The current status of the payout.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -441,6 +445,7 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
+        /** The currency of the payout, represented as an ISO 4217 currency code. */
         fun currency(currency: Currency) = currency(JsonField.of(currency))
 
         /**
@@ -499,6 +504,7 @@ private constructor(
          */
         fun refunds(refunds: JsonField<Long>) = apply { this.refunds = refunds }
 
+        /** The current status of the payout. */
         fun status(status: Status) = status(JsonField.of(status))
 
         /**
@@ -698,6 +704,7 @@ private constructor(
             (if (payoutDocumentUrl.asKnown().isPresent) 1 else 0) +
             (if (remarks.asKnown().isPresent) 1 else 0)
 
+    /** The current status of the payout. */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

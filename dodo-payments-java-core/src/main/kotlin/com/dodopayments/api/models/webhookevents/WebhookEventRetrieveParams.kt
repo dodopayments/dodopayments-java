@@ -9,6 +9,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+@Deprecated("deprecated")
 class WebhookEventRetrieveParams
 private constructor(
     private val webhookEventId: String?,

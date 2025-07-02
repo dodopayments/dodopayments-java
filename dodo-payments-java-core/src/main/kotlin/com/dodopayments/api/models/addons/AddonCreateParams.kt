@@ -30,6 +30,8 @@ private constructor(
 ) : Params {
 
     /**
+     * The currency of the Addon
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -52,7 +54,7 @@ private constructor(
     fun price(): Int = body.price()
 
     /**
-     * Represents the different categories of taxation applicable to various products and services.
+     * Tax category applied to this Addon
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -154,6 +156,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** The currency of the Addon */
         fun currency(currency: Currency) = apply { body.currency(currency) }
 
         /**
@@ -187,10 +190,7 @@ private constructor(
          */
         fun price(price: JsonField<Int>) = apply { body.price(price) }
 
-        /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
-         */
+        /** Tax category applied to this Addon */
         fun taxCategory(taxCategory: TaxCategory) = apply { body.taxCategory(taxCategory) }
 
         /**
@@ -391,6 +391,8 @@ private constructor(
         ) : this(currency, name, price, taxCategory, description, mutableMapOf())
 
         /**
+         * The currency of the Addon
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -413,8 +415,7 @@ private constructor(
         fun price(): Int = price.getRequired("price")
 
         /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
+         * Tax category applied to this Addon
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -516,6 +517,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** The currency of the Addon */
             fun currency(currency: Currency) = currency(JsonField.of(currency))
 
             /**
@@ -551,10 +553,7 @@ private constructor(
              */
             fun price(price: JsonField<Int>) = apply { this.price = price }
 
-            /**
-             * Represents the different categories of taxation applicable to various products and
-             * services.
-             */
+            /** Tax category applied to this Addon */
             fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
 
             /**
