@@ -32,12 +32,16 @@ private constructor(
 ) : Params {
 
     /**
+     * Billing address details for the payment
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun billing(): BillingAddress = body.billing()
 
     /**
+     * Customer information for the payment
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -65,6 +69,9 @@ private constructor(
         body.allowedPaymentMethodTypes()
 
     /**
+     * Fix the currency in which the end customer is billed. If Dodo Payments cannot support that
+     * currency for this transaction, it will not proceed
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -79,6 +86,8 @@ private constructor(
     fun discountCode(): Optional<String> = body.discountCode()
 
     /**
+     * Additional metadata associated with the payment. Defaults to empty if not provided.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -247,6 +256,7 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
+        /** Billing address details for the payment */
         fun billing(billing: BillingAddress) = apply { body.billing(billing) }
 
         /**
@@ -258,6 +268,7 @@ private constructor(
          */
         fun billing(billing: JsonField<BillingAddress>) = apply { body.billing(billing) }
 
+        /** Customer information for the payment */
         fun customer(customer: CustomerRequest) = apply { body.customer(customer) }
 
         /**
@@ -351,6 +362,10 @@ private constructor(
                 body.addAllowedPaymentMethodType(allowedPaymentMethodType)
             }
 
+        /**
+         * Fix the currency in which the end customer is billed. If Dodo Payments cannot support
+         * that currency for this transaction, it will not proceed
+         */
         fun billingCurrency(billingCurrency: Currency?) = apply {
             body.billingCurrency(billingCurrency)
         }
@@ -387,6 +402,7 @@ private constructor(
             body.discountCode(discountCode)
         }
 
+        /** Additional metadata associated with the payment. Defaults to empty if not provided. */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
         /**
@@ -678,12 +694,16 @@ private constructor(
         )
 
         /**
+         * Billing address details for the payment
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun billing(): BillingAddress = billing.getRequired("billing")
 
         /**
+         * Customer information for the payment
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -711,6 +731,9 @@ private constructor(
             allowedPaymentMethodTypes.getOptional("allowed_payment_method_types")
 
         /**
+         * Fix the currency in which the end customer is billed. If Dodo Payments cannot support
+         * that currency for this transaction, it will not proceed
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -725,6 +748,8 @@ private constructor(
         fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
 
         /**
+         * Additional metadata associated with the payment. Defaults to empty if not provided.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -922,6 +947,7 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
+            /** Billing address details for the payment */
             fun billing(billing: BillingAddress) = billing(JsonField.of(billing))
 
             /**
@@ -933,6 +959,7 @@ private constructor(
              */
             fun billing(billing: JsonField<BillingAddress>) = apply { this.billing = billing }
 
+            /** Customer information for the payment */
             fun customer(customer: CustomerRequest) = customer(JsonField.of(customer))
 
             /**
@@ -1032,6 +1059,10 @@ private constructor(
                         }
                 }
 
+            /**
+             * Fix the currency in which the end customer is billed. If Dodo Payments cannot support
+             * that currency for this transaction, it will not proceed
+             */
             fun billingCurrency(billingCurrency: Currency?) =
                 billingCurrency(JsonField.ofNullable(billingCurrency))
 
@@ -1069,6 +1100,9 @@ private constructor(
                 this.discountCode = discountCode
             }
 
+            /**
+             * Additional metadata associated with the payment. Defaults to empty if not provided.
+             */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
             /**
@@ -1505,6 +1539,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /** Additional metadata associated with the payment. Defaults to empty if not provided. */
     class Metadata
     @JsonCreator
     private constructor(

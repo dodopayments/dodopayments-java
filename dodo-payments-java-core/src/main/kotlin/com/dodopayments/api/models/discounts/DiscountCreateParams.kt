@@ -23,7 +23,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** If `code` is omitted or empty, a random 16-char uppercase code is generated. */
+/** POST /discounts If `code` is omitted or empty, a random 16-char uppercase code is generated. */
 class DiscountCreateParams
 private constructor(
     private val body: Body,
@@ -46,6 +46,8 @@ private constructor(
     fun amount(): Int = body.amount()
 
     /**
+     * The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`).
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -209,6 +211,7 @@ private constructor(
          */
         fun amount(amount: JsonField<Int>) = apply { body.amount(amount) }
 
+        /** The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`). */
         fun type(type: DiscountType) = apply { body.type(type) }
 
         /**
@@ -505,6 +508,8 @@ private constructor(
         fun amount(): Int = amount.getRequired("amount")
 
         /**
+         * The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`).
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -674,6 +679,7 @@ private constructor(
              */
             fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
 
+            /** The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`). */
             fun type(type: DiscountType) = type(JsonField.of(type))
 
             /**

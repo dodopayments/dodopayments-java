@@ -45,7 +45,7 @@ private constructor(
     fun city(): String = city.getRequired("city")
 
     /**
-     * ISO country code alpha2 variant
+     * Two-letter ISO country code (ISO 3166-1 alpha-2)
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -171,7 +171,7 @@ private constructor(
          */
         fun city(city: JsonField<String>) = apply { this.city = city }
 
-        /** ISO country code alpha2 variant */
+        /** Two-letter ISO country code (ISO 3166-1 alpha-2) */
         fun country(country: CountryCode) = country(JsonField.of(country))
 
         /**

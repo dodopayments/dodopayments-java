@@ -144,6 +144,8 @@ private constructor(
     fun licenseKeyEnabled(): Boolean = licenseKeyEnabled.getRequired("license_key_enabled")
 
     /**
+     * Pricing information for the product.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -158,7 +160,7 @@ private constructor(
     fun productId(): String = productId.getRequired("product_id")
 
     /**
-     * Represents the different categories of taxation applicable to various products and services.
+     * Tax category associated with the product.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -223,6 +225,8 @@ private constructor(
         licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
 
     /**
+     * Duration of the license key validity, if enabled.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -517,6 +521,7 @@ private constructor(
             this.licenseKeyEnabled = licenseKeyEnabled
         }
 
+        /** Pricing information for the product. */
         fun price(price: Price) = price(JsonField.of(price))
 
         /**
@@ -545,10 +550,7 @@ private constructor(
          */
         fun productId(productId: JsonField<String>) = apply { this.productId = productId }
 
-        /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
-         */
+        /** Tax category associated with the product. */
         fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
 
         /**
@@ -706,6 +708,7 @@ private constructor(
             this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
         }
 
+        /** Duration of the license key validity, if enabled. */
         fun licenseKeyDuration(licenseKeyDuration: LicenseKeyDuration?) =
             licenseKeyDuration(JsonField.ofNullable(licenseKeyDuration))
 
