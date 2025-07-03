@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.37.1 (2025-07-03)
+
+Full Changelog: [v1.37.0...v1.37.1](https://github.com/dodopayments/dodopayments-java/compare/v1.37.0...v1.37.1)
+
+### Features
+
+* **api:** added webhook event type model ([8df490d](https://github.com/dodopayments/dodopayments-java/commit/8df490da49d12842a55f2589d2bace66959787f2))
+* **api:** added webhook payload model ([327da08](https://github.com/dodopayments/dodopayments-java/commit/327da08d66ac30ccfd6c429bd71ad5e6c41ca224))
+
 ## 1.37.0 (2025-07-02)
 
 Full Changelog: [v1.34.2...v1.37.0](https://github.com/dodopayments/dodopayments-java/compare/v1.34.2...v1.37.0)
