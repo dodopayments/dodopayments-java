@@ -210,6 +210,7 @@ private constructor(
     private constructor(
         private val amount: JsonField<Int>,
         private val itemsId: JsonField<String>,
+        private val refundableAmount: JsonField<Int>,
         private val tax: JsonField<Int>,
         private val description: JsonField<String>,
         private val name: JsonField<String>,
@@ -220,12 +221,15 @@ private constructor(
         private constructor(
             @JsonProperty("amount") @ExcludeMissing amount: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("items_id") @ExcludeMissing itemsId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("refundable_amount")
+            @ExcludeMissing
+            refundableAmount: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("description")
             @ExcludeMissing
             description: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(amount, itemsId, tax, description, name, mutableMapOf())
+        ) : this(amount, itemsId, refundableAmount, tax, description, name, mutableMapOf())
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -238,6 +242,12 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun itemsId(): String = itemsId.getRequired("items_id")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun refundableAmount(): Int = refundableAmount.getRequired("refundable_amount")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -270,6 +280,16 @@ private constructor(
          * Unlike [itemsId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("items_id") @ExcludeMissing fun _itemsId(): JsonField<String> = itemsId
+
+        /**
+         * Returns the raw JSON value of [refundableAmount].
+         *
+         * Unlike [refundableAmount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("refundable_amount")
+        @ExcludeMissing
+        fun _refundableAmount(): JsonField<Int> = refundableAmount
 
         /**
          * Returns the raw JSON value of [tax].
@@ -315,6 +335,7 @@ private constructor(
              * ```java
              * .amount()
              * .itemsId()
+             * .refundableAmount()
              * .tax()
              * ```
              */
@@ -326,6 +347,7 @@ private constructor(
 
             private var amount: JsonField<Int>? = null
             private var itemsId: JsonField<String>? = null
+            private var refundableAmount: JsonField<Int>? = null
             private var tax: JsonField<Int>? = null
             private var description: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
@@ -335,6 +357,7 @@ private constructor(
             internal fun from(item: Item) = apply {
                 amount = item.amount
                 itemsId = item.itemsId
+                refundableAmount = item.refundableAmount
                 tax = item.tax
                 description = item.description
                 name = item.name
@@ -362,6 +385,20 @@ private constructor(
              * supported value.
              */
             fun itemsId(itemsId: JsonField<String>) = apply { this.itemsId = itemsId }
+
+            fun refundableAmount(refundableAmount: Int) =
+                refundableAmount(JsonField.of(refundableAmount))
+
+            /**
+             * Sets [Builder.refundableAmount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.refundableAmount] with a well-typed [Int] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun refundableAmount(refundableAmount: JsonField<Int>) = apply {
+                this.refundableAmount = refundableAmount
+            }
 
             fun tax(tax: Int) = tax(JsonField.of(tax))
 
@@ -432,6 +469,7 @@ private constructor(
              * ```java
              * .amount()
              * .itemsId()
+             * .refundableAmount()
              * .tax()
              * ```
              *
@@ -441,6 +479,7 @@ private constructor(
                 Item(
                     checkRequired("amount", amount),
                     checkRequired("itemsId", itemsId),
+                    checkRequired("refundableAmount", refundableAmount),
                     checkRequired("tax", tax),
                     description,
                     name,
@@ -457,6 +496,7 @@ private constructor(
 
             amount()
             itemsId()
+            refundableAmount()
             tax()
             description()
             name()
@@ -481,6 +521,7 @@ private constructor(
         internal fun validity(): Int =
             (if (amount.asKnown().isPresent) 1 else 0) +
                 (if (itemsId.asKnown().isPresent) 1 else 0) +
+                (if (refundableAmount.asKnown().isPresent) 1 else 0) +
                 (if (tax.asKnown().isPresent) 1 else 0) +
                 (if (description.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0)
@@ -490,17 +531,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Item && amount == other.amount && itemsId == other.itemsId && tax == other.tax && description == other.description && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Item && amount == other.amount && itemsId == other.itemsId && refundableAmount == other.refundableAmount && tax == other.tax && description == other.description && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(amount, itemsId, tax, description, name, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(amount, itemsId, refundableAmount, tax, description, name, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Item{amount=$amount, itemsId=$itemsId, tax=$tax, description=$description, name=$name, additionalProperties=$additionalProperties}"
+            "Item{amount=$amount, itemsId=$itemsId, refundableAmount=$refundableAmount, tax=$tax, description=$description, name=$name, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
