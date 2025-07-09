@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.38.1 (2025-07-09)
+
+Full Changelog: [v1.38.0...v1.38.1](https://github.com/dodopayments/dodopayments-java/compare/v1.38.0...v1.38.1)
+
+### Chores
+
+* **ci:** ensure docs generation always succeeds ([c37b645](https://github.com/dodopayments/dodopayments-java/commit/c37b6455d5b4e5815e9dbacdadcb645affdc832f))
+
 ## 1.38.0 (2025-07-05)
 
 Full Changelog: [v1.37.1...v1.38.0](https://github.com/dodopayments/dodopayments-java/compare/v1.37.1...v1.38.0)
