@@ -66,6 +66,7 @@ internal class SubscriptionServiceAsyncTest {
                             .mandateOnly(true)
                             .adaptiveCurrencyFeesInclusive(true)
                             .productCurrency(Currency.AED)
+                            .productDescription("product_description")
                             .productPrice(0)
                             .build()
                     )
@@ -204,6 +205,7 @@ internal class SubscriptionServiceAsyncTest {
                             .build()
                     )
                     .productCurrency(Currency.AED)
+                    .productDescription("product_description")
                     .build()
             )
 

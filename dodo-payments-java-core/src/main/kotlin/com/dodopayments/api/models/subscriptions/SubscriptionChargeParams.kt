@@ -68,6 +68,15 @@ private constructor(
     fun productCurrency(): Optional<Currency> = body.productCurrency()
 
     /**
+     * Optional product description override for billing and line items. If not specified, the
+     * stored description of the product will be used.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun productDescription(): Optional<String> = body.productDescription()
+
+    /**
      * Returns the raw JSON value of [productPrice].
      *
      * Unlike [productPrice], this method doesn't throw if the JSON field has an unexpected type.
@@ -95,6 +104,14 @@ private constructor(
      * Unlike [productCurrency], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _productCurrency(): JsonField<Currency> = body._productCurrency()
+
+    /**
+     * Returns the raw JSON value of [productDescription].
+     *
+     * Unlike [productDescription], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _productDescription(): JsonField<String> = body._productDescription()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -148,6 +165,8 @@ private constructor(
          * - [adaptiveCurrencyFeesInclusive]
          * - [metadata]
          * - [productCurrency]
+         * - [productDescription]
+         * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -239,6 +258,31 @@ private constructor(
          */
         fun productCurrency(productCurrency: JsonField<Currency>) = apply {
             body.productCurrency(productCurrency)
+        }
+
+        /**
+         * Optional product description override for billing and line items. If not specified, the
+         * stored description of the product will be used.
+         */
+        fun productDescription(productDescription: String?) = apply {
+            body.productDescription(productDescription)
+        }
+
+        /**
+         * Alias for calling [Builder.productDescription] with `productDescription.orElse(null)`.
+         */
+        fun productDescription(productDescription: Optional<String>) =
+            productDescription(productDescription.getOrNull())
+
+        /**
+         * Sets [Builder.productDescription] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.productDescription] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun productDescription(productDescription: JsonField<String>) = apply {
+            body.productDescription(productDescription)
         }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
@@ -397,6 +441,7 @@ private constructor(
         private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
         private val metadata: JsonField<Metadata>,
         private val productCurrency: JsonField<Currency>,
+        private val productDescription: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -414,11 +459,15 @@ private constructor(
             @JsonProperty("product_currency")
             @ExcludeMissing
             productCurrency: JsonField<Currency> = JsonMissing.of(),
+            @JsonProperty("product_description")
+            @ExcludeMissing
+            productDescription: JsonField<String> = JsonMissing.of(),
         ) : this(
             productPrice,
             adaptiveCurrencyFeesInclusive,
             metadata,
             productCurrency,
+            productDescription,
             mutableMapOf(),
         )
 
@@ -459,6 +508,16 @@ private constructor(
         fun productCurrency(): Optional<Currency> = productCurrency.getOptional("product_currency")
 
         /**
+         * Optional product description override for billing and line items. If not specified, the
+         * stored description of the product will be used.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun productDescription(): Optional<String> =
+            productDescription.getOptional("product_description")
+
+        /**
          * Returns the raw JSON value of [productPrice].
          *
          * Unlike [productPrice], this method doesn't throw if the JSON field has an unexpected
@@ -495,6 +554,16 @@ private constructor(
         @ExcludeMissing
         fun _productCurrency(): JsonField<Currency> = productCurrency
 
+        /**
+         * Returns the raw JSON value of [productDescription].
+         *
+         * Unlike [productDescription], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("product_description")
+        @ExcludeMissing
+        fun _productDescription(): JsonField<String> = productDescription
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -527,6 +596,7 @@ private constructor(
             private var adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var productCurrency: JsonField<Currency> = JsonMissing.of()
+            private var productDescription: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -535,6 +605,7 @@ private constructor(
                 adaptiveCurrencyFeesInclusive = body.adaptiveCurrencyFeesInclusive
                 metadata = body.metadata
                 productCurrency = body.productCurrency
+                productDescription = body.productDescription
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -630,6 +701,31 @@ private constructor(
                 this.productCurrency = productCurrency
             }
 
+            /**
+             * Optional product description override for billing and line items. If not specified,
+             * the stored description of the product will be used.
+             */
+            fun productDescription(productDescription: String?) =
+                productDescription(JsonField.ofNullable(productDescription))
+
+            /**
+             * Alias for calling [Builder.productDescription] with
+             * `productDescription.orElse(null)`.
+             */
+            fun productDescription(productDescription: Optional<String>) =
+                productDescription(productDescription.getOrNull())
+
+            /**
+             * Sets [Builder.productDescription] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.productDescription] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun productDescription(productDescription: JsonField<String>) = apply {
+                this.productDescription = productDescription
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -667,6 +763,7 @@ private constructor(
                     adaptiveCurrencyFeesInclusive,
                     metadata,
                     productCurrency,
+                    productDescription,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -682,6 +779,7 @@ private constructor(
             adaptiveCurrencyFeesInclusive()
             metadata().ifPresent { it.validate() }
             productCurrency().ifPresent { it.validate() }
+            productDescription()
             validated = true
         }
 
@@ -704,24 +802,25 @@ private constructor(
             (if (productPrice.asKnown().isPresent) 1 else 0) +
                 (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (productCurrency.asKnown().getOrNull()?.validity() ?: 0)
+                (productCurrency.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (productDescription.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return /* spotless:off */ other is Body && productPrice == other.productPrice && adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive && metadata == other.metadata && productCurrency == other.productCurrency && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && productPrice == other.productPrice && adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive && metadata == other.metadata && productCurrency == other.productCurrency && productDescription == other.productDescription && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(productPrice, adaptiveCurrencyFeesInclusive, metadata, productCurrency, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(productPrice, adaptiveCurrencyFeesInclusive, metadata, productCurrency, productDescription, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{productPrice=$productPrice, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, metadata=$metadata, productCurrency=$productCurrency, additionalProperties=$additionalProperties}"
+            "Body{productPrice=$productPrice, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, metadata=$metadata, productCurrency=$productCurrency, productDescription=$productDescription, additionalProperties=$additionalProperties}"
     }
 
     /** Metadata for the payment. If not passed, the metadata of the subscription will be taken */
