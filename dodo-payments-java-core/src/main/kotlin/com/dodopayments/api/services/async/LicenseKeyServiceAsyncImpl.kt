@@ -3,14 +3,14 @@
 package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
-import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.core.handlers.errorBodyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
-import com.dodopayments.api.core.handlers.withErrorHandler
 import com.dodopayments.api.core.http.HttpMethod
 import com.dodopayments.api.core.http.HttpRequest
+import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.core.http.json
@@ -62,7 +62,8 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         LicenseKeyServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -72,7 +73,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             )
 
         private val retrieveHandler: Handler<LicenseKey> =
-            jsonHandler<LicenseKey>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: LicenseKeyRetrieveParams,
@@ -92,7 +93,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
                             .also {
@@ -105,7 +106,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
         }
 
         private val updateHandler: Handler<LicenseKey> =
-            jsonHandler<LicenseKey>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
         override fun update(
             params: LicenseKeyUpdateParams,
@@ -126,7 +127,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { updateHandler.handle(it) }
                             .also {
@@ -140,7 +141,6 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
 
         private val listHandler: Handler<LicenseKeyListPageResponse> =
             jsonHandler<LicenseKeyListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: LicenseKeyListParams,
@@ -157,7 +157,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {

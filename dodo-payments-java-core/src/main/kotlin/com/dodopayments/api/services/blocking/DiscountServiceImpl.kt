@@ -3,13 +3,12 @@
 package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.ClientOptions
-import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.emptyHandler
+import com.dodopayments.api.core.handlers.errorBodyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
-import com.dodopayments.api.core.handlers.withErrorHandler
 import com.dodopayments.api.core.http.HttpMethod
 import com.dodopayments.api.core.http.HttpRequest
 import com.dodopayments.api.core.http.HttpResponse
@@ -71,7 +70,8 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         DiscountService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -81,7 +81,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
             )
 
         private val createHandler: Handler<Discount> =
-            jsonHandler<Discount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Discount>(clientOptions.jsonMapper)
 
         override fun create(
             params: DiscountCreateParams,
@@ -97,7 +97,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { createHandler.handle(it) }
                     .also {
@@ -109,7 +109,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
         }
 
         private val retrieveHandler: Handler<Discount> =
-            jsonHandler<Discount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Discount>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: DiscountRetrieveParams,
@@ -127,7 +127,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveHandler.handle(it) }
                     .also {
@@ -139,7 +139,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
         }
 
         private val updateHandler: Handler<Discount> =
-            jsonHandler<Discount>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Discount>(clientOptions.jsonMapper)
 
         override fun update(
             params: DiscountUpdateParams,
@@ -158,7 +158,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { updateHandler.handle(it) }
                     .also {
@@ -171,7 +171,6 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
 
         private val listHandler: Handler<DiscountListPageResponse> =
             jsonHandler<DiscountListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: DiscountListParams,
@@ -186,7 +185,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { listHandler.handle(it) }
                     .also {
@@ -204,7 +203,7 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
             }
         }
 
-        private val deleteHandler: Handler<Void?> = emptyHandler().withErrorHandler(errorHandler)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: DiscountDeleteParams,
@@ -223,7 +222,9 @@ class DiscountServiceImpl internal constructor(private val clientOptions: Client
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable { response.use { deleteHandler.handle(it) } }
+            return errorHandler.handle(response).parseable {
+                response.use { deleteHandler.handle(it) }
+            }
         }
     }
 }
