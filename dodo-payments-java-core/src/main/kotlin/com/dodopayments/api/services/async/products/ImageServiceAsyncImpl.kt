@@ -3,14 +3,14 @@
 package com.dodopayments.api.services.async.products
 
 import com.dodopayments.api.core.ClientOptions
-import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.core.handlers.errorBodyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
-import com.dodopayments.api.core.handlers.withErrorHandler
 import com.dodopayments.api.core.http.HttpMethod
 import com.dodopayments.api.core.http.HttpRequest
+import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.core.http.json
@@ -44,7 +44,8 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ImageServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -55,7 +56,6 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
         private val updateHandler: Handler<ImageUpdateResponse> =
             jsonHandler<ImageUpdateResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun update(
             params: ImageUpdateParams,
@@ -76,7 +76,7 @@ class ImageServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { updateHandler.handle(it) }
                             .also {
