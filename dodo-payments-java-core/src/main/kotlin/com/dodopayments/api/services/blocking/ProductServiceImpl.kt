@@ -3,13 +3,12 @@
 package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.ClientOptions
-import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.handlers.emptyHandler
+import com.dodopayments.api.core.handlers.errorBodyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
-import com.dodopayments.api.core.handlers.withErrorHandler
 import com.dodopayments.api.core.http.HttpMethod
 import com.dodopayments.api.core.http.HttpRequest
 import com.dodopayments.api.core.http.HttpResponse
@@ -87,7 +86,8 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProductService.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         private val images: ImageService.WithRawResponse by lazy {
             ImageServiceImpl.WithRawResponseImpl(clientOptions)
@@ -102,8 +102,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
 
         override fun images(): ImageService.WithRawResponse = images
 
-        private val createHandler: Handler<Product> =
-            jsonHandler<Product>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val createHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
         override fun create(
             params: ProductCreateParams,
@@ -119,7 +118,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { createHandler.handle(it) }
                     .also {
@@ -131,7 +130,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
         }
 
         private val retrieveHandler: Handler<Product> =
-            jsonHandler<Product>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<Product>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: ProductRetrieveParams,
@@ -149,7 +148,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { retrieveHandler.handle(it) }
                     .also {
@@ -160,7 +159,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val updateHandler: Handler<Void?> = emptyHandler().withErrorHandler(errorHandler)
+        private val updateHandler: Handler<Void?> = emptyHandler()
 
         override fun update(
             params: ProductUpdateParams,
@@ -179,12 +178,13 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable { response.use { updateHandler.handle(it) } }
+            return errorHandler.handle(response).parseable {
+                response.use { updateHandler.handle(it) }
+            }
         }
 
         private val listHandler: Handler<ProductListPageResponse> =
             jsonHandler<ProductListPageResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun list(
             params: ProductListParams,
@@ -199,7 +199,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { listHandler.handle(it) }
                     .also {
@@ -217,7 +217,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val deleteHandler: Handler<Void?> = emptyHandler().withErrorHandler(errorHandler)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: ProductDeleteParams,
@@ -236,10 +236,12 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable { response.use { deleteHandler.handle(it) } }
+            return errorHandler.handle(response).parseable {
+                response.use { deleteHandler.handle(it) }
+            }
         }
 
-        private val unarchiveHandler: Handler<Void?> = emptyHandler().withErrorHandler(errorHandler)
+        private val unarchiveHandler: Handler<Void?> = emptyHandler()
 
         override fun unarchive(
             params: ProductUnarchiveParams,
@@ -258,12 +260,13 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable { response.use { unarchiveHandler.handle(it) } }
+            return errorHandler.handle(response).parseable {
+                response.use { unarchiveHandler.handle(it) }
+            }
         }
 
         private val updateFilesHandler: Handler<ProductUpdateFilesResponse> =
             jsonHandler<ProductUpdateFilesResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun updateFiles(
             params: ProductUpdateFilesParams,
@@ -282,7 +285,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
-            return response.parseable {
+            return errorHandler.handle(response).parseable {
                 response
                     .use { updateFilesHandler.handle(it) }
                     .also {
