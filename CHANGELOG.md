@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.43.0 (2025-07-19)
+
+Full Changelog: [v1.42.0...v1.43.0](https://github.com/dodopayments/dodopayments-java/compare/v1.42.0...v1.43.0)
+
+### Features
+
+* **client:** add https config options ([e62e91f](https://github.com/dodopayments/dodopayments-java/commit/e62e91f30b49b1d548515e5904c379dec0d94586))
+
+
+### Bug Fixes
+
+* **client:** ensure error handling always occurs ([db84398](https://github.com/dodopayments/dodopayments-java/commit/db84398e5076509f37c886718d556c260cbc25d4))
+
+
+### Chores
+
+* **internal:** allow running specific example from cli ([542964c](https://github.com/dodopayments/dodopayments-java/commit/542964cec07ffba7008813634cc0dee3a9214dab))
+* **internal:** refactor delegating from client to options ([2782e80](https://github.com/dodopayments/dodopayments-java/commit/2782e8052ce6d589f2fa3bb7b44fb1c6771e6f14))
+
 ## 1.42.0 (2025-07-16)
 
 Full Changelog: [v1.39.0...v1.42.0](https://github.com/dodopayments/dodopayments-java/compare/v1.39.0...v1.42.0)
