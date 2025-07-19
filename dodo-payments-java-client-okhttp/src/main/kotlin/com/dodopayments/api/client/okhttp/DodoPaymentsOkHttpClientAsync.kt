@@ -8,11 +8,14 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.Timeout
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
+import com.dodopayments.api.core.jsonMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
+import java.util.Optional
 import java.util.concurrent.Executor
+import kotlin.jvm.optionals.getOrNull
 
 class DodoPaymentsOkHttpClientAsync private constructor() {
 
@@ -31,12 +34,9 @@ class DodoPaymentsOkHttpClientAsync private constructor() {
     class Builder internal constructor() {
 
         private var clientOptions: ClientOptions.Builder = ClientOptions.builder()
-        private var timeout: Timeout = Timeout.default()
         private var proxy: Proxy? = null
 
-        fun testMode() = apply { baseUrl(ClientOptions.TEST_MODE_URL) }
-
-        fun baseUrl(baseUrl: String) = apply { clientOptions.baseUrl(baseUrl) }
+        fun proxy(proxy: Proxy) = apply { this.proxy = proxy }
 
         /**
          * Whether to throw an exception if any of the Jackson versions detected at runtime are
@@ -56,6 +56,32 @@ class DodoPaymentsOkHttpClientAsync private constructor() {
         }
 
         fun clock(clock: Clock) = apply { clientOptions.clock(clock) }
+
+        fun baseUrl(baseUrl: String?) = apply { clientOptions.baseUrl(baseUrl) }
+
+        /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
+        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
+
+        fun testMode() = apply { clientOptions.testMode() }
+
+        fun responseValidation(responseValidation: Boolean) = apply {
+            clientOptions.responseValidation(responseValidation)
+        }
+
+        fun timeout(timeout: Timeout) = apply { clientOptions.timeout(timeout) }
+
+        /**
+         * Sets the maximum time allowed for a complete HTTP call, not including retries.
+         *
+         * See [Timeout.request] for more details.
+         *
+         * For fine-grained control, pass a [Timeout] object.
+         */
+        fun timeout(timeout: Duration) = apply { clientOptions.timeout(timeout) }
+
+        fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        fun bearerToken(bearerToken: String) = apply { clientOptions.bearerToken(bearerToken) }
 
         fun headers(headers: Headers) = apply { clientOptions.headers(headers) }
 
@@ -137,30 +163,6 @@ class DodoPaymentsOkHttpClientAsync private constructor() {
             clientOptions.removeAllQueryParams(keys)
         }
 
-        fun timeout(timeout: Timeout) = apply {
-            clientOptions.timeout(timeout)
-            this.timeout = timeout
-        }
-
-        /**
-         * Sets the maximum time allowed for a complete HTTP call, not including retries.
-         *
-         * See [Timeout.request] for more details.
-         *
-         * For fine-grained control, pass a [Timeout] object.
-         */
-        fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
-
-        fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
-
-        fun proxy(proxy: Proxy) = apply { this.proxy = proxy }
-
-        fun responseValidation(responseValidation: Boolean) = apply {
-            clientOptions.responseValidation(responseValidation)
-        }
-
-        fun bearerToken(bearerToken: String) = apply { clientOptions.bearerToken(bearerToken) }
-
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
         /**
@@ -171,7 +173,9 @@ class DodoPaymentsOkHttpClientAsync private constructor() {
         fun build(): DodoPaymentsClientAsync =
             DodoPaymentsClientAsyncImpl(
                 clientOptions
-                    .httpClient(OkHttpClient.builder().timeout(timeout).proxy(proxy).build())
+                    .httpClient(
+                        OkHttpClient.builder().timeout(clientOptions.timeout()).proxy(proxy).build()
+                    )
                     .build()
             )
     }
