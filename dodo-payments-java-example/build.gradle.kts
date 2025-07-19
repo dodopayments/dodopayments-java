@@ -17,5 +17,12 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 application {
-    mainClass = "com.dodopayments.api.example.Main"
+    // Use `./gradlew :dodo-payments-java-example:run` to run `Main`
+    // Use `./gradlew :dodo-payments-java-example:run -Dexample=Something` to run `SomethingExample`
+    mainClass = "com.dodopayments.api.example.${
+        if (project.hasProperty("example"))
+            "${project.property("example")}Example"
+        else
+            "Main"
+    }"
 }
