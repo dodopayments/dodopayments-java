@@ -57,7 +57,8 @@ import com.dodopayments.api.models.payments.OneTimeProductCartItem;
 import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
+// Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
+// Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
@@ -81,13 +82,14 @@ PaymentCreateResponse payment = client.payments().create(params);
 
 ## Client configuration
 
-Configure the client using environment variables:
+Configure the client using system properties or environment variables:
 
 ```java
 import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
+// Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
+// Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 ```
 
@@ -109,7 +111,8 @@ import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
-    // Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
+    // Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
+    Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
     .fromEnv()
     .bearerToken("My Bearer Token")
     .build();
@@ -117,10 +120,12 @@ DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter        | Environment variable     | Required | Default value                     |
-| ------------- | ------------------------ | -------- | --------------------------------- |
-| `bearerToken` | `DODO_PAYMENTS_API_KEY`  | true     | -                                 |
-| `baseUrl`     | `DODO_PAYMENTS_BASE_URL` | true     | `"https://live.dodopayments.com"` |
+| Setter        | System property        | Environment variable     | Required | Default value                     |
+| ------------- | ---------------------- | ------------------------ | -------- | --------------------------------- |
+| `bearerToken` | `dodopayments.apiKey`  | `DODO_PAYMENTS_API_KEY`  | true     | -                                 |
+| `baseUrl`     | `dodopayments.baseUrl` | `DODO_PAYMENTS_BASE_URL` | true     | `"https://live.dodopayments.com"` |
+
+System properties take precedence over environment variables.
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -170,7 +175,8 @@ import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
+// Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
+// Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
@@ -205,7 +211,8 @@ import com.dodopayments.api.models.payments.PaymentCreateParams;
 import com.dodopayments.api.models.payments.PaymentCreateResponse;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
+// Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
+// Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
 PaymentCreateParams params = PaymentCreateParams.builder()
