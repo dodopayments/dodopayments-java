@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.43.0 (2025-07-23)
+
+Full Changelog: [v1.42.0...v1.43.0](https://github.com/dodopayments/dodopayments-java/compare/v1.42.0...v1.43.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.42.5 ([40d296c](https://github.com/dodopayments/dodopayments-java/commit/40d296c6b5fcbd0f05847ed3b54a6deabb331fc7))
+* **client:** add `{QueryParams,Headers}#put(String, JsonValue)` methods ([58db9e6](https://github.com/dodopayments/dodopayments-java/commit/58db9e65ab2b8f5a543fd0d934655175e4998053))
+* **client:** add https config options ([e62e91f](https://github.com/dodopayments/dodopayments-java/commit/e62e91f30b49b1d548515e5904c379dec0d94586))
+* **client:** allow configuring env via system properties ([7ae6669](https://github.com/dodopayments/dodopayments-java/commit/7ae6669f78963b09f17fc8994a614729ccd81db7))
+
+
+### Bug Fixes
+
+* **client:** ensure error handling always occurs ([db84398](https://github.com/dodopayments/dodopayments-java/commit/db84398e5076509f37c886718d556c260cbc25d4))
+
+
+### Chores
+
+* **internal:** allow running specific example from cli ([542964c](https://github.com/dodopayments/dodopayments-java/commit/542964cec07ffba7008813634cc0dee3a9214dab))
+* **internal:** refactor delegating from client to options ([2782e80](https://github.com/dodopayments/dodopayments-java/commit/2782e8052ce6d589f2fa3bb7b44fb1c6771e6f14))
+
 ## 1.42.0 (2025-07-16)
 
 Full Changelog: [v1.39.0...v1.42.0](https://github.com/dodopayments/dodopayments-java/compare/v1.39.0...v1.42.0)
