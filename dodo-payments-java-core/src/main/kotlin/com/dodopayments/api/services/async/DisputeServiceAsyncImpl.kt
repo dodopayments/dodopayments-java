@@ -19,7 +19,7 @@ import com.dodopayments.api.models.disputes.DisputeListPageAsync
 import com.dodopayments.api.models.disputes.DisputeListPageResponse
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
-import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
+import com.dodopayments.api.models.disputes.GetDispute
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -39,7 +39,7 @@ class DisputeServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<DisputeRetrieveResponse> =
+    ): CompletableFuture<GetDispute> =
         // get /disputes/{dispute_id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
@@ -63,13 +63,13 @@ class DisputeServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveHandler: Handler<DisputeRetrieveResponse> =
-            jsonHandler<DisputeRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<GetDispute> =
+            jsonHandler<GetDispute>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<DisputeRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<GetDispute>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("disputeId", params.disputeId().getOrNull())

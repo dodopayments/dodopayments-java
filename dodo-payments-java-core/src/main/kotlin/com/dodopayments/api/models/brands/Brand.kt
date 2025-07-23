@@ -18,7 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BrandCreateResponse
+class Brand
 private constructor(
     private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
@@ -266,7 +266,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [BrandCreateResponse].
+         * Returns a mutable builder for constructing an instance of [Brand].
          *
          * The following fields are required:
          * ```java
@@ -281,7 +281,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [BrandCreateResponse]. */
+    /** A builder for [Brand]. */
     class Builder internal constructor() {
 
         private var brandId: JsonField<String>? = null
@@ -299,20 +299,20 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(brandCreateResponse: BrandCreateResponse) = apply {
-            brandId = brandCreateResponse.brandId
-            businessId = brandCreateResponse.businessId
-            enabled = brandCreateResponse.enabled
-            statementDescriptor = brandCreateResponse.statementDescriptor
-            verificationEnabled = brandCreateResponse.verificationEnabled
-            verificationStatus = brandCreateResponse.verificationStatus
-            description = brandCreateResponse.description
-            image = brandCreateResponse.image
-            name = brandCreateResponse.name
-            reasonForHold = brandCreateResponse.reasonForHold
-            supportEmail = brandCreateResponse.supportEmail
-            url = brandCreateResponse.url
-            additionalProperties = brandCreateResponse.additionalProperties.toMutableMap()
+        internal fun from(brand: Brand) = apply {
+            brandId = brand.brandId
+            businessId = brand.businessId
+            enabled = brand.enabled
+            statementDescriptor = brand.statementDescriptor
+            verificationEnabled = brand.verificationEnabled
+            verificationStatus = brand.verificationStatus
+            description = brand.description
+            image = brand.image
+            name = brand.name
+            reasonForHold = brand.reasonForHold
+            supportEmail = brand.supportEmail
+            url = brand.url
+            additionalProperties = brand.additionalProperties.toMutableMap()
         }
 
         fun brandId(brandId: String) = brandId(JsonField.of(brandId))
@@ -496,7 +496,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [BrandCreateResponse].
+         * Returns an immutable instance of [Brand].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -512,8 +512,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): BrandCreateResponse =
-            BrandCreateResponse(
+        fun build(): Brand =
+            Brand(
                 checkRequired("brandId", brandId),
                 checkRequired("businessId", businessId),
                 checkRequired("enabled", enabled),
@@ -532,7 +532,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): BrandCreateResponse = apply {
+    fun validate(): Brand = apply {
         if (validated) {
             return@apply
         }
@@ -729,7 +729,7 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is BrandCreateResponse && brandId == other.brandId && businessId == other.businessId && enabled == other.enabled && statementDescriptor == other.statementDescriptor && verificationEnabled == other.verificationEnabled && verificationStatus == other.verificationStatus && description == other.description && image == other.image && name == other.name && reasonForHold == other.reasonForHold && supportEmail == other.supportEmail && url == other.url && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Brand && brandId == other.brandId && businessId == other.businessId && enabled == other.enabled && statementDescriptor == other.statementDescriptor && verificationEnabled == other.verificationEnabled && verificationStatus == other.verificationStatus && description == other.description && image == other.image && name == other.name && reasonForHold == other.reasonForHold && supportEmail == other.supportEmail && url == other.url && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -739,5 +739,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BrandCreateResponse{brandId=$brandId, businessId=$businessId, enabled=$enabled, statementDescriptor=$statementDescriptor, verificationEnabled=$verificationEnabled, verificationStatus=$verificationStatus, description=$description, image=$image, name=$name, reasonForHold=$reasonForHold, supportEmail=$supportEmail, url=$url, additionalProperties=$additionalProperties}"
+        "Brand{brandId=$brandId, businessId=$businessId, enabled=$enabled, statementDescriptor=$statementDescriptor, verificationEnabled=$verificationEnabled, verificationStatus=$verificationStatus, description=$description, image=$image, name=$name, reasonForHold=$reasonForHold, supportEmail=$supportEmail, url=$url, additionalProperties=$additionalProperties}"
 }

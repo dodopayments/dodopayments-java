@@ -5,16 +5,14 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.brands.Brand
 import com.dodopayments.api.models.brands.BrandCreateParams
-import com.dodopayments.api.models.brands.BrandCreateResponse
 import com.dodopayments.api.models.brands.BrandListParams
 import com.dodopayments.api.models.brands.BrandListResponse
 import com.dodopayments.api.models.brands.BrandRetrieveParams
-import com.dodopayments.api.models.brands.BrandRetrieveResponse
 import com.dodopayments.api.models.brands.BrandUpdateImagesParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
-import com.dodopayments.api.models.brands.BrandUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -32,87 +30,79 @@ interface BrandServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandServiceAsync
 
-    fun create(): CompletableFuture<BrandCreateResponse> = create(BrandCreateParams.none())
+    fun create(): CompletableFuture<Brand> = create(BrandCreateParams.none())
 
     /** @see [create] */
     fun create(
         params: BrandCreateParams = BrandCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BrandCreateResponse>
+    ): CompletableFuture<Brand>
 
     /** @see [create] */
-    fun create(
-        params: BrandCreateParams = BrandCreateParams.none()
-    ): CompletableFuture<BrandCreateResponse> = create(params, RequestOptions.none())
+    fun create(params: BrandCreateParams = BrandCreateParams.none()): CompletableFuture<Brand> =
+        create(params, RequestOptions.none())
 
     /** @see [create] */
-    fun create(requestOptions: RequestOptions): CompletableFuture<BrandCreateResponse> =
+    fun create(requestOptions: RequestOptions): CompletableFuture<Brand> =
         create(BrandCreateParams.none(), requestOptions)
 
     /** Thin handler just calls `get_brand` and wraps in `Json(...)` */
-    fun retrieve(id: String): CompletableFuture<BrandRetrieveResponse> =
-        retrieve(id, BrandRetrieveParams.none())
+    fun retrieve(id: String): CompletableFuture<Brand> = retrieve(id, BrandRetrieveParams.none())
 
     /** @see [retrieve] */
     fun retrieve(
         id: String,
         params: BrandRetrieveParams = BrandRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BrandRetrieveResponse> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Brand> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see [retrieve] */
     fun retrieve(
         id: String,
         params: BrandRetrieveParams = BrandRetrieveParams.none(),
-    ): CompletableFuture<BrandRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<Brand> = retrieve(id, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: BrandRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BrandRetrieveResponse>
+    ): CompletableFuture<Brand>
 
     /** @see [retrieve] */
-    fun retrieve(params: BrandRetrieveParams): CompletableFuture<BrandRetrieveResponse> =
+    fun retrieve(params: BrandRetrieveParams): CompletableFuture<Brand> =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<BrandRetrieveResponse> =
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Brand> =
         retrieve(id, BrandRetrieveParams.none(), requestOptions)
 
-    fun update(id: String): CompletableFuture<BrandUpdateResponse> =
-        update(id, BrandUpdateParams.none())
+    fun update(id: String): CompletableFuture<Brand> = update(id, BrandUpdateParams.none())
 
     /** @see [update] */
     fun update(
         id: String,
         params: BrandUpdateParams = BrandUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BrandUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Brand> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see [update] */
     fun update(
         id: String,
         params: BrandUpdateParams = BrandUpdateParams.none(),
-    ): CompletableFuture<BrandUpdateResponse> = update(id, params, RequestOptions.none())
+    ): CompletableFuture<Brand> = update(id, params, RequestOptions.none())
 
     /** @see [update] */
     fun update(
         params: BrandUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BrandUpdateResponse>
+    ): CompletableFuture<Brand>
 
     /** @see [update] */
-    fun update(params: BrandUpdateParams): CompletableFuture<BrandUpdateResponse> =
+    fun update(params: BrandUpdateParams): CompletableFuture<Brand> =
         update(params, RequestOptions.none())
 
     /** @see [update] */
-    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<BrandUpdateResponse> =
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Brand> =
         update(id, BrandUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<BrandListResponse> = list(BrandListParams.none())
@@ -184,32 +174,28 @@ interface BrandServiceAsync {
          * Returns a raw HTTP response for `post /brands`, but is otherwise the same as
          * [BrandServiceAsync.create].
          */
-        fun create(): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
-            create(BrandCreateParams.none())
+        fun create(): CompletableFuture<HttpResponseFor<Brand>> = create(BrandCreateParams.none())
 
         /** @see [create] */
         fun create(
             params: BrandCreateParams = BrandCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BrandCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<Brand>>
 
         /** @see [create] */
         fun create(
             params: BrandCreateParams = BrandCreateParams.none()
-        ): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
-            create(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Brand>> = create(params, RequestOptions.none())
 
         /** @see [create] */
-        fun create(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<BrandCreateResponse>> =
+        fun create(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Brand>> =
             create(BrandCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /brands/{id}`, but is otherwise the same as
          * [BrandServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(id, BrandRetrieveParams.none())
 
         /** @see [retrieve] */
@@ -217,40 +203,37 @@ interface BrandServiceAsync {
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [retrieve] */
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
-            retrieve(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Brand>> = retrieve(id, params, RequestOptions.none())
 
         /** @see [retrieve] */
         fun retrieve(
             params: BrandRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<Brand>>
 
         /** @see [retrieve] */
-        fun retrieve(
-            params: BrandRetrieveParams
-        ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
+        fun retrieve(params: BrandRetrieveParams): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BrandRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(id, BrandRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `patch /brands/{id}`, but is otherwise the same as
          * [BrandServiceAsync.update].
          */
-        fun update(id: String): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<Brand>> =
             update(id, BrandUpdateParams.none())
 
         /** @see [update] */
@@ -258,33 +241,30 @@ interface BrandServiceAsync {
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Brand>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [update] */
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
-            update(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Brand>> = update(id, params, RequestOptions.none())
 
         /** @see [update] */
         fun update(
             params: BrandUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<Brand>>
 
         /** @see [update] */
-        fun update(
-            params: BrandUpdateParams
-        ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
+        fun update(params: BrandUpdateParams): CompletableFuture<HttpResponseFor<Brand>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BrandUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Brand>> =
             update(id, BrandUpdateParams.none(), requestOptions)
 
         /**
