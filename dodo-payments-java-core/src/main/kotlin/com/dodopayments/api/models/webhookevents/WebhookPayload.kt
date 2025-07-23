@@ -18,6 +18,7 @@ import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
+import com.dodopayments.api.models.disputes.GetDispute
 import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.dodopayments.api.models.misc.CountryCode
@@ -4412,10 +4413,10 @@ private constructor(
             private val disputeId: JsonField<String>,
             private val disputeStage: JsonField<DisputeStage>,
             private val disputeStatus: JsonField<DisputeStatus>,
-            private val payloadType: JsonField<PayloadType>,
             private val paymentId: JsonField<String>,
             private val reason: JsonField<String>,
             private val remarks: JsonField<String>,
+            private val payloadType: JsonField<PayloadType>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -4445,9 +4446,6 @@ private constructor(
                 @JsonProperty("dispute_status")
                 @ExcludeMissing
                 disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
-                @JsonProperty("payload_type")
-                @ExcludeMissing
-                payloadType: JsonField<PayloadType> = JsonMissing.of(),
                 @JsonProperty("payment_id")
                 @ExcludeMissing
                 paymentId: JsonField<String> = JsonMissing.of(),
@@ -4457,6 +4455,9 @@ private constructor(
                 @JsonProperty("remarks")
                 @ExcludeMissing
                 remarks: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("payload_type")
+                @ExcludeMissing
+                payloadType: JsonField<PayloadType> = JsonMissing.of(),
             ) : this(
                 amount,
                 businessId,
@@ -4466,12 +4467,27 @@ private constructor(
                 disputeId,
                 disputeStage,
                 disputeStatus,
-                payloadType,
                 paymentId,
                 reason,
                 remarks,
+                payloadType,
                 mutableMapOf(),
             )
+
+            fun toGetDispute(): GetDispute =
+                GetDispute.builder()
+                    .amount(amount)
+                    .businessId(businessId)
+                    .createdAt(createdAt)
+                    .currency(currency)
+                    .customer(customer)
+                    .disputeId(disputeId)
+                    .disputeStage(disputeStage)
+                    .disputeStatus(disputeStatus)
+                    .paymentId(paymentId)
+                    .reason(reason)
+                    .remarks(remarks)
+                    .build()
 
             /**
              * The amount involved in the dispute, represented as a string to accommodate precision.
@@ -4546,13 +4562,6 @@ private constructor(
             fun disputeStatus(): DisputeStatus = disputeStatus.getRequired("dispute_status")
 
             /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun payloadType(): PayloadType = payloadType.getRequired("payload_type")
-
-            /**
              * The unique identifier of the payment associated with the dispute.
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -4576,6 +4585,13 @@ private constructor(
              *   (e.g. if the server responded with an unexpected value).
              */
             fun remarks(): Optional<String> = remarks.getOptional("remarks")
+
+            /**
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun payloadType(): PayloadType = payloadType.getRequired("payload_type")
 
             /**
              * Returns the raw JSON value of [amount].
@@ -4653,16 +4669,6 @@ private constructor(
             fun _disputeStatus(): JsonField<DisputeStatus> = disputeStatus
 
             /**
-             * Returns the raw JSON value of [payloadType].
-             *
-             * Unlike [payloadType], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("payload_type")
-            @ExcludeMissing
-            fun _payloadType(): JsonField<PayloadType> = payloadType
-
-            /**
              * Returns the raw JSON value of [paymentId].
              *
              * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected
@@ -4685,6 +4691,16 @@ private constructor(
              * Unlike [remarks], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("remarks") @ExcludeMissing fun _remarks(): JsonField<String> = remarks
+
+            /**
+             * Returns the raw JSON value of [payloadType].
+             *
+             * Unlike [payloadType], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("payload_type")
+            @ExcludeMissing
+            fun _payloadType(): JsonField<PayloadType> = payloadType
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -4713,8 +4729,8 @@ private constructor(
                  * .disputeId()
                  * .disputeStage()
                  * .disputeStatus()
-                 * .payloadType()
                  * .paymentId()
+                 * .payloadType()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -4731,10 +4747,10 @@ private constructor(
                 private var disputeId: JsonField<String>? = null
                 private var disputeStage: JsonField<DisputeStage>? = null
                 private var disputeStatus: JsonField<DisputeStatus>? = null
-                private var payloadType: JsonField<PayloadType>? = null
                 private var paymentId: JsonField<String>? = null
                 private var reason: JsonField<String> = JsonMissing.of()
                 private var remarks: JsonField<String> = JsonMissing.of()
+                private var payloadType: JsonField<PayloadType>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -4747,10 +4763,10 @@ private constructor(
                     disputeId = dispute.disputeId
                     disputeStage = dispute.disputeStage
                     disputeStatus = dispute.disputeStatus
-                    payloadType = dispute.payloadType
                     paymentId = dispute.paymentId
                     reason = dispute.reason
                     remarks = dispute.remarks
+                    payloadType = dispute.payloadType
                     additionalProperties = dispute.additionalProperties.toMutableMap()
                 }
 
@@ -4867,19 +4883,6 @@ private constructor(
                     this.disputeStatus = disputeStatus
                 }
 
-                fun payloadType(payloadType: PayloadType) = payloadType(JsonField.of(payloadType))
-
-                /**
-                 * Sets [Builder.payloadType] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.payloadType] with a well-typed [PayloadType]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
-                 */
-                fun payloadType(payloadType: JsonField<PayloadType>) = apply {
-                    this.payloadType = payloadType
-                }
-
                 /** The unique identifier of the payment associated with the dispute. */
                 fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
 
@@ -4922,6 +4925,19 @@ private constructor(
                  */
                 fun remarks(remarks: JsonField<String>) = apply { this.remarks = remarks }
 
+                fun payloadType(payloadType: PayloadType) = payloadType(JsonField.of(payloadType))
+
+                /**
+                 * Sets [Builder.payloadType] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.payloadType] with a well-typed [PayloadType]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun payloadType(payloadType: JsonField<PayloadType>) = apply {
+                    this.payloadType = payloadType
+                }
+
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
                     putAllAdditionalProperties(additionalProperties)
@@ -4959,8 +4975,8 @@ private constructor(
                  * .disputeId()
                  * .disputeStage()
                  * .disputeStatus()
-                 * .payloadType()
                  * .paymentId()
+                 * .payloadType()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -4975,10 +4991,10 @@ private constructor(
                         checkRequired("disputeId", disputeId),
                         checkRequired("disputeStage", disputeStage),
                         checkRequired("disputeStatus", disputeStatus),
-                        checkRequired("payloadType", payloadType),
                         checkRequired("paymentId", paymentId),
                         reason,
                         remarks,
+                        checkRequired("payloadType", payloadType),
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -4998,10 +5014,10 @@ private constructor(
                 disputeId()
                 disputeStage().validate()
                 disputeStatus().validate()
-                payloadType().validate()
                 paymentId()
                 reason()
                 remarks()
+                payloadType().validate()
                 validated = true
             }
 
@@ -5029,10 +5045,10 @@ private constructor(
                     (if (disputeId.asKnown().isPresent) 1 else 0) +
                     (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
                     (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
-                    (payloadType.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
                     (if (reason.asKnown().isPresent) 1 else 0) +
-                    (if (remarks.asKnown().isPresent) 1 else 0)
+                    (if (remarks.asKnown().isPresent) 1 else 0) +
+                    (payloadType.asKnown().getOrNull()?.validity() ?: 0)
 
             class PayloadType
             @JsonCreator
@@ -5166,17 +5182,17 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Dispute && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && payloadType == other.payloadType && paymentId == other.paymentId && reason == other.reason && remarks == other.remarks && additionalProperties == other.additionalProperties /* spotless:on */
+                return /* spotless:off */ other is Dispute && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && reason == other.reason && remarks == other.remarks && payloadType == other.payloadType && additionalProperties == other.additionalProperties /* spotless:on */
             }
 
             /* spotless:off */
-            private val hashCode: Int by lazy { Objects.hash(amount, businessId, createdAt, currency, customer, disputeId, disputeStage, disputeStatus, payloadType, paymentId, reason, remarks, additionalProperties) }
+            private val hashCode: Int by lazy { Objects.hash(amount, businessId, createdAt, currency, customer, disputeId, disputeStage, disputeStatus, paymentId, reason, remarks, payloadType, additionalProperties) }
             /* spotless:on */
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, payloadType=$payloadType, paymentId=$paymentId, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
+                "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, reason=$reason, remarks=$remarks, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class LicenseKey

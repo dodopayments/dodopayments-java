@@ -63,7 +63,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun addons(): Optional<List<Addon>> = body.addons()
+    fun addons(): Optional<List<AttachAddon>> = body.addons()
 
     /**
      * Returns the raw JSON value of [productId].
@@ -92,7 +92,7 @@ private constructor(
      *
      * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _addons(): JsonField<List<Addon>> = body._addons()
+    fun _addons(): JsonField<List<AttachAddon>> = body._addons()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -191,26 +191,26 @@ private constructor(
         fun quantity(quantity: JsonField<Int>) = apply { body.quantity(quantity) }
 
         /** Addons for the new plan. Note : Leaving this empty would remove any existing addons */
-        fun addons(addons: List<Addon>?) = apply { body.addons(addons) }
+        fun addons(addons: List<AttachAddon>?) = apply { body.addons(addons) }
 
         /** Alias for calling [Builder.addons] with `addons.orElse(null)`. */
-        fun addons(addons: Optional<List<Addon>>) = addons(addons.getOrNull())
+        fun addons(addons: Optional<List<AttachAddon>>) = addons(addons.getOrNull())
 
         /**
          * Sets [Builder.addons] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.addons] with a well-typed `List<Addon>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.addons] with a well-typed `List<AttachAddon>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun addons(addons: JsonField<List<Addon>>) = apply { body.addons(addons) }
+        fun addons(addons: JsonField<List<AttachAddon>>) = apply { body.addons(addons) }
 
         /**
-         * Adds a single [Addon] to [addons].
+         * Adds a single [AttachAddon] to [addons].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAddon(addon: Addon) = apply { body.addAddon(addon) }
+        fun addAddon(addon: AttachAddon) = apply { body.addAddon(addon) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -369,7 +369,7 @@ private constructor(
         private val productId: JsonField<String>,
         private val prorationBillingMode: JsonField<ProrationBillingMode>,
         private val quantity: JsonField<Int>,
-        private val addons: JsonField<List<Addon>>,
+        private val addons: JsonField<List<AttachAddon>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -384,7 +384,7 @@ private constructor(
             @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("addons")
             @ExcludeMissing
-            addons: JsonField<List<Addon>> = JsonMissing.of(),
+            addons: JsonField<List<AttachAddon>> = JsonMissing.of(),
         ) : this(productId, prorationBillingMode, quantity, addons, mutableMapOf())
 
         /**
@@ -418,7 +418,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun addons(): Optional<List<Addon>> = addons.getOptional("addons")
+        fun addons(): Optional<List<AttachAddon>> = addons.getOptional("addons")
 
         /**
          * Returns the raw JSON value of [productId].
@@ -449,7 +449,7 @@ private constructor(
          *
          * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<Addon>> = addons
+        @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<AttachAddon>> = addons
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -484,7 +484,7 @@ private constructor(
             private var productId: JsonField<String>? = null
             private var prorationBillingMode: JsonField<ProrationBillingMode>? = null
             private var quantity: JsonField<Int>? = null
-            private var addons: JsonField<MutableList<Addon>>? = null
+            private var addons: JsonField<MutableList<AttachAddon>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -539,28 +539,28 @@ private constructor(
             /**
              * Addons for the new plan. Note : Leaving this empty would remove any existing addons
              */
-            fun addons(addons: List<Addon>?) = addons(JsonField.ofNullable(addons))
+            fun addons(addons: List<AttachAddon>?) = addons(JsonField.ofNullable(addons))
 
             /** Alias for calling [Builder.addons] with `addons.orElse(null)`. */
-            fun addons(addons: Optional<List<Addon>>) = addons(addons.getOrNull())
+            fun addons(addons: Optional<List<AttachAddon>>) = addons(addons.getOrNull())
 
             /**
              * Sets [Builder.addons] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.addons] with a well-typed `List<Addon>` value
+             * You should usually call [Builder.addons] with a well-typed `List<AttachAddon>` value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun addons(addons: JsonField<List<Addon>>) = apply {
+            fun addons(addons: JsonField<List<AttachAddon>>) = apply {
                 this.addons = addons.map { it.toMutableList() }
             }
 
             /**
-             * Adds a single [Addon] to [addons].
+             * Adds a single [AttachAddon] to [addons].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addAddon(addon: Addon) = apply {
+            fun addAddon(addon: AttachAddon) = apply {
                 addons =
                     (addons ?: JsonField.of(mutableListOf())).also {
                         checkKnown("addons", it).add(addon)
@@ -796,196 +796,6 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
-    }
-
-    class Addon
-    private constructor(
-        private val addonId: JsonField<String>,
-        private val quantity: JsonField<Int>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("addon_id") @ExcludeMissing addonId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
-        ) : this(addonId, quantity, mutableMapOf())
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun addonId(): String = addonId.getRequired("addon_id")
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun quantity(): Int = quantity.getRequired("quantity")
-
-        /**
-         * Returns the raw JSON value of [addonId].
-         *
-         * Unlike [addonId], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("addon_id") @ExcludeMissing fun _addonId(): JsonField<String> = addonId
-
-        /**
-         * Returns the raw JSON value of [quantity].
-         *
-         * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [Addon].
-             *
-             * The following fields are required:
-             * ```java
-             * .addonId()
-             * .quantity()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [Addon]. */
-        class Builder internal constructor() {
-
-            private var addonId: JsonField<String>? = null
-            private var quantity: JsonField<Int>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(addon: Addon) = apply {
-                addonId = addon.addonId
-                quantity = addon.quantity
-                additionalProperties = addon.additionalProperties.toMutableMap()
-            }
-
-            fun addonId(addonId: String) = addonId(JsonField.of(addonId))
-
-            /**
-             * Sets [Builder.addonId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.addonId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun addonId(addonId: JsonField<String>) = apply { this.addonId = addonId }
-
-            fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
-
-            /**
-             * Sets [Builder.quantity] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.quantity] with a well-typed [Int] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [Addon].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .addonId()
-             * .quantity()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): Addon =
-                Addon(
-                    checkRequired("addonId", addonId),
-                    checkRequired("quantity", quantity),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): Addon = apply {
-            if (validated) {
-                return@apply
-            }
-
-            addonId()
-            quantity()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: DodoPaymentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (addonId.asKnown().isPresent) 1 else 0) +
-                (if (quantity.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is Addon && addonId == other.addonId && quantity == other.quantity && additionalProperties == other.additionalProperties /* spotless:on */
-        }
-
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(addonId, quantity, additionalProperties) }
-        /* spotless:on */
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "Addon{addonId=$addonId, quantity=$quantity, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

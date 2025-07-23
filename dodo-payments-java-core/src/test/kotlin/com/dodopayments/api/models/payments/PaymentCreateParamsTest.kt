@@ -31,7 +31,7 @@ internal class PaymentCreateParamsTest {
                     .amount(0)
                     .build()
             )
-            .addAllowedPaymentMethodType(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
+            .addAllowedPaymentMethodType(PaymentMethodTypes.CREDIT)
             .billingCurrency(Currency.AED)
             .discountCode("discount_code")
             .metadata(
@@ -67,7 +67,7 @@ internal class PaymentCreateParamsTest {
                         .amount(0)
                         .build()
                 )
-                .addAllowedPaymentMethodType(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
+                .addAllowedPaymentMethodType(PaymentMethodTypes.CREDIT)
                 .billingCurrency(Currency.AED)
                 .discountCode("discount_code")
                 .metadata(
@@ -108,7 +108,7 @@ internal class PaymentCreateParamsTest {
                     .build()
             )
         assertThat(body.allowedPaymentMethodTypes().getOrNull())
-            .containsExactly(PaymentCreateParams.AllowedPaymentMethodType.CREDIT)
+            .containsExactly(PaymentMethodTypes.CREDIT)
         assertThat(body.billingCurrency()).contains(Currency.AED)
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.metadata())

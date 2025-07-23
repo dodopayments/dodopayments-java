@@ -8,6 +8,7 @@ import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomerRequest
+import com.dodopayments.api.models.payments.PaymentMethodTypes
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,10 +30,8 @@ internal class SubscriptionCreateParamsTest {
             .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
             .productId("product_id")
             .quantity(0)
-            .addAddon(
-                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
-            )
-            .addAllowedPaymentMethodType(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT)
+            .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+            .addAllowedPaymentMethodType(PaymentMethodTypes.CREDIT)
             .billingCurrency(Currency.AED)
             .discountCode("discount_code")
             .metadata(
@@ -73,12 +72,8 @@ internal class SubscriptionCreateParamsTest {
                 .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                 .productId("product_id")
                 .quantity(0)
-                .addAddon(
-                    SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
-                )
-                .addAllowedPaymentMethodType(
-                    SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT
-                )
+                .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                .addAllowedPaymentMethodType(PaymentMethodTypes.CREDIT)
                 .billingCurrency(Currency.AED)
                 .discountCode("discount_code")
                 .metadata(
@@ -123,11 +118,9 @@ internal class SubscriptionCreateParamsTest {
         assertThat(body.productId()).isEqualTo("product_id")
         assertThat(body.quantity()).isEqualTo(0)
         assertThat(body.addons().getOrNull())
-            .containsExactly(
-                SubscriptionCreateParams.Addon.builder().addonId("addon_id").quantity(0).build()
-            )
+            .containsExactly(AttachAddon.builder().addonId("addon_id").quantity(0).build())
         assertThat(body.allowedPaymentMethodTypes().getOrNull())
-            .containsExactly(SubscriptionCreateParams.AllowedPaymentMethodType.CREDIT)
+            .containsExactly(PaymentMethodTypes.CREDIT)
         assertThat(body.billingCurrency()).contains(Currency.AED)
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.metadata())
