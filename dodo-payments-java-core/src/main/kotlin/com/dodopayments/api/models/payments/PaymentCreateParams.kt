@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.payments
 
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -65,7 +64,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun allowedPaymentMethodTypes(): Optional<List<AllowedPaymentMethodType>> =
+    fun allowedPaymentMethodTypes(): Optional<List<PaymentMethodTypes>> =
         body.allowedPaymentMethodTypes()
 
     /**
@@ -152,7 +151,7 @@ private constructor(
      * Unlike [allowedPaymentMethodTypes], this method doesn't throw if the JSON field has an
      * unexpected type.
      */
-    fun _allowedPaymentMethodTypes(): JsonField<List<AllowedPaymentMethodType>> =
+    fun _allowedPaymentMethodTypes(): JsonField<List<PaymentMethodTypes>> =
         body._allowedPaymentMethodTypes()
 
     /**
@@ -328,7 +327,7 @@ private constructor(
          * adding a method here **does not guarantee** customers will see it. Availability still
          * depends on other factors (e.g., customer location, merchant settings).
          */
-        fun allowedPaymentMethodTypes(allowedPaymentMethodTypes: List<AllowedPaymentMethodType>?) =
+        fun allowedPaymentMethodTypes(allowedPaymentMethodTypes: List<PaymentMethodTypes>?) =
             apply {
                 body.allowedPaymentMethodTypes(allowedPaymentMethodTypes)
             }
@@ -338,29 +337,28 @@ private constructor(
          * `allowedPaymentMethodTypes.orElse(null)`.
          */
         fun allowedPaymentMethodTypes(
-            allowedPaymentMethodTypes: Optional<List<AllowedPaymentMethodType>>
+            allowedPaymentMethodTypes: Optional<List<PaymentMethodTypes>>
         ) = allowedPaymentMethodTypes(allowedPaymentMethodTypes.getOrNull())
 
         /**
          * Sets [Builder.allowedPaymentMethodTypes] to an arbitrary JSON value.
          *
          * You should usually call [Builder.allowedPaymentMethodTypes] with a well-typed
-         * `List<AllowedPaymentMethodType>` value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * `List<PaymentMethodTypes>` value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
          */
         fun allowedPaymentMethodTypes(
-            allowedPaymentMethodTypes: JsonField<List<AllowedPaymentMethodType>>
+            allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>
         ) = apply { body.allowedPaymentMethodTypes(allowedPaymentMethodTypes) }
 
         /**
-         * Adds a single [AllowedPaymentMethodType] to [allowedPaymentMethodTypes].
+         * Adds a single [PaymentMethodTypes] to [allowedPaymentMethodTypes].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAllowedPaymentMethodType(allowedPaymentMethodType: AllowedPaymentMethodType) =
-            apply {
-                body.addAllowedPaymentMethodType(allowedPaymentMethodType)
-            }
+        fun addAllowedPaymentMethodType(allowedPaymentMethodType: PaymentMethodTypes) = apply {
+            body.addAllowedPaymentMethodType(allowedPaymentMethodType)
+        }
 
         /**
          * Fix the currency in which the end customer is billed. If Dodo Payments cannot support
@@ -634,7 +632,7 @@ private constructor(
         private val billing: JsonField<BillingAddress>,
         private val customer: JsonField<CustomerRequest>,
         private val productCart: JsonField<List<OneTimeProductCartItem>>,
-        private val allowedPaymentMethodTypes: JsonField<List<AllowedPaymentMethodType>>,
+        private val allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>,
         private val billingCurrency: JsonField<Currency>,
         private val discountCode: JsonField<String>,
         private val metadata: JsonField<Metadata>,
@@ -658,7 +656,7 @@ private constructor(
             productCart: JsonField<List<OneTimeProductCartItem>> = JsonMissing.of(),
             @JsonProperty("allowed_payment_method_types")
             @ExcludeMissing
-            allowedPaymentMethodTypes: JsonField<List<AllowedPaymentMethodType>> = JsonMissing.of(),
+            allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>> = JsonMissing.of(),
             @JsonProperty("billing_currency")
             @ExcludeMissing
             billingCurrency: JsonField<Currency> = JsonMissing.of(),
@@ -727,7 +725,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun allowedPaymentMethodTypes(): Optional<List<AllowedPaymentMethodType>> =
+        fun allowedPaymentMethodTypes(): Optional<List<PaymentMethodTypes>> =
             allowedPaymentMethodTypes.getOptional("allowed_payment_method_types")
 
         /**
@@ -822,7 +820,7 @@ private constructor(
          */
         @JsonProperty("allowed_payment_method_types")
         @ExcludeMissing
-        fun _allowedPaymentMethodTypes(): JsonField<List<AllowedPaymentMethodType>> =
+        fun _allowedPaymentMethodTypes(): JsonField<List<PaymentMethodTypes>> =
             allowedPaymentMethodTypes
 
         /**
@@ -918,8 +916,7 @@ private constructor(
             private var billing: JsonField<BillingAddress>? = null
             private var customer: JsonField<CustomerRequest>? = null
             private var productCart: JsonField<MutableList<OneTimeProductCartItem>>? = null
-            private var allowedPaymentMethodTypes:
-                JsonField<MutableList<AllowedPaymentMethodType>>? =
+            private var allowedPaymentMethodTypes: JsonField<MutableList<PaymentMethodTypes>>? =
                 null
             private var billingCurrency: JsonField<Currency> = JsonMissing.of()
             private var discountCode: JsonField<String> = JsonMissing.of()
@@ -1019,45 +1016,42 @@ private constructor(
              * adding a method here **does not guarantee** customers will see it. Availability still
              * depends on other factors (e.g., customer location, merchant settings).
              */
-            fun allowedPaymentMethodTypes(
-                allowedPaymentMethodTypes: List<AllowedPaymentMethodType>?
-            ) = allowedPaymentMethodTypes(JsonField.ofNullable(allowedPaymentMethodTypes))
+            fun allowedPaymentMethodTypes(allowedPaymentMethodTypes: List<PaymentMethodTypes>?) =
+                allowedPaymentMethodTypes(JsonField.ofNullable(allowedPaymentMethodTypes))
 
             /**
              * Alias for calling [Builder.allowedPaymentMethodTypes] with
              * `allowedPaymentMethodTypes.orElse(null)`.
              */
             fun allowedPaymentMethodTypes(
-                allowedPaymentMethodTypes: Optional<List<AllowedPaymentMethodType>>
+                allowedPaymentMethodTypes: Optional<List<PaymentMethodTypes>>
             ) = allowedPaymentMethodTypes(allowedPaymentMethodTypes.getOrNull())
 
             /**
              * Sets [Builder.allowedPaymentMethodTypes] to an arbitrary JSON value.
              *
              * You should usually call [Builder.allowedPaymentMethodTypes] with a well-typed
-             * `List<AllowedPaymentMethodType>` value instead. This method is primarily for setting
-             * the field to an undocumented or not yet supported value.
+             * `List<PaymentMethodTypes>` value instead. This method is primarily for setting the
+             * field to an undocumented or not yet supported value.
              */
             fun allowedPaymentMethodTypes(
-                allowedPaymentMethodTypes: JsonField<List<AllowedPaymentMethodType>>
+                allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>
             ) = apply {
                 this.allowedPaymentMethodTypes =
                     allowedPaymentMethodTypes.map { it.toMutableList() }
             }
 
             /**
-             * Adds a single [AllowedPaymentMethodType] to [allowedPaymentMethodTypes].
+             * Adds a single [PaymentMethodTypes] to [allowedPaymentMethodTypes].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addAllowedPaymentMethodType(allowedPaymentMethodType: AllowedPaymentMethodType) =
-                apply {
-                    allowedPaymentMethodTypes =
-                        (allowedPaymentMethodTypes ?: JsonField.of(mutableListOf())).also {
-                            checkKnown("allowedPaymentMethodTypes", it)
-                                .add(allowedPaymentMethodType)
-                        }
-                }
+            fun addAllowedPaymentMethodType(allowedPaymentMethodType: PaymentMethodTypes) = apply {
+                allowedPaymentMethodTypes =
+                    (allowedPaymentMethodTypes ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("allowedPaymentMethodTypes", it).add(allowedPaymentMethodType)
+                    }
+            }
 
             /**
              * Fix the currency in which the end customer is billed. If Dodo Payments cannot support
@@ -1304,239 +1298,6 @@ private constructor(
 
         override fun toString() =
             "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, metadata=$metadata, paymentLink=$paymentLink, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
-    }
-
-    class AllowedPaymentMethodType
-    @JsonCreator
-    private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val CREDIT = of("credit")
-
-            @JvmField val DEBIT = of("debit")
-
-            @JvmField val UPI_COLLECT = of("upi_collect")
-
-            @JvmField val UPI_INTENT = of("upi_intent")
-
-            @JvmField val APPLE_PAY = of("apple_pay")
-
-            @JvmField val CASHAPP = of("cashapp")
-
-            @JvmField val GOOGLE_PAY = of("google_pay")
-
-            @JvmField val MULTIBANCO = of("multibanco")
-
-            @JvmField val BANCONTACT_CARD = of("bancontact_card")
-
-            @JvmField val EPS = of("eps")
-
-            @JvmField val IDEAL = of("ideal")
-
-            @JvmField val PRZELEWY24 = of("przelewy24")
-
-            @JvmField val AFFIRM = of("affirm")
-
-            @JvmField val KLARNA = of("klarna")
-
-            @JvmField val SEPA = of("sepa")
-
-            @JvmField val ACH = of("ach")
-
-            @JvmField val AMAZON_PAY = of("amazon_pay")
-
-            @JvmField val AFTERPAY_CLEARPAY = of("afterpay_clearpay")
-
-            @JvmStatic fun of(value: String) = AllowedPaymentMethodType(JsonField.of(value))
-        }
-
-        /** An enum containing [AllowedPaymentMethodType]'s known values. */
-        enum class Known {
-            CREDIT,
-            DEBIT,
-            UPI_COLLECT,
-            UPI_INTENT,
-            APPLE_PAY,
-            CASHAPP,
-            GOOGLE_PAY,
-            MULTIBANCO,
-            BANCONTACT_CARD,
-            EPS,
-            IDEAL,
-            PRZELEWY24,
-            AFFIRM,
-            KLARNA,
-            SEPA,
-            ACH,
-            AMAZON_PAY,
-            AFTERPAY_CLEARPAY,
-        }
-
-        /**
-         * An enum containing [AllowedPaymentMethodType]'s known values, as well as an [_UNKNOWN]
-         * member.
-         *
-         * An instance of [AllowedPaymentMethodType] can contain an unknown value in a couple of
-         * cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            CREDIT,
-            DEBIT,
-            UPI_COLLECT,
-            UPI_INTENT,
-            APPLE_PAY,
-            CASHAPP,
-            GOOGLE_PAY,
-            MULTIBANCO,
-            BANCONTACT_CARD,
-            EPS,
-            IDEAL,
-            PRZELEWY24,
-            AFFIRM,
-            KLARNA,
-            SEPA,
-            ACH,
-            AMAZON_PAY,
-            AFTERPAY_CLEARPAY,
-            /**
-             * An enum member indicating that [AllowedPaymentMethodType] was instantiated with an
-             * unknown value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                CREDIT -> Value.CREDIT
-                DEBIT -> Value.DEBIT
-                UPI_COLLECT -> Value.UPI_COLLECT
-                UPI_INTENT -> Value.UPI_INTENT
-                APPLE_PAY -> Value.APPLE_PAY
-                CASHAPP -> Value.CASHAPP
-                GOOGLE_PAY -> Value.GOOGLE_PAY
-                MULTIBANCO -> Value.MULTIBANCO
-                BANCONTACT_CARD -> Value.BANCONTACT_CARD
-                EPS -> Value.EPS
-                IDEAL -> Value.IDEAL
-                PRZELEWY24 -> Value.PRZELEWY24
-                AFFIRM -> Value.AFFIRM
-                KLARNA -> Value.KLARNA
-                SEPA -> Value.SEPA
-                ACH -> Value.ACH
-                AMAZON_PAY -> Value.AMAZON_PAY
-                AFTERPAY_CLEARPAY -> Value.AFTERPAY_CLEARPAY
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                CREDIT -> Known.CREDIT
-                DEBIT -> Known.DEBIT
-                UPI_COLLECT -> Known.UPI_COLLECT
-                UPI_INTENT -> Known.UPI_INTENT
-                APPLE_PAY -> Known.APPLE_PAY
-                CASHAPP -> Known.CASHAPP
-                GOOGLE_PAY -> Known.GOOGLE_PAY
-                MULTIBANCO -> Known.MULTIBANCO
-                BANCONTACT_CARD -> Known.BANCONTACT_CARD
-                EPS -> Known.EPS
-                IDEAL -> Known.IDEAL
-                PRZELEWY24 -> Known.PRZELEWY24
-                AFFIRM -> Known.AFFIRM
-                KLARNA -> Known.KLARNA
-                SEPA -> Known.SEPA
-                ACH -> Known.ACH
-                AMAZON_PAY -> Known.AMAZON_PAY
-                AFTERPAY_CLEARPAY -> Known.AFTERPAY_CLEARPAY
-                else ->
-                    throw DodoPaymentsInvalidDataException(
-                        "Unknown AllowedPaymentMethodType: $value"
-                    )
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): AllowedPaymentMethodType = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: DodoPaymentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return /* spotless:off */ other is AllowedPaymentMethodType && value == other.value /* spotless:on */
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
     }
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */

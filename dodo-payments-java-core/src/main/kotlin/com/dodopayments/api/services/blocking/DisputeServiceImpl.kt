@@ -19,7 +19,7 @@ import com.dodopayments.api.models.disputes.DisputeListPage
 import com.dodopayments.api.models.disputes.DisputeListPageResponse
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
-import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
+import com.dodopayments.api.models.disputes.GetDispute
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -38,7 +38,7 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
     override fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions,
-    ): DisputeRetrieveResponse =
+    ): GetDispute =
         // get /disputes/{dispute_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -59,13 +59,13 @@ class DisputeServiceImpl internal constructor(private val clientOptions: ClientO
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveHandler: Handler<DisputeRetrieveResponse> =
-            jsonHandler<DisputeRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<GetDispute> =
+            jsonHandler<GetDispute>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<DisputeRetrieveResponse> {
+        ): HttpResponseFor<GetDispute> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("disputeId", params.disputeId().getOrNull())

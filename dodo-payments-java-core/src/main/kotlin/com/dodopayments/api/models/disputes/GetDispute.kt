@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class DisputeRetrieveResponse
+class GetDispute
 private constructor(
     private val amount: JsonField<String>,
     private val businessId: JsonField<String>,
@@ -261,7 +261,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [DisputeRetrieveResponse].
+         * Returns a mutable builder for constructing an instance of [GetDispute].
          *
          * The following fields are required:
          * ```java
@@ -279,7 +279,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [DisputeRetrieveResponse]. */
+    /** A builder for [GetDispute]. */
     class Builder internal constructor() {
 
         private var amount: JsonField<String>? = null
@@ -296,19 +296,19 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(disputeRetrieveResponse: DisputeRetrieveResponse) = apply {
-            amount = disputeRetrieveResponse.amount
-            businessId = disputeRetrieveResponse.businessId
-            createdAt = disputeRetrieveResponse.createdAt
-            currency = disputeRetrieveResponse.currency
-            customer = disputeRetrieveResponse.customer
-            disputeId = disputeRetrieveResponse.disputeId
-            disputeStage = disputeRetrieveResponse.disputeStage
-            disputeStatus = disputeRetrieveResponse.disputeStatus
-            paymentId = disputeRetrieveResponse.paymentId
-            reason = disputeRetrieveResponse.reason
-            remarks = disputeRetrieveResponse.remarks
-            additionalProperties = disputeRetrieveResponse.additionalProperties.toMutableMap()
+        internal fun from(getDispute: GetDispute) = apply {
+            amount = getDispute.amount
+            businessId = getDispute.businessId
+            createdAt = getDispute.createdAt
+            currency = getDispute.currency
+            customer = getDispute.customer
+            disputeId = getDispute.disputeId
+            disputeStage = getDispute.disputeStage
+            disputeStatus = getDispute.disputeStatus
+            paymentId = getDispute.paymentId
+            reason = getDispute.reason
+            remarks = getDispute.remarks
+            additionalProperties = getDispute.additionalProperties.toMutableMap()
         }
 
         /** The amount involved in the dispute, represented as a string to accommodate precision. */
@@ -471,7 +471,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [DisputeRetrieveResponse].
+         * Returns an immutable instance of [GetDispute].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -490,8 +490,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): DisputeRetrieveResponse =
-            DisputeRetrieveResponse(
+        fun build(): GetDispute =
+            GetDispute(
                 checkRequired("amount", amount),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
@@ -509,7 +509,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): DisputeRetrieveResponse = apply {
+    fun validate(): GetDispute = apply {
         if (validated) {
             return@apply
         }
@@ -560,7 +560,7 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is DisputeRetrieveResponse && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && reason == other.reason && remarks == other.remarks && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is GetDispute && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && customer == other.customer && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && reason == other.reason && remarks == other.remarks && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -570,5 +570,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "DisputeRetrieveResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
+        "GetDispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
 }

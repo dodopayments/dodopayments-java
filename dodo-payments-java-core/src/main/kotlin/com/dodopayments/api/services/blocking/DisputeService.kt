@@ -8,7 +8,7 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.disputes.DisputeListPage
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
-import com.dodopayments.api.models.disputes.DisputeRetrieveResponse
+import com.dodopayments.api.models.disputes.GetDispute
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -26,35 +26,33 @@ interface DisputeService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DisputeService
 
-    fun retrieve(disputeId: String): DisputeRetrieveResponse =
-        retrieve(disputeId, DisputeRetrieveParams.none())
+    fun retrieve(disputeId: String): GetDispute = retrieve(disputeId, DisputeRetrieveParams.none())
 
     /** @see [retrieve] */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DisputeRetrieveResponse =
-        retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
+    ): GetDispute = retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
     /** @see [retrieve] */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-    ): DisputeRetrieveResponse = retrieve(disputeId, params, RequestOptions.none())
+    ): GetDispute = retrieve(disputeId, params, RequestOptions.none())
 
     /** @see [retrieve] */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): DisputeRetrieveResponse
+    ): GetDispute
 
     /** @see [retrieve] */
-    fun retrieve(params: DisputeRetrieveParams): DisputeRetrieveResponse =
+    fun retrieve(params: DisputeRetrieveParams): GetDispute =
         retrieve(params, RequestOptions.none())
 
     /** @see [retrieve] */
-    fun retrieve(disputeId: String, requestOptions: RequestOptions): DisputeRetrieveResponse =
+    fun retrieve(disputeId: String, requestOptions: RequestOptions): GetDispute =
         retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
     fun list(): DisputeListPage = list(DisputeListParams.none())
@@ -88,7 +86,7 @@ interface DisputeService {
          * as [DisputeService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(disputeId: String): HttpResponseFor<DisputeRetrieveResponse> =
+        fun retrieve(disputeId: String): HttpResponseFor<GetDispute> =
             retrieve(disputeId, DisputeRetrieveParams.none())
 
         /** @see [retrieve] */
@@ -97,7 +95,7 @@ interface DisputeService {
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DisputeRetrieveResponse> =
+        ): HttpResponseFor<GetDispute> =
             retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
         /** @see [retrieve] */
@@ -105,19 +103,18 @@ interface DisputeService {
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-        ): HttpResponseFor<DisputeRetrieveResponse> =
-            retrieve(disputeId, params, RequestOptions.none())
+        ): HttpResponseFor<GetDispute> = retrieve(disputeId, params, RequestOptions.none())
 
         /** @see [retrieve] */
         @MustBeClosed
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<DisputeRetrieveResponse>
+        ): HttpResponseFor<GetDispute>
 
         /** @see [retrieve] */
         @MustBeClosed
-        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<DisputeRetrieveResponse> =
+        fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<GetDispute> =
             retrieve(params, RequestOptions.none())
 
         /** @see [retrieve] */
@@ -125,7 +122,7 @@ interface DisputeService {
         fun retrieve(
             disputeId: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<DisputeRetrieveResponse> =
+        ): HttpResponseFor<GetDispute> =
             retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
         /**
