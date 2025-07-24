@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.43.1 (2025-07-24)
+
+Full Changelog: [v1.43.0...v1.43.1](https://github.com/dodopayments/dodopayments-java/compare/v1.43.0...v1.43.1)
+
+### Documentation
+
+* fix missing readme comment ([2ed6479](https://github.com/dodopayments/dodopayments-java/commit/2ed6479a230be9371f476f4ae8fa05924aba2d11))
+
 ## 1.43.0 (2025-07-23)
 
 Full Changelog: [v1.42.0...v1.43.0](https://github.com/dodopayments/dodopayments-java/compare/v1.42.0...v1.43.0)
