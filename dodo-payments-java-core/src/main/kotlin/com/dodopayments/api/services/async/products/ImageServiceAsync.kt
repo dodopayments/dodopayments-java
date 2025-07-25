@@ -27,7 +27,7 @@ interface ImageServiceAsync {
     fun update(id: String): CompletableFuture<ImageUpdateResponse> =
         update(id, ImageUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: ImageUpdateParams = ImageUpdateParams.none(),
@@ -35,23 +35,23 @@ interface ImageServiceAsync {
     ): CompletableFuture<ImageUpdateResponse> =
         update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: ImageUpdateParams = ImageUpdateParams.none(),
     ): CompletableFuture<ImageUpdateResponse> = update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: ImageUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ImageUpdateResponse>
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: ImageUpdateParams): CompletableFuture<ImageUpdateResponse> =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions): CompletableFuture<ImageUpdateResponse> =
         update(id, ImageUpdateParams.none(), requestOptions)
 
@@ -74,7 +74,7 @@ interface ImageServiceAsync {
         fun update(id: String): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
             update(id, ImageUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             params: ImageUpdateParams = ImageUpdateParams.none(),
@@ -82,26 +82,26 @@ interface ImageServiceAsync {
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             params: ImageUpdateParams = ImageUpdateParams.none(),
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
             update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             params: ImageUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>>
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             params: ImageUpdateParams
         ): CompletableFuture<HttpResponseFor<ImageUpdateResponse>> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,

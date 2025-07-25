@@ -27,7 +27,7 @@ interface CustomerPortalService {
     fun create(customerId: String): CustomerPortalSession =
         create(customerId, CustomerPortalCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         customerId: String,
         params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
@@ -35,23 +35,23 @@ interface CustomerPortalService {
     ): CustomerPortalSession =
         create(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         customerId: String,
         params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
     ): CustomerPortalSession = create(customerId, params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CustomerPortalCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CustomerPortalSession
 
-    /** @see [create] */
+    /** @see create */
     fun create(params: CustomerPortalCreateParams): CustomerPortalSession =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(customerId: String, requestOptions: RequestOptions): CustomerPortalSession =
         create(customerId, CustomerPortalCreateParams.none(), requestOptions)
 
@@ -77,7 +77,7 @@ interface CustomerPortalService {
         fun create(customerId: String): HttpResponseFor<CustomerPortalSession> =
             create(customerId, CustomerPortalCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             customerId: String,
@@ -86,7 +86,7 @@ interface CustomerPortalService {
         ): HttpResponseFor<CustomerPortalSession> =
             create(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             customerId: String,
@@ -94,19 +94,19 @@ interface CustomerPortalService {
         ): HttpResponseFor<CustomerPortalSession> =
             create(customerId, params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: CustomerPortalCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CustomerPortalSession>
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(params: CustomerPortalCreateParams): HttpResponseFor<CustomerPortalSession> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             customerId: String,

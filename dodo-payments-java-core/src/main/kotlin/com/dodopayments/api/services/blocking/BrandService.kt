@@ -32,116 +32,116 @@ interface BrandService {
 
     fun create(): Brand = create(BrandCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: BrandCreateParams = BrandCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Brand
 
-    /** @see [create] */
+    /** @see create */
     fun create(params: BrandCreateParams = BrandCreateParams.none()): Brand =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(requestOptions: RequestOptions): Brand =
         create(BrandCreateParams.none(), requestOptions)
 
     /** Thin handler just calls `get_brand` and wraps in `Json(...)` */
     fun retrieve(id: String): Brand = retrieve(id, BrandRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: BrandRetrieveParams = BrandRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Brand = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(id: String, params: BrandRetrieveParams = BrandRetrieveParams.none()): Brand =
         retrieve(id, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: BrandRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Brand
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: BrandRetrieveParams): Brand = retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): Brand =
         retrieve(id, BrandRetrieveParams.none(), requestOptions)
 
     fun update(id: String): Brand = update(id, BrandUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: BrandUpdateParams = BrandUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Brand = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, params: BrandUpdateParams = BrandUpdateParams.none()): Brand =
         update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: BrandUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Brand
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: BrandUpdateParams): Brand = update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions): Brand =
         update(id, BrandUpdateParams.none(), requestOptions)
 
     fun list(): BrandListResponse = list(BrandListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: BrandListParams = BrandListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BrandListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: BrandListParams = BrandListParams.none()): BrandListResponse =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): BrandListResponse =
         list(BrandListParams.none(), requestOptions)
 
     fun updateImages(id: String): BrandUpdateImagesResponse =
         updateImages(id, BrandUpdateImagesParams.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         id: String,
         params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BrandUpdateImagesResponse = updateImages(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         id: String,
         params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
     ): BrandUpdateImagesResponse = updateImages(id, params, RequestOptions.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         params: BrandUpdateImagesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BrandUpdateImagesResponse
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(params: BrandUpdateImagesParams): BrandUpdateImagesResponse =
         updateImages(params, RequestOptions.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(id: String, requestOptions: RequestOptions): BrandUpdateImagesResponse =
         updateImages(id, BrandUpdateImagesParams.none(), requestOptions)
 
@@ -161,19 +161,19 @@ interface BrandService {
          */
         @MustBeClosed fun create(): HttpResponseFor<Brand> = create(BrandCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: BrandCreateParams = BrandCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Brand>
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(params: BrandCreateParams = BrandCreateParams.none()): HttpResponseFor<Brand> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<Brand> =
             create(BrandCreateParams.none(), requestOptions)
@@ -185,7 +185,7 @@ interface BrandService {
         @MustBeClosed
         fun retrieve(id: String): HttpResponseFor<Brand> = retrieve(id, BrandRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -193,26 +193,26 @@ interface BrandService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Brand> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
         ): HttpResponseFor<Brand> = retrieve(id, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: BrandRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Brand>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: BrandRetrieveParams): HttpResponseFor<Brand> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Brand> =
             retrieve(id, BrandRetrieveParams.none(), requestOptions)
@@ -224,7 +224,7 @@ interface BrandService {
         @MustBeClosed
         fun update(id: String): HttpResponseFor<Brand> = update(id, BrandUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -232,26 +232,26 @@ interface BrandService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Brand> = update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
         ): HttpResponseFor<Brand> = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: BrandUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Brand>
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: BrandUpdateParams): HttpResponseFor<Brand> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(id: String, requestOptions: RequestOptions): HttpResponseFor<Brand> =
             update(id, BrandUpdateParams.none(), requestOptions)
@@ -262,20 +262,20 @@ interface BrandService {
          */
         @MustBeClosed fun list(): HttpResponseFor<BrandListResponse> = list(BrandListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: BrandListParams = BrandListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BrandListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: BrandListParams = BrandListParams.none()
         ): HttpResponseFor<BrandListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<BrandListResponse> =
             list(BrandListParams.none(), requestOptions)
@@ -288,7 +288,7 @@ interface BrandService {
         fun updateImages(id: String): HttpResponseFor<BrandUpdateImagesResponse> =
             updateImages(id, BrandUpdateImagesParams.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         @MustBeClosed
         fun updateImages(
             id: String,
@@ -297,7 +297,7 @@ interface BrandService {
         ): HttpResponseFor<BrandUpdateImagesResponse> =
             updateImages(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         @MustBeClosed
         fun updateImages(
             id: String,
@@ -305,20 +305,20 @@ interface BrandService {
         ): HttpResponseFor<BrandUpdateImagesResponse> =
             updateImages(id, params, RequestOptions.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         @MustBeClosed
         fun updateImages(
             params: BrandUpdateImagesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<BrandUpdateImagesResponse>
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         @MustBeClosed
         fun updateImages(
             params: BrandUpdateImagesParams
         ): HttpResponseFor<BrandUpdateImagesResponse> = updateImages(params, RequestOptions.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         @MustBeClosed
         fun updateImages(
             id: String,

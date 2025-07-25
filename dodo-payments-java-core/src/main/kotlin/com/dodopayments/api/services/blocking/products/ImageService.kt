@@ -26,30 +26,30 @@ interface ImageService {
 
     fun update(id: String): ImageUpdateResponse = update(id, ImageUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: ImageUpdateParams = ImageUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ImageUpdateResponse = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: ImageUpdateParams = ImageUpdateParams.none(),
     ): ImageUpdateResponse = update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: ImageUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ImageUpdateResponse
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: ImageUpdateParams): ImageUpdateResponse =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions): ImageUpdateResponse =
         update(id, ImageUpdateParams.none(), requestOptions)
 
@@ -71,7 +71,7 @@ interface ImageService {
         fun update(id: String): HttpResponseFor<ImageUpdateResponse> =
             update(id, ImageUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -80,26 +80,26 @@ interface ImageService {
         ): HttpResponseFor<ImageUpdateResponse> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: ImageUpdateParams = ImageUpdateParams.none(),
         ): HttpResponseFor<ImageUpdateResponse> = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: ImageUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ImageUpdateResponse>
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: ImageUpdateParams): HttpResponseFor<ImageUpdateResponse> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,

@@ -26,18 +26,18 @@ interface PayoutServiceAsync {
 
     fun list(): CompletableFuture<PayoutListPageAsync> = list(PayoutListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: PayoutListParams = PayoutListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<PayoutListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: PayoutListParams = PayoutListParams.none()
     ): CompletableFuture<PayoutListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<PayoutListPageAsync> =
         list(PayoutListParams.none(), requestOptions)
 
@@ -62,19 +62,19 @@ interface PayoutServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
             list(PayoutListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: PayoutListParams = PayoutListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: PayoutListParams = PayoutListParams.none()
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =

@@ -31,7 +31,7 @@ interface LicenseServiceAsync {
     fun activate(params: LicenseActivateParams): CompletableFuture<LicenseKeyInstance> =
         activate(params, RequestOptions.none())
 
-    /** @see [activate] */
+    /** @see activate */
     fun activate(
         params: LicenseActivateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -40,7 +40,7 @@ interface LicenseServiceAsync {
     fun deactivate(params: LicenseDeactivateParams): CompletableFuture<Void?> =
         deactivate(params, RequestOptions.none())
 
-    /** @see [deactivate] */
+    /** @see deactivate */
     fun deactivate(
         params: LicenseDeactivateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -49,7 +49,7 @@ interface LicenseServiceAsync {
     fun validate(params: LicenseValidateParams): CompletableFuture<LicenseValidateResponse> =
         validate(params, RequestOptions.none())
 
-    /** @see [validate] */
+    /** @see validate */
     fun validate(
         params: LicenseValidateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -78,7 +78,7 @@ interface LicenseServiceAsync {
         ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
             activate(params, RequestOptions.none())
 
-        /** @see [activate] */
+        /** @see activate */
         fun activate(
             params: LicenseActivateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -91,7 +91,7 @@ interface LicenseServiceAsync {
         fun deactivate(params: LicenseDeactivateParams): CompletableFuture<HttpResponse> =
             deactivate(params, RequestOptions.none())
 
-        /** @see [deactivate] */
+        /** @see deactivate */
         fun deactivate(
             params: LicenseDeactivateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -106,7 +106,7 @@ interface LicenseServiceAsync {
         ): CompletableFuture<HttpResponseFor<LicenseValidateResponse>> =
             validate(params, RequestOptions.none())
 
-        /** @see [validate] */
+        /** @see validate */
         fun validate(
             params: LicenseValidateParams,
             requestOptions: RequestOptions = RequestOptions.none(),

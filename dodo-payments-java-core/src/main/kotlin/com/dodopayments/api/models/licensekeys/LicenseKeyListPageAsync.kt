@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [LicenseKeyServiceAsync.list] */
+/** @see LicenseKeyServiceAsync.list */
 class LicenseKeyListPageAsync
 private constructor(
     private val service: LicenseKeyServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [LicenseKeyListPageResponse], but gracefully handles missing data.
      *
-     * @see [LicenseKeyListPageResponse.items]
+     * @see LicenseKeyListPageResponse.items
      */
     override fun items(): List<LicenseKey> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

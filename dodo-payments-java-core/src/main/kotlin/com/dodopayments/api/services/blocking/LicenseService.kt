@@ -31,7 +31,7 @@ interface LicenseService {
     fun activate(params: LicenseActivateParams): LicenseKeyInstance =
         activate(params, RequestOptions.none())
 
-    /** @see [activate] */
+    /** @see activate */
     fun activate(
         params: LicenseActivateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -39,7 +39,7 @@ interface LicenseService {
 
     fun deactivate(params: LicenseDeactivateParams) = deactivate(params, RequestOptions.none())
 
-    /** @see [deactivate] */
+    /** @see deactivate */
     fun deactivate(
         params: LicenseDeactivateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -48,7 +48,7 @@ interface LicenseService {
     fun validate(params: LicenseValidateParams): LicenseValidateResponse =
         validate(params, RequestOptions.none())
 
-    /** @see [validate] */
+    /** @see validate */
     fun validate(
         params: LicenseValidateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -72,7 +72,7 @@ interface LicenseService {
         fun activate(params: LicenseActivateParams): HttpResponseFor<LicenseKeyInstance> =
             activate(params, RequestOptions.none())
 
-        /** @see [activate] */
+        /** @see activate */
         @MustBeClosed
         fun activate(
             params: LicenseActivateParams,
@@ -87,7 +87,7 @@ interface LicenseService {
         fun deactivate(params: LicenseDeactivateParams): HttpResponse =
             deactivate(params, RequestOptions.none())
 
-        /** @see [deactivate] */
+        /** @see deactivate */
         @MustBeClosed
         fun deactivate(
             params: LicenseDeactivateParams,
@@ -102,7 +102,7 @@ interface LicenseService {
         fun validate(params: LicenseValidateParams): HttpResponseFor<LicenseValidateResponse> =
             validate(params, RequestOptions.none())
 
-        /** @see [validate] */
+        /** @see validate */
         @MustBeClosed
         fun validate(
             params: LicenseValidateParams,

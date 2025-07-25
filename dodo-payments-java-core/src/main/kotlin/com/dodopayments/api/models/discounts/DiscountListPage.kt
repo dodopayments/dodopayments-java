@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [DiscountService.list] */
+/** @see DiscountService.list */
 class DiscountListPage
 private constructor(
     private val service: DiscountService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [DiscountListPageResponse], but gracefully handles missing data.
      *
-     * @see [DiscountListPageResponse.items]
+     * @see DiscountListPageResponse.items
      */
     override fun items(): List<Discount> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

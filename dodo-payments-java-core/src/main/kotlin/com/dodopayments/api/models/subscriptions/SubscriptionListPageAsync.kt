@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [SubscriptionServiceAsync.list] */
+/** @see SubscriptionServiceAsync.list */
 class SubscriptionListPageAsync
 private constructor(
     private val service: SubscriptionServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [SubscriptionListPageResponse], but gracefully handles missing data.
      *
-     * @see [SubscriptionListPageResponse.items]
+     * @see SubscriptionListPageResponse.items
      */
     override fun items(): List<SubscriptionListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
