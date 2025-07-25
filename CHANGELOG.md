@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.43.2 (2025-07-25)
+
+Full Changelog: [v1.43.1...v1.43.2](https://github.com/dodopayments/dodopayments-java/compare/v1.43.1...v1.43.2)
+
+### Chores
+
+* **internal:** remove unnecessary `[...]` in `[@see](https://github.com/see)` ([4b9b17c](https://github.com/dodopayments/dodopayments-java/commit/4b9b17ce94e0d30f4bc731bf50e6e10d42b09658))
+
+
+### Documentation
+
+* more code comments ([a20b681](https://github.com/dodopayments/dodopayments-java/commit/a20b6810a5e1db583d84af2b6e0b7c4de47e2e4f))
+
 ## 1.43.1 (2025-07-24)
 
 Full Changelog: [v1.43.0...v1.43.1](https://github.com/dodopayments/dodopayments-java/compare/v1.43.0...v1.43.1)
