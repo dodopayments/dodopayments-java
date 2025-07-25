@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [WebhookEventServiceAsync.list] */
+/** @see WebhookEventServiceAsync.list */
 class WebhookEventListPageAsync
 private constructor(
     private val service: WebhookEventServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [WebhookEventListPageResponse], but gracefully handles missing data.
      *
-     * @see [WebhookEventListPageResponse.items]
+     * @see WebhookEventListPageResponse.items
      */
     override fun items(): List<WebhookEvent> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

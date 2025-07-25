@@ -27,7 +27,7 @@ interface CustomerPortalServiceAsync {
     fun create(customerId: String): CompletableFuture<CustomerPortalSession> =
         create(customerId, CustomerPortalCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         customerId: String,
         params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
@@ -35,23 +35,23 @@ interface CustomerPortalServiceAsync {
     ): CompletableFuture<CustomerPortalSession> =
         create(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         customerId: String,
         params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
     ): CompletableFuture<CustomerPortalSession> = create(customerId, params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CustomerPortalCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CustomerPortalSession>
 
-    /** @see [create] */
+    /** @see create */
     fun create(params: CustomerPortalCreateParams): CompletableFuture<CustomerPortalSession> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         customerId: String,
         requestOptions: RequestOptions,
@@ -80,7 +80,7 @@ interface CustomerPortalServiceAsync {
         fun create(customerId: String): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(customerId, CustomerPortalCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             customerId: String,
             params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
@@ -88,26 +88,26 @@ interface CustomerPortalServiceAsync {
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             customerId: String,
             params: CustomerPortalCreateParams = CustomerPortalCreateParams.none(),
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(customerId, params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: CustomerPortalCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>>
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: CustomerPortalCreateParams
         ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             customerId: String,
             requestOptions: RequestOptions,

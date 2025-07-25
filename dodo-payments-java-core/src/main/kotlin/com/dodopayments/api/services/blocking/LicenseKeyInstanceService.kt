@@ -30,48 +30,48 @@ interface LicenseKeyInstanceService {
     fun retrieve(id: String): LicenseKeyInstance =
         retrieve(id, LicenseKeyInstanceRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstance = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
     ): LicenseKeyInstance = retrieve(id, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: LicenseKeyInstanceRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstance
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: LicenseKeyInstanceRetrieveParams): LicenseKeyInstance =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): LicenseKeyInstance =
         retrieve(id, LicenseKeyInstanceRetrieveParams.none(), requestOptions)
 
     fun update(id: String, params: LicenseKeyInstanceUpdateParams): LicenseKeyInstance =
         update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: LicenseKeyInstanceUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstance = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: LicenseKeyInstanceUpdateParams): LicenseKeyInstance =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: LicenseKeyInstanceUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -79,18 +79,18 @@ interface LicenseKeyInstanceService {
 
     fun list(): LicenseKeyInstanceListPage = list(LicenseKeyInstanceListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyInstanceListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
     ): LicenseKeyInstanceListPage = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): LicenseKeyInstanceListPage =
         list(LicenseKeyInstanceListParams.none(), requestOptions)
 
@@ -117,7 +117,7 @@ interface LicenseKeyInstanceService {
         fun retrieve(id: String): HttpResponseFor<LicenseKeyInstance> =
             retrieve(id, LicenseKeyInstanceRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -126,27 +126,27 @@ interface LicenseKeyInstanceService {
         ): HttpResponseFor<LicenseKeyInstance> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
             params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
         ): HttpResponseFor<LicenseKeyInstance> = retrieve(id, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: LicenseKeyInstanceRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<LicenseKeyInstance>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: LicenseKeyInstanceRetrieveParams
         ): HttpResponseFor<LicenseKeyInstance> = retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -164,7 +164,7 @@ interface LicenseKeyInstanceService {
             params: LicenseKeyInstanceUpdateParams,
         ): HttpResponseFor<LicenseKeyInstance> = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -173,12 +173,12 @@ interface LicenseKeyInstanceService {
         ): HttpResponseFor<LicenseKeyInstance> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: LicenseKeyInstanceUpdateParams): HttpResponseFor<LicenseKeyInstance> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: LicenseKeyInstanceUpdateParams,
@@ -193,20 +193,20 @@ interface LicenseKeyInstanceService {
         fun list(): HttpResponseFor<LicenseKeyInstanceListPage> =
             list(LicenseKeyInstanceListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<LicenseKeyInstanceListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
         ): HttpResponseFor<LicenseKeyInstanceListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<LicenseKeyInstanceListPage> =
             list(LicenseKeyInstanceListParams.none(), requestOptions)

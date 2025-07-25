@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [LicenseKeyInstanceService.list] */
+/** @see LicenseKeyInstanceService.list */
 class LicenseKeyInstanceListPage
 private constructor(
     private val service: LicenseKeyInstanceService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [LicenseKeyInstanceListPageResponse], but gracefully handles missing data.
      *
-     * @see [LicenseKeyInstanceListPageResponse.items]
+     * @see LicenseKeyInstanceListPageResponse.items
      */
     override fun items(): List<LicenseKeyInstance> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

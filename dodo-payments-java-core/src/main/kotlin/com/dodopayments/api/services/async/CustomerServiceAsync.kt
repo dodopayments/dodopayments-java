@@ -34,7 +34,7 @@ interface CustomerServiceAsync {
     fun create(params: CustomerCreateParams): CompletableFuture<Customer> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CustomerCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -43,7 +43,7 @@ interface CustomerServiceAsync {
     fun retrieve(customerId: String): CompletableFuture<Customer> =
         retrieve(customerId, CustomerRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         customerId: String,
         params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
@@ -51,30 +51,30 @@ interface CustomerServiceAsync {
     ): CompletableFuture<Customer> =
         retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         customerId: String,
         params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
     ): CompletableFuture<Customer> = retrieve(customerId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: CustomerRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Customer>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: CustomerRetrieveParams): CompletableFuture<Customer> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(customerId: String, requestOptions: RequestOptions): CompletableFuture<Customer> =
         retrieve(customerId, CustomerRetrieveParams.none(), requestOptions)
 
     fun update(customerId: String): CompletableFuture<Customer> =
         update(customerId, CustomerUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         customerId: String,
         params: CustomerUpdateParams = CustomerUpdateParams.none(),
@@ -82,40 +82,40 @@ interface CustomerServiceAsync {
     ): CompletableFuture<Customer> =
         update(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         customerId: String,
         params: CustomerUpdateParams = CustomerUpdateParams.none(),
     ): CompletableFuture<Customer> = update(customerId, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: CustomerUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Customer>
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: CustomerUpdateParams): CompletableFuture<Customer> =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(customerId: String, requestOptions: RequestOptions): CompletableFuture<Customer> =
         update(customerId, CustomerUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<CustomerListPageAsync> = list(CustomerListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: CustomerListParams = CustomerListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CustomerListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: CustomerListParams = CustomerListParams.none()
     ): CompletableFuture<CustomerListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CustomerListPageAsync> =
         list(CustomerListParams.none(), requestOptions)
 
@@ -142,7 +142,7 @@ interface CustomerServiceAsync {
         fun create(params: CustomerCreateParams): CompletableFuture<HttpResponseFor<Customer>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: CustomerCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -155,7 +155,7 @@ interface CustomerServiceAsync {
         fun retrieve(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(customerId, CustomerRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             customerId: String,
             params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
@@ -163,24 +163,24 @@ interface CustomerServiceAsync {
         ): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             customerId: String,
             params: CustomerRetrieveParams = CustomerRetrieveParams.none(),
         ): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(customerId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: CustomerRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(params: CustomerRetrieveParams): CompletableFuture<HttpResponseFor<Customer>> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             customerId: String,
             requestOptions: RequestOptions,
@@ -194,7 +194,7 @@ interface CustomerServiceAsync {
         fun update(customerId: String): CompletableFuture<HttpResponseFor<Customer>> =
             update(customerId, CustomerUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             customerId: String,
             params: CustomerUpdateParams = CustomerUpdateParams.none(),
@@ -202,24 +202,24 @@ interface CustomerServiceAsync {
         ): CompletableFuture<HttpResponseFor<Customer>> =
             update(params.toBuilder().customerId(customerId).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             customerId: String,
             params: CustomerUpdateParams = CustomerUpdateParams.none(),
         ): CompletableFuture<HttpResponseFor<Customer>> =
             update(customerId, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             params: CustomerUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Customer>>
 
-        /** @see [update] */
+        /** @see update */
         fun update(params: CustomerUpdateParams): CompletableFuture<HttpResponseFor<Customer>> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             customerId: String,
             requestOptions: RequestOptions,
@@ -233,19 +233,19 @@ interface CustomerServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(CustomerListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: CustomerListParams = CustomerListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: CustomerListParams = CustomerListParams.none()
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =

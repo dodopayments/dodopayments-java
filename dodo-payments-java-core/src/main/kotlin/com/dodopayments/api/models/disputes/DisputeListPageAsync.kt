@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [DisputeServiceAsync.list] */
+/** @see DisputeServiceAsync.list */
 class DisputeListPageAsync
 private constructor(
     private val service: DisputeServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [DisputeListPageResponse], but gracefully handles missing data.
      *
-     * @see [DisputeListPageResponse.items]
+     * @see DisputeListPageResponse.items
      */
     override fun items(): List<DisputeListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

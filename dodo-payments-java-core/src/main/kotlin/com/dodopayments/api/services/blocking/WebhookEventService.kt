@@ -30,7 +30,7 @@ interface WebhookEventService {
     fun retrieve(webhookEventId: String): WebhookEvent =
         retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
@@ -39,43 +39,43 @@ interface WebhookEventService {
     ): WebhookEvent =
         retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
         params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
     ): WebhookEvent = retrieve(webhookEventId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         params: WebhookEventRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): WebhookEvent
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(params: WebhookEventRetrieveParams): WebhookEvent =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(webhookEventId: String, requestOptions: RequestOptions): WebhookEvent =
         retrieve(webhookEventId, WebhookEventRetrieveParams.none(), requestOptions)
 
     fun list(): WebhookEventListPage = list(WebhookEventListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: WebhookEventListParams = WebhookEventListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): WebhookEventListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: WebhookEventListParams = WebhookEventListParams.none()): WebhookEventListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): WebhookEventListPage =
         list(WebhookEventListParams.none(), requestOptions)
 
@@ -102,7 +102,7 @@ interface WebhookEventService {
         fun retrieve(webhookEventId: String): HttpResponseFor<WebhookEvent> =
             retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
@@ -112,7 +112,7 @@ interface WebhookEventService {
         ): HttpResponseFor<WebhookEvent> =
             retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
@@ -120,7 +120,7 @@ interface WebhookEventService {
             params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
         ): HttpResponseFor<WebhookEvent> = retrieve(webhookEventId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
@@ -128,13 +128,13 @@ interface WebhookEventService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<WebhookEvent>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(params: WebhookEventRetrieveParams): HttpResponseFor<WebhookEvent> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
@@ -150,20 +150,20 @@ interface WebhookEventService {
         @MustBeClosed
         fun list(): HttpResponseFor<WebhookEventListPage> = list(WebhookEventListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<WebhookEventListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none()
         ): HttpResponseFor<WebhookEventListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<WebhookEventListPage> =
             list(WebhookEventListParams.none(), requestOptions)

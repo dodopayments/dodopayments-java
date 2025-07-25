@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [RefundServiceAsync.list] */
+/** @see RefundServiceAsync.list */
 class RefundListPageAsync
 private constructor(
     private val service: RefundServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [RefundListPageResponse], but gracefully handles missing data.
      *
-     * @see [RefundListPageResponse.items]
+     * @see RefundListPageResponse.items
      */
     override fun items(): List<Refund> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

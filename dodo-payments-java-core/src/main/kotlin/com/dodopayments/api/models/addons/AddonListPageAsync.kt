@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [AddonServiceAsync.list] */
+/** @see AddonServiceAsync.list */
 class AddonListPageAsync
 private constructor(
     private val service: AddonServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [AddonListPageResponse], but gracefully handles missing data.
      *
-     * @see [AddonListPageResponse.items]
+     * @see AddonListPageResponse.items
      */
     override fun items(): List<AddonResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [PaymentService.list] */
+/** @see PaymentService.list */
 class PaymentListPage
 private constructor(
     private val service: PaymentService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [PaymentListPageResponse], but gracefully handles missing data.
      *
-     * @see [PaymentListPageResponse.items]
+     * @see PaymentListPageResponse.items
      */
     override fun items(): List<PaymentListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

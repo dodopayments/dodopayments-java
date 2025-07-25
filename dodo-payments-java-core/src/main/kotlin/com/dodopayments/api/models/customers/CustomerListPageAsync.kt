@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [CustomerServiceAsync.list] */
+/** @see CustomerServiceAsync.list */
 class CustomerListPageAsync
 private constructor(
     private val service: CustomerServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [CustomerListPageResponse], but gracefully handles missing data.
      *
-     * @see [CustomerListPageResponse.items]
+     * @see CustomerListPageResponse.items
      */
     override fun items(): List<Customer> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

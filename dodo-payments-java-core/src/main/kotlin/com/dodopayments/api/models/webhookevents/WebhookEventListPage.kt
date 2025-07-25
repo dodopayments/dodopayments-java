@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [WebhookEventService.list] */
+/** @see WebhookEventService.list */
 class WebhookEventListPage
 private constructor(
     private val service: WebhookEventService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [WebhookEventListPageResponse], but gracefully handles missing data.
      *
-     * @see [WebhookEventListPageResponse.items]
+     * @see WebhookEventListPageResponse.items
      */
     override fun items(): List<WebhookEvent> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

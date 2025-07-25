@@ -30,7 +30,7 @@ interface WebhookEventServiceAsync {
     fun retrieve(webhookEventId: String): CompletableFuture<WebhookEvent> =
         retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
@@ -39,26 +39,26 @@ interface WebhookEventServiceAsync {
     ): CompletableFuture<WebhookEvent> =
         retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
         params: WebhookEventRetrieveParams = WebhookEventRetrieveParams.none(),
     ): CompletableFuture<WebhookEvent> = retrieve(webhookEventId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         params: WebhookEventRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<WebhookEvent>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(params: WebhookEventRetrieveParams): CompletableFuture<WebhookEvent> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(
         webhookEventId: String,
@@ -68,18 +68,18 @@ interface WebhookEventServiceAsync {
 
     fun list(): CompletableFuture<WebhookEventListPageAsync> = list(WebhookEventListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: WebhookEventListParams = WebhookEventListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<WebhookEventListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: WebhookEventListParams = WebhookEventListParams.none()
     ): CompletableFuture<WebhookEventListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<WebhookEventListPageAsync> =
         list(WebhookEventListParams.none(), requestOptions)
 
@@ -106,7 +106,7 @@ interface WebhookEventServiceAsync {
         fun retrieve(webhookEventId: String): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(webhookEventId, WebhookEventRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
@@ -115,7 +115,7 @@ interface WebhookEventServiceAsync {
         ): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(params.toBuilder().webhookEventId(webhookEventId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
@@ -123,21 +123,21 @@ interface WebhookEventServiceAsync {
         ): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(webhookEventId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         fun retrieve(
             params: WebhookEventRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<WebhookEvent>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         fun retrieve(
             params: WebhookEventRetrieveParams
         ): CompletableFuture<HttpResponseFor<WebhookEvent>> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @Deprecated("deprecated")
         fun retrieve(
             webhookEventId: String,
@@ -152,19 +152,19 @@ interface WebhookEventServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =
             list(WebhookEventListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: WebhookEventListParams = WebhookEventListParams.none()
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> =

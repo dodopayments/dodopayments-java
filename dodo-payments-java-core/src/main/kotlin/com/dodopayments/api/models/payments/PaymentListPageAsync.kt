@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [PaymentServiceAsync.list] */
+/** @see PaymentServiceAsync.list */
 class PaymentListPageAsync
 private constructor(
     private val service: PaymentServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [PaymentListPageResponse], but gracefully handles missing data.
      *
-     * @see [PaymentListPageResponse.items]
+     * @see PaymentListPageResponse.items
      */
     override fun items(): List<PaymentListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

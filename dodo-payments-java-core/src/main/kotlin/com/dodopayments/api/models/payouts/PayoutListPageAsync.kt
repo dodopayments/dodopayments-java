@@ -12,7 +12,7 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [PayoutServiceAsync.list] */
+/** @see PayoutServiceAsync.list */
 class PayoutListPageAsync
 private constructor(
     private val service: PayoutServiceAsync,
@@ -24,7 +24,7 @@ private constructor(
     /**
      * Delegates to [PayoutListPageResponse], but gracefully handles missing data.
      *
-     * @see [PayoutListPageResponse.items]
+     * @see PayoutListPageResponse.items
      */
     override fun items(): List<PayoutListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

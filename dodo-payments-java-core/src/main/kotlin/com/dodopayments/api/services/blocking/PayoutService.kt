@@ -26,17 +26,17 @@ interface PayoutService {
 
     fun list(): PayoutListPage = list(PayoutListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: PayoutListParams = PayoutListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): PayoutListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: PayoutListParams = PayoutListParams.none()): PayoutListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): PayoutListPage =
         list(PayoutListParams.none(), requestOptions)
 
@@ -56,20 +56,20 @@ interface PayoutService {
          */
         @MustBeClosed fun list(): HttpResponseFor<PayoutListPage> = list(PayoutListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: PayoutListParams = PayoutListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<PayoutListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: PayoutListParams = PayoutListParams.none()
         ): HttpResponseFor<PayoutListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<PayoutListPage> =
             list(PayoutListParams.none(), requestOptions)
