@@ -28,46 +28,46 @@ interface DisputeService {
 
     fun retrieve(disputeId: String): GetDispute = retrieve(disputeId, DisputeRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): GetDispute = retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
     ): GetDispute = retrieve(disputeId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): GetDispute
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: DisputeRetrieveParams): GetDispute =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(disputeId: String, requestOptions: RequestOptions): GetDispute =
         retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
     fun list(): DisputeListPage = list(DisputeListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: DisputeListParams = DisputeListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): DisputeListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: DisputeListParams = DisputeListParams.none()): DisputeListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): DisputeListPage =
         list(DisputeListParams.none(), requestOptions)
 
@@ -89,7 +89,7 @@ interface DisputeService {
         fun retrieve(disputeId: String): HttpResponseFor<GetDispute> =
             retrieve(disputeId, DisputeRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             disputeId: String,
@@ -98,26 +98,26 @@ interface DisputeService {
         ): HttpResponseFor<GetDispute> =
             retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
         ): HttpResponseFor<GetDispute> = retrieve(disputeId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<GetDispute>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: DisputeRetrieveParams): HttpResponseFor<GetDispute> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             disputeId: String,
@@ -131,20 +131,20 @@ interface DisputeService {
          */
         @MustBeClosed fun list(): HttpResponseFor<DisputeListPage> = list(DisputeListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: DisputeListParams = DisputeListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<DisputeListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: DisputeListParams = DisputeListParams.none()
         ): HttpResponseFor<DisputeListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<DisputeListPage> =
             list(DisputeListParams.none(), requestOptions)

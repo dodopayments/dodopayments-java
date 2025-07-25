@@ -29,7 +29,7 @@ interface RefundService {
 
     fun create(params: RefundCreateParams): Refund = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: RefundCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -37,45 +37,45 @@ interface RefundService {
 
     fun retrieve(refundId: String): Refund = retrieve(refundId, RefundRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         refundId: String,
         params: RefundRetrieveParams = RefundRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Refund = retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         refundId: String,
         params: RefundRetrieveParams = RefundRetrieveParams.none(),
     ): Refund = retrieve(refundId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: RefundRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Refund
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: RefundRetrieveParams): Refund = retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(refundId: String, requestOptions: RequestOptions): Refund =
         retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
     fun list(): RefundListPage = list(RefundListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: RefundListParams = RefundListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): RefundListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: RefundListParams = RefundListParams.none()): RefundListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): RefundListPage =
         list(RefundListParams.none(), requestOptions)
 
@@ -97,7 +97,7 @@ interface RefundService {
         fun create(params: RefundCreateParams): HttpResponseFor<Refund> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: RefundCreateParams,
@@ -112,7 +112,7 @@ interface RefundService {
         fun retrieve(refundId: String): HttpResponseFor<Refund> =
             retrieve(refundId, RefundRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             refundId: String,
@@ -121,26 +121,26 @@ interface RefundService {
         ): HttpResponseFor<Refund> =
             retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             refundId: String,
             params: RefundRetrieveParams = RefundRetrieveParams.none(),
         ): HttpResponseFor<Refund> = retrieve(refundId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: RefundRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Refund>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: RefundRetrieveParams): HttpResponseFor<Refund> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(refundId: String, requestOptions: RequestOptions): HttpResponseFor<Refund> =
             retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
@@ -151,20 +151,20 @@ interface RefundService {
          */
         @MustBeClosed fun list(): HttpResponseFor<RefundListPage> = list(RefundListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: RefundListParams = RefundListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<RefundListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: RefundListParams = RefundListParams.none()
         ): HttpResponseFor<RefundListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<RefundListPage> =
             list(RefundListParams.none(), requestOptions)

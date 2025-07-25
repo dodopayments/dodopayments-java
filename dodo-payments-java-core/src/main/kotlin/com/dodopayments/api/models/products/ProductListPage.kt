@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [ProductService.list] */
+/** @see ProductService.list */
 class ProductListPage
 private constructor(
     private val service: ProductService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [ProductListPageResponse], but gracefully handles missing data.
      *
-     * @see [ProductListPageResponse.items]
+     * @see ProductListPageResponse.items
      */
     override fun items(): List<ProductListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

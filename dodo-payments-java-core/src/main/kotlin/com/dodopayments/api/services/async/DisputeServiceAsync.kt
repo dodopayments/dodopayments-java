@@ -29,7 +29,7 @@ interface DisputeServiceAsync {
     fun retrieve(disputeId: String): CompletableFuture<GetDispute> =
         retrieve(disputeId, DisputeRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
@@ -37,40 +37,40 @@ interface DisputeServiceAsync {
     ): CompletableFuture<GetDispute> =
         retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         disputeId: String,
         params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
     ): CompletableFuture<GetDispute> = retrieve(disputeId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: DisputeRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<GetDispute>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: DisputeRetrieveParams): CompletableFuture<GetDispute> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(disputeId: String, requestOptions: RequestOptions): CompletableFuture<GetDispute> =
         retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
 
     fun list(): CompletableFuture<DisputeListPageAsync> = list(DisputeListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: DisputeListParams = DisputeListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<DisputeListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: DisputeListParams = DisputeListParams.none()
     ): CompletableFuture<DisputeListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<DisputeListPageAsync> =
         list(DisputeListParams.none(), requestOptions)
 
@@ -95,7 +95,7 @@ interface DisputeServiceAsync {
         fun retrieve(disputeId: String): CompletableFuture<HttpResponseFor<GetDispute>> =
             retrieve(disputeId, DisputeRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
@@ -103,25 +103,25 @@ interface DisputeServiceAsync {
         ): CompletableFuture<HttpResponseFor<GetDispute>> =
             retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             disputeId: String,
             params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
         ): CompletableFuture<HttpResponseFor<GetDispute>> =
             retrieve(disputeId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: DisputeRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<GetDispute>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: DisputeRetrieveParams
         ): CompletableFuture<HttpResponseFor<GetDispute>> = retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             disputeId: String,
             requestOptions: RequestOptions,
@@ -135,19 +135,19 @@ interface DisputeServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
             list(DisputeListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: DisputeListParams = DisputeListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: DisputeListParams = DisputeListParams.none()
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =

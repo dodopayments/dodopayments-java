@@ -38,7 +38,7 @@ interface ProductService {
 
     fun create(params: ProductCreateParams): Product = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: ProductCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -46,135 +46,135 @@ interface ProductService {
 
     fun retrieve(id: String): Product = retrieve(id, ProductRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: ProductRetrieveParams = ProductRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Product = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: ProductRetrieveParams = ProductRetrieveParams.none(),
     ): Product = retrieve(id, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: ProductRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Product
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: ProductRetrieveParams): Product = retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): Product =
         retrieve(id, ProductRetrieveParams.none(), requestOptions)
 
     fun update(id: String) = update(id, ProductUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: ProductUpdateParams = ProductUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ) = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, params: ProductUpdateParams = ProductUpdateParams.none()) =
         update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: ProductUpdateParams, requestOptions: RequestOptions = RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: ProductUpdateParams) = update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions) =
         update(id, ProductUpdateParams.none(), requestOptions)
 
     fun list(): ProductListPage = list(ProductListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ProductListParams = ProductListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProductListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: ProductListParams = ProductListParams.none()): ProductListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): ProductListPage =
         list(ProductListParams.none(), requestOptions)
 
     fun delete(id: String) = delete(id, ProductDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: ProductDeleteParams = ProductDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ) = delete(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, params: ProductDeleteParams = ProductDeleteParams.none()) =
         delete(id, params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: ProductDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: ProductDeleteParams) = delete(params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions) =
         delete(id, ProductDeleteParams.none(), requestOptions)
 
     fun unarchive(id: String) = unarchive(id, ProductUnarchiveParams.none())
 
-    /** @see [unarchive] */
+    /** @see unarchive */
     fun unarchive(
         id: String,
         params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ) = unarchive(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [unarchive] */
+    /** @see unarchive */
     fun unarchive(id: String, params: ProductUnarchiveParams = ProductUnarchiveParams.none()) =
         unarchive(id, params, RequestOptions.none())
 
-    /** @see [unarchive] */
+    /** @see unarchive */
     fun unarchive(
         params: ProductUnarchiveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     )
 
-    /** @see [unarchive] */
+    /** @see unarchive */
     fun unarchive(params: ProductUnarchiveParams) = unarchive(params, RequestOptions.none())
 
-    /** @see [unarchive] */
+    /** @see unarchive */
     fun unarchive(id: String, requestOptions: RequestOptions) =
         unarchive(id, ProductUnarchiveParams.none(), requestOptions)
 
     fun updateFiles(id: String, params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
         updateFiles(id, params, RequestOptions.none())
 
-    /** @see [updateFiles] */
+    /** @see updateFiles */
     fun updateFiles(
         id: String,
         params: ProductUpdateFilesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProductUpdateFilesResponse = updateFiles(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [updateFiles] */
+    /** @see updateFiles */
     fun updateFiles(params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
         updateFiles(params, RequestOptions.none())
 
-    /** @see [updateFiles] */
+    /** @see updateFiles */
     fun updateFiles(
         params: ProductUpdateFilesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -200,7 +200,7 @@ interface ProductService {
         fun create(params: ProductCreateParams): HttpResponseFor<Product> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: ProductCreateParams,
@@ -215,7 +215,7 @@ interface ProductService {
         fun retrieve(id: String): HttpResponseFor<Product> =
             retrieve(id, ProductRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -223,26 +223,26 @@ interface ProductService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Product> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             id: String,
             params: ProductRetrieveParams = ProductRetrieveParams.none(),
         ): HttpResponseFor<Product> = retrieve(id, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: ProductRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Product>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: ProductRetrieveParams): HttpResponseFor<Product> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Product> =
             retrieve(id, ProductRetrieveParams.none(), requestOptions)
@@ -253,7 +253,7 @@ interface ProductService {
          */
         @MustBeClosed fun update(id: String): HttpResponse = update(id, ProductUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -261,26 +261,26 @@ interface ProductService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse = update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: ProductUpdateParams = ProductUpdateParams.none(),
         ): HttpResponse = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: ProductUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: ProductUpdateParams): HttpResponse =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(id: String, requestOptions: RequestOptions): HttpResponse =
             update(id, ProductUpdateParams.none(), requestOptions)
@@ -291,20 +291,20 @@ interface ProductService {
          */
         @MustBeClosed fun list(): HttpResponseFor<ProductListPage> = list(ProductListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ProductListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none()
         ): HttpResponseFor<ProductListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ProductListPage> =
             list(ProductListParams.none(), requestOptions)
@@ -315,7 +315,7 @@ interface ProductService {
          */
         @MustBeClosed fun delete(id: String): HttpResponse = delete(id, ProductDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -323,26 +323,26 @@ interface ProductService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: ProductDeleteParams = ProductDeleteParams.none(),
         ): HttpResponse = delete(id, params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             params: ProductDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(params: ProductDeleteParams): HttpResponse =
             delete(params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(id: String, requestOptions: RequestOptions): HttpResponse =
             delete(id, ProductDeleteParams.none(), requestOptions)
@@ -354,7 +354,7 @@ interface ProductService {
         @MustBeClosed
         fun unarchive(id: String): HttpResponse = unarchive(id, ProductUnarchiveParams.none())
 
-        /** @see [unarchive] */
+        /** @see unarchive */
         @MustBeClosed
         fun unarchive(
             id: String,
@@ -362,26 +362,26 @@ interface ProductService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse = unarchive(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [unarchive] */
+        /** @see unarchive */
         @MustBeClosed
         fun unarchive(
             id: String,
             params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
         ): HttpResponse = unarchive(id, params, RequestOptions.none())
 
-        /** @see [unarchive] */
+        /** @see unarchive */
         @MustBeClosed
         fun unarchive(
             params: ProductUnarchiveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponse
 
-        /** @see [unarchive] */
+        /** @see unarchive */
         @MustBeClosed
         fun unarchive(params: ProductUnarchiveParams): HttpResponse =
             unarchive(params, RequestOptions.none())
 
-        /** @see [unarchive] */
+        /** @see unarchive */
         @MustBeClosed
         fun unarchive(id: String, requestOptions: RequestOptions): HttpResponse =
             unarchive(id, ProductUnarchiveParams.none(), requestOptions)
@@ -397,7 +397,7 @@ interface ProductService {
         ): HttpResponseFor<ProductUpdateFilesResponse> =
             updateFiles(id, params, RequestOptions.none())
 
-        /** @see [updateFiles] */
+        /** @see updateFiles */
         @MustBeClosed
         fun updateFiles(
             id: String,
@@ -406,13 +406,13 @@ interface ProductService {
         ): HttpResponseFor<ProductUpdateFilesResponse> =
             updateFiles(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [updateFiles] */
+        /** @see updateFiles */
         @MustBeClosed
         fun updateFiles(
             params: ProductUpdateFilesParams
         ): HttpResponseFor<ProductUpdateFilesResponse> = updateFiles(params, RequestOptions.none())
 
-        /** @see [updateFiles] */
+        /** @see updateFiles */
         @MustBeClosed
         fun updateFiles(
             params: ProductUpdateFilesParams,

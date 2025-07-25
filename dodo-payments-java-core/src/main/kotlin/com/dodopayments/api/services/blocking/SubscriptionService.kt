@@ -36,7 +36,7 @@ interface SubscriptionService {
     fun create(params: SubscriptionCreateParams): SubscriptionCreateResponse =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: SubscriptionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -45,7 +45,7 @@ interface SubscriptionService {
     fun retrieve(subscriptionId: String): Subscription =
         retrieve(subscriptionId, SubscriptionRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         subscriptionId: String,
         params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
@@ -53,30 +53,30 @@ interface SubscriptionService {
     ): Subscription =
         retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         subscriptionId: String,
         params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
     ): Subscription = retrieve(subscriptionId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: SubscriptionRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Subscription
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: SubscriptionRetrieveParams): Subscription =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(subscriptionId: String, requestOptions: RequestOptions): Subscription =
         retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
 
     fun update(subscriptionId: String): Subscription =
         update(subscriptionId, SubscriptionUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         subscriptionId: String,
         params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
@@ -84,56 +84,56 @@ interface SubscriptionService {
     ): Subscription =
         update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         subscriptionId: String,
         params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
     ): Subscription = update(subscriptionId, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: SubscriptionUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): Subscription
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: SubscriptionUpdateParams): Subscription =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(subscriptionId: String, requestOptions: RequestOptions): Subscription =
         update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
 
     fun list(): SubscriptionListPage = list(SubscriptionListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: SubscriptionListParams = SubscriptionListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionListPage
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: SubscriptionListParams = SubscriptionListParams.none()): SubscriptionListPage =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): SubscriptionListPage =
         list(SubscriptionListParams.none(), requestOptions)
 
     fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams) =
         changePlan(subscriptionId, params, RequestOptions.none())
 
-    /** @see [changePlan] */
+    /** @see changePlan */
     fun changePlan(
         subscriptionId: String,
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ) = changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-    /** @see [changePlan] */
+    /** @see changePlan */
     fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
 
-    /** @see [changePlan] */
+    /** @see changePlan */
     fun changePlan(
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -144,7 +144,7 @@ interface SubscriptionService {
         params: SubscriptionChargeParams,
     ): SubscriptionChargeResponse = charge(subscriptionId, params, RequestOptions.none())
 
-    /** @see [charge] */
+    /** @see charge */
     fun charge(
         subscriptionId: String,
         params: SubscriptionChargeParams,
@@ -152,11 +152,11 @@ interface SubscriptionService {
     ): SubscriptionChargeResponse =
         charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-    /** @see [charge] */
+    /** @see charge */
     fun charge(params: SubscriptionChargeParams): SubscriptionChargeResponse =
         charge(params, RequestOptions.none())
 
-    /** @see [charge] */
+    /** @see charge */
     fun charge(
         params: SubscriptionChargeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -184,7 +184,7 @@ interface SubscriptionService {
         fun create(params: SubscriptionCreateParams): HttpResponseFor<SubscriptionCreateResponse> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: SubscriptionCreateParams,
@@ -199,7 +199,7 @@ interface SubscriptionService {
         fun retrieve(subscriptionId: String): HttpResponseFor<Subscription> =
             retrieve(subscriptionId, SubscriptionRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             subscriptionId: String,
@@ -208,26 +208,26 @@ interface SubscriptionService {
         ): HttpResponseFor<Subscription> =
             retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             subscriptionId: String,
             params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
         ): HttpResponseFor<Subscription> = retrieve(subscriptionId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: SubscriptionRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Subscription>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: SubscriptionRetrieveParams): HttpResponseFor<Subscription> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             subscriptionId: String,
@@ -243,7 +243,7 @@ interface SubscriptionService {
         fun update(subscriptionId: String): HttpResponseFor<Subscription> =
             update(subscriptionId, SubscriptionUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             subscriptionId: String,
@@ -252,26 +252,26 @@ interface SubscriptionService {
         ): HttpResponseFor<Subscription> =
             update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             subscriptionId: String,
             params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
         ): HttpResponseFor<Subscription> = update(subscriptionId, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: SubscriptionUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<Subscription>
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: SubscriptionUpdateParams): HttpResponseFor<Subscription> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             subscriptionId: String,
@@ -286,20 +286,20 @@ interface SubscriptionService {
         @MustBeClosed
         fun list(): HttpResponseFor<SubscriptionListPage> = list(SubscriptionListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionListPage>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none()
         ): HttpResponseFor<SubscriptionListPage> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<SubscriptionListPage> =
             list(SubscriptionListParams.none(), requestOptions)
@@ -312,7 +312,7 @@ interface SubscriptionService {
         fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): HttpResponse =
             changePlan(subscriptionId, params, RequestOptions.none())
 
-        /** @see [changePlan] */
+        /** @see changePlan */
         @MustBeClosed
         fun changePlan(
             subscriptionId: String,
@@ -321,12 +321,12 @@ interface SubscriptionService {
         ): HttpResponse =
             changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-        /** @see [changePlan] */
+        /** @see changePlan */
         @MustBeClosed
         fun changePlan(params: SubscriptionChangePlanParams): HttpResponse =
             changePlan(params, RequestOptions.none())
 
-        /** @see [changePlan] */
+        /** @see changePlan */
         @MustBeClosed
         fun changePlan(
             params: SubscriptionChangePlanParams,
@@ -344,7 +344,7 @@ interface SubscriptionService {
         ): HttpResponseFor<SubscriptionChargeResponse> =
             charge(subscriptionId, params, RequestOptions.none())
 
-        /** @see [charge] */
+        /** @see charge */
         @MustBeClosed
         fun charge(
             subscriptionId: String,
@@ -353,12 +353,12 @@ interface SubscriptionService {
         ): HttpResponseFor<SubscriptionChargeResponse> =
             charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
-        /** @see [charge] */
+        /** @see charge */
         @MustBeClosed
         fun charge(params: SubscriptionChargeParams): HttpResponseFor<SubscriptionChargeResponse> =
             charge(params, RequestOptions.none())
 
-        /** @see [charge] */
+        /** @see charge */
         @MustBeClosed
         fun charge(
             params: SubscriptionChargeParams,

@@ -30,7 +30,7 @@ interface RefundServiceAsync {
     fun create(params: RefundCreateParams): CompletableFuture<Refund> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: RefundCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -39,7 +39,7 @@ interface RefundServiceAsync {
     fun retrieve(refundId: String): CompletableFuture<Refund> =
         retrieve(refundId, RefundRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         refundId: String,
         params: RefundRetrieveParams = RefundRetrieveParams.none(),
@@ -47,40 +47,40 @@ interface RefundServiceAsync {
     ): CompletableFuture<Refund> =
         retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         refundId: String,
         params: RefundRetrieveParams = RefundRetrieveParams.none(),
     ): CompletableFuture<Refund> = retrieve(refundId, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: RefundRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Refund>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: RefundRetrieveParams): CompletableFuture<Refund> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(refundId: String, requestOptions: RequestOptions): CompletableFuture<Refund> =
         retrieve(refundId, RefundRetrieveParams.none(), requestOptions)
 
     fun list(): CompletableFuture<RefundListPageAsync> = list(RefundListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: RefundListParams = RefundListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<RefundListPageAsync>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: RefundListParams = RefundListParams.none()
     ): CompletableFuture<RefundListPageAsync> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<RefundListPageAsync> =
         list(RefundListParams.none(), requestOptions)
 
@@ -105,7 +105,7 @@ interface RefundServiceAsync {
         fun create(params: RefundCreateParams): CompletableFuture<HttpResponseFor<Refund>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: RefundCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -118,7 +118,7 @@ interface RefundServiceAsync {
         fun retrieve(refundId: String): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(refundId, RefundRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             refundId: String,
             params: RefundRetrieveParams = RefundRetrieveParams.none(),
@@ -126,24 +126,24 @@ interface RefundServiceAsync {
         ): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(params.toBuilder().refundId(refundId).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             refundId: String,
             params: RefundRetrieveParams = RefundRetrieveParams.none(),
         ): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(refundId, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: RefundRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Refund>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(params: RefundRetrieveParams): CompletableFuture<HttpResponseFor<Refund>> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             refundId: String,
             requestOptions: RequestOptions,
@@ -157,19 +157,19 @@ interface RefundServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =
             list(RefundListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: RefundListParams = RefundListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: RefundListParams = RefundListParams.none()
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<RefundListPageAsync>> =

@@ -10,7 +10,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
-/** @see [SubscriptionService.list] */
+/** @see SubscriptionService.list */
 class SubscriptionListPage
 private constructor(
     private val service: SubscriptionService,
@@ -21,7 +21,7 @@ private constructor(
     /**
      * Delegates to [SubscriptionListPageResponse], but gracefully handles missing data.
      *
-     * @see [SubscriptionListPageResponse.items]
+     * @see SubscriptionListPageResponse.items
      */
     override fun items(): List<SubscriptionListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()

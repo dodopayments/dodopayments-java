@@ -27,18 +27,18 @@ interface MiscService {
     fun listSupportedCountries(): List<CountryCode> =
         listSupportedCountries(MiscListSupportedCountriesParams.none())
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(
         params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): List<CountryCode>
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(
         params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
     ): List<CountryCode> = listSupportedCountries(params, RequestOptions.none())
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(requestOptions: RequestOptions): List<CountryCode> =
         listSupportedCountries(MiscListSupportedCountriesParams.none(), requestOptions)
 
@@ -60,21 +60,21 @@ interface MiscService {
         fun listSupportedCountries(): HttpResponseFor<List<CountryCode>> =
             listSupportedCountries(MiscListSupportedCountriesParams.none())
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         @MustBeClosed
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<List<CountryCode>>
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         @MustBeClosed
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
         ): HttpResponseFor<List<CountryCode>> =
             listSupportedCountries(params, RequestOptions.none())
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         @MustBeClosed
         fun listSupportedCountries(
             requestOptions: RequestOptions

@@ -27,18 +27,18 @@ interface MiscServiceAsync {
     fun listSupportedCountries(): CompletableFuture<List<CountryCode>> =
         listSupportedCountries(MiscListSupportedCountriesParams.none())
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(
         params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<List<CountryCode>>
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(
         params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
     ): CompletableFuture<List<CountryCode>> = listSupportedCountries(params, RequestOptions.none())
 
-    /** @see [listSupportedCountries] */
+    /** @see listSupportedCountries */
     fun listSupportedCountries(
         requestOptions: RequestOptions
     ): CompletableFuture<List<CountryCode>> =
@@ -61,19 +61,19 @@ interface MiscServiceAsync {
         fun listSupportedCountries(): CompletableFuture<HttpResponseFor<List<CountryCode>>> =
             listSupportedCountries(MiscListSupportedCountriesParams.none())
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>>
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         fun listSupportedCountries(
             params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>> =
             listSupportedCountries(params, RequestOptions.none())
 
-        /** @see [listSupportedCountries] */
+        /** @see listSupportedCountries */
         fun listSupportedCountries(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<List<CountryCode>>> =

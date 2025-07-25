@@ -32,100 +32,100 @@ interface BrandServiceAsync {
 
     fun create(): CompletableFuture<Brand> = create(BrandCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: BrandCreateParams = BrandCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Brand>
 
-    /** @see [create] */
+    /** @see create */
     fun create(params: BrandCreateParams = BrandCreateParams.none()): CompletableFuture<Brand> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(requestOptions: RequestOptions): CompletableFuture<Brand> =
         create(BrandCreateParams.none(), requestOptions)
 
     /** Thin handler just calls `get_brand` and wraps in `Json(...)` */
     fun retrieve(id: String): CompletableFuture<Brand> = retrieve(id, BrandRetrieveParams.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: BrandRetrieveParams = BrandRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Brand> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         id: String,
         params: BrandRetrieveParams = BrandRetrieveParams.none(),
     ): CompletableFuture<Brand> = retrieve(id, params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(
         params: BrandRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Brand>
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(params: BrandRetrieveParams): CompletableFuture<Brand> =
         retrieve(params, RequestOptions.none())
 
-    /** @see [retrieve] */
+    /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Brand> =
         retrieve(id, BrandRetrieveParams.none(), requestOptions)
 
     fun update(id: String): CompletableFuture<Brand> = update(id, BrandUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: BrandUpdateParams = BrandUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Brand> = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: BrandUpdateParams = BrandUpdateParams.none(),
     ): CompletableFuture<Brand> = update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: BrandUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Brand>
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: BrandUpdateParams): CompletableFuture<Brand> =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Brand> =
         update(id, BrandUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<BrandListResponse> = list(BrandListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: BrandListParams = BrandListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BrandListResponse>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: BrandListParams = BrandListParams.none()
     ): CompletableFuture<BrandListResponse> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<BrandListResponse> =
         list(BrandListParams.none(), requestOptions)
 
     fun updateImages(id: String): CompletableFuture<BrandUpdateImagesResponse> =
         updateImages(id, BrandUpdateImagesParams.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         id: String,
         params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
@@ -133,25 +133,25 @@ interface BrandServiceAsync {
     ): CompletableFuture<BrandUpdateImagesResponse> =
         updateImages(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         id: String,
         params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
     ): CompletableFuture<BrandUpdateImagesResponse> =
         updateImages(id, params, RequestOptions.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         params: BrandUpdateImagesParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BrandUpdateImagesResponse>
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         params: BrandUpdateImagesParams
     ): CompletableFuture<BrandUpdateImagesResponse> = updateImages(params, RequestOptions.none())
 
-    /** @see [updateImages] */
+    /** @see updateImages */
     fun updateImages(
         id: String,
         requestOptions: RequestOptions,
@@ -176,18 +176,18 @@ interface BrandServiceAsync {
          */
         fun create(): CompletableFuture<HttpResponseFor<Brand>> = create(BrandCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: BrandCreateParams = BrandCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Brand>>
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: BrandCreateParams = BrandCreateParams.none()
         ): CompletableFuture<HttpResponseFor<Brand>> = create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Brand>> =
             create(BrandCreateParams.none(), requestOptions)
 
@@ -198,7 +198,7 @@ interface BrandServiceAsync {
         fun retrieve(id: String): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(id, BrandRetrieveParams.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
@@ -206,23 +206,23 @@ interface BrandServiceAsync {
         ): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             id: String,
             params: BrandRetrieveParams = BrandRetrieveParams.none(),
         ): CompletableFuture<HttpResponseFor<Brand>> = retrieve(id, params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             params: BrandRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Brand>>
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(params: BrandRetrieveParams): CompletableFuture<HttpResponseFor<Brand>> =
             retrieve(params, RequestOptions.none())
 
-        /** @see [retrieve] */
+        /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
@@ -236,7 +236,7 @@ interface BrandServiceAsync {
         fun update(id: String): CompletableFuture<HttpResponseFor<Brand>> =
             update(id, BrandUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
@@ -244,23 +244,23 @@ interface BrandServiceAsync {
         ): CompletableFuture<HttpResponseFor<Brand>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             params: BrandUpdateParams = BrandUpdateParams.none(),
         ): CompletableFuture<HttpResponseFor<Brand>> = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             params: BrandUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<Brand>>
 
-        /** @see [update] */
+        /** @see update */
         fun update(params: BrandUpdateParams): CompletableFuture<HttpResponseFor<Brand>> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
@@ -274,19 +274,19 @@ interface BrandServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<BrandListResponse>> =
             list(BrandListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: BrandListParams = BrandListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandListResponse>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: BrandListParams = BrandListParams.none()
         ): CompletableFuture<HttpResponseFor<BrandListResponse>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<BrandListResponse>> =
@@ -301,7 +301,7 @@ interface BrandServiceAsync {
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(id, BrandUpdateImagesParams.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         fun updateImages(
             id: String,
             params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
@@ -309,26 +309,26 @@ interface BrandServiceAsync {
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         fun updateImages(
             id: String,
             params: BrandUpdateImagesParams = BrandUpdateImagesParams.none(),
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(id, params, RequestOptions.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         fun updateImages(
             params: BrandUpdateImagesParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>>
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         fun updateImages(
             params: BrandUpdateImagesParams
         ): CompletableFuture<HttpResponseFor<BrandUpdateImagesResponse>> =
             updateImages(params, RequestOptions.none())
 
-        /** @see [updateImages] */
+        /** @see updateImages */
         fun updateImages(
             id: String,
             requestOptions: RequestOptions,
