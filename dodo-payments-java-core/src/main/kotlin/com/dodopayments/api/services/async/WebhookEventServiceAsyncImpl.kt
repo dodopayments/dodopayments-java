@@ -3,26 +3,7 @@
 package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
-import com.dodopayments.api.core.RequestOptions
-import com.dodopayments.api.core.checkRequired
-import com.dodopayments.api.core.handlers.errorBodyHandler
-import com.dodopayments.api.core.handlers.errorHandler
-import com.dodopayments.api.core.handlers.jsonHandler
-import com.dodopayments.api.core.http.HttpMethod
-import com.dodopayments.api.core.http.HttpRequest
-import com.dodopayments.api.core.http.HttpResponse
-import com.dodopayments.api.core.http.HttpResponse.Handler
-import com.dodopayments.api.core.http.HttpResponseFor
-import com.dodopayments.api.core.http.parseable
-import com.dodopayments.api.core.prepareAsync
-import com.dodopayments.api.models.webhookevents.WebhookEvent
-import com.dodopayments.api.models.webhookevents.WebhookEventListPageAsync
-import com.dodopayments.api.models.webhookevents.WebhookEventListPageResponse
-import com.dodopayments.api.models.webhookevents.WebhookEventListParams
-import com.dodopayments.api.models.webhookevents.WebhookEventRetrieveParams
-import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
-import kotlin.jvm.optionals.getOrNull
 
 class WebhookEventServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     WebhookEventServiceAsync {
@@ -36,26 +17,8 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventServiceAsync =
         WebhookEventServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    @Deprecated("deprecated")
-    override fun retrieve(
-        params: WebhookEventRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookEvent> =
-        // get /webhook_events/{webhook_event_id}
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
-
-    override fun list(
-        params: WebhookEventListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookEventListPageAsync> =
-        // get /webhook_events
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
-
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         WebhookEventServiceAsync.WithRawResponse {
-
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -63,77 +26,5 @@ class WebhookEventServiceAsyncImpl internal constructor(private val clientOption
             WebhookEventServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        private val retrieveHandler: Handler<WebhookEvent> =
-            jsonHandler<WebhookEvent>(clientOptions.jsonMapper)
-
-        @Deprecated("deprecated")
-        override fun retrieve(
-            params: WebhookEventRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookEvent>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("webhookEventId", params.webhookEventId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("webhook_events", params._pathParam(0))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val listHandler: Handler<WebhookEventListPageResponse> =
-            jsonHandler<WebhookEventListPageResponse>(clientOptions.jsonMapper)
-
-        override fun list(
-            params: WebhookEventListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookEventListPageAsync>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("webhook_events")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                            .let {
-                                WebhookEventListPageAsync.builder()
-                                    .service(WebhookEventServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
-                    }
-                }
-        }
     }
 }
