@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.44.0 (2025-08-02)
+
+Full Changelog: [v1.43.2...v1.44.0](https://github.com/dodopayments/dodopayments-java/compare/v1.43.2...v1.44.0)
+
+### Features
+
+* add retryable exception ([2cfcdaa](https://github.com/dodopayments/dodopayments-java/commit/2cfcdaa7da9651a876443b34d73b1b42abb1db1e))
+* **client:** ensure compat with proguard ([7847fb3](https://github.com/dodopayments/dodopayments-java/commit/7847fb36251e398482d7ff60478ac9e5ddf442d3))
+
+
+### Bug Fixes
+
+* **client:** r8 support ([65bb517](https://github.com/dodopayments/dodopayments-java/commit/65bb517937649064e44b88e973976f8acf76612c))
+
+
+### Chores
+
+* **internal:** bump ci test timeout ([241fef9](https://github.com/dodopayments/dodopayments-java/commit/241fef99406259e687bb9f67a77a7b5643d21d16))
+* **internal:** reduce proguard ci logging ([387b1b4](https://github.com/dodopayments/dodopayments-java/commit/387b1b44b7b6297436152f4acf4465517e3dda22))
+
 ## 1.43.2 (2025-07-25)
 
 Full Changelog: [v1.43.1...v1.43.2](https://github.com/dodopayments/dodopayments-java/compare/v1.43.1...v1.43.2)

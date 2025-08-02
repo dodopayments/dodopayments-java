@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.43.2)
-[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.43.2/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.43.2)
+[![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.44.0)
+[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.44.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.44.0)
 
 <!-- x-release-please-end -->
 
@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.43.2).
+The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.44.0).
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ The REST API documentation can be found on [docs.dodopayments.com](https://docs.
 ### Gradle
 
 ```kotlin
-implementation("com.dodopayments.api:dodo-payments-java:1.43.2")
+implementation("com.dodopayments.api:dodo-payments-java:1.44.0")
 ```
 
 ### Maven
@@ -35,7 +35,7 @@ implementation("com.dodopayments.api:dodo-payments-java:1.43.2")
 <dependency>
   <groupId>com.dodopayments.api</groupId>
   <artifactId>dodo-payments-java</artifactId>
-  <version>1.43.2</version>
+  <version>1.44.0</version>
 </dependency>
 ```
 
@@ -349,6 +349,8 @@ The SDK throws custom unchecked exception types:
 
 - [`DodoPaymentsIoException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsIoException.kt): I/O networking errors.
 
+- [`DodoPaymentsRetryableException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+
 - [`DodoPaymentsInvalidDataException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
 - [`DodoPaymentsException`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/errors/DodoPaymentsException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
@@ -468,6 +470,12 @@ Or to `debug` for more verbose logging:
 ```sh
 $ export DODO_PAYMENTS_LOG=debug
 ```
+
+## ProGuard and R8
+
+Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `dodo-payments-java-core` is published with a [configuration file](dodo-payments-java-core/src/main/resources/META-INF/proguard/dodo-payments-java-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
+
+ProGuard and R8 should automatically detect and use the published rules, but you can also manually copy the keep rules if necessary.
 
 ## Jackson
 
