@@ -36,6 +36,10 @@ import com.dodopayments.api.services.blocking.SubscriptionService
 import com.dodopayments.api.services.blocking.SubscriptionServiceImpl
 import com.dodopayments.api.services.blocking.WebhookEventService
 import com.dodopayments.api.services.blocking.WebhookEventServiceImpl
+import com.dodopayments.api.services.blocking.WebhookService
+import com.dodopayments.api.services.blocking.WebhookServiceImpl
+import com.dodopayments.api.services.blocking.YourWebhookUrlService
+import com.dodopayments.api.services.blocking.YourWebhookUrlServiceImpl
 import java.util.function.Consumer
 
 class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPaymentsClient {
@@ -101,6 +105,12 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
 
+    private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
+
+    private val yourWebhookUrl: YourWebhookUrlService by lazy {
+        YourWebhookUrlServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): DodoPaymentsClientAsync = async
 
     override fun withRawResponse(): DodoPaymentsClient.WithRawResponse = withRawResponse
@@ -139,6 +149,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
     override fun addons(): AddonService = addons
 
     override fun brands(): BrandService = brands
+
+    override fun webhooks(): WebhookService = webhooks
+
+    override fun yourWebhookUrl(): YourWebhookUrlService = yourWebhookUrl
 
     override fun close() = clientOptions.httpClient.close()
 
@@ -209,6 +223,14 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
             BrandServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookService.WithRawResponse by lazy {
+            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val yourWebhookUrl: YourWebhookUrlService.WithRawResponse by lazy {
+            YourWebhookUrlServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): DodoPaymentsClient.WithRawResponse =
@@ -248,5 +270,9 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
         override fun addons(): AddonService.WithRawResponse = addons
 
         override fun brands(): BrandService.WithRawResponse = brands
+
+        override fun webhooks(): WebhookService.WithRawResponse = webhooks
+
+        override fun yourWebhookUrl(): YourWebhookUrlService.WithRawResponse = yourWebhookUrl
     }
 }

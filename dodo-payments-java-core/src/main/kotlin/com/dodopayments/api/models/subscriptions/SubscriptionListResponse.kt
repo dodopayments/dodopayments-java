@@ -46,6 +46,7 @@ private constructor(
     private val taxInclusive: JsonField<Boolean>,
     private val trialPeriodDays: JsonField<Int>,
     private val cancelledAt: JsonField<OffsetDateTime>,
+    private val discountCyclesRemaining: JsonField<Int>,
     private val discountId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -105,6 +106,9 @@ private constructor(
         @JsonProperty("cancelled_at")
         @ExcludeMissing
         cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("discount_cycles_remaining")
+        @ExcludeMissing
+        discountCyclesRemaining: JsonField<Int> = JsonMissing.of(),
         @JsonProperty("discount_id")
         @ExcludeMissing
         discountId: JsonField<String> = JsonMissing.of(),
@@ -130,6 +134,7 @@ private constructor(
         taxInclusive,
         trialPeriodDays,
         cancelledAt,
+        discountCyclesRemaining,
         discountId,
         mutableMapOf(),
     )
@@ -306,6 +311,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun cancelledAt(): Optional<OffsetDateTime> = cancelledAt.getOptional("cancelled_at")
+
+    /**
+     * Number of remaining discount cycles if discount is applied
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountCyclesRemaining(): Optional<Int> =
+        discountCyclesRemaining.getOptional("discount_cycles_remaining")
 
     /**
      * The discount id if discount is applied
@@ -498,6 +512,16 @@ private constructor(
     fun _cancelledAt(): JsonField<OffsetDateTime> = cancelledAt
 
     /**
+     * Returns the raw JSON value of [discountCyclesRemaining].
+     *
+     * Unlike [discountCyclesRemaining], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("discount_cycles_remaining")
+    @ExcludeMissing
+    fun _discountCyclesRemaining(): JsonField<Int> = discountCyclesRemaining
+
+    /**
      * Returns the raw JSON value of [discountId].
      *
      * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -572,6 +596,7 @@ private constructor(
         private var taxInclusive: JsonField<Boolean>? = null
         private var trialPeriodDays: JsonField<Int>? = null
         private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -598,6 +623,7 @@ private constructor(
             taxInclusive = subscriptionListResponse.taxInclusive
             trialPeriodDays = subscriptionListResponse.trialPeriodDays
             cancelledAt = subscriptionListResponse.cancelledAt
+            discountCyclesRemaining = subscriptionListResponse.discountCyclesRemaining
             discountId = subscriptionListResponse.discountId
             additionalProperties = subscriptionListResponse.additionalProperties.toMutableMap()
         }
@@ -896,6 +922,36 @@ private constructor(
             this.cancelledAt = cancelledAt
         }
 
+        /** Number of remaining discount cycles if discount is applied */
+        fun discountCyclesRemaining(discountCyclesRemaining: Int?) =
+            discountCyclesRemaining(JsonField.ofNullable(discountCyclesRemaining))
+
+        /**
+         * Alias for [Builder.discountCyclesRemaining].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun discountCyclesRemaining(discountCyclesRemaining: Int) =
+            discountCyclesRemaining(discountCyclesRemaining as Int?)
+
+        /**
+         * Alias for calling [Builder.discountCyclesRemaining] with
+         * `discountCyclesRemaining.orElse(null)`.
+         */
+        fun discountCyclesRemaining(discountCyclesRemaining: Optional<Int>) =
+            discountCyclesRemaining(discountCyclesRemaining.getOrNull())
+
+        /**
+         * Sets [Builder.discountCyclesRemaining] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountCyclesRemaining] with a well-typed [Int] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discountCyclesRemaining(discountCyclesRemaining: JsonField<Int>) = apply {
+            this.discountCyclesRemaining = discountCyclesRemaining
+        }
+
         /** The discount id if discount is applied */
         fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
@@ -984,6 +1040,7 @@ private constructor(
                 checkRequired("taxInclusive", taxInclusive),
                 checkRequired("trialPeriodDays", trialPeriodDays),
                 cancelledAt,
+                discountCyclesRemaining,
                 discountId,
                 additionalProperties.toMutableMap(),
             )
@@ -1017,6 +1074,7 @@ private constructor(
         taxInclusive()
         trialPeriodDays()
         cancelledAt()
+        discountCyclesRemaining()
         discountId()
         validated = true
     }
@@ -1057,6 +1115,7 @@ private constructor(
             (if (taxInclusive.asKnown().isPresent) 1 else 0) +
             (if (trialPeriodDays.asKnown().isPresent) 1 else 0) +
             (if (cancelledAt.asKnown().isPresent) 1 else 0) +
+            (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
             (if (discountId.asKnown().isPresent) 1 else 0)
 
     /** Additional custom data associated with the subscription */
@@ -1166,15 +1225,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is SubscriptionListResponse && billing == other.billing && cancelAtNextBillingDate == other.cancelAtNextBillingDate && createdAt == other.createdAt && currency == other.currency && customer == other.customer && metadata == other.metadata && nextBillingDate == other.nextBillingDate && onDemand == other.onDemand && paymentFrequencyCount == other.paymentFrequencyCount && paymentFrequencyInterval == other.paymentFrequencyInterval && previousBillingDate == other.previousBillingDate && productId == other.productId && quantity == other.quantity && recurringPreTaxAmount == other.recurringPreTaxAmount && status == other.status && subscriptionId == other.subscriptionId && subscriptionPeriodCount == other.subscriptionPeriodCount && subscriptionPeriodInterval == other.subscriptionPeriodInterval && taxInclusive == other.taxInclusive && trialPeriodDays == other.trialPeriodDays && cancelledAt == other.cancelledAt && discountId == other.discountId && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is SubscriptionListResponse && billing == other.billing && cancelAtNextBillingDate == other.cancelAtNextBillingDate && createdAt == other.createdAt && currency == other.currency && customer == other.customer && metadata == other.metadata && nextBillingDate == other.nextBillingDate && onDemand == other.onDemand && paymentFrequencyCount == other.paymentFrequencyCount && paymentFrequencyInterval == other.paymentFrequencyInterval && previousBillingDate == other.previousBillingDate && productId == other.productId && quantity == other.quantity && recurringPreTaxAmount == other.recurringPreTaxAmount && status == other.status && subscriptionId == other.subscriptionId && subscriptionPeriodCount == other.subscriptionPeriodCount && subscriptionPeriodInterval == other.subscriptionPeriodInterval && taxInclusive == other.taxInclusive && trialPeriodDays == other.trialPeriodDays && cancelledAt == other.cancelledAt && discountCyclesRemaining == other.discountCyclesRemaining && discountId == other.discountId && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(billing, cancelAtNextBillingDate, createdAt, currency, customer, metadata, nextBillingDate, onDemand, paymentFrequencyCount, paymentFrequencyInterval, previousBillingDate, productId, quantity, recurringPreTaxAmount, status, subscriptionId, subscriptionPeriodCount, subscriptionPeriodInterval, taxInclusive, trialPeriodDays, cancelledAt, discountId, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(billing, cancelAtNextBillingDate, createdAt, currency, customer, metadata, nextBillingDate, onDemand, paymentFrequencyCount, paymentFrequencyInterval, previousBillingDate, productId, quantity, recurringPreTaxAmount, status, subscriptionId, subscriptionPeriodCount, subscriptionPeriodInterval, taxInclusive, trialPeriodDays, cancelledAt, discountCyclesRemaining, discountId, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountId=$discountId, additionalProperties=$additionalProperties}"
+        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, additionalProperties=$additionalProperties}"
 }
