@@ -19,6 +19,8 @@ import com.dodopayments.api.services.async.ProductServiceAsync
 import com.dodopayments.api.services.async.RefundServiceAsync
 import com.dodopayments.api.services.async.SubscriptionServiceAsync
 import com.dodopayments.api.services.async.WebhookEventServiceAsync
+import com.dodopayments.api.services.async.WebhookServiceAsync
+import com.dodopayments.api.services.async.YourWebhookUrlServiceAsync
 import java.util.function.Consumer
 
 /**
@@ -89,6 +91,10 @@ interface DodoPaymentsClientAsync {
 
     fun brands(): BrandServiceAsync
 
+    fun webhooks(): WebhookServiceAsync
+
+    fun yourWebhookUrl(): YourWebhookUrlServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -148,5 +154,9 @@ interface DodoPaymentsClientAsync {
         fun addons(): AddonServiceAsync.WithRawResponse
 
         fun brands(): BrandServiceAsync.WithRawResponse
+
+        fun webhooks(): WebhookServiceAsync.WithRawResponse
+
+        fun yourWebhookUrl(): YourWebhookUrlServiceAsync.WithRawResponse
     }
 }

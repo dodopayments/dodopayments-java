@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.products
 
+import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -42,6 +43,11 @@ internal class ProductCreateParamsTest {
                 LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
             )
             .licenseKeyEnabled(true)
+            .metadata(
+                ProductCreateParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
             .name("name")
             .build()
     }
@@ -78,6 +84,11 @@ internal class ProductCreateParamsTest {
                     LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
                 )
                 .licenseKeyEnabled(true)
+                .metadata(
+                    ProductCreateParams.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .build()
+                )
                 .name("name")
                 .build()
 
@@ -114,6 +125,12 @@ internal class ProductCreateParamsTest {
         assertThat(body.licenseKeyDuration())
             .contains(LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build())
         assertThat(body.licenseKeyEnabled()).contains(true)
+        assertThat(body.metadata())
+            .contains(
+                ProductCreateParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
         assertThat(body.name()).contains("name")
     }
 
