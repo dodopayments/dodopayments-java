@@ -18,6 +18,7 @@ internal class DiscountUpdateParamsTest {
             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .name("name")
             .addRestrictedTo("string")
+            .subscriptionCycles(0)
             .type(DiscountType.PERCENTAGE)
             .usageLimit(0)
             .build()
@@ -42,6 +43,7 @@ internal class DiscountUpdateParamsTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .name("name")
                 .addRestrictedTo("string")
+                .subscriptionCycles(0)
                 .type(DiscountType.PERCENTAGE)
                 .usageLimit(0)
                 .build()
@@ -53,6 +55,7 @@ internal class DiscountUpdateParamsTest {
         assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(body.name()).contains("name")
         assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
+        assertThat(body.subscriptionCycles()).contains(0)
         assertThat(body.type()).contains(DiscountType.PERCENTAGE)
         assertThat(body.usageLimit()).contains(0)
     }
