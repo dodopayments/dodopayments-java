@@ -1341,12 +1341,39 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && price == other.price && taxCategory == other.taxCategory && addons == other.addons && brandId == other.brandId && description == other.description && digitalProductDelivery == other.digitalProductDelivery && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && licenseKeyEnabled == other.licenseKeyEnabled && metadata == other.metadata && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Body &&
+                price == other.price &&
+                taxCategory == other.taxCategory &&
+                addons == other.addons &&
+                brandId == other.brandId &&
+                description == other.description &&
+                digitalProductDelivery == other.digitalProductDelivery &&
+                licenseKeyActivationMessage == other.licenseKeyActivationMessage &&
+                licenseKeyActivationsLimit == other.licenseKeyActivationsLimit &&
+                licenseKeyDuration == other.licenseKeyDuration &&
+                licenseKeyEnabled == other.licenseKeyEnabled &&
+                metadata == other.metadata &&
+                name == other.name &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(price, taxCategory, addons, brandId, description, digitalProductDelivery, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, licenseKeyEnabled, metadata, name, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                price,
+                taxCategory,
+                addons,
+                brandId,
+                description,
+                digitalProductDelivery,
+                licenseKeyActivationMessage,
+                licenseKeyActivationsLimit,
+                licenseKeyDuration,
+                licenseKeyEnabled,
+                metadata,
+                name,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1545,12 +1572,15 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is DigitalProductDelivery && externalUrl == other.externalUrl && instructions == other.instructions && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is DigitalProductDelivery &&
+                externalUrl == other.externalUrl &&
+                instructions == other.instructions &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(externalUrl, instructions, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(externalUrl, instructions, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1648,12 +1678,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Metadata && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Metadata && additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -1665,10 +1693,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ProductCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is ProductCreateParams &&
+            body == other.body &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "ProductCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"

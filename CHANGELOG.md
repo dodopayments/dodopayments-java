@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.47.1 (2025-08-13)
+
+Full Changelog: [v1.47.0...v1.47.1](https://github.com/dodopayments/dodopayments-java/compare/v1.47.0...v1.47.1)
+
+### Chores
+
+* **internal:** codegen related update ([e88566b](https://github.com/dodopayments/dodopayments-java/commit/e88566bc2a62e7b1dd6cd9306475b798c78b10f3))
+
 ## 1.47.0 (2025-08-11)
 
 Full Changelog: [v1.43.2...v1.47.0](https://github.com/dodopayments/dodopayments-java/compare/v1.43.2...v1.47.0)

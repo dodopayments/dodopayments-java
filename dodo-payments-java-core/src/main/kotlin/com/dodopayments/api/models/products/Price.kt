@@ -117,10 +117,10 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Price && oneTime == other.oneTime && recurring == other.recurring /* spotless:on */
+        return other is Price && oneTime == other.oneTime && recurring == other.recurring
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(oneTime, recurring) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(oneTime, recurring)
 
     override fun toString(): String =
         when {
@@ -795,7 +795,7 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Type && value == other.value /* spotless:on */
+                return other is Type && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -808,12 +808,31 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is OneTimePrice && currency == other.currency && discount == other.discount && price == other.price && purchasingPowerParity == other.purchasingPowerParity && type == other.type && payWhatYouWant == other.payWhatYouWant && suggestedPrice == other.suggestedPrice && taxInclusive == other.taxInclusive && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is OneTimePrice &&
+                currency == other.currency &&
+                discount == other.discount &&
+                price == other.price &&
+                purchasingPowerParity == other.purchasingPowerParity &&
+                type == other.type &&
+                payWhatYouWant == other.payWhatYouWant &&
+                suggestedPrice == other.suggestedPrice &&
+                taxInclusive == other.taxInclusive &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(currency, discount, price, purchasingPowerParity, type, payWhatYouWant, suggestedPrice, taxInclusive, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                currency,
+                discount,
+                price,
+                purchasingPowerParity,
+                type,
+                payWhatYouWant,
+                suggestedPrice,
+                taxInclusive,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1535,7 +1554,7 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Type && value == other.value /* spotless:on */
+                return other is Type && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -1548,12 +1567,37 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is RecurringPrice && currency == other.currency && discount == other.discount && paymentFrequencyCount == other.paymentFrequencyCount && paymentFrequencyInterval == other.paymentFrequencyInterval && price == other.price && purchasingPowerParity == other.purchasingPowerParity && subscriptionPeriodCount == other.subscriptionPeriodCount && subscriptionPeriodInterval == other.subscriptionPeriodInterval && type == other.type && taxInclusive == other.taxInclusive && trialPeriodDays == other.trialPeriodDays && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is RecurringPrice &&
+                currency == other.currency &&
+                discount == other.discount &&
+                paymentFrequencyCount == other.paymentFrequencyCount &&
+                paymentFrequencyInterval == other.paymentFrequencyInterval &&
+                price == other.price &&
+                purchasingPowerParity == other.purchasingPowerParity &&
+                subscriptionPeriodCount == other.subscriptionPeriodCount &&
+                subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
+                type == other.type &&
+                taxInclusive == other.taxInclusive &&
+                trialPeriodDays == other.trialPeriodDays &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(currency, discount, paymentFrequencyCount, paymentFrequencyInterval, price, purchasingPowerParity, subscriptionPeriodCount, subscriptionPeriodInterval, type, taxInclusive, trialPeriodDays, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                currency,
+                discount,
+                paymentFrequencyCount,
+                paymentFrequencyInterval,
+                price,
+                purchasingPowerParity,
+                subscriptionPeriodCount,
+                subscriptionPeriodInterval,
+                type,
+                taxInclusive,
+                trialPeriodDays,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
