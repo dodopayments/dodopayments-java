@@ -1281,12 +1281,37 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Body && billing == other.billing && customer == other.customer && productCart == other.productCart && allowedPaymentMethodTypes == other.allowedPaymentMethodTypes && billingCurrency == other.billingCurrency && discountCode == other.discountCode && metadata == other.metadata && paymentLink == other.paymentLink && returnUrl == other.returnUrl && showSavedPaymentMethods == other.showSavedPaymentMethods && taxId == other.taxId && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Body &&
+                billing == other.billing &&
+                customer == other.customer &&
+                productCart == other.productCart &&
+                allowedPaymentMethodTypes == other.allowedPaymentMethodTypes &&
+                billingCurrency == other.billingCurrency &&
+                discountCode == other.discountCode &&
+                metadata == other.metadata &&
+                paymentLink == other.paymentLink &&
+                returnUrl == other.returnUrl &&
+                showSavedPaymentMethods == other.showSavedPaymentMethods &&
+                taxId == other.taxId &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(billing, customer, productCart, allowedPaymentMethodTypes, billingCurrency, discountCode, metadata, paymentLink, returnUrl, showSavedPaymentMethods, taxId, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                billing,
+                customer,
+                productCart,
+                allowedPaymentMethodTypes,
+                billingCurrency,
+                discountCode,
+                metadata,
+                paymentLink,
+                returnUrl,
+                showSavedPaymentMethods,
+                taxId,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1384,12 +1409,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Metadata && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Metadata && additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -1401,10 +1424,13 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is PaymentCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return other is PaymentCreateParams &&
+            body == other.body &&
+            additionalHeaders == other.additionalHeaders &&
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(body, additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
         "PaymentCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
