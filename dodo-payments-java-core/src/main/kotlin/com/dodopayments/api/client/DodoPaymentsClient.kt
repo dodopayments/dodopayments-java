@@ -5,6 +5,7 @@ package com.dodopayments.api.client
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.services.blocking.AddonService
 import com.dodopayments.api.services.blocking.BrandService
+import com.dodopayments.api.services.blocking.CheckoutSessionService
 import com.dodopayments.api.services.blocking.CustomerService
 import com.dodopayments.api.services.blocking.DiscountService
 import com.dodopayments.api.services.blocking.DisputeService
@@ -12,15 +13,16 @@ import com.dodopayments.api.services.blocking.InvoiceService
 import com.dodopayments.api.services.blocking.LicenseKeyInstanceService
 import com.dodopayments.api.services.blocking.LicenseKeyService
 import com.dodopayments.api.services.blocking.LicenseService
+import com.dodopayments.api.services.blocking.MeterService
 import com.dodopayments.api.services.blocking.MiscService
 import com.dodopayments.api.services.blocking.PaymentService
 import com.dodopayments.api.services.blocking.PayoutService
 import com.dodopayments.api.services.blocking.ProductService
 import com.dodopayments.api.services.blocking.RefundService
 import com.dodopayments.api.services.blocking.SubscriptionService
+import com.dodopayments.api.services.blocking.UsageEventService
 import com.dodopayments.api.services.blocking.WebhookEventService
 import com.dodopayments.api.services.blocking.WebhookService
-import com.dodopayments.api.services.blocking.YourWebhookUrlService
 import java.util.function.Consumer
 
 /**
@@ -59,6 +61,8 @@ interface DodoPaymentsClient {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient
 
+    fun checkoutSessions(): CheckoutSessionService
+
     fun payments(): PaymentService
 
     fun subscriptions(): SubscriptionService
@@ -93,7 +97,9 @@ interface DodoPaymentsClient {
 
     fun webhooks(): WebhookService
 
-    fun yourWebhookUrl(): YourWebhookUrlService
+    fun usageEvents(): UsageEventService
+
+    fun meters(): MeterService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -121,6 +127,8 @@ interface DodoPaymentsClient {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): DodoPaymentsClient.WithRawResponse
+
+        fun checkoutSessions(): CheckoutSessionService.WithRawResponse
 
         fun payments(): PaymentService.WithRawResponse
 
@@ -156,6 +164,8 @@ interface DodoPaymentsClient {
 
         fun webhooks(): WebhookService.WithRawResponse
 
-        fun yourWebhookUrl(): YourWebhookUrlService.WithRawResponse
+        fun usageEvents(): UsageEventService.WithRawResponse
+
+        fun meters(): MeterService.WithRawResponse
     }
 }

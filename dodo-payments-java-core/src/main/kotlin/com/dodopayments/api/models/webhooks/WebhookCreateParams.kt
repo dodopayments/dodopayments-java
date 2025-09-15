@@ -40,10 +40,6 @@ private constructor(
     fun url(): String = body.url()
 
     /**
-     * Filter events to the webhook.
-     *
-     * Webhook event will only be sent for events in the list.
-     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -60,6 +56,10 @@ private constructor(
     fun disabled(): Optional<Boolean> = body.disabled()
 
     /**
+     * Filter events to the webhook.
+     *
+     * Webhook event will only be sent for events in the list.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -213,11 +213,6 @@ private constructor(
          */
         fun url(url: JsonField<String>) = apply { body.url(url) }
 
-        /**
-         * Filter events to the webhook.
-         *
-         * Webhook event will only be sent for events in the list.
-         */
         fun description(description: String?) = apply { body.description(description) }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -258,6 +253,11 @@ private constructor(
          */
         fun disabled(disabled: JsonField<Boolean>) = apply { body.disabled(disabled) }
 
+        /**
+         * Filter events to the webhook.
+         *
+         * Webhook event will only be sent for events in the list.
+         */
         fun filterTypes(filterTypes: List<WebhookEventType>) = apply {
             body.filterTypes(filterTypes)
         }
@@ -544,10 +544,6 @@ private constructor(
         fun url(): String = url.getRequired("url")
 
         /**
-         * Filter events to the webhook.
-         *
-         * Webhook event will only be sent for events in the list.
-         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -564,6 +560,10 @@ private constructor(
         fun disabled(): Optional<Boolean> = disabled.getOptional("disabled")
 
         /**
+         * Filter events to the webhook.
+         *
+         * Webhook event will only be sent for events in the list.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -726,11 +726,6 @@ private constructor(
              */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
-            /**
-             * Filter events to the webhook.
-             *
-             * Webhook event will only be sent for events in the list.
-             */
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
             /** Alias for calling [Builder.description] with `description.orElse(null)`. */
@@ -773,6 +768,11 @@ private constructor(
              */
             fun disabled(disabled: JsonField<Boolean>) = apply { this.disabled = disabled }
 
+            /**
+             * Filter events to the webhook.
+             *
+             * Webhook event will only be sent for events in the list.
+             */
             fun filterTypes(filterTypes: List<WebhookEventType>) =
                 filterTypes(JsonField.of(filterTypes))
 

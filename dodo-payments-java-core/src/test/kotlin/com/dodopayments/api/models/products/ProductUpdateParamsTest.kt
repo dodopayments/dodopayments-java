@@ -42,7 +42,7 @@ internal class ProductUpdateParamsTest {
             .price(
                 Price.OneTimePrice.builder()
                     .currency(Currency.AED)
-                    .discount(0.0f)
+                    .discount(0L)
                     .price(0)
                     .purchasingPowerParity(true)
                     .type(Price.OneTimePrice.Type.ONE_TIME_PRICE)
@@ -95,7 +95,7 @@ internal class ProductUpdateParamsTest {
                 .price(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
-                        .discount(0.0f)
+                        .discount(0L)
                         .price(0)
                         .purchasingPowerParity(true)
                         .type(Price.OneTimePrice.Type.ONE_TIME_PRICE)
@@ -138,7 +138,7 @@ internal class ProductUpdateParamsTest {
                 Price.ofOneTime(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
-                        .discount(0.0f)
+                        .discount(0L)
                         .price(0)
                         .purchasingPowerParity(true)
                         .type(Price.OneTimePrice.Type.ONE_TIME_PRICE)

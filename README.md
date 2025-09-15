@@ -7,7 +7,7 @@
 
 <!-- x-release-please-end -->
 
-The Dodo Payments Java SDK provides convenient access to the [Dodo Payments REST API](https://docs.dodopayments.com) from applications written in Java.
+The Dodo Payments Java SDK provides convenient access to the [Dodo Payments REST API](https://docs.dodopayments.com/api-reference/introduction) from applications written in Java.
 
 The Dodo Payments Java SDK is similar to the Dodo Payments Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.47.0).
+The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com/api-reference/introduction). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.47.0).
 
 <!-- x-release-please-end -->
 
@@ -50,34 +50,23 @@ This library requires Java 8 or later.
 ```java
 import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
 // Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(BillingAddress.builder()
-        .city("city")
-        .country(CountryCode.AF)
-        .state("state")
-        .street("street")
-        .zipcode("zipcode")
-        .build())
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
-        .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
     .build();
-PaymentCreateResponse payment = client.payments().create(params);
+CheckoutSessionResponse checkoutSessionResponse = client.checkoutSessions().create(params);
 ```
 
 ## Client configuration
@@ -150,7 +139,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the Dodo Payments API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.payments().create(...)` should be called with an instance of `PaymentCreateParams`, and it will return an instance of `PaymentCreateResponse`.
+For example, `client.checkoutSessions().create(...)` should be called with an instance of `CheckoutSessionCreateParams`, and it will return an instance of `CheckoutSessionResponse`.
 
 ## Immutability
 
@@ -167,35 +156,24 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import com.dodopayments.api.client.DodoPaymentsClient;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(BillingAddress.builder()
-        .city("city")
-        .country(CountryCode.AF)
-        .state("state")
-        .street("street")
-        .zipcode("zipcode")
-        .build())
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
-        .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
     .build();
-CompletableFuture<PaymentCreateResponse> payment = client.async().payments().create(params);
+CompletableFuture<CheckoutSessionResponse> checkoutSessionResponse = client.async().checkoutSessions().create(params);
 ```
 
 Or create an asynchronous client from the beginning:
@@ -203,35 +181,24 @@ Or create an asynchronous client from the beginning:
 ```java
 import com.dodopayments.api.client.DodoPaymentsClientAsync;
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync;
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `dodopayments.apiKey` and `dodopayments.baseUrl` system properties
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(BillingAddress.builder()
-        .city("city")
-        .country(CountryCode.AF)
-        .state("state")
-        .street("street")
-        .zipcode("zipcode")
-        .build())
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
-        .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
     .build();
-CompletableFuture<PaymentCreateResponse> payment = client.payments().create(params);
+CompletableFuture<CheckoutSessionResponse> checkoutSessionResponse = client.checkoutSessions().create(params);
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -293,41 +260,30 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.dodopayments.api.core.http.Headers;
 import com.dodopayments.api.core.http.HttpResponseFor;
-import com.dodopayments.api.models.misc.CountryCode;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(BillingAddress.builder()
-        .city("city")
-        .country(CountryCode.AF)
-        .state("state")
-        .street("street")
-        .zipcode("zipcode")
-        .build())
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
-        .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
     .build();
-HttpResponseFor<PaymentCreateResponse> payment = client.payments().withRawResponse().create(params);
+HttpResponseFor<CheckoutSessionResponse> checkoutSessionResponse = client.checkoutSessions().withRawResponse().create(params);
 
-int statusCode = payment.statusCode();
-Headers headers = payment.headers();
+int statusCode = checkoutSessionResponse.statusCode();
+Headers headers = checkoutSessionResponse.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-PaymentCreateResponse parsedPayment = payment.parse();
+CheckoutSessionResponse parsedCheckoutSessionResponse = checkoutSessionResponse.parse();
 ```
 
 ## Error handling
@@ -523,9 +479,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-PaymentCreateResponse payment = client.payments().create(
+CheckoutSessionResponse checkoutSessionResponse = client.checkoutSessions().create(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
 );
 ```
@@ -644,9 +600,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import com.dodopayments.api.core.JsonValue;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 
-PaymentCreateParams params = PaymentCreateParams.builder()
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -655,38 +611,18 @@ PaymentCreateParams params = PaymentCreateParams.builder()
 
 These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
 
-To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
-
-```java
-import com.dodopayments.api.core.JsonValue;
-import com.dodopayments.api.models.payments.BillingAddress;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
-
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(BillingAddress.builder()
-        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
-        .build())
-    .build();
-```
-
-These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
-
 To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](dodo-payments-java-core/src/main/kotlin/com/dodopayments/api/core/Values.kt) object to its setter:
 
 ```java
-import com.dodopayments.api.core.JsonValue;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .billing(JsonValue.from(42))
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
-        .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
     .build();
 ```
@@ -736,19 +672,17 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](dodo-pay
 
 ```java
 import com.dodopayments.api.core.JsonMissing;
-import com.dodopayments.api.models.payments.AttachExistingCustomer;
-import com.dodopayments.api.models.payments.OneTimeProductCartItem;
-import com.dodopayments.api.models.payments.PaymentCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 
-PaymentCreateParams params = PaymentCreateParams.builder()
-    .customer(AttachExistingCustomer.builder()
-        .customerId("customer_id")
+CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
+    .checkoutSessionRequest(CheckoutSessionRequest.builder()
+        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+            .productId("product_id")
+            .quantity(0)
+            .build())
         .build())
-    .addProductCart(OneTimeProductCartItem.builder()
-        .productId("product_id")
-        .quantity(0)
-        .build())
-    .billing(JsonMissing.of())
+    .productCart(JsonMissing.of())
     .build();
 ```
 
@@ -760,7 +694,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import com.dodopayments.api.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.payments().create(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.checkoutSessions().create(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -788,22 +722,21 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 
 ```java
 import com.dodopayments.api.core.JsonField;
-import com.dodopayments.api.models.payments.BillingAddress;
 import java.util.Optional;
 
-JsonField<BillingAddress> billing = client.payments().create(params)._billing();
+JsonField<Object> field = client.checkoutSessions().create(params)._field();
 
-if (billing.isMissing()) {
+if (field.isMissing()) {
   // The property is absent from the JSON response
-} else if (billing.isNull()) {
+} else if (field.isNull()) {
   // The property was set to literal null
 } else {
   // Check if value was provided as a string
   // Other methods include `asNumber()`, `asBoolean()`, etc.
-  Optional<String> jsonString = billing.asString();
+  Optional<String> jsonString = field.asString();
 
   // Try to deserialize into a custom type
-  MyClass myObject = billing.asUnknown().orElseThrow().convert(MyClass.class);
+  MyClass myObject = field.asUnknown().orElseThrow().convert(MyClass.class);
 }
 ```
 
@@ -816,17 +749,17 @@ By default, the SDK will not throw an exception in this case. It will throw [`Do
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-PaymentCreateResponse payment = client.payments().create(params).validate();
+CheckoutSessionResponse checkoutSessionResponse = client.checkoutSessions().create(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.dodopayments.api.models.payments.PaymentCreateResponse;
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-PaymentCreateResponse payment = client.payments().create(
+CheckoutSessionResponse checkoutSessionResponse = client.checkoutSessions().create(
   params, RequestOptions.builder().responseValidation(true).build()
 );
 ```

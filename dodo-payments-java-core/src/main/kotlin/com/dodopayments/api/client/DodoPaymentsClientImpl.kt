@@ -8,6 +8,8 @@ import com.dodopayments.api.services.blocking.AddonService
 import com.dodopayments.api.services.blocking.AddonServiceImpl
 import com.dodopayments.api.services.blocking.BrandService
 import com.dodopayments.api.services.blocking.BrandServiceImpl
+import com.dodopayments.api.services.blocking.CheckoutSessionService
+import com.dodopayments.api.services.blocking.CheckoutSessionServiceImpl
 import com.dodopayments.api.services.blocking.CustomerService
 import com.dodopayments.api.services.blocking.CustomerServiceImpl
 import com.dodopayments.api.services.blocking.DiscountService
@@ -22,6 +24,8 @@ import com.dodopayments.api.services.blocking.LicenseKeyService
 import com.dodopayments.api.services.blocking.LicenseKeyServiceImpl
 import com.dodopayments.api.services.blocking.LicenseService
 import com.dodopayments.api.services.blocking.LicenseServiceImpl
+import com.dodopayments.api.services.blocking.MeterService
+import com.dodopayments.api.services.blocking.MeterServiceImpl
 import com.dodopayments.api.services.blocking.MiscService
 import com.dodopayments.api.services.blocking.MiscServiceImpl
 import com.dodopayments.api.services.blocking.PaymentService
@@ -34,12 +38,12 @@ import com.dodopayments.api.services.blocking.RefundService
 import com.dodopayments.api.services.blocking.RefundServiceImpl
 import com.dodopayments.api.services.blocking.SubscriptionService
 import com.dodopayments.api.services.blocking.SubscriptionServiceImpl
+import com.dodopayments.api.services.blocking.UsageEventService
+import com.dodopayments.api.services.blocking.UsageEventServiceImpl
 import com.dodopayments.api.services.blocking.WebhookEventService
 import com.dodopayments.api.services.blocking.WebhookEventServiceImpl
 import com.dodopayments.api.services.blocking.WebhookService
 import com.dodopayments.api.services.blocking.WebhookServiceImpl
-import com.dodopayments.api.services.blocking.YourWebhookUrlService
-import com.dodopayments.api.services.blocking.YourWebhookUrlServiceImpl
 import java.util.function.Consumer
 
 class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPaymentsClient {
@@ -59,6 +63,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val withRawResponse: DodoPaymentsClient.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
+    }
+
+    private val checkoutSessions: CheckoutSessionService by lazy {
+        CheckoutSessionServiceImpl(clientOptionsWithUserAgent)
     }
 
     private val payments: PaymentService by lazy { PaymentServiceImpl(clientOptionsWithUserAgent) }
@@ -107,9 +115,11 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
 
-    private val yourWebhookUrl: YourWebhookUrlService by lazy {
-        YourWebhookUrlServiceImpl(clientOptionsWithUserAgent)
+    private val usageEvents: UsageEventService by lazy {
+        UsageEventServiceImpl(clientOptionsWithUserAgent)
     }
+
+    private val meters: MeterService by lazy { MeterServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): DodoPaymentsClientAsync = async
 
@@ -117,6 +127,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient =
         DodoPaymentsClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun checkoutSessions(): CheckoutSessionService = checkoutSessions
 
     override fun payments(): PaymentService = payments
 
@@ -152,12 +164,18 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     override fun webhooks(): WebhookService = webhooks
 
-    override fun yourWebhookUrl(): YourWebhookUrlService = yourWebhookUrl
+    override fun usageEvents(): UsageEventService = usageEvents
+
+    override fun meters(): MeterService = meters
 
     override fun close() = clientOptions.httpClient.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         DodoPaymentsClient.WithRawResponse {
+
+        private val checkoutSessions: CheckoutSessionService.WithRawResponse by lazy {
+            CheckoutSessionServiceImpl.WithRawResponseImpl(clientOptions)
+        }
 
         private val payments: PaymentService.WithRawResponse by lazy {
             PaymentServiceImpl.WithRawResponseImpl(clientOptions)
@@ -227,8 +245,12 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
             WebhookServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val yourWebhookUrl: YourWebhookUrlService.WithRawResponse by lazy {
-            YourWebhookUrlServiceImpl.WithRawResponseImpl(clientOptions)
+        private val usageEvents: UsageEventService.WithRawResponse by lazy {
+            UsageEventServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val meters: MeterService.WithRawResponse by lazy {
+            MeterServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -237,6 +259,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
             DodoPaymentsClientImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun checkoutSessions(): CheckoutSessionService.WithRawResponse = checkoutSessions
 
         override fun payments(): PaymentService.WithRawResponse = payments
 
@@ -273,6 +297,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
 
-        override fun yourWebhookUrl(): YourWebhookUrlService.WithRawResponse = yourWebhookUrl
+        override fun usageEvents(): UsageEventService.WithRawResponse = usageEvents
+
+        override fun meters(): MeterService.WithRawResponse = meters
     }
 }

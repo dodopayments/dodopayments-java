@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -23,6 +24,7 @@ class Refund
 private constructor(
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
+    private val customer: JsonField<CustomerLimitedDetails>,
     private val isPartial: JsonField<Boolean>,
     private val paymentId: JsonField<String>,
     private val refundId: JsonField<String>,
@@ -41,6 +43,9 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("customer")
+        @ExcludeMissing
+        customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
         @JsonProperty("is_partial")
         @ExcludeMissing
         isPartial: JsonField<Boolean> = JsonMissing.of(),
@@ -53,6 +58,7 @@ private constructor(
     ) : this(
         businessId,
         createdAt,
+        customer,
         isPartial,
         paymentId,
         refundId,
@@ -78,6 +84,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /**
+     * Details about the customer for this refund (from the associated payment)
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
 
     /**
      * If true the refund is a partial refund
@@ -152,6 +166,15 @@ private constructor(
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
 
     /**
+     * Returns the raw JSON value of [customer].
+     *
+     * Unlike [customer], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("customer")
+    @ExcludeMissing
+    fun _customer(): JsonField<CustomerLimitedDetails> = customer
+
+    /**
      * Returns the raw JSON value of [isPartial].
      *
      * Unlike [isPartial], this method doesn't throw if the JSON field has an unexpected type.
@@ -221,6 +244,7 @@ private constructor(
          * ```java
          * .businessId()
          * .createdAt()
+         * .customer()
          * .isPartial()
          * .paymentId()
          * .refundId()
@@ -235,6 +259,7 @@ private constructor(
 
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
+        private var customer: JsonField<CustomerLimitedDetails>? = null
         private var isPartial: JsonField<Boolean>? = null
         private var paymentId: JsonField<String>? = null
         private var refundId: JsonField<String>? = null
@@ -248,6 +273,7 @@ private constructor(
         internal fun from(refund: Refund) = apply {
             businessId = refund.businessId
             createdAt = refund.createdAt
+            customer = refund.customer
             isPartial = refund.isPartial
             paymentId = refund.paymentId
             refundId = refund.refundId
@@ -281,6 +307,20 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /** Details about the customer for this refund (from the associated payment) */
+        fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
+
+        /**
+         * Sets [Builder.customer] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customer] with a well-typed [CustomerLimitedDetails]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
+            this.customer = customer
+        }
 
         /** If true the refund is a partial refund */
         fun isPartial(isPartial: Boolean) = isPartial(JsonField.of(isPartial))
@@ -407,6 +447,7 @@ private constructor(
          * ```java
          * .businessId()
          * .createdAt()
+         * .customer()
          * .isPartial()
          * .paymentId()
          * .refundId()
@@ -419,6 +460,7 @@ private constructor(
             Refund(
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
+                checkRequired("customer", customer),
                 checkRequired("isPartial", isPartial),
                 checkRequired("paymentId", paymentId),
                 checkRequired("refundId", refundId),
@@ -439,6 +481,7 @@ private constructor(
 
         businessId()
         createdAt()
+        customer().validate()
         isPartial()
         paymentId()
         refundId()
@@ -466,6 +509,7 @@ private constructor(
     internal fun validity(): Int =
         (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isPartial.asKnown().isPresent) 1 else 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
             (if (refundId.asKnown().isPresent) 1 else 0) +
@@ -482,6 +526,7 @@ private constructor(
         return other is Refund &&
             businessId == other.businessId &&
             createdAt == other.createdAt &&
+            customer == other.customer &&
             isPartial == other.isPartial &&
             paymentId == other.paymentId &&
             refundId == other.refundId &&
@@ -496,6 +541,7 @@ private constructor(
         Objects.hash(
             businessId,
             createdAt,
+            customer,
             isPartial,
             paymentId,
             refundId,
@@ -510,5 +556,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Refund{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
+        "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
 }

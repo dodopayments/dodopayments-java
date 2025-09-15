@@ -16,14 +16,14 @@ private constructor(
     private val service: RefundService,
     private val params: RefundListParams,
     private val response: RefundListPageResponse,
-) : Page<Refund> {
+) : Page<RefundListResponse> {
 
     /**
      * Delegates to [RefundListPageResponse], but gracefully handles missing data.
      *
      * @see RefundListPageResponse.items
      */
-    override fun items(): List<Refund> =
+    override fun items(): List<RefundListResponse> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -35,7 +35,7 @@ private constructor(
 
     override fun nextPage(): RefundListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<Refund> = AutoPager.from(this)
+    fun autoPager(): AutoPager<RefundListResponse> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): RefundListParams = params

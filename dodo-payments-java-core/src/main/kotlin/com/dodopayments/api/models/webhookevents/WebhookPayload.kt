@@ -582,7 +582,7 @@ private constructor(
             private val disputes: JsonField<List<Dispute>>,
             private val metadata: JsonField<Payment.Metadata>,
             private val paymentId: JsonField<String>,
-            private val refunds: JsonField<List<Refund>>,
+            private val refunds: JsonField<List<Payment.Refund>>,
             private val settlementAmount: JsonField<Int>,
             private val settlementCurrency: JsonField<Currency>,
             private val totalAmount: JsonField<Int>,
@@ -590,6 +590,7 @@ private constructor(
             private val cardLastFour: JsonField<String>,
             private val cardNetwork: JsonField<String>,
             private val cardType: JsonField<String>,
+            private val checkoutSessionId: JsonField<String>,
             private val discountId: JsonField<String>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
@@ -640,7 +641,7 @@ private constructor(
                 paymentId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("refunds")
                 @ExcludeMissing
-                refunds: JsonField<List<Refund>> = JsonMissing.of(),
+                refunds: JsonField<List<Payment.Refund>> = JsonMissing.of(),
                 @JsonProperty("settlement_amount")
                 @ExcludeMissing
                 settlementAmount: JsonField<Int> = JsonMissing.of(),
@@ -662,6 +663,9 @@ private constructor(
                 @JsonProperty("card_type")
                 @ExcludeMissing
                 cardType: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("checkout_session_id")
+                @ExcludeMissing
+                checkoutSessionId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("discount_id")
                 @ExcludeMissing
                 discountId: JsonField<String> = JsonMissing.of(),
@@ -718,6 +722,7 @@ private constructor(
                 cardLastFour,
                 cardNetwork,
                 cardType,
+                checkoutSessionId,
                 discountId,
                 errorCode,
                 errorMessage,
@@ -754,6 +759,7 @@ private constructor(
                     .cardLastFour(cardLastFour)
                     .cardNetwork(cardNetwork)
                     .cardType(cardType)
+                    .checkoutSessionId(checkoutSessionId)
                     .discountId(discountId)
                     .errorCode(errorCode)
                     .errorMessage(errorMessage)
@@ -866,7 +872,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun refunds(): List<Refund> = refunds.getRequired("refunds")
+            fun refunds(): List<Payment.Refund> = refunds.getRequired("refunds")
 
             /**
              * The amount that will be credited to your Dodo balance after currency conversion and
@@ -932,6 +938,16 @@ private constructor(
              *   (e.g. if the server responded with an unexpected value).
              */
             fun cardType(): Optional<String> = cardType.getOptional("card_type")
+
+            /**
+             * If payment is made using a checkout session, this field is set to the id of the
+             * session.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun checkoutSessionId(): Optional<String> =
+                checkoutSessionId.getOptional("checkout_session_id")
 
             /**
              * The discount id if discount is applied
@@ -1143,7 +1159,7 @@ private constructor(
              */
             @JsonProperty("refunds")
             @ExcludeMissing
-            fun _refunds(): JsonField<List<Refund>> = refunds
+            fun _refunds(): JsonField<List<Payment.Refund>> = refunds
 
             /**
              * Returns the raw JSON value of [settlementAmount].
@@ -1212,6 +1228,16 @@ private constructor(
              * type.
              */
             @JsonProperty("card_type") @ExcludeMissing fun _cardType(): JsonField<String> = cardType
+
+            /**
+             * Returns the raw JSON value of [checkoutSessionId].
+             *
+             * Unlike [checkoutSessionId], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("checkout_session_id")
+            @ExcludeMissing
+            fun _checkoutSessionId(): JsonField<String> = checkoutSessionId
 
             /**
              * Returns the raw JSON value of [discountId].
@@ -1389,7 +1415,7 @@ private constructor(
                 private var disputes: JsonField<MutableList<Dispute>>? = null
                 private var metadata: JsonField<Payment.Metadata>? = null
                 private var paymentId: JsonField<String>? = null
-                private var refunds: JsonField<MutableList<Refund>>? = null
+                private var refunds: JsonField<MutableList<Payment.Refund>>? = null
                 private var settlementAmount: JsonField<Int>? = null
                 private var settlementCurrency: JsonField<Currency>? = null
                 private var totalAmount: JsonField<Int>? = null
@@ -1397,6 +1423,7 @@ private constructor(
                 private var cardLastFour: JsonField<String> = JsonMissing.of()
                 private var cardNetwork: JsonField<String> = JsonMissing.of()
                 private var cardType: JsonField<String> = JsonMissing.of()
+                private var checkoutSessionId: JsonField<String> = JsonMissing.of()
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
@@ -1432,6 +1459,7 @@ private constructor(
                     cardLastFour = payment.cardLastFour
                     cardNetwork = payment.cardNetwork
                     cardType = payment.cardType
+                    checkoutSessionId = payment.checkoutSessionId
                     discountId = payment.discountId
                     errorCode = payment.errorCode
                     errorMessage = payment.errorMessage
@@ -1594,25 +1622,25 @@ private constructor(
                 fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
                 /** List of refunds issued for this payment */
-                fun refunds(refunds: List<Refund>) = refunds(JsonField.of(refunds))
+                fun refunds(refunds: List<Payment.Refund>) = refunds(JsonField.of(refunds))
 
                 /**
                  * Sets [Builder.refunds] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.refunds] with a well-typed `List<Refund>` value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.refunds] with a well-typed
+                 * `List<Payment.Refund>` value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
-                fun refunds(refunds: JsonField<List<Refund>>) = apply {
+                fun refunds(refunds: JsonField<List<Payment.Refund>>) = apply {
                     this.refunds = refunds.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Refund] to [refunds].
+                 * Adds a single [Payment.Refund] to [refunds].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addRefund(refund: Refund) = apply {
+                fun addRefund(refund: Payment.Refund) = apply {
                     refunds =
                         (refunds ?: JsonField.of(mutableListOf())).also {
                             checkKnown("refunds", it).add(refund)
@@ -1748,6 +1776,31 @@ private constructor(
                  * yet supported value.
                  */
                 fun cardType(cardType: JsonField<String>) = apply { this.cardType = cardType }
+
+                /**
+                 * If payment is made using a checkout session, this field is set to the id of the
+                 * session.
+                 */
+                fun checkoutSessionId(checkoutSessionId: String?) =
+                    checkoutSessionId(JsonField.ofNullable(checkoutSessionId))
+
+                /**
+                 * Alias for calling [Builder.checkoutSessionId] with
+                 * `checkoutSessionId.orElse(null)`.
+                 */
+                fun checkoutSessionId(checkoutSessionId: Optional<String>) =
+                    checkoutSessionId(checkoutSessionId.getOrNull())
+
+                /**
+                 * Sets [Builder.checkoutSessionId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.checkoutSessionId] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun checkoutSessionId(checkoutSessionId: JsonField<String>) = apply {
+                    this.checkoutSessionId = checkoutSessionId
+                }
 
                 /** The discount id if discount is applied */
                 fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
@@ -2079,6 +2132,7 @@ private constructor(
                         cardLastFour,
                         cardNetwork,
                         cardType,
+                        checkoutSessionId,
                         discountId,
                         errorCode,
                         errorMessage,
@@ -2121,6 +2175,7 @@ private constructor(
                 cardLastFour()
                 cardNetwork()
                 cardType()
+                checkoutSessionId()
                 discountId()
                 errorCode()
                 errorMessage()
@@ -2171,6 +2226,7 @@ private constructor(
                     (if (cardLastFour.asKnown().isPresent) 1 else 0) +
                     (if (cardNetwork.asKnown().isPresent) 1 else 0) +
                     (if (cardType.asKnown().isPresent) 1 else 0) +
+                    (if (checkoutSessionId.asKnown().isPresent) 1 else 0) +
                     (if (discountId.asKnown().isPresent) 1 else 0) +
                     (if (errorCode.asKnown().isPresent) 1 else 0) +
                     (if (errorMessage.asKnown().isPresent) 1 else 0) +
@@ -2336,6 +2392,7 @@ private constructor(
                     cardLastFour == other.cardLastFour &&
                     cardNetwork == other.cardNetwork &&
                     cardType == other.cardType &&
+                    checkoutSessionId == other.checkoutSessionId &&
                     discountId == other.discountId &&
                     errorCode == other.errorCode &&
                     errorMessage == other.errorMessage &&
@@ -2372,6 +2429,7 @@ private constructor(
                     cardLastFour,
                     cardNetwork,
                     cardType,
+                    checkoutSessionId,
                     discountId,
                     errorCode,
                     errorMessage,
@@ -2392,7 +2450,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         /** Response struct representing subscription details */
@@ -2405,6 +2463,7 @@ private constructor(
             private val currency: JsonField<Currency>,
             private val customer: JsonField<CustomerLimitedDetails>,
             private val metadata: JsonField<Subscription.Metadata>,
+            private val meters: JsonField<List<Subscription.Meter>>,
             private val nextBillingDate: JsonField<OffsetDateTime>,
             private val onDemand: JsonField<Boolean>,
             private val paymentFrequencyCount: JsonField<Int>,
@@ -2422,6 +2481,7 @@ private constructor(
             private val cancelledAt: JsonField<OffsetDateTime>,
             private val discountCyclesRemaining: JsonField<Int>,
             private val discountId: JsonField<String>,
+            private val expiresAt: JsonField<OffsetDateTime>,
             private val payloadType: JsonField<PayloadType>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -2449,6 +2509,9 @@ private constructor(
                 @JsonProperty("metadata")
                 @ExcludeMissing
                 metadata: JsonField<Subscription.Metadata> = JsonMissing.of(),
+                @JsonProperty("meters")
+                @ExcludeMissing
+                meters: JsonField<List<Subscription.Meter>> = JsonMissing.of(),
                 @JsonProperty("next_billing_date")
                 @ExcludeMissing
                 nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -2500,6 +2563,9 @@ private constructor(
                 @JsonProperty("discount_id")
                 @ExcludeMissing
                 discountId: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("expires_at")
+                @ExcludeMissing
+                expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
                 @JsonProperty("payload_type")
                 @ExcludeMissing
                 payloadType: JsonField<PayloadType> = JsonMissing.of(),
@@ -2511,6 +2577,7 @@ private constructor(
                 currency,
                 customer,
                 metadata,
+                meters,
                 nextBillingDate,
                 onDemand,
                 paymentFrequencyCount,
@@ -2528,6 +2595,7 @@ private constructor(
                 cancelledAt,
                 discountCyclesRemaining,
                 discountId,
+                expiresAt,
                 payloadType,
                 mutableMapOf(),
             )
@@ -2541,6 +2609,7 @@ private constructor(
                     .currency(currency)
                     .customer(customer)
                     .metadata(metadata)
+                    .meters(meters)
                     .nextBillingDate(nextBillingDate)
                     .onDemand(onDemand)
                     .paymentFrequencyCount(paymentFrequencyCount)
@@ -2558,6 +2627,7 @@ private constructor(
                     .cancelledAt(cancelledAt)
                     .discountCyclesRemaining(discountCyclesRemaining)
                     .discountId(discountId)
+                    .expiresAt(expiresAt)
                     .build()
 
             /**
@@ -2623,6 +2693,15 @@ private constructor(
              *   value).
              */
             fun metadata(): Subscription.Metadata = metadata.getRequired("metadata")
+
+            /**
+             * Meters associated with this subscription (for usage-based billing)
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun meters(): List<Subscription.Meter> = meters.getRequired("meters")
 
             /**
              * Timestamp of the next scheduled billing. Indicates the end of current billing period
@@ -2783,6 +2862,14 @@ private constructor(
             fun discountId(): Optional<String> = discountId.getOptional("discount_id")
 
             /**
+             * Timestamp when the subscription will expire
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
+
+            /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -2856,6 +2943,15 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             fun _metadata(): JsonField<Subscription.Metadata> = metadata
+
+            /**
+             * Returns the raw JSON value of [meters].
+             *
+             * Unlike [meters], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("meters")
+            @ExcludeMissing
+            fun _meters(): JsonField<List<Subscription.Meter>> = meters
 
             /**
              * Returns the raw JSON value of [nextBillingDate].
@@ -3025,6 +3121,16 @@ private constructor(
             fun _discountId(): JsonField<String> = discountId
 
             /**
+             * Returns the raw JSON value of [expiresAt].
+             *
+             * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("expires_at")
+            @ExcludeMissing
+            fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+            /**
              * Returns the raw JSON value of [payloadType].
              *
              * Unlike [payloadType], this method doesn't throw if the JSON field has an unexpected
@@ -3060,6 +3166,7 @@ private constructor(
                  * .currency()
                  * .customer()
                  * .metadata()
+                 * .meters()
                  * .nextBillingDate()
                  * .onDemand()
                  * .paymentFrequencyCount()
@@ -3090,6 +3197,7 @@ private constructor(
                 private var currency: JsonField<Currency>? = null
                 private var customer: JsonField<CustomerLimitedDetails>? = null
                 private var metadata: JsonField<Subscription.Metadata>? = null
+                private var meters: JsonField<MutableList<Subscription.Meter>>? = null
                 private var nextBillingDate: JsonField<OffsetDateTime>? = null
                 private var onDemand: JsonField<Boolean>? = null
                 private var paymentFrequencyCount: JsonField<Int>? = null
@@ -3107,6 +3215,7 @@ private constructor(
                 private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
                 private var discountId: JsonField<String> = JsonMissing.of()
+                private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var payloadType: JsonField<PayloadType>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -3119,6 +3228,7 @@ private constructor(
                     currency = subscription.currency
                     customer = subscription.customer
                     metadata = subscription.metadata
+                    meters = subscription.meters.map { it.toMutableList() }
                     nextBillingDate = subscription.nextBillingDate
                     onDemand = subscription.onDemand
                     paymentFrequencyCount = subscription.paymentFrequencyCount
@@ -3136,6 +3246,7 @@ private constructor(
                     cancelledAt = subscription.cancelledAt
                     discountCyclesRemaining = subscription.discountCyclesRemaining
                     discountId = subscription.discountId
+                    expiresAt = subscription.expiresAt
                     payloadType = subscription.payloadType
                     additionalProperties = subscription.additionalProperties.toMutableMap()
                 }
@@ -3245,6 +3356,32 @@ private constructor(
                  */
                 fun metadata(metadata: JsonField<Subscription.Metadata>) = apply {
                     this.metadata = metadata
+                }
+
+                /** Meters associated with this subscription (for usage-based billing) */
+                fun meters(meters: List<Subscription.Meter>) = meters(JsonField.of(meters))
+
+                /**
+                 * Sets [Builder.meters] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.meters] with a well-typed
+                 * `List<Subscription.Meter>` value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
+                 */
+                fun meters(meters: JsonField<List<Subscription.Meter>>) = apply {
+                    this.meters = meters.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Subscription.Meter] to [meters].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addMeter(meter: Subscription.Meter) = apply {
+                    meters =
+                        (meters ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("meters", it).add(meter)
+                        }
                 }
 
                 /**
@@ -3517,6 +3654,25 @@ private constructor(
                     this.discountId = discountId
                 }
 
+                /** Timestamp when the subscription will expire */
+                fun expiresAt(expiresAt: OffsetDateTime?) =
+                    expiresAt(JsonField.ofNullable(expiresAt))
+
+                /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */
+                fun expiresAt(expiresAt: Optional<OffsetDateTime>) =
+                    expiresAt(expiresAt.getOrNull())
+
+                /**
+                 * Sets [Builder.expiresAt] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply {
+                    this.expiresAt = expiresAt
+                }
+
                 fun payloadType(payloadType: PayloadType) = payloadType(JsonField.of(payloadType))
 
                 /**
@@ -3566,6 +3722,7 @@ private constructor(
                  * .currency()
                  * .customer()
                  * .metadata()
+                 * .meters()
                  * .nextBillingDate()
                  * .onDemand()
                  * .paymentFrequencyCount()
@@ -3594,6 +3751,7 @@ private constructor(
                         checkRequired("currency", currency),
                         checkRequired("customer", customer),
                         checkRequired("metadata", metadata),
+                        checkRequired("meters", meters).map { it.toImmutable() },
                         checkRequired("nextBillingDate", nextBillingDate),
                         checkRequired("onDemand", onDemand),
                         checkRequired("paymentFrequencyCount", paymentFrequencyCount),
@@ -3611,6 +3769,7 @@ private constructor(
                         cancelledAt,
                         discountCyclesRemaining,
                         discountId,
+                        expiresAt,
                         checkRequired("payloadType", payloadType),
                         additionalProperties.toMutableMap(),
                     )
@@ -3630,6 +3789,7 @@ private constructor(
                 currency().validate()
                 customer().validate()
                 metadata().validate()
+                meters().forEach { it.validate() }
                 nextBillingDate()
                 onDemand()
                 paymentFrequencyCount()
@@ -3647,6 +3807,7 @@ private constructor(
                 cancelledAt()
                 discountCyclesRemaining()
                 discountId()
+                expiresAt()
                 payloadType().validate()
                 validated = true
             }
@@ -3674,6 +3835,7 @@ private constructor(
                     (currency.asKnown().getOrNull()?.validity() ?: 0) +
                     (customer.asKnown().getOrNull()?.validity() ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                    (meters.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
                     (if (onDemand.asKnown().isPresent) 1 else 0) +
                     (if (paymentFrequencyCount.asKnown().isPresent) 1 else 0) +
@@ -3691,6 +3853,7 @@ private constructor(
                     (if (cancelledAt.asKnown().isPresent) 1 else 0) +
                     (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
                     (if (discountId.asKnown().isPresent) 1 else 0) +
+                    (if (expiresAt.asKnown().isPresent) 1 else 0) +
                     (payloadType.asKnown().getOrNull()?.validity() ?: 0)
 
             class PayloadType
@@ -3833,6 +3996,7 @@ private constructor(
                     currency == other.currency &&
                     customer == other.customer &&
                     metadata == other.metadata &&
+                    meters == other.meters &&
                     nextBillingDate == other.nextBillingDate &&
                     onDemand == other.onDemand &&
                     paymentFrequencyCount == other.paymentFrequencyCount &&
@@ -3850,6 +4014,7 @@ private constructor(
                     cancelledAt == other.cancelledAt &&
                     discountCyclesRemaining == other.discountCyclesRemaining &&
                     discountId == other.discountId &&
+                    expiresAt == other.expiresAt &&
                     payloadType == other.payloadType &&
                     additionalProperties == other.additionalProperties
             }
@@ -3863,6 +4028,7 @@ private constructor(
                     currency,
                     customer,
                     metadata,
+                    meters,
                     nextBillingDate,
                     onDemand,
                     paymentFrequencyCount,
@@ -3880,6 +4046,7 @@ private constructor(
                     cancelledAt,
                     discountCyclesRemaining,
                     discountId,
+                    expiresAt,
                     payloadType,
                     additionalProperties,
                 )
@@ -3888,13 +4055,14 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Refund
         private constructor(
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
+            private val customer: JsonField<CustomerLimitedDetails>,
             private val isPartial: JsonField<Boolean>,
             private val paymentId: JsonField<String>,
             private val refundId: JsonField<String>,
@@ -3914,6 +4082,9 @@ private constructor(
                 @JsonProperty("created_at")
                 @ExcludeMissing
                 createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+                @JsonProperty("customer")
+                @ExcludeMissing
+                customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
                 @JsonProperty("is_partial")
                 @ExcludeMissing
                 isPartial: JsonField<Boolean> = JsonMissing.of(),
@@ -3939,6 +4110,7 @@ private constructor(
             ) : this(
                 businessId,
                 createdAt,
+                customer,
                 isPartial,
                 paymentId,
                 refundId,
@@ -3954,6 +4126,7 @@ private constructor(
                 Refund.builder()
                     .businessId(businessId)
                     .createdAt(createdAt)
+                    .customer(customer)
                     .isPartial(isPartial)
                     .paymentId(paymentId)
                     .refundId(refundId)
@@ -3980,6 +4153,15 @@ private constructor(
              *   value).
              */
             fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+            /**
+             * Details about the customer for this refund (from the associated payment)
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
 
             /**
              * If true the refund is a partial refund
@@ -4067,6 +4249,16 @@ private constructor(
             @JsonProperty("created_at")
             @ExcludeMissing
             fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+            /**
+             * Returns the raw JSON value of [customer].
+             *
+             * Unlike [customer], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("customer")
+            @ExcludeMissing
+            fun _customer(): JsonField<CustomerLimitedDetails> = customer
 
             /**
              * Returns the raw JSON value of [isPartial].
@@ -4158,6 +4350,7 @@ private constructor(
                  * ```java
                  * .businessId()
                  * .createdAt()
+                 * .customer()
                  * .isPartial()
                  * .paymentId()
                  * .refundId()
@@ -4173,6 +4366,7 @@ private constructor(
 
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
+                private var customer: JsonField<CustomerLimitedDetails>? = null
                 private var isPartial: JsonField<Boolean>? = null
                 private var paymentId: JsonField<String>? = null
                 private var refundId: JsonField<String>? = null
@@ -4187,6 +4381,7 @@ private constructor(
                 internal fun from(refund: Refund) = apply {
                     businessId = refund.businessId
                     createdAt = refund.createdAt
+                    customer = refund.customer
                     isPartial = refund.isPartial
                     paymentId = refund.paymentId
                     refundId = refund.refundId
@@ -4224,6 +4419,20 @@ private constructor(
                  */
                 fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
                     this.createdAt = createdAt
+                }
+
+                /** Details about the customer for this refund (from the associated payment) */
+                fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
+
+                /**
+                 * Sets [Builder.customer] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.customer] with a well-typed
+                 * [CustomerLimitedDetails] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
+                    this.customer = customer
                 }
 
                 /** If true the refund is a partial refund */
@@ -4370,6 +4579,7 @@ private constructor(
                  * ```java
                  * .businessId()
                  * .createdAt()
+                 * .customer()
                  * .isPartial()
                  * .paymentId()
                  * .refundId()
@@ -4383,6 +4593,7 @@ private constructor(
                     Refund(
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
+                        checkRequired("customer", customer),
                         checkRequired("isPartial", isPartial),
                         checkRequired("paymentId", paymentId),
                         checkRequired("refundId", refundId),
@@ -4404,6 +4615,7 @@ private constructor(
 
                 businessId()
                 createdAt()
+                customer().validate()
                 isPartial()
                 paymentId()
                 refundId()
@@ -4433,6 +4645,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
+                    (customer.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (isPartial.asKnown().isPresent) 1 else 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
                     (if (refundId.asKnown().isPresent) 1 else 0) +
@@ -4577,6 +4790,7 @@ private constructor(
                 return other is Refund &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
+                    customer == other.customer &&
                     isPartial == other.isPartial &&
                     paymentId == other.paymentId &&
                     refundId == other.refundId &&
@@ -4592,6 +4806,7 @@ private constructor(
                 Objects.hash(
                     businessId,
                     createdAt,
+                    customer,
                     isPartial,
                     paymentId,
                     refundId,
@@ -4607,7 +4822,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Refund{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Dispute
