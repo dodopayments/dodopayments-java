@@ -40,6 +40,8 @@ private constructor(
     fun billing(): Optional<BillingAddress> = body.billing()
 
     /**
+     * When set, the subscription will remain active until the end of billing period
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -56,6 +58,12 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
+
+    /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun nextBillingDate(): Optional<OffsetDateTime> = body.nextBillingDate()
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -97,6 +105,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<Metadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [nextBillingDate].
+     *
+     * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _nextBillingDate(): JsonField<OffsetDateTime> = body._nextBillingDate()
 
     /**
      * Returns the raw JSON value of [status].
@@ -161,7 +176,7 @@ private constructor(
          * - [cancelAtNextBillingDate]
          * - [disableOnDemand]
          * - [metadata]
-         * - [status]
+         * - [nextBillingDate]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -180,6 +195,7 @@ private constructor(
          */
         fun billing(billing: JsonField<BillingAddress>) = apply { body.billing(billing) }
 
+        /** When set, the subscription will remain active until the end of billing period */
         fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) = apply {
             body.cancelAtNextBillingDate(cancelAtNextBillingDate)
         }
@@ -242,6 +258,25 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+
+        fun nextBillingDate(nextBillingDate: OffsetDateTime?) = apply {
+            body.nextBillingDate(nextBillingDate)
+        }
+
+        /** Alias for calling [Builder.nextBillingDate] with `nextBillingDate.orElse(null)`. */
+        fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) =
+            nextBillingDate(nextBillingDate.getOrNull())
+
+        /**
+         * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
+            body.nextBillingDate(nextBillingDate)
+        }
 
         fun status(status: SubscriptionStatus?) = apply { body.status(status) }
 
@@ -419,6 +454,7 @@ private constructor(
         private val cancelAtNextBillingDate: JsonField<Boolean>,
         private val disableOnDemand: JsonField<DisableOnDemand>,
         private val metadata: JsonField<Metadata>,
+        private val nextBillingDate: JsonField<OffsetDateTime>,
         private val status: JsonField<SubscriptionStatus>,
         private val taxId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -438,6 +474,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("next_billing_date")
+            @ExcludeMissing
+            nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("status")
             @ExcludeMissing
             status: JsonField<SubscriptionStatus> = JsonMissing.of(),
@@ -447,6 +486,7 @@ private constructor(
             cancelAtNextBillingDate,
             disableOnDemand,
             metadata,
+            nextBillingDate,
             status,
             taxId,
             mutableMapOf(),
@@ -459,6 +499,8 @@ private constructor(
         fun billing(): Optional<BillingAddress> = billing.getOptional("billing")
 
         /**
+         * When set, the subscription will remain active until the end of billing period
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -477,6 +519,13 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun nextBillingDate(): Optional<OffsetDateTime> =
+            nextBillingDate.getOptional("next_billing_date")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -525,6 +574,16 @@ private constructor(
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
         /**
+         * Returns the raw JSON value of [nextBillingDate].
+         *
+         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("next_billing_date")
+        @ExcludeMissing
+        fun _nextBillingDate(): JsonField<OffsetDateTime> = nextBillingDate
+
+        /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
@@ -565,6 +624,7 @@ private constructor(
             private var cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of()
             private var disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
             private var status: JsonField<SubscriptionStatus> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -575,6 +635,7 @@ private constructor(
                 cancelAtNextBillingDate = body.cancelAtNextBillingDate
                 disableOnDemand = body.disableOnDemand
                 metadata = body.metadata
+                nextBillingDate = body.nextBillingDate
                 status = body.status
                 taxId = body.taxId
                 additionalProperties = body.additionalProperties.toMutableMap()
@@ -594,6 +655,7 @@ private constructor(
              */
             fun billing(billing: JsonField<BillingAddress>) = apply { this.billing = billing }
 
+            /** When set, the subscription will remain active until the end of billing period */
             fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) =
                 cancelAtNextBillingDate(JsonField.ofNullable(cancelAtNextBillingDate))
 
@@ -655,6 +717,24 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+            fun nextBillingDate(nextBillingDate: OffsetDateTime?) =
+                nextBillingDate(JsonField.ofNullable(nextBillingDate))
+
+            /** Alias for calling [Builder.nextBillingDate] with `nextBillingDate.orElse(null)`. */
+            fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) =
+                nextBillingDate(nextBillingDate.getOrNull())
+
+            /**
+             * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
+                this.nextBillingDate = nextBillingDate
+            }
+
             fun status(status: SubscriptionStatus?) = status(JsonField.ofNullable(status))
 
             /** Alias for calling [Builder.status] with `status.orElse(null)`. */
@@ -713,6 +793,7 @@ private constructor(
                     cancelAtNextBillingDate,
                     disableOnDemand,
                     metadata,
+                    nextBillingDate,
                     status,
                     taxId,
                     additionalProperties.toMutableMap(),
@@ -730,6 +811,7 @@ private constructor(
             cancelAtNextBillingDate()
             disableOnDemand().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
+            nextBillingDate()
             status().ifPresent { it.validate() }
             taxId()
             validated = true
@@ -755,6 +837,7 @@ private constructor(
                 (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) +
                 (disableOnDemand.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0)
 
@@ -768,6 +851,7 @@ private constructor(
                 cancelAtNextBillingDate == other.cancelAtNextBillingDate &&
                 disableOnDemand == other.disableOnDemand &&
                 metadata == other.metadata &&
+                nextBillingDate == other.nextBillingDate &&
                 status == other.status &&
                 taxId == other.taxId &&
                 additionalProperties == other.additionalProperties
@@ -779,6 +863,7 @@ private constructor(
                 cancelAtNextBillingDate,
                 disableOnDemand,
                 metadata,
+                nextBillingDate,
                 status,
                 taxId,
                 additionalProperties,
@@ -788,7 +873,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, disableOnDemand=$disableOnDemand, metadata=$metadata, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     class DisableOnDemand

@@ -27,6 +27,9 @@ import com.dodopayments.api.models.subscriptions.SubscriptionListPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionListPageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionListParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageResponse
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -85,6 +88,13 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
     ): CompletableFuture<SubscriptionChargeResponse> =
         // post /subscriptions/{subscription_id}/charge
         withRawResponse().charge(params, requestOptions).thenApply { it.parse() }
+
+    override fun retrieveUsageHistory(
+        params: SubscriptionRetrieveUsageHistoryParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+        // get /subscriptions/{subscription_id}/usage-history
+        withRawResponse().retrieveUsageHistory(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SubscriptionServiceAsync.WithRawResponse {
@@ -291,6 +301,48 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveUsageHistoryHandler:
+            Handler<SubscriptionRetrieveUsageHistoryPageResponse> =
+            jsonHandler<SubscriptionRetrieveUsageHistoryPageResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveUsageHistory(
+            params: SubscriptionRetrieveUsageHistoryParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("subscriptions", params._pathParam(0), "usage-history")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveUsageHistoryHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                            .let {
+                                SubscriptionRetrieveUsageHistoryPageAsync.builder()
+                                    .service(SubscriptionServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

@@ -23,7 +23,7 @@ internal class WebhookServiceAsyncTest {
                 .build()
         val webhookServiceAsync = client.webhooks()
 
-        val webhookFuture =
+        val webhookDetailsFuture =
             webhookServiceAsync.create(
                 WebhookCreateParams.builder()
                     .url("url")
@@ -45,8 +45,8 @@ internal class WebhookServiceAsyncTest {
                     .build()
             )
 
-        val webhook = webhookFuture.get()
-        webhook.validate()
+        val webhookDetails = webhookDetailsFuture.get()
+        webhookDetails.validate()
     }
 
     @Test
@@ -58,10 +58,10 @@ internal class WebhookServiceAsyncTest {
                 .build()
         val webhookServiceAsync = client.webhooks()
 
-        val webhookFuture = webhookServiceAsync.retrieve("webhook_id")
+        val webhookDetailsFuture = webhookServiceAsync.retrieve("webhook_id")
 
-        val webhook = webhookFuture.get()
-        webhook.validate()
+        val webhookDetails = webhookDetailsFuture.get()
+        webhookDetails.validate()
     }
 
     @Test
@@ -73,7 +73,7 @@ internal class WebhookServiceAsyncTest {
                 .build()
         val webhookServiceAsync = client.webhooks()
 
-        val webhookFuture =
+        val webhookDetailsFuture =
             webhookServiceAsync.update(
                 WebhookUpdateParams.builder()
                     .webhookId("webhook_id")
@@ -90,8 +90,8 @@ internal class WebhookServiceAsyncTest {
                     .build()
             )
 
-        val webhook = webhookFuture.get()
-        webhook.validate()
+        val webhookDetails = webhookDetailsFuture.get()
+        webhookDetails.validate()
     }
 
     @Test
@@ -121,5 +121,20 @@ internal class WebhookServiceAsyncTest {
         val future = webhookServiceAsync.delete("webhook_id")
 
         val response = future.get()
+    }
+
+    @Test
+    fun retrieveSecret() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val webhookServiceAsync = client.webhooks()
+
+        val responseFuture = webhookServiceAsync.retrieveSecret("webhook_id")
+
+        val response = responseFuture.get()
+        response.validate()
     }
 }

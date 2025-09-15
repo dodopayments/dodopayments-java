@@ -12,6 +12,7 @@ import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
+import com.dodopayments.api.services.blocking.customers.WalletService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -30,6 +31,8 @@ interface CustomerService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService
 
     fun customerPortal(): CustomerPortalService
+
+    fun wallets(): WalletService
 
     fun create(params: CustomerCreateParams): Customer = create(params, RequestOptions.none())
 
@@ -122,6 +125,8 @@ interface CustomerService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService.WithRawResponse
 
         fun customerPortal(): CustomerPortalService.WithRawResponse
+
+        fun wallets(): WalletService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /customers`, but is otherwise the same as

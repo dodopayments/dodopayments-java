@@ -19,14 +19,14 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: WebhookListParams,
     private val response: WebhookListPageResponse,
-) : PageAsync<WebhookListResponse> {
+) : PageAsync<WebhookDetails> {
 
     /**
      * Delegates to [WebhookListPageResponse], but gracefully handles missing data.
      *
      * @see WebhookListPageResponse.data
      */
-    fun data(): List<WebhookListResponse> =
+    fun data(): List<WebhookDetails> =
         response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
@@ -43,7 +43,7 @@ private constructor(
      */
     fun done(): Optional<Boolean> = response._done().getOptional("done")
 
-    override fun items(): List<WebhookListResponse> = data()
+    override fun items(): List<WebhookDetails> = data()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty() && iterator().isPresent
 
@@ -57,7 +57,7 @@ private constructor(
     override fun nextPage(): CompletableFuture<WebhookListPageAsync> =
         service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<WebhookListResponse> =
+    fun autoPager(): AutoPagerAsync<WebhookDetails> =
         AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */

@@ -18,15 +18,15 @@ import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.webhooks.WebhookCreateParams
-import com.dodopayments.api.models.webhooks.WebhookCreateResponse
 import com.dodopayments.api.models.webhooks.WebhookDeleteParams
+import com.dodopayments.api.models.webhooks.WebhookDetails
 import com.dodopayments.api.models.webhooks.WebhookListPageAsync
 import com.dodopayments.api.models.webhooks.WebhookListPageResponse
 import com.dodopayments.api.models.webhooks.WebhookListParams
 import com.dodopayments.api.models.webhooks.WebhookRetrieveParams
-import com.dodopayments.api.models.webhooks.WebhookRetrieveResponse
+import com.dodopayments.api.models.webhooks.WebhookRetrieveSecretParams
+import com.dodopayments.api.models.webhooks.WebhookRetrieveSecretResponse
 import com.dodopayments.api.models.webhooks.WebhookUpdateParams
-import com.dodopayments.api.models.webhooks.WebhookUpdateResponse
 import com.dodopayments.api.services.async.webhooks.HeaderServiceAsync
 import com.dodopayments.api.services.async.webhooks.HeaderServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
@@ -52,21 +52,21 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun create(
         params: WebhookCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookCreateResponse> =
+    ): CompletableFuture<WebhookDetails> =
         // post /webhooks
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun retrieve(
         params: WebhookRetrieveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookRetrieveResponse> =
+    ): CompletableFuture<WebhookDetails> =
         // get /webhooks/{webhook_id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: WebhookUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<WebhookUpdateResponse> =
+    ): CompletableFuture<WebhookDetails> =
         // patch /webhooks/{webhook_id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
@@ -83,6 +83,13 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<Void?> =
         // delete /webhooks/{webhook_id}
         withRawResponse().delete(params, requestOptions).thenAccept {}
+
+    override fun retrieveSecret(
+        params: WebhookRetrieveSecretParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<WebhookRetrieveSecretResponse> =
+        // get /webhooks/{webhook_id}/secret
+        withRawResponse().retrieveSecret(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         WebhookServiceAsync.WithRawResponse {
@@ -103,13 +110,13 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
         override fun headers(): HeaderServiceAsync.WithRawResponse = headers
 
-        private val createHandler: Handler<WebhookCreateResponse> =
-            jsonHandler<WebhookCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<WebhookDetails> =
+            jsonHandler<WebhookDetails>(clientOptions.jsonMapper)
 
         override fun create(
             params: WebhookCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookCreateResponse>> {
+        ): CompletableFuture<HttpResponseFor<WebhookDetails>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -134,13 +141,13 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val retrieveHandler: Handler<WebhookRetrieveResponse> =
-            jsonHandler<WebhookRetrieveResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<WebhookDetails> =
+            jsonHandler<WebhookDetails>(clientOptions.jsonMapper)
 
         override fun retrieve(
             params: WebhookRetrieveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookRetrieveResponse>> {
+        ): CompletableFuture<HttpResponseFor<WebhookDetails>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("webhookId", params.webhookId().getOrNull())
@@ -167,13 +174,13 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val updateHandler: Handler<WebhookUpdateResponse> =
-            jsonHandler<WebhookUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<WebhookDetails> =
+            jsonHandler<WebhookDetails>(clientOptions.jsonMapper)
 
         override fun update(
             params: WebhookUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<WebhookUpdateResponse>> {
+        ): CompletableFuture<HttpResponseFor<WebhookDetails>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("webhookId", params.webhookId().getOrNull())
@@ -262,6 +269,39 @@ class WebhookServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
                         response.use { deleteHandler.handle(it) }
+                    }
+                }
+        }
+
+        private val retrieveSecretHandler: Handler<WebhookRetrieveSecretResponse> =
+            jsonHandler<WebhookRetrieveSecretResponse>(clientOptions.jsonMapper)
+
+        override fun retrieveSecret(
+            params: WebhookRetrieveSecretParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<WebhookRetrieveSecretResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("webhookId", params.webhookId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("webhooks", params._pathParam(0), "secret")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveSecretHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }

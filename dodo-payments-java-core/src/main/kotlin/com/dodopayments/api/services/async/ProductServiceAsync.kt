@@ -7,8 +7,8 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.products.Product
+import com.dodopayments.api.models.products.ProductArchiveParams
 import com.dodopayments.api.models.products.ProductCreateParams
-import com.dodopayments.api.models.products.ProductDeleteParams
 import com.dodopayments.api.models.products.ProductListPageAsync
 import com.dodopayments.api.models.products.ProductListParams
 import com.dodopayments.api.models.products.ProductRetrieveParams
@@ -121,34 +121,34 @@ interface ProductServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<ProductListPageAsync> =
         list(ProductListParams.none(), requestOptions)
 
-    fun delete(id: String): CompletableFuture<Void?> = delete(id, ProductDeleteParams.none())
+    fun archive(id: String): CompletableFuture<Void?> = archive(id, ProductArchiveParams.none())
 
-    /** @see delete */
-    fun delete(
+    /** @see archive */
+    fun archive(
         id: String,
-        params: ProductDeleteParams = ProductDeleteParams.none(),
+        params: ProductArchiveParams = ProductArchiveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> = delete(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Void?> = archive(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see delete */
-    fun delete(
+    /** @see archive */
+    fun archive(
         id: String,
-        params: ProductDeleteParams = ProductDeleteParams.none(),
-    ): CompletableFuture<Void?> = delete(id, params, RequestOptions.none())
+        params: ProductArchiveParams = ProductArchiveParams.none(),
+    ): CompletableFuture<Void?> = archive(id, params, RequestOptions.none())
 
-    /** @see delete */
-    fun delete(
-        params: ProductDeleteParams,
+    /** @see archive */
+    fun archive(
+        params: ProductArchiveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
 
-    /** @see delete */
-    fun delete(params: ProductDeleteParams): CompletableFuture<Void?> =
-        delete(params, RequestOptions.none())
+    /** @see archive */
+    fun archive(params: ProductArchiveParams): CompletableFuture<Void?> =
+        archive(params, RequestOptions.none())
 
-    /** @see delete */
-    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        delete(id, ProductDeleteParams.none(), requestOptions)
+    /** @see archive */
+    fun archive(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        archive(id, ProductArchiveParams.none(), requestOptions)
 
     fun unarchive(id: String): CompletableFuture<Void?> =
         unarchive(id, ProductUnarchiveParams.none())
@@ -334,38 +334,38 @@ interface ProductServiceAsync {
 
         /**
          * Returns a raw HTTP response for `delete /products/{id}`, but is otherwise the same as
-         * [ProductServiceAsync.delete].
+         * [ProductServiceAsync.archive].
          */
-        fun delete(id: String): CompletableFuture<HttpResponse> =
-            delete(id, ProductDeleteParams.none())
+        fun archive(id: String): CompletableFuture<HttpResponse> =
+            archive(id, ProductArchiveParams.none())
 
-        /** @see delete */
-        fun delete(
+        /** @see archive */
+        fun archive(
             id: String,
-            params: ProductDeleteParams = ProductDeleteParams.none(),
+            params: ProductArchiveParams = ProductArchiveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse> =
-            delete(params.toBuilder().id(id).build(), requestOptions)
+            archive(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see delete */
-        fun delete(
+        /** @see archive */
+        fun archive(
             id: String,
-            params: ProductDeleteParams = ProductDeleteParams.none(),
-        ): CompletableFuture<HttpResponse> = delete(id, params, RequestOptions.none())
+            params: ProductArchiveParams = ProductArchiveParams.none(),
+        ): CompletableFuture<HttpResponse> = archive(id, params, RequestOptions.none())
 
-        /** @see delete */
-        fun delete(
-            params: ProductDeleteParams,
+        /** @see archive */
+        fun archive(
+            params: ProductArchiveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
 
-        /** @see delete */
-        fun delete(params: ProductDeleteParams): CompletableFuture<HttpResponse> =
-            delete(params, RequestOptions.none())
+        /** @see archive */
+        fun archive(params: ProductArchiveParams): CompletableFuture<HttpResponse> =
+            archive(params, RequestOptions.none())
 
-        /** @see delete */
-        fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
-            delete(id, ProductDeleteParams.none(), requestOptions)
+        /** @see archive */
+        fun archive(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            archive(id, ProductArchiveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /products/{id}/unarchive`, but is otherwise the

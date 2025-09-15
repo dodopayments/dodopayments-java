@@ -6,8 +6,8 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
-import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
 import com.dodopayments.api.models.licenses.LicenseActivateParams
+import com.dodopayments.api.models.licenses.LicenseActivateResponse
 import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
@@ -28,14 +28,14 @@ interface LicenseServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseServiceAsync
 
-    fun activate(params: LicenseActivateParams): CompletableFuture<LicenseKeyInstance> =
+    fun activate(params: LicenseActivateParams): CompletableFuture<LicenseActivateResponse> =
         activate(params, RequestOptions.none())
 
     /** @see activate */
     fun activate(
         params: LicenseActivateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstance>
+    ): CompletableFuture<LicenseActivateResponse>
 
     fun deactivate(params: LicenseDeactivateParams): CompletableFuture<Void?> =
         deactivate(params, RequestOptions.none())
@@ -75,14 +75,14 @@ interface LicenseServiceAsync {
          */
         fun activate(
             params: LicenseActivateParams
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+        ): CompletableFuture<HttpResponseFor<LicenseActivateResponse>> =
             activate(params, RequestOptions.none())
 
         /** @see activate */
         fun activate(
             params: LicenseActivateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>>
+        ): CompletableFuture<HttpResponseFor<LicenseActivateResponse>>
 
         /**
          * Returns a raw HTTP response for `post /licenses/deactivate`, but is otherwise the same as
