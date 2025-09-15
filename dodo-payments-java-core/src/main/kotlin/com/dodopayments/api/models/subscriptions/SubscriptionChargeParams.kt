@@ -51,6 +51,14 @@ private constructor(
     fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> = body.adaptiveCurrencyFeesInclusive()
 
     /**
+     * Specify how customer balance is used for the payment
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun customerBalanceConfig(): Optional<CustomerBalanceConfig> = body.customerBalanceConfig()
+
+    /**
      * Metadata for the payment. If not passed, the metadata of the subscription will be taken
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -90,6 +98,14 @@ private constructor(
      * unexpected type.
      */
     fun _adaptiveCurrencyFeesInclusive(): JsonField<Boolean> = body._adaptiveCurrencyFeesInclusive()
+
+    /**
+     * Returns the raw JSON value of [customerBalanceConfig].
+     *
+     * Unlike [customerBalanceConfig], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _customerBalanceConfig(): JsonField<CustomerBalanceConfig> = body._customerBalanceConfig()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -165,9 +181,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [productPrice]
          * - [adaptiveCurrencyFeesInclusive]
+         * - [customerBalanceConfig]
          * - [metadata]
          * - [productCurrency]
-         * - [productDescription]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -221,6 +237,29 @@ private constructor(
             apply {
                 body.adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive)
             }
+
+        /** Specify how customer balance is used for the payment */
+        fun customerBalanceConfig(customerBalanceConfig: CustomerBalanceConfig?) = apply {
+            body.customerBalanceConfig(customerBalanceConfig)
+        }
+
+        /**
+         * Alias for calling [Builder.customerBalanceConfig] with
+         * `customerBalanceConfig.orElse(null)`.
+         */
+        fun customerBalanceConfig(customerBalanceConfig: Optional<CustomerBalanceConfig>) =
+            customerBalanceConfig(customerBalanceConfig.getOrNull())
+
+        /**
+         * Sets [Builder.customerBalanceConfig] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customerBalanceConfig] with a well-typed
+         * [CustomerBalanceConfig] value instead. This method is primarily for setting the field to
+         * an undocumented or not yet supported value.
+         */
+        fun customerBalanceConfig(customerBalanceConfig: JsonField<CustomerBalanceConfig>) = apply {
+            body.customerBalanceConfig(customerBalanceConfig)
+        }
 
         /**
          * Metadata for the payment. If not passed, the metadata of the subscription will be taken
@@ -441,6 +480,7 @@ private constructor(
     private constructor(
         private val productPrice: JsonField<Int>,
         private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
+        private val customerBalanceConfig: JsonField<CustomerBalanceConfig>,
         private val metadata: JsonField<Metadata>,
         private val productCurrency: JsonField<Currency>,
         private val productDescription: JsonField<String>,
@@ -455,6 +495,9 @@ private constructor(
             @JsonProperty("adaptive_currency_fees_inclusive")
             @ExcludeMissing
             adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("customer_balance_config")
+            @ExcludeMissing
+            customerBalanceConfig: JsonField<CustomerBalanceConfig> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -467,6 +510,7 @@ private constructor(
         ) : this(
             productPrice,
             adaptiveCurrencyFeesInclusive,
+            customerBalanceConfig,
             metadata,
             productCurrency,
             productDescription,
@@ -491,6 +535,15 @@ private constructor(
          */
         fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> =
             adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
+
+        /**
+         * Specify how customer balance is used for the payment
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun customerBalanceConfig(): Optional<CustomerBalanceConfig> =
+            customerBalanceConfig.getOptional("customer_balance_config")
 
         /**
          * Metadata for the payment. If not passed, the metadata of the subscription will be taken
@@ -538,6 +591,16 @@ private constructor(
         @JsonProperty("adaptive_currency_fees_inclusive")
         @ExcludeMissing
         fun _adaptiveCurrencyFeesInclusive(): JsonField<Boolean> = adaptiveCurrencyFeesInclusive
+
+        /**
+         * Returns the raw JSON value of [customerBalanceConfig].
+         *
+         * Unlike [customerBalanceConfig], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("customer_balance_config")
+        @ExcludeMissing
+        fun _customerBalanceConfig(): JsonField<CustomerBalanceConfig> = customerBalanceConfig
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -596,6 +659,7 @@ private constructor(
 
             private var productPrice: JsonField<Int>? = null
             private var adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of()
+            private var customerBalanceConfig: JsonField<CustomerBalanceConfig> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var productCurrency: JsonField<Currency> = JsonMissing.of()
             private var productDescription: JsonField<String> = JsonMissing.of()
@@ -605,6 +669,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 productPrice = body.productPrice
                 adaptiveCurrencyFeesInclusive = body.adaptiveCurrencyFeesInclusive
+                customerBalanceConfig = body.customerBalanceConfig
                 metadata = body.metadata
                 productCurrency = body.productCurrency
                 productDescription = body.productDescription
@@ -661,6 +726,29 @@ private constructor(
             fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: JsonField<Boolean>) =
                 apply {
                     this.adaptiveCurrencyFeesInclusive = adaptiveCurrencyFeesInclusive
+                }
+
+            /** Specify how customer balance is used for the payment */
+            fun customerBalanceConfig(customerBalanceConfig: CustomerBalanceConfig?) =
+                customerBalanceConfig(JsonField.ofNullable(customerBalanceConfig))
+
+            /**
+             * Alias for calling [Builder.customerBalanceConfig] with
+             * `customerBalanceConfig.orElse(null)`.
+             */
+            fun customerBalanceConfig(customerBalanceConfig: Optional<CustomerBalanceConfig>) =
+                customerBalanceConfig(customerBalanceConfig.getOrNull())
+
+            /**
+             * Sets [Builder.customerBalanceConfig] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.customerBalanceConfig] with a well-typed
+             * [CustomerBalanceConfig] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun customerBalanceConfig(customerBalanceConfig: JsonField<CustomerBalanceConfig>) =
+                apply {
+                    this.customerBalanceConfig = customerBalanceConfig
                 }
 
             /**
@@ -763,6 +851,7 @@ private constructor(
                 Body(
                     checkRequired("productPrice", productPrice),
                     adaptiveCurrencyFeesInclusive,
+                    customerBalanceConfig,
                     metadata,
                     productCurrency,
                     productDescription,
@@ -779,6 +868,7 @@ private constructor(
 
             productPrice()
             adaptiveCurrencyFeesInclusive()
+            customerBalanceConfig().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             productCurrency().ifPresent { it.validate() }
             productDescription()
@@ -803,6 +893,7 @@ private constructor(
         internal fun validity(): Int =
             (if (productPrice.asKnown().isPresent) 1 else 0) +
                 (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
+                (customerBalanceConfig.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (productCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (productDescription.asKnown().isPresent) 1 else 0)
@@ -815,6 +906,7 @@ private constructor(
             return other is Body &&
                 productPrice == other.productPrice &&
                 adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
+                customerBalanceConfig == other.customerBalanceConfig &&
                 metadata == other.metadata &&
                 productCurrency == other.productCurrency &&
                 productDescription == other.productDescription &&
@@ -825,6 +917,7 @@ private constructor(
             Objects.hash(
                 productPrice,
                 adaptiveCurrencyFeesInclusive,
+                customerBalanceConfig,
                 metadata,
                 productCurrency,
                 productDescription,
@@ -835,7 +928,246 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{productPrice=$productPrice, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, metadata=$metadata, productCurrency=$productCurrency, productDescription=$productDescription, additionalProperties=$additionalProperties}"
+            "Body{productPrice=$productPrice, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, customerBalanceConfig=$customerBalanceConfig, metadata=$metadata, productCurrency=$productCurrency, productDescription=$productDescription, additionalProperties=$additionalProperties}"
+    }
+
+    /** Specify how customer balance is used for the payment */
+    class CustomerBalanceConfig
+    private constructor(
+        private val allowCustomerCreditsPurchase: JsonField<Boolean>,
+        private val allowCustomerCreditsUsage: JsonField<Boolean>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("allow_customer_credits_purchase")
+            @ExcludeMissing
+            allowCustomerCreditsPurchase: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("allow_customer_credits_usage")
+            @ExcludeMissing
+            allowCustomerCreditsUsage: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(allowCustomerCreditsPurchase, allowCustomerCreditsUsage, mutableMapOf())
+
+        /**
+         * Allows Customer Credit to be purchased to settle payments
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun allowCustomerCreditsPurchase(): Optional<Boolean> =
+            allowCustomerCreditsPurchase.getOptional("allow_customer_credits_purchase")
+
+        /**
+         * Allows Customer Credit Balance to be used to settle payments
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun allowCustomerCreditsUsage(): Optional<Boolean> =
+            allowCustomerCreditsUsage.getOptional("allow_customer_credits_usage")
+
+        /**
+         * Returns the raw JSON value of [allowCustomerCreditsPurchase].
+         *
+         * Unlike [allowCustomerCreditsPurchase], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("allow_customer_credits_purchase")
+        @ExcludeMissing
+        fun _allowCustomerCreditsPurchase(): JsonField<Boolean> = allowCustomerCreditsPurchase
+
+        /**
+         * Returns the raw JSON value of [allowCustomerCreditsUsage].
+         *
+         * Unlike [allowCustomerCreditsUsage], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("allow_customer_credits_usage")
+        @ExcludeMissing
+        fun _allowCustomerCreditsUsage(): JsonField<Boolean> = allowCustomerCreditsUsage
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [CustomerBalanceConfig].
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [CustomerBalanceConfig]. */
+        class Builder internal constructor() {
+
+            private var allowCustomerCreditsPurchase: JsonField<Boolean> = JsonMissing.of()
+            private var allowCustomerCreditsUsage: JsonField<Boolean> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(customerBalanceConfig: CustomerBalanceConfig) = apply {
+                allowCustomerCreditsPurchase = customerBalanceConfig.allowCustomerCreditsPurchase
+                allowCustomerCreditsUsage = customerBalanceConfig.allowCustomerCreditsUsage
+                additionalProperties = customerBalanceConfig.additionalProperties.toMutableMap()
+            }
+
+            /** Allows Customer Credit to be purchased to settle payments */
+            fun allowCustomerCreditsPurchase(allowCustomerCreditsPurchase: Boolean?) =
+                allowCustomerCreditsPurchase(JsonField.ofNullable(allowCustomerCreditsPurchase))
+
+            /**
+             * Alias for [Builder.allowCustomerCreditsPurchase].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun allowCustomerCreditsPurchase(allowCustomerCreditsPurchase: Boolean) =
+                allowCustomerCreditsPurchase(allowCustomerCreditsPurchase as Boolean?)
+
+            /**
+             * Alias for calling [Builder.allowCustomerCreditsPurchase] with
+             * `allowCustomerCreditsPurchase.orElse(null)`.
+             */
+            fun allowCustomerCreditsPurchase(allowCustomerCreditsPurchase: Optional<Boolean>) =
+                allowCustomerCreditsPurchase(allowCustomerCreditsPurchase.getOrNull())
+
+            /**
+             * Sets [Builder.allowCustomerCreditsPurchase] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.allowCustomerCreditsPurchase] with a well-typed
+             * [Boolean] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun allowCustomerCreditsPurchase(allowCustomerCreditsPurchase: JsonField<Boolean>) =
+                apply {
+                    this.allowCustomerCreditsPurchase = allowCustomerCreditsPurchase
+                }
+
+            /** Allows Customer Credit Balance to be used to settle payments */
+            fun allowCustomerCreditsUsage(allowCustomerCreditsUsage: Boolean?) =
+                allowCustomerCreditsUsage(JsonField.ofNullable(allowCustomerCreditsUsage))
+
+            /**
+             * Alias for [Builder.allowCustomerCreditsUsage].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun allowCustomerCreditsUsage(allowCustomerCreditsUsage: Boolean) =
+                allowCustomerCreditsUsage(allowCustomerCreditsUsage as Boolean?)
+
+            /**
+             * Alias for calling [Builder.allowCustomerCreditsUsage] with
+             * `allowCustomerCreditsUsage.orElse(null)`.
+             */
+            fun allowCustomerCreditsUsage(allowCustomerCreditsUsage: Optional<Boolean>) =
+                allowCustomerCreditsUsage(allowCustomerCreditsUsage.getOrNull())
+
+            /**
+             * Sets [Builder.allowCustomerCreditsUsage] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.allowCustomerCreditsUsage] with a well-typed
+             * [Boolean] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun allowCustomerCreditsUsage(allowCustomerCreditsUsage: JsonField<Boolean>) = apply {
+                this.allowCustomerCreditsUsage = allowCustomerCreditsUsage
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [CustomerBalanceConfig].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): CustomerBalanceConfig =
+                CustomerBalanceConfig(
+                    allowCustomerCreditsPurchase,
+                    allowCustomerCreditsUsage,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): CustomerBalanceConfig = apply {
+            if (validated) {
+                return@apply
+            }
+
+            allowCustomerCreditsPurchase()
+            allowCustomerCreditsUsage()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (allowCustomerCreditsPurchase.asKnown().isPresent) 1 else 0) +
+                (if (allowCustomerCreditsUsage.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CustomerBalanceConfig &&
+                allowCustomerCreditsPurchase == other.allowCustomerCreditsPurchase &&
+                allowCustomerCreditsUsage == other.allowCustomerCreditsUsage &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                allowCustomerCreditsPurchase,
+                allowCustomerCreditsUsage,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "CustomerBalanceConfig{allowCustomerCreditsPurchase=$allowCustomerCreditsPurchase, allowCustomerCreditsUsage=$allowCustomerCreditsUsage, additionalProperties=$additionalProperties}"
     }
 
     /** Metadata for the payment. If not passed, the metadata of the subscription will be taken */

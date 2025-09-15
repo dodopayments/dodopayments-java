@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -56,6 +57,40 @@ interface PaymentServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
         retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+
+    fun retrieveRefund(refundId: String): CompletableFuture<HttpResponse> =
+        retrieveRefund(refundId, PaymentRetrieveRefundParams.none())
+
+    /** @see retrieveRefund */
+    fun retrieveRefund(
+        refundId: String,
+        params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse> =
+        retrieveRefund(params.toBuilder().refundId(refundId).build(), requestOptions)
+
+    /** @see retrieveRefund */
+    fun retrieveRefund(
+        refundId: String,
+        params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
+    ): CompletableFuture<HttpResponse> = retrieveRefund(refundId, params, RequestOptions.none())
+
+    /** @see retrieveRefund */
+    fun retrieveRefund(
+        params: PaymentRetrieveRefundParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse>
+
+    /** @see retrieveRefund */
+    fun retrieveRefund(params: PaymentRetrieveRefundParams): CompletableFuture<HttpResponse> =
+        retrieveRefund(params, RequestOptions.none())
+
+    /** @see retrieveRefund */
+    fun retrieveRefund(
+        refundId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> =
+        retrieveRefund(refundId, PaymentRetrieveRefundParams.none(), requestOptions)
 
     /**
      * A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method.
@@ -108,5 +143,43 @@ interface PaymentServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> =
             retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /invoices/refunds/{refund_id}`, but is otherwise the
+         * same as [PaymentServiceAsync.retrieveRefund].
+         */
+        fun retrieveRefund(refundId: String): CompletableFuture<HttpResponse> =
+            retrieveRefund(refundId, PaymentRetrieveRefundParams.none())
+
+        /** @see retrieveRefund */
+        fun retrieveRefund(
+            refundId: String,
+            params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            retrieveRefund(params.toBuilder().refundId(refundId).build(), requestOptions)
+
+        /** @see retrieveRefund */
+        fun retrieveRefund(
+            refundId: String,
+            params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
+        ): CompletableFuture<HttpResponse> = retrieveRefund(refundId, params, RequestOptions.none())
+
+        /** @see retrieveRefund */
+        fun retrieveRefund(
+            params: PaymentRetrieveRefundParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see retrieveRefund */
+        fun retrieveRefund(params: PaymentRetrieveRefundParams): CompletableFuture<HttpResponse> =
+            retrieveRefund(params, RequestOptions.none())
+
+        /** @see retrieveRefund */
+        fun retrieveRefund(
+            refundId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            retrieveRefund(refundId, PaymentRetrieveRefundParams.none(), requestOptions)
     }
 }

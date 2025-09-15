@@ -34,7 +34,7 @@ internal class ProductServiceAsyncTest {
                     .price(
                         Price.OneTimePrice.builder()
                             .currency(Currency.AED)
-                            .discount(0.0f)
+                            .discount(0L)
                             .price(0)
                             .purchasingPowerParity(true)
                             .type(Price.OneTimePrice.Type.ONE_TIME_PRICE)
@@ -126,7 +126,7 @@ internal class ProductServiceAsyncTest {
                     .price(
                         Price.OneTimePrice.builder()
                             .currency(Currency.AED)
-                            .discount(0.0f)
+                            .discount(0L)
                             .price(0)
                             .purchasingPowerParity(true)
                             .type(Price.OneTimePrice.Type.ONE_TIME_PRICE)
@@ -158,7 +158,7 @@ internal class ProductServiceAsyncTest {
     }
 
     @Test
-    fun delete() {
+    fun archive() {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
@@ -166,7 +166,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val future = productServiceAsync.delete("id")
+        val future = productServiceAsync.archive("id")
 
         val response = future.get()
     }

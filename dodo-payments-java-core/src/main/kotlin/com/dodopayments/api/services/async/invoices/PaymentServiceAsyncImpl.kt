@@ -13,6 +13,7 @@ import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -35,6 +36,13 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<HttpResponse> =
         // get /invoices/payments/{payment_id}
         withRawResponse().retrieve(params, requestOptions)
+
+    override fun retrieveRefund(
+        params: PaymentRetrieveRefundParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> =
+        // get /invoices/refunds/{refund_id}
+        withRawResponse().retrieveRefund(params, requestOptions)
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         PaymentServiceAsync.WithRawResponse {
@@ -61,6 +69,26 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("invoices", "payments", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response -> errorHandler.handle(response) }
+        }
+
+        override fun retrieveRefund(
+            params: PaymentRetrieveRefundParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("refundId", params.refundId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("invoices", "refunds", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

@@ -11,6 +11,7 @@ import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.PaymentMethodTypes
 import com.dodopayments.api.models.subscriptions.AttachAddon
+import com.dodopayments.api.models.subscriptions.OnDemandSubscription
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
@@ -57,7 +58,7 @@ internal class SubscriptionServiceAsyncTest {
                             .build()
                     )
                     .onDemand(
-                        SubscriptionCreateParams.OnDemand.builder()
+                        OnDemandSubscription.builder()
                             .mandateOnly(true)
                             .adaptiveCurrencyFeesInclusive(true)
                             .productCurrency(Currency.AED)
@@ -125,6 +126,7 @@ internal class SubscriptionServiceAsyncTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
+                    .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .status(SubscriptionStatus.PENDING)
                     .taxId("tax_id")
                     .build()
@@ -189,6 +191,12 @@ internal class SubscriptionServiceAsyncTest {
                     .subscriptionId("subscription_id")
                     .productPrice(0)
                     .adaptiveCurrencyFeesInclusive(true)
+                    .customerBalanceConfig(
+                        SubscriptionChargeParams.CustomerBalanceConfig.builder()
+                            .allowCustomerCreditsPurchase(true)
+                            .allowCustomerCreditsUsage(true)
+                            .build()
+                    )
                     .metadata(
                         SubscriptionChargeParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -201,5 +209,20 @@ internal class SubscriptionServiceAsyncTest {
 
         val response = responseFuture.get()
         response.validate()
+    }
+
+    @Test
+    fun retrieveUsageHistory() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val subscriptionServiceAsync = client.subscriptions()
+
+        val pageFuture = subscriptionServiceAsync.retrieveUsageHistory("subscription_id")
+
+        val page = pageFuture.get()
+        page.response().validate()
     }
 }

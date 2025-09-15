@@ -33,6 +33,7 @@ private constructor(
     private val currency: JsonField<Currency>,
     private val customer: JsonField<CustomerLimitedDetails>,
     private val metadata: JsonField<Metadata>,
+    private val meters: JsonField<List<Meter>>,
     private val nextBillingDate: JsonField<OffsetDateTime>,
     private val onDemand: JsonField<Boolean>,
     private val paymentFrequencyCount: JsonField<Int>,
@@ -50,6 +51,7 @@ private constructor(
     private val cancelledAt: JsonField<OffsetDateTime>,
     private val discountCyclesRemaining: JsonField<Int>,
     private val discountId: JsonField<String>,
+    private val expiresAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -72,6 +74,7 @@ private constructor(
         @ExcludeMissing
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+        @JsonProperty("meters") @ExcludeMissing meters: JsonField<List<Meter>> = JsonMissing.of(),
         @JsonProperty("next_billing_date")
         @ExcludeMissing
         nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -117,6 +120,9 @@ private constructor(
         @JsonProperty("discount_id")
         @ExcludeMissing
         discountId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expires_at")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
     ) : this(
         addons,
         billing,
@@ -125,6 +131,7 @@ private constructor(
         currency,
         customer,
         metadata,
+        meters,
         nextBillingDate,
         onDemand,
         paymentFrequencyCount,
@@ -142,6 +149,7 @@ private constructor(
         cancelledAt,
         discountCyclesRemaining,
         discountId,
+        expiresAt,
         mutableMapOf(),
     )
 
@@ -201,6 +209,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
+
+    /**
+     * Meters associated with this subscription (for usage-based billing)
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun meters(): List<Meter> = meters.getRequired("meters")
 
     /**
      * Timestamp of the next scheduled billing. Indicates the end of current billing period
@@ -344,6 +360,14 @@ private constructor(
     fun discountId(): Optional<String> = discountId.getOptional("discount_id")
 
     /**
+     * Timestamp when the subscription will expire
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
+
+    /**
      * Returns the raw JSON value of [addons].
      *
      * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
@@ -400,6 +424,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+
+    /**
+     * Returns the raw JSON value of [meters].
+     *
+     * Unlike [meters], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("meters") @ExcludeMissing fun _meters(): JsonField<List<Meter>> = meters
 
     /**
      * Returns the raw JSON value of [nextBillingDate].
@@ -551,6 +582,15 @@ private constructor(
      */
     @JsonProperty("discount_id") @ExcludeMissing fun _discountId(): JsonField<String> = discountId
 
+    /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expires_at")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -577,6 +617,7 @@ private constructor(
          * .currency()
          * .customer()
          * .metadata()
+         * .meters()
          * .nextBillingDate()
          * .onDemand()
          * .paymentFrequencyCount()
@@ -606,6 +647,7 @@ private constructor(
         private var currency: JsonField<Currency>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
         private var metadata: JsonField<Metadata>? = null
+        private var meters: JsonField<MutableList<Meter>>? = null
         private var nextBillingDate: JsonField<OffsetDateTime>? = null
         private var onDemand: JsonField<Boolean>? = null
         private var paymentFrequencyCount: JsonField<Int>? = null
@@ -623,6 +665,7 @@ private constructor(
         private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -634,6 +677,7 @@ private constructor(
             currency = subscription.currency
             customer = subscription.customer
             metadata = subscription.metadata
+            meters = subscription.meters.map { it.toMutableList() }
             nextBillingDate = subscription.nextBillingDate
             onDemand = subscription.onDemand
             paymentFrequencyCount = subscription.paymentFrequencyCount
@@ -651,6 +695,7 @@ private constructor(
             cancelledAt = subscription.cancelledAt
             discountCyclesRemaining = subscription.discountCyclesRemaining
             discountId = subscription.discountId
+            expiresAt = subscription.expiresAt
             additionalProperties = subscription.additionalProperties.toMutableMap()
         }
 
@@ -756,6 +801,32 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+
+        /** Meters associated with this subscription (for usage-based billing) */
+        fun meters(meters: List<Meter>) = meters(JsonField.of(meters))
+
+        /**
+         * Sets [Builder.meters] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.meters] with a well-typed `List<Meter>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun meters(meters: JsonField<List<Meter>>) = apply {
+            this.meters = meters.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [Meter] to [meters].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addMeter(meter: Meter) = apply {
+            meters =
+                (meters ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("meters", it).add(meter)
+                }
+        }
 
         /** Timestamp of the next scheduled billing. Indicates the end of current billing period */
         fun nextBillingDate(nextBillingDate: OffsetDateTime) =
@@ -1019,6 +1090,21 @@ private constructor(
          */
         fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
 
+        /** Timestamp when the subscription will expire */
+        fun expiresAt(expiresAt: OffsetDateTime?) = expiresAt(JsonField.ofNullable(expiresAt))
+
+        /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */
+        fun expiresAt(expiresAt: Optional<OffsetDateTime>) = expiresAt(expiresAt.getOrNull())
+
+        /**
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -1052,6 +1138,7 @@ private constructor(
          * .currency()
          * .customer()
          * .metadata()
+         * .meters()
          * .nextBillingDate()
          * .onDemand()
          * .paymentFrequencyCount()
@@ -1079,6 +1166,7 @@ private constructor(
                 checkRequired("currency", currency),
                 checkRequired("customer", customer),
                 checkRequired("metadata", metadata),
+                checkRequired("meters", meters).map { it.toImmutable() },
                 checkRequired("nextBillingDate", nextBillingDate),
                 checkRequired("onDemand", onDemand),
                 checkRequired("paymentFrequencyCount", paymentFrequencyCount),
@@ -1096,6 +1184,7 @@ private constructor(
                 cancelledAt,
                 discountCyclesRemaining,
                 discountId,
+                expiresAt,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1114,6 +1203,7 @@ private constructor(
         currency().validate()
         customer().validate()
         metadata().validate()
+        meters().forEach { it.validate() }
         nextBillingDate()
         onDemand()
         paymentFrequencyCount()
@@ -1131,6 +1221,7 @@ private constructor(
         cancelledAt()
         discountCyclesRemaining()
         discountId()
+        expiresAt()
         validated = true
     }
 
@@ -1156,6 +1247,7 @@ private constructor(
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (meters.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
             (if (onDemand.asKnown().isPresent) 1 else 0) +
             (if (paymentFrequencyCount.asKnown().isPresent) 1 else 0) +
@@ -1172,7 +1264,8 @@ private constructor(
             (if (trialPeriodDays.asKnown().isPresent) 1 else 0) +
             (if (cancelledAt.asKnown().isPresent) 1 else 0) +
             (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
-            (if (discountId.asKnown().isPresent) 1 else 0)
+            (if (discountId.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0)
 
     /** Additional custom data associated with the subscription */
     class Metadata
@@ -1274,6 +1367,419 @@ private constructor(
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
     }
 
+    /** Response struct representing usage-based meter cart details for a subscription */
+    class Meter
+    private constructor(
+        private val currency: JsonField<Currency>,
+        private val freeThreshold: JsonField<Long>,
+        private val measurementUnit: JsonField<String>,
+        private val meterId: JsonField<String>,
+        private val name: JsonField<String>,
+        private val pricePerUnit: JsonField<String>,
+        private val description: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("currency")
+            @ExcludeMissing
+            currency: JsonField<Currency> = JsonMissing.of(),
+            @JsonProperty("free_threshold")
+            @ExcludeMissing
+            freeThreshold: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("measurement_unit")
+            @ExcludeMissing
+            measurementUnit: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("meter_id") @ExcludeMissing meterId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("price_per_unit")
+            @ExcludeMissing
+            pricePerUnit: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("description")
+            @ExcludeMissing
+            description: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            currency,
+            freeThreshold,
+            measurementUnit,
+            meterId,
+            name,
+            pricePerUnit,
+            description,
+            mutableMapOf(),
+        )
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun currency(): Currency = currency.getRequired("currency")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun freeThreshold(): Long = freeThreshold.getRequired("free_threshold")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun measurementUnit(): String = measurementUnit.getRequired("measurement_unit")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun meterId(): String = meterId.getRequired("meter_id")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun name(): String = name.getRequired("name")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun pricePerUnit(): String = pricePerUnit.getRequired("price_per_unit")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun description(): Optional<String> = description.getOptional("description")
+
+        /**
+         * Returns the raw JSON value of [currency].
+         *
+         * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+
+        /**
+         * Returns the raw JSON value of [freeThreshold].
+         *
+         * Unlike [freeThreshold], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("free_threshold")
+        @ExcludeMissing
+        fun _freeThreshold(): JsonField<Long> = freeThreshold
+
+        /**
+         * Returns the raw JSON value of [measurementUnit].
+         *
+         * Unlike [measurementUnit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("measurement_unit")
+        @ExcludeMissing
+        fun _measurementUnit(): JsonField<String> = measurementUnit
+
+        /**
+         * Returns the raw JSON value of [meterId].
+         *
+         * Unlike [meterId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("meter_id") @ExcludeMissing fun _meterId(): JsonField<String> = meterId
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [pricePerUnit].
+         *
+         * Unlike [pricePerUnit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("price_per_unit")
+        @ExcludeMissing
+        fun _pricePerUnit(): JsonField<String> = pricePerUnit
+
+        /**
+         * Returns the raw JSON value of [description].
+         *
+         * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("description")
+        @ExcludeMissing
+        fun _description(): JsonField<String> = description
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Meter].
+             *
+             * The following fields are required:
+             * ```java
+             * .currency()
+             * .freeThreshold()
+             * .measurementUnit()
+             * .meterId()
+             * .name()
+             * .pricePerUnit()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Meter]. */
+        class Builder internal constructor() {
+
+            private var currency: JsonField<Currency>? = null
+            private var freeThreshold: JsonField<Long>? = null
+            private var measurementUnit: JsonField<String>? = null
+            private var meterId: JsonField<String>? = null
+            private var name: JsonField<String>? = null
+            private var pricePerUnit: JsonField<String>? = null
+            private var description: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(meter: Meter) = apply {
+                currency = meter.currency
+                freeThreshold = meter.freeThreshold
+                measurementUnit = meter.measurementUnit
+                meterId = meter.meterId
+                name = meter.name
+                pricePerUnit = meter.pricePerUnit
+                description = meter.description
+                additionalProperties = meter.additionalProperties.toMutableMap()
+            }
+
+            fun currency(currency: Currency) = currency(JsonField.of(currency))
+
+            /**
+             * Sets [Builder.currency] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.currency] with a well-typed [Currency] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+
+            fun freeThreshold(freeThreshold: Long) = freeThreshold(JsonField.of(freeThreshold))
+
+            /**
+             * Sets [Builder.freeThreshold] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.freeThreshold] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun freeThreshold(freeThreshold: JsonField<Long>) = apply {
+                this.freeThreshold = freeThreshold
+            }
+
+            fun measurementUnit(measurementUnit: String) =
+                measurementUnit(JsonField.of(measurementUnit))
+
+            /**
+             * Sets [Builder.measurementUnit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.measurementUnit] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun measurementUnit(measurementUnit: JsonField<String>) = apply {
+                this.measurementUnit = measurementUnit
+            }
+
+            fun meterId(meterId: String) = meterId(JsonField.of(meterId))
+
+            /**
+             * Sets [Builder.meterId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.meterId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun meterId(meterId: JsonField<String>) = apply { this.meterId = meterId }
+
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            fun pricePerUnit(pricePerUnit: String) = pricePerUnit(JsonField.of(pricePerUnit))
+
+            /**
+             * Sets [Builder.pricePerUnit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.pricePerUnit] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun pricePerUnit(pricePerUnit: JsonField<String>) = apply {
+                this.pricePerUnit = pricePerUnit
+            }
+
+            fun description(description: String?) = description(JsonField.ofNullable(description))
+
+            /** Alias for calling [Builder.description] with `description.orElse(null)`. */
+            fun description(description: Optional<String>) = description(description.getOrNull())
+
+            /**
+             * Sets [Builder.description] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.description] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun description(description: JsonField<String>) = apply {
+                this.description = description
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Meter].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .currency()
+             * .freeThreshold()
+             * .measurementUnit()
+             * .meterId()
+             * .name()
+             * .pricePerUnit()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Meter =
+                Meter(
+                    checkRequired("currency", currency),
+                    checkRequired("freeThreshold", freeThreshold),
+                    checkRequired("measurementUnit", measurementUnit),
+                    checkRequired("meterId", meterId),
+                    checkRequired("name", name),
+                    checkRequired("pricePerUnit", pricePerUnit),
+                    description,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Meter = apply {
+            if (validated) {
+                return@apply
+            }
+
+            currency().validate()
+            freeThreshold()
+            measurementUnit()
+            meterId()
+            name()
+            pricePerUnit()
+            description()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (currency.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (freeThreshold.asKnown().isPresent) 1 else 0) +
+                (if (measurementUnit.asKnown().isPresent) 1 else 0) +
+                (if (meterId.asKnown().isPresent) 1 else 0) +
+                (if (name.asKnown().isPresent) 1 else 0) +
+                (if (pricePerUnit.asKnown().isPresent) 1 else 0) +
+                (if (description.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Meter &&
+                currency == other.currency &&
+                freeThreshold == other.freeThreshold &&
+                measurementUnit == other.measurementUnit &&
+                meterId == other.meterId &&
+                name == other.name &&
+                pricePerUnit == other.pricePerUnit &&
+                description == other.description &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                currency,
+                freeThreshold,
+                measurementUnit,
+                meterId,
+                name,
+                pricePerUnit,
+                description,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Meter{currency=$currency, freeThreshold=$freeThreshold, measurementUnit=$measurementUnit, meterId=$meterId, name=$name, pricePerUnit=$pricePerUnit, description=$description, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1287,6 +1793,7 @@ private constructor(
             currency == other.currency &&
             customer == other.customer &&
             metadata == other.metadata &&
+            meters == other.meters &&
             nextBillingDate == other.nextBillingDate &&
             onDemand == other.onDemand &&
             paymentFrequencyCount == other.paymentFrequencyCount &&
@@ -1304,6 +1811,7 @@ private constructor(
             cancelledAt == other.cancelledAt &&
             discountCyclesRemaining == other.discountCyclesRemaining &&
             discountId == other.discountId &&
+            expiresAt == other.expiresAt &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1316,6 +1824,7 @@ private constructor(
             currency,
             customer,
             metadata,
+            meters,
             nextBillingDate,
             onDemand,
             paymentFrequencyCount,
@@ -1333,6 +1842,7 @@ private constructor(
             cancelledAt,
             discountCyclesRemaining,
             discountId,
+            expiresAt,
             additionalProperties,
         )
     }
@@ -1340,5 +1850,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, additionalProperties=$additionalProperties}"
+        "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, additionalProperties=$additionalProperties}"
 }
