@@ -1,7 +1,14 @@
 rootProject.name = "dodo-payments-java-root"
 
-include("dodo-payments-java")
-include("dodo-payments-java-client-okhttp")
-include("dodo-payments-java-core")
-include("dodo-payments-java-proguard-test")
-include("dodo-payments-java-example")
+val projectNames = rootDir.listFiles()
+    ?.asSequence()
+    .orEmpty()
+    .filter { file ->
+        file.isDirectory &&
+        file.name.startsWith("dodo-payments-java") &&
+        file.listFiles()?.asSequence().orEmpty().any { it.name == "build.gradle.kts" }
+    }
+    .map { it.name }
+    .toList()
+println("projects: $projectNames")
+projectNames.forEach { include(it) }
