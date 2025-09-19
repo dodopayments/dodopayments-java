@@ -58,12 +58,10 @@ import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
-    .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
-            .productId("product_id")
-            .quantity(0)
-            .build())
+CheckoutSessionRequest params = CheckoutSessionRequest.builder()
+    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .productId("product_id")
+        .quantity(0)
         .build())
     .build();
 CheckoutSessionResponse checkoutSessionResponse = client.checkoutSessions().create(params);
@@ -165,12 +163,10 @@ import java.util.concurrent.CompletableFuture;
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
-CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
-    .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
-            .productId("product_id")
-            .quantity(0)
-            .build())
+CheckoutSessionRequest params = CheckoutSessionRequest.builder()
+    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .productId("product_id")
+        .quantity(0)
         .build())
     .build();
 CompletableFuture<CheckoutSessionResponse> checkoutSessionResponse = client.async().checkoutSessions().create(params);
@@ -190,12 +186,10 @@ import java.util.concurrent.CompletableFuture;
 // Or configures using the `DODO_PAYMENTS_API_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
-CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
-    .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
-            .productId("product_id")
-            .quantity(0)
-            .build())
+CheckoutSessionRequest params = CheckoutSessionRequest.builder()
+    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .productId("product_id")
+        .quantity(0)
         .build())
     .build();
 CompletableFuture<CheckoutSessionResponse> checkoutSessionResponse = client.checkoutSessions().create(params);
@@ -264,12 +258,10 @@ import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
 
-CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
-    .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
-            .productId("product_id")
-            .quantity(0)
-            .build())
+CheckoutSessionRequest params = CheckoutSessionRequest.builder()
+    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .productId("product_id")
+        .quantity(0)
         .build())
     .build();
 HttpResponseFor<CheckoutSessionResponse> checkoutSessionResponse = client.checkoutSessions().withRawResponse().create(params);
