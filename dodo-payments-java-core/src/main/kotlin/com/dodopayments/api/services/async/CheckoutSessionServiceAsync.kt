@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -32,6 +33,24 @@ interface CheckoutSessionServiceAsync {
         params: CheckoutSessionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CheckoutSessionResponse>
+
+    /** @see create */
+    fun create(
+        checkoutSessionRequest: CheckoutSessionRequest,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CheckoutSessionResponse> =
+        create(
+            CheckoutSessionCreateParams.builder()
+                .checkoutSessionRequest(checkoutSessionRequest)
+                .build(),
+            requestOptions,
+        )
+
+    /** @see create */
+    fun create(
+        checkoutSessionRequest: CheckoutSessionRequest
+    ): CompletableFuture<CheckoutSessionResponse> =
+        create(checkoutSessionRequest, RequestOptions.none())
 
     /**
      * A view of [CheckoutSessionServiceAsync] that provides access to raw HTTP responses for each
@@ -62,5 +81,23 @@ interface CheckoutSessionServiceAsync {
             params: CheckoutSessionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>>
+
+        /** @see create */
+        fun create(
+            checkoutSessionRequest: CheckoutSessionRequest,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>> =
+            create(
+                CheckoutSessionCreateParams.builder()
+                    .checkoutSessionRequest(checkoutSessionRequest)
+                    .build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        fun create(
+            checkoutSessionRequest: CheckoutSessionRequest
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>> =
+            create(checkoutSessionRequest, RequestOptions.none())
     }
 }
