@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.53.2 (2025-09-24)
+
+Full Changelog: [v1.47.1...v1.53.2](https://github.com/dodopayments/dodopayments-java/compare/v1.47.1...v1.53.2)
+
+### Features
+
+* **api:** manual updates ([5308663](https://github.com/dodopayments/dodopayments-java/commit/5308663903b12f14f88cc72ed02f17fbe4d45777))
+* **api:** manual updates ([32eef24](https://github.com/dodopayments/dodopayments-java/commit/32eef246d9cea2783ef968537f9a61e66ca08457))
+* **client:** add convenience overloads for some methods ([977c5f3](https://github.com/dodopayments/dodopayments-java/commit/977c5f3e4fd71de43ccb5b1bd1383f1306ad2d05))
+* **client:** expose sleeper option ([6a1400b](https://github.com/dodopayments/dodopayments-java/commit/6a1400b73a305af933828aa06559c50b32d8eca6))
+
+
+### Bug Fixes
+
+* **client:** ensure single timer is created per client ([6a1400b](https://github.com/dodopayments/dodopayments-java/commit/6a1400b73a305af933828aa06559c50b32d8eca6))
+* **client:** incorrect `getPackageVersion` impl ([b6bebb0](https://github.com/dodopayments/dodopayments-java/commit/b6bebb042dee61e79e212ad3c1811c3d874fe69e))
+
+
+### Chores
+
+* **internal:** codegen related update ([1c0b780](https://github.com/dodopayments/dodopayments-java/commit/1c0b78096e5daeb7e1ec0620adb97a36ab22cf44))
+* **internal:** codegen related update ([0e2f89c](https://github.com/dodopayments/dodopayments-java/commit/0e2f89cb057ec273c3ea015b9a112e64932a5ec7))
+
 ## 1.47.1 (2025-08-13)
 
 Full Changelog: [v1.47.0...v1.47.1](https://github.com/dodopayments/dodopayments-java/compare/v1.47.0...v1.47.1)
