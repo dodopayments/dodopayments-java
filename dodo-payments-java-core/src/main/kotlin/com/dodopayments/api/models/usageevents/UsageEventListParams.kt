@@ -27,7 +27,6 @@ import kotlin.jvm.optionals.getOrNull
  * - **Pagination**: Navigate through large result sets
  *
  * ## Meter Integration:
- *
  * When using `meter_id`, the endpoint automatically applies:
  * - The meter's configured `event_name` filter
  * - The meter's custom filter criteria (if any)
