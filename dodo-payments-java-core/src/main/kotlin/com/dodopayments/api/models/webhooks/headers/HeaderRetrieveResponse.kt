@@ -24,6 +24,7 @@ import kotlin.jvm.optionals.getOrNull
  * Sensitive headers that have been redacted are returned in the sensitive field.
  */
 class HeaderRetrieveResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val headers: JsonField<Headers>,
     private val sensitive: JsonField<List<String>>,
