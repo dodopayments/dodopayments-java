@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.53.4 (2025-09-26)
+
+Full Changelog: [v1.53.3...v1.53.4](https://github.com/dodopayments/dodopayments-java/compare/v1.53.3...v1.53.4)
+
+### Bug Fixes
+
+* **client:** deserialization of empty objects ([0e2dcab](https://github.com/dodopayments/dodopayments-java/commit/0e2dcab767200d2db8b1358bdee7a335effe942b))
+
 ## 1.53.3 (2025-09-25)
 
 Full Changelog: [v1.53.2...v1.53.3](https://github.com/dodopayments/dodopayments-java/compare/v1.53.2...v1.53.3)
