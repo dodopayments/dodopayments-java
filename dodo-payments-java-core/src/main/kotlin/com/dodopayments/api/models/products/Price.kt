@@ -241,6 +241,7 @@ private constructor(
 
     /** One-time price details. */
     class OneTimePrice
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val currency: JsonField<Currency>,
         private val discount: JsonField<Long>,
@@ -874,6 +875,7 @@ private constructor(
 
     /** Recurring price details. */
     class RecurringPrice
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val currency: JsonField<Currency>,
         private val discount: JsonField<Long>,
@@ -1639,6 +1641,7 @@ private constructor(
 
     /** Usage Based price details. */
     class UsageBasedPrice
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val currency: JsonField<Currency>,
         private val discount: JsonField<Long>,

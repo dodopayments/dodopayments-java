@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class OnDemandSubscription
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val mandateOnly: JsonField<Boolean>,
     private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,

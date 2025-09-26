@@ -22,6 +22,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class Product
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
@@ -1006,6 +1007,7 @@ private constructor(
     }
 
     class DigitalProductDelivery
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val externalUrl: JsonField<String>,
         private val files: JsonField<List<File>>,
@@ -1242,6 +1244,7 @@ private constructor(
                 (if (instructions.asKnown().isPresent) 1 else 0)
 
         class File
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val fileId: JsonField<String>,
             private val fileName: JsonField<String>,

@@ -19,6 +19,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionRetrieveUsageHistoryPageResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val items: JsonField<List<SubscriptionRetrieveUsageHistoryResponse>>,
     private val additionalProperties: MutableMap<String, JsonValue>,

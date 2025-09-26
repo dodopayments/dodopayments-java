@@ -19,6 +19,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyInstanceListPageResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val items: JsonField<List<LicenseKeyInstance>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
