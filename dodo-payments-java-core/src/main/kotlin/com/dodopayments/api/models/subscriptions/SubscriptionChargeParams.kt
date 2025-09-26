@@ -477,6 +477,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val productPrice: JsonField<Int>,
         private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
@@ -933,6 +934,7 @@ private constructor(
 
     /** Specify how customer balance is used for the payment */
     class CustomerBalanceConfig
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val allowCustomerCreditsPurchase: JsonField<Boolean>,
         private val allowCustomerCreditsUsage: JsonField<Boolean>,

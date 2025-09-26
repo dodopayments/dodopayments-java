@@ -22,6 +22,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionCreateResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val addons: JsonField<List<AddonCartResponseItem>>,
     private val customer: JsonField<CustomerLimitedDetails>,

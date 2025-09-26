@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class OneTimeProductCartItem
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val productId: JsonField<String>,
     private val quantity: JsonField<Int>,

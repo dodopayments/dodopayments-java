@@ -18,6 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class AddMeterToPrice
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val meterId: JsonField<String>,
     private val pricePerUnit: JsonField<String>,

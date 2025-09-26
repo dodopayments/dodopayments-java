@@ -38,6 +38,7 @@ import kotlin.jvm.optionals.getOrNull
  * conjunction (and/or) and clauses that can be either direct conditions or nested filters.
  */
 class MeterFilter
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val clauses: JsonField<Clauses>,
     private val conjunction: JsonField<Conjunction>,
@@ -439,6 +440,7 @@ private constructor(
 
         /** Filter condition with key, operator, and value */
         class MeterFilterCondition
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val key: JsonField<String>,
             private val operator: JsonField<Operator>,
@@ -1056,6 +1058,7 @@ private constructor(
 
         /** Level 1 nested filter - can contain Level 2 filters */
         class InnerMeterFilter
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val clauses: JsonField<InnerClauses>,
             private val conjunction: JsonField<Conjunction>,
@@ -1485,6 +1488,7 @@ private constructor(
 
                 /** Filter condition with key, operator, and value */
                 class MeterFilterCondition
+                @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                 private constructor(
                     private val key: JsonField<String>,
                     private val operator: JsonField<Operator>,
@@ -2124,6 +2128,7 @@ private constructor(
 
                 /** Level 2 nested filter */
                 class InnerInnerMeterFilter
+                @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                 private constructor(
                     private val clauses: JsonField<InnerInnerClauses>,
                     private val conjunction: JsonField<Conjunction>,
@@ -2588,6 +2593,7 @@ private constructor(
 
                         /** Filter condition with key, operator, and value */
                         class MeterFilterCondition
+                        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                         private constructor(
                             private val key: JsonField<String>,
                             private val operator: JsonField<Operator>,
@@ -3244,6 +3250,7 @@ private constructor(
 
                         /** Level 3 nested filter (final nesting level) */
                         class InnerInnerInnerMeterFilter
+                        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                         private constructor(
                             private val clauses: JsonField<List<Clause>>,
                             private val conjunction: JsonField<Conjunction>,
@@ -3464,6 +3471,7 @@ private constructor(
 
                             /** Filter condition with key, operator, and value */
                             class Clause
+                            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                             private constructor(
                                 private val key: JsonField<String>,
                                 private val operator: JsonField<Operator>,

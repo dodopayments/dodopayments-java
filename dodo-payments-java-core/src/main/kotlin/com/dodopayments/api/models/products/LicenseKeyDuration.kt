@@ -18,6 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyDuration
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val count: JsonField<Int>,
     private val interval: JsonField<TimeInterval>,

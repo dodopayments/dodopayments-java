@@ -21,6 +21,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class PaymentRetrieveLineItemsResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val currency: JsonField<Currency>,
     private val items: JsonField<List<Item>>,
@@ -207,6 +208,7 @@ private constructor(
             (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
     class Item
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val amount: JsonField<Int>,
         private val itemsId: JsonField<String>,
