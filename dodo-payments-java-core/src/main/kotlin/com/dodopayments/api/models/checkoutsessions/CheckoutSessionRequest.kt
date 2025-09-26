@@ -29,6 +29,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class CheckoutSessionRequest
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val productCart: JsonField<List<ProductCart>>,
     private val allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>,
@@ -735,6 +736,7 @@ private constructor(
             (subscriptionData.asKnown().getOrNull()?.validity() ?: 0)
 
     class ProductCart
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val productId: JsonField<String>,
         private val quantity: JsonField<Int>,
@@ -1046,6 +1048,7 @@ private constructor(
 
     /** Billing address information for the session */
     class BillingAddress
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val country: JsonField<CountryCode>,
         private val city: JsonField<String>,
@@ -1363,6 +1366,7 @@ private constructor(
 
     /** Customization for the checkout session page */
     class Customization
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val showOnDemandTag: JsonField<Boolean>,
         private val showOrderDetails: JsonField<Boolean>,
@@ -1756,6 +1760,7 @@ private constructor(
     }
 
     class FeatureFlags
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val allowCurrencySelection: JsonField<Boolean>,
         private val allowDiscountCode: JsonField<Boolean>,
@@ -2230,6 +2235,7 @@ private constructor(
     }
 
     class SubscriptionData
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val onDemand: JsonField<OnDemandSubscription>,
         private val trialPeriodDays: JsonField<Int>,

@@ -21,6 +21,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class SubscriptionRetrieveUsageHistoryResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val endDate: JsonField<OffsetDateTime>,
     private val meters: JsonField<List<Meter>>,
@@ -258,6 +259,7 @@ private constructor(
             (if (startDate.asKnown().isPresent) 1 else 0)
 
     class Meter
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val chargeableUnits: JsonField<String>,

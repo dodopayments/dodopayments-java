@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class LicenseActivateResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val businessId: JsonField<String>,
@@ -393,6 +394,7 @@ private constructor(
 
     /** Related product info. Present if the license key is tied to a product. */
     class Product
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val productId: JsonField<String>,
         private val name: JsonField<String>,

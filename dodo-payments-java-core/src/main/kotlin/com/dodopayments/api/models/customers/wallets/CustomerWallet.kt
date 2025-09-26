@@ -19,6 +19,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 class CustomerWallet
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val balance: JsonField<Long>,
     private val createdAt: JsonField<OffsetDateTime>,

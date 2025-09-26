@@ -20,6 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class EventInput
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val customerId: JsonField<String>,
     private val eventId: JsonField<String>,

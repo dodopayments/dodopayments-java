@@ -25,6 +25,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class Payment
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val billing: JsonField<BillingAddress>,
     private val brandId: JsonField<String>,
@@ -1598,6 +1599,7 @@ private constructor(
     }
 
     class Refund
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val businessId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
@@ -2108,6 +2110,7 @@ private constructor(
     }
 
     class ProductCart
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val productId: JsonField<String>,
         private val quantity: JsonField<Int>,
