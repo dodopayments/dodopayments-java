@@ -5,17 +5,27 @@ package com.dodopayments.api.models.payouts
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class PayoutListParams
 private constructor(
+    private val createdAtGte: OffsetDateTime?,
+    private val createdAtLte: OffsetDateTime?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Get payouts created after this time (inclusive) */
+    fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
+
+    /** Get payouts created before this time (inclusive) */
+    fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -42,6 +52,8 @@ private constructor(
     /** A builder for [PayoutListParams]. */
     class Builder internal constructor() {
 
+        private var createdAtGte: OffsetDateTime? = null
+        private var createdAtLte: OffsetDateTime? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -49,11 +61,27 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(payoutListParams: PayoutListParams) = apply {
+            createdAtGte = payoutListParams.createdAtGte
+            createdAtLte = payoutListParams.createdAtLte
             pageNumber = payoutListParams.pageNumber
             pageSize = payoutListParams.pageSize
             additionalHeaders = payoutListParams.additionalHeaders.toBuilder()
             additionalQueryParams = payoutListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Get payouts created after this time (inclusive) */
+        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+
+        /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
+            createdAtGte(createdAtGte.getOrNull())
+
+        /** Get payouts created before this time (inclusive) */
+        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+
+        /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
+            createdAtLte(createdAtLte.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -186,6 +214,8 @@ private constructor(
          */
         fun build(): PayoutListParams =
             PayoutListParams(
+                createdAtGte,
+                createdAtLte,
                 pageNumber,
                 pageSize,
                 additionalHeaders.build(),
@@ -198,6 +228,12 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                createdAtGte?.let {
+                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLte?.let {
+                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -210,6 +246,8 @@ private constructor(
         }
 
         return other is PayoutListParams &&
+            createdAtGte == other.createdAtGte &&
+            createdAtLte == other.createdAtLte &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
@@ -217,8 +255,15 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(pageNumber, pageSize, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            createdAtGte,
+            createdAtLte,
+            pageNumber,
+            pageSize,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "PayoutListParams{pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PayoutListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
