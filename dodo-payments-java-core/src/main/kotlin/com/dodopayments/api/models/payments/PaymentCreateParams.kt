@@ -85,6 +85,14 @@ private constructor(
     fun discountCode(): Optional<String> = body.discountCode()
 
     /**
+     * Override merchant default 3DS behaviour for this payment
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun force3ds(): Optional<Boolean> = body.force3ds()
+
+    /**
      * Additional metadata associated with the payment. Defaults to empty if not provided.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -167,6 +175,13 @@ private constructor(
      * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _discountCode(): JsonField<String> = body._discountCode()
+
+    /**
+     * Returns the raw JSON value of [force3ds].
+     *
+     * Unlike [force3ds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _force3ds(): JsonField<Boolean> = body._force3ds()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -396,6 +411,28 @@ private constructor(
         fun discountCode(discountCode: JsonField<String>) = apply {
             body.discountCode(discountCode)
         }
+
+        /** Override merchant default 3DS behaviour for this payment */
+        fun force3ds(force3ds: Boolean?) = apply { body.force3ds(force3ds) }
+
+        /**
+         * Alias for [Builder.force3ds].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun force3ds(force3ds: Boolean) = force3ds(force3ds as Boolean?)
+
+        /** Alias for calling [Builder.force3ds] with `force3ds.orElse(null)`. */
+        fun force3ds(force3ds: Optional<Boolean>) = force3ds(force3ds.getOrNull())
+
+        /**
+         * Sets [Builder.force3ds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.force3ds] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun force3ds(force3ds: JsonField<Boolean>) = apply { body.force3ds(force3ds) }
 
         /** Additional metadata associated with the payment. Defaults to empty if not provided. */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
@@ -633,6 +670,7 @@ private constructor(
         private val allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>,
         private val billingCurrency: JsonField<Currency>,
         private val discountCode: JsonField<String>,
+        private val force3ds: JsonField<Boolean>,
         private val metadata: JsonField<Metadata>,
         private val paymentLink: JsonField<Boolean>,
         private val returnUrl: JsonField<String>,
@@ -661,6 +699,9 @@ private constructor(
             @JsonProperty("discount_code")
             @ExcludeMissing
             discountCode: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("force_3ds")
+            @ExcludeMissing
+            force3ds: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -681,6 +722,7 @@ private constructor(
             allowedPaymentMethodTypes,
             billingCurrency,
             discountCode,
+            force3ds,
             metadata,
             paymentLink,
             returnUrl,
@@ -742,6 +784,14 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
+
+        /**
+         * Override merchant default 3DS behaviour for this payment
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun force3ds(): Optional<Boolean> = force3ds.getOptional("force_3ds")
 
         /**
          * Additional metadata associated with the payment. Defaults to empty if not provided.
@@ -842,6 +892,13 @@ private constructor(
         fun _discountCode(): JsonField<String> = discountCode
 
         /**
+         * Returns the raw JSON value of [force3ds].
+         *
+         * Unlike [force3ds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("force_3ds") @ExcludeMissing fun _force3ds(): JsonField<Boolean> = force3ds
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -918,6 +975,7 @@ private constructor(
                 null
             private var billingCurrency: JsonField<Currency> = JsonMissing.of()
             private var discountCode: JsonField<String> = JsonMissing.of()
+            private var force3ds: JsonField<Boolean> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var paymentLink: JsonField<Boolean> = JsonMissing.of()
             private var returnUrl: JsonField<String> = JsonMissing.of()
@@ -934,6 +992,7 @@ private constructor(
                     body.allowedPaymentMethodTypes.map { it.toMutableList() }
                 billingCurrency = body.billingCurrency
                 discountCode = body.discountCode
+                force3ds = body.force3ds
                 metadata = body.metadata
                 paymentLink = body.paymentLink
                 returnUrl = body.returnUrl
@@ -1089,6 +1148,28 @@ private constructor(
                 this.discountCode = discountCode
             }
 
+            /** Override merchant default 3DS behaviour for this payment */
+            fun force3ds(force3ds: Boolean?) = force3ds(JsonField.ofNullable(force3ds))
+
+            /**
+             * Alias for [Builder.force3ds].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun force3ds(force3ds: Boolean) = force3ds(force3ds as Boolean?)
+
+            /** Alias for calling [Builder.force3ds] with `force3ds.orElse(null)`. */
+            fun force3ds(force3ds: Optional<Boolean>) = force3ds(force3ds.getOrNull())
+
+            /**
+             * Sets [Builder.force3ds] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.force3ds] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun force3ds(force3ds: JsonField<Boolean>) = apply { this.force3ds = force3ds }
+
             /**
              * Additional metadata associated with the payment. Defaults to empty if not provided.
              */
@@ -1218,6 +1299,7 @@ private constructor(
                     (allowedPaymentMethodTypes ?: JsonMissing.of()).map { it.toImmutable() },
                     billingCurrency,
                     discountCode,
+                    force3ds,
                     metadata,
                     paymentLink,
                     returnUrl,
@@ -1240,6 +1322,7 @@ private constructor(
             allowedPaymentMethodTypes().ifPresent { it.forEach { it.validate() } }
             billingCurrency().ifPresent { it.validate() }
             discountCode()
+            force3ds()
             metadata().ifPresent { it.validate() }
             paymentLink()
             returnUrl()
@@ -1271,6 +1354,7 @@ private constructor(
                     ?: 0) +
                 (billingCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discountCode.asKnown().isPresent) 1 else 0) +
+                (if (force3ds.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (paymentLink.asKnown().isPresent) 1 else 0) +
                 (if (returnUrl.asKnown().isPresent) 1 else 0) +
@@ -1289,6 +1373,7 @@ private constructor(
                 allowedPaymentMethodTypes == other.allowedPaymentMethodTypes &&
                 billingCurrency == other.billingCurrency &&
                 discountCode == other.discountCode &&
+                force3ds == other.force3ds &&
                 metadata == other.metadata &&
                 paymentLink == other.paymentLink &&
                 returnUrl == other.returnUrl &&
@@ -1305,6 +1390,7 @@ private constructor(
                 allowedPaymentMethodTypes,
                 billingCurrency,
                 discountCode,
+                force3ds,
                 metadata,
                 paymentLink,
                 returnUrl,
@@ -1317,7 +1403,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, metadata=$metadata, paymentLink=$paymentLink, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */
