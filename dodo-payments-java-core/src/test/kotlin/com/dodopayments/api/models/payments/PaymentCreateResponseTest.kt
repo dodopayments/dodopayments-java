@@ -22,6 +22,7 @@ internal class PaymentCreateResponseTest {
                         .customerId("customer_id")
                         .email("email")
                         .name("name")
+                        .phoneNumber("phone_number")
                         .build()
                 )
                 .metadata(
@@ -50,6 +51,7 @@ internal class PaymentCreateResponseTest {
                     .customerId("customer_id")
                     .email("email")
                     .name("name")
+                    .phoneNumber("phone_number")
                     .build()
             )
         assertThat(paymentCreateResponse.metadata())
@@ -85,6 +87,7 @@ internal class PaymentCreateResponseTest {
                         .customerId("customer_id")
                         .email("email")
                         .name("name")
+                        .phoneNumber("phone_number")
                         .build()
                 )
                 .metadata(

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class CustomerLimitedDetails
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -21,6 +23,7 @@ private constructor(
     private val customerId: JsonField<String>,
     private val email: JsonField<String>,
     private val name: JsonField<String>,
+    private val phoneNumber: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -31,7 +34,10 @@ private constructor(
         customerId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-    ) : this(customerId, email, name, mutableMapOf())
+        @JsonProperty("phone_number")
+        @ExcludeMissing
+        phoneNumber: JsonField<String> = JsonMissing.of(),
+    ) : this(customerId, email, name, phoneNumber, mutableMapOf())
 
     /**
      * Unique identifier for the customer
@@ -58,6 +64,14 @@ private constructor(
     fun name(): String = name.getRequired("name")
 
     /**
+     * Phone number of the customer
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun phoneNumber(): Optional<String> = phoneNumber.getOptional("phone_number")
+
+    /**
      * Returns the raw JSON value of [customerId].
      *
      * Unlike [customerId], this method doesn't throw if the JSON field has an unexpected type.
@@ -77,6 +91,15 @@ private constructor(
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+    /**
+     * Returns the raw JSON value of [phoneNumber].
+     *
+     * Unlike [phoneNumber], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("phone_number")
+    @ExcludeMissing
+    fun _phoneNumber(): JsonField<String> = phoneNumber
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -111,6 +134,7 @@ private constructor(
         private var customerId: JsonField<String>? = null
         private var email: JsonField<String>? = null
         private var name: JsonField<String>? = null
+        private var phoneNumber: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -118,6 +142,7 @@ private constructor(
             customerId = customerLimitedDetails.customerId
             email = customerLimitedDetails.email
             name = customerLimitedDetails.name
+            phoneNumber = customerLimitedDetails.phoneNumber
             additionalProperties = customerLimitedDetails.additionalProperties.toMutableMap()
         }
 
@@ -154,6 +179,21 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
+
+        /** Phone number of the customer */
+        fun phoneNumber(phoneNumber: String?) = phoneNumber(JsonField.ofNullable(phoneNumber))
+
+        /** Alias for calling [Builder.phoneNumber] with `phoneNumber.orElse(null)`. */
+        fun phoneNumber(phoneNumber: Optional<String>) = phoneNumber(phoneNumber.getOrNull())
+
+        /**
+         * Sets [Builder.phoneNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.phoneNumber] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun phoneNumber(phoneNumber: JsonField<String>) = apply { this.phoneNumber = phoneNumber }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -193,6 +233,7 @@ private constructor(
                 checkRequired("customerId", customerId),
                 checkRequired("email", email),
                 checkRequired("name", name),
+                phoneNumber,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -207,6 +248,7 @@ private constructor(
         customerId()
         email()
         name()
+        phoneNumber()
         validated = true
     }
 
@@ -227,7 +269,8 @@ private constructor(
     internal fun validity(): Int =
         (if (customerId.asKnown().isPresent) 1 else 0) +
             (if (email.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0)
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (if (phoneNumber.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -238,15 +281,16 @@ private constructor(
             customerId == other.customerId &&
             email == other.email &&
             name == other.name &&
+            phoneNumber == other.phoneNumber &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(customerId, email, name, additionalProperties)
+        Objects.hash(customerId, email, name, phoneNumber, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CustomerLimitedDetails{customerId=$customerId, email=$email, name=$name, additionalProperties=$additionalProperties}"
+        "CustomerLimitedDetails{customerId=$customerId, email=$email, name=$name, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
 }
