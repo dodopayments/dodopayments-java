@@ -36,16 +36,22 @@ private constructor(
     ) : this(email, name, phoneNumber, mutableMapOf())
 
     /**
+     * Email is required for creating a new customer
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun email(): String = email.getRequired("email")
 
     /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Optional full name of the customer. If provided during session creation, it is persisted and
+     * becomes immutable for the session. If omitted here, it can be provided later via the confirm
+     * API.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    fun name(): String = name.getRequired("name")
+    fun name(): Optional<String> = name.getOptional("name")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -96,7 +102,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .email()
-         * .name()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -106,7 +111,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var email: JsonField<String>? = null
-        private var name: JsonField<String>? = null
+        private var name: JsonField<String> = JsonMissing.of()
         private var phoneNumber: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -118,6 +123,7 @@ private constructor(
             additionalProperties = newCustomer.additionalProperties.toMutableMap()
         }
 
+        /** Email is required for creating a new customer */
         fun email(email: String) = email(JsonField.of(email))
 
         /**
@@ -128,7 +134,15 @@ private constructor(
          */
         fun email(email: JsonField<String>) = apply { this.email = email }
 
-        fun name(name: String) = name(JsonField.of(name))
+        /**
+         * Optional full name of the customer. If provided during session creation, it is persisted
+         * and becomes immutable for the session. If omitted here, it can be provided later via the
+         * confirm API.
+         */
+        fun name(name: String?) = name(JsonField.ofNullable(name))
+
+        /** Alias for calling [Builder.name] with `name.orElse(null)`. */
+        fun name(name: Optional<String>) = name(name.getOrNull())
 
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
@@ -179,7 +193,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .email()
-         * .name()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -187,7 +200,7 @@ private constructor(
         fun build(): NewCustomer =
             NewCustomer(
                 checkRequired("email", email),
-                checkRequired("name", name),
+                name,
                 phoneNumber,
                 additionalProperties.toMutableMap(),
             )

@@ -15,7 +15,7 @@ internal class NewCustomerTest {
             NewCustomer.builder().email("email").name("name").phoneNumber("phone_number").build()
 
         assertThat(newCustomer.email()).isEqualTo("email")
-        assertThat(newCustomer.name()).isEqualTo("name")
+        assertThat(newCustomer.name()).contains("name")
         assertThat(newCustomer.phoneNumber()).contains("phone_number")
     }
 
