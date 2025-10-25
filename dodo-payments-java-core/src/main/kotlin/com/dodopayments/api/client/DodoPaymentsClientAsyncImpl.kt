@@ -108,10 +108,6 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         PayoutServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val webhookEvents: WebhookEventServiceAsync by lazy {
-        WebhookEventServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
     private val products: ProductServiceAsync by lazy {
         ProductServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -132,6 +128,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     private val webhooks: WebhookServiceAsync by lazy {
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val webhookEvents: WebhookEventServiceAsync by lazy {
+        WebhookEventServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val usageEvents: UsageEventServiceAsync by lazy {
@@ -171,8 +171,6 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun payouts(): PayoutServiceAsync = payouts
 
-    override fun webhookEvents(): WebhookEventServiceAsync = webhookEvents
-
     override fun products(): ProductServiceAsync = products
 
     override fun misc(): MiscServiceAsync = misc
@@ -184,6 +182,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun brands(): BrandServiceAsync = brands
 
     override fun webhooks(): WebhookServiceAsync = webhooks
+
+    override fun webhookEvents(): WebhookEventServiceAsync = webhookEvents
 
     override fun usageEvents(): UsageEventServiceAsync = usageEvents
 
@@ -238,10 +238,6 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             PayoutServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val webhookEvents: WebhookEventServiceAsync.WithRawResponse by lazy {
-            WebhookEventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val products: ProductServiceAsync.WithRawResponse by lazy {
             ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
@@ -264,6 +260,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
             WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val webhookEvents: WebhookEventServiceAsync.WithRawResponse by lazy {
+            WebhookEventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val usageEvents: UsageEventServiceAsync.WithRawResponse by lazy {
@@ -305,8 +305,6 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         override fun payouts(): PayoutServiceAsync.WithRawResponse = payouts
 
-        override fun webhookEvents(): WebhookEventServiceAsync.WithRawResponse = webhookEvents
-
         override fun products(): ProductServiceAsync.WithRawResponse = products
 
         override fun misc(): MiscServiceAsync.WithRawResponse = misc
@@ -318,6 +316,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun brands(): BrandServiceAsync.WithRawResponse = brands
 
         override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
+
+        override fun webhookEvents(): WebhookEventServiceAsync.WithRawResponse = webhookEvents
 
         override fun usageEvents(): UsageEventServiceAsync.WithRawResponse = usageEvents
 
