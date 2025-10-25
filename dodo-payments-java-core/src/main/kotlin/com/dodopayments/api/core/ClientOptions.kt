@@ -109,6 +109,7 @@ private constructor(
     @get:JvmName("maxRetries") val maxRetries: Int,
     /** Bearer Token for API authentication */
     @get:JvmName("bearerToken") val bearerToken: String,
+    private val webhookKey: String?,
 ) {
 
     init {
@@ -126,6 +127,8 @@ private constructor(
      * - test_mode: `https://test.dodopayments.com`
      */
     fun baseUrl(): String = baseUrl ?: LIVE_MODE_URL
+
+    fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
 
     fun toBuilder() = Builder().from(this)
 
@@ -170,6 +173,7 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
         private var bearerToken: String? = null
+        private var webhookKey: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -186,6 +190,7 @@ private constructor(
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
             bearerToken = clientOptions.bearerToken
+            webhookKey = clientOptions.webhookKey
         }
 
         /**
@@ -315,6 +320,11 @@ private constructor(
         /** Bearer Token for API authentication */
         fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
 
+        fun webhookKey(webhookKey: String?) = apply { this.webhookKey = webhookKey }
+
+        /** Alias for calling [Builder.webhookKey] with `webhookKey.orElse(null)`. */
+        fun webhookKey(webhookKey: Optional<String>) = webhookKey(webhookKey.getOrNull())
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -402,10 +412,11 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter       |System property       |Environment variable    |Required|Default value                    |
-         * |-------------|----------------------|------------------------|--------|---------------------------------|
-         * |`bearerToken`|`dodopayments.apiKey` |`DODO_PAYMENTS_API_KEY` |true    |-                                |
-         * |`baseUrl`    |`dodopayments.baseUrl`|`DODO_PAYMENTS_BASE_URL`|true    |`"https://live.dodopayments.com"`|
+         * |Setter       |System property          |Environment variable       |Required|Default value                    |
+         * |-------------|-------------------------|---------------------------|--------|---------------------------------|
+         * |`bearerToken`|`dodopayments.apiKey`    |`DODO_PAYMENTS_API_KEY`    |true    |-                                |
+         * |`webhookKey` |`dodopayments.webhookKey`|`DODO_PAYMENTS_WEBHOOK_KEY`|false   |-                                |
+         * |`baseUrl`    |`dodopayments.baseUrl`   |`DODO_PAYMENTS_BASE_URL`   |true    |`"https://live.dodopayments.com"`|
          *
          * System properties take precedence over environment variables.
          */
@@ -414,6 +425,9 @@ private constructor(
                 ?.let { baseUrl(it) }
             (System.getProperty("dodopayments.apiKey") ?: System.getenv("DODO_PAYMENTS_API_KEY"))
                 ?.let { bearerToken(it) }
+            (System.getProperty("dodopayments.webhookKey")
+                    ?: System.getenv("DODO_PAYMENTS_WEBHOOK_KEY"))
+                ?.let { webhookKey(it) }
         }
 
         /**
@@ -489,6 +503,7 @@ private constructor(
                 timeout,
                 maxRetries,
                 bearerToken,
+                webhookKey,
             )
         }
     }
