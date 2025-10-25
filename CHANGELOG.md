@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.56.0 (2025-10-25)
+
+Full Changelog: [v1.55.7...v1.56.0](https://github.com/dodopayments/dodopayments-java/compare/v1.55.7...v1.56.0)
+
+### Features
+
+* **api:** added unwrap functions for webhooks ([1098fec](https://github.com/dodopayments/dodopayments-java/commit/1098fecff53d959d59db4abad4be9d1c39319980))
+
 ## 1.55.7 (2025-10-17)
 
 Full Changelog: [v1.55.0...v1.55.7](https://github.com/dodopayments/dodopayments-java/compare/v1.55.0...v1.55.7)
