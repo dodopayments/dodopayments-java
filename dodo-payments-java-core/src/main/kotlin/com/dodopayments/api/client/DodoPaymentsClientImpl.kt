@@ -97,10 +97,6 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val payouts: PayoutService by lazy { PayoutServiceImpl(clientOptionsWithUserAgent) }
 
-    private val webhookEvents: WebhookEventService by lazy {
-        WebhookEventServiceImpl(clientOptionsWithUserAgent)
-    }
-
     private val products: ProductService by lazy { ProductServiceImpl(clientOptionsWithUserAgent) }
 
     private val misc: MiscService by lazy { MiscServiceImpl(clientOptionsWithUserAgent) }
@@ -114,6 +110,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
     private val brands: BrandService by lazy { BrandServiceImpl(clientOptionsWithUserAgent) }
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
+
+    private val webhookEvents: WebhookEventService by lazy {
+        WebhookEventServiceImpl(clientOptionsWithUserAgent)
+    }
 
     private val usageEvents: UsageEventService by lazy {
         UsageEventServiceImpl(clientOptionsWithUserAgent)
@@ -150,8 +150,6 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     override fun payouts(): PayoutService = payouts
 
-    override fun webhookEvents(): WebhookEventService = webhookEvents
-
     override fun products(): ProductService = products
 
     override fun misc(): MiscService = misc
@@ -163,6 +161,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
     override fun brands(): BrandService = brands
 
     override fun webhooks(): WebhookService = webhooks
+
+    override fun webhookEvents(): WebhookEventService = webhookEvents
 
     override fun usageEvents(): UsageEventService = usageEvents
 
@@ -217,10 +217,6 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
             PayoutServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val webhookEvents: WebhookEventService.WithRawResponse by lazy {
-            WebhookEventServiceImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val products: ProductService.WithRawResponse by lazy {
             ProductServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -243,6 +239,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
         private val webhooks: WebhookService.WithRawResponse by lazy {
             WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val webhookEvents: WebhookEventService.WithRawResponse by lazy {
+            WebhookEventServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val usageEvents: UsageEventService.WithRawResponse by lazy {
@@ -283,8 +283,6 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
         override fun payouts(): PayoutService.WithRawResponse = payouts
 
-        override fun webhookEvents(): WebhookEventService.WithRawResponse = webhookEvents
-
         override fun products(): ProductService.WithRawResponse = products
 
         override fun misc(): MiscService.WithRawResponse = misc
@@ -296,6 +294,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
         override fun brands(): BrandService.WithRawResponse = brands
 
         override fun webhooks(): WebhookService.WithRawResponse = webhooks
+
+        override fun webhookEvents(): WebhookEventService.WithRawResponse = webhookEvents
 
         override fun usageEvents(): UsageEventService.WithRawResponse = usageEvents
 
