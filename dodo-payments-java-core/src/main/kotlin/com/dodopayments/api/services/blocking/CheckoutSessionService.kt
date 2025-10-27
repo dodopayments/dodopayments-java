@@ -8,6 +8,8 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRetrieveParams
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionStatus
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -49,6 +51,36 @@ interface CheckoutSessionService {
     /** @see create */
     fun create(checkoutSessionRequest: CheckoutSessionRequest): CheckoutSessionResponse =
         create(checkoutSessionRequest, RequestOptions.none())
+
+    fun retrieve(id: String): CheckoutSessionStatus =
+        retrieve(id, CheckoutSessionRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutSessionStatus = retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+    ): CheckoutSessionStatus = retrieve(id, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: CheckoutSessionRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CheckoutSessionStatus
+
+    /** @see retrieve */
+    fun retrieve(params: CheckoutSessionRetrieveParams): CheckoutSessionStatus =
+        retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(id: String, requestOptions: RequestOptions): CheckoutSessionStatus =
+        retrieve(id, CheckoutSessionRetrieveParams.none(), requestOptions)
 
     /**
      * A view of [CheckoutSessionService] that provides access to raw HTTP responses for each
@@ -99,5 +131,50 @@ interface CheckoutSessionService {
             checkoutSessionRequest: CheckoutSessionRequest
         ): HttpResponseFor<CheckoutSessionResponse> =
             create(checkoutSessionRequest, RequestOptions.none())
+
+        /**
+         * Returns a raw HTTP response for `get /checkouts/{id}`, but is otherwise the same as
+         * [CheckoutSessionService.retrieve].
+         */
+        @MustBeClosed
+        fun retrieve(id: String): HttpResponseFor<CheckoutSessionStatus> =
+            retrieve(id, CheckoutSessionRetrieveParams.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CheckoutSessionStatus> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+        ): HttpResponseFor<CheckoutSessionStatus> = retrieve(id, params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            params: CheckoutSessionRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CheckoutSessionStatus>
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            params: CheckoutSessionRetrieveParams
+        ): HttpResponseFor<CheckoutSessionStatus> = retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        @MustBeClosed
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<CheckoutSessionStatus> =
+            retrieve(id, CheckoutSessionRetrieveParams.none(), requestOptions)
     }
 }
