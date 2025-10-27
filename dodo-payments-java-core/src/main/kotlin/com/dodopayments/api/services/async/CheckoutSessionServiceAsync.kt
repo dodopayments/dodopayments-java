@@ -8,6 +8,8 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRetrieveParams
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionStatus
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -51,6 +53,40 @@ interface CheckoutSessionServiceAsync {
         checkoutSessionRequest: CheckoutSessionRequest
     ): CompletableFuture<CheckoutSessionResponse> =
         create(checkoutSessionRequest, RequestOptions.none())
+
+    fun retrieve(id: String): CompletableFuture<CheckoutSessionStatus> =
+        retrieve(id, CheckoutSessionRetrieveParams.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CheckoutSessionStatus> =
+        retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+    ): CompletableFuture<CheckoutSessionStatus> = retrieve(id, params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        params: CheckoutSessionRetrieveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CheckoutSessionStatus>
+
+    /** @see retrieve */
+    fun retrieve(params: CheckoutSessionRetrieveParams): CompletableFuture<CheckoutSessionStatus> =
+        retrieve(params, RequestOptions.none())
+
+    /** @see retrieve */
+    fun retrieve(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CheckoutSessionStatus> =
+        retrieve(id, CheckoutSessionRetrieveParams.none(), requestOptions)
 
     /**
      * A view of [CheckoutSessionServiceAsync] that provides access to raw HTTP responses for each
@@ -99,5 +135,46 @@ interface CheckoutSessionServiceAsync {
             checkoutSessionRequest: CheckoutSessionRequest
         ): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>> =
             create(checkoutSessionRequest, RequestOptions.none())
+
+        /**
+         * Returns a raw HTTP response for `get /checkouts/{id}`, but is otherwise the same as
+         * [CheckoutSessionServiceAsync.retrieve].
+         */
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> =
+            retrieve(id, CheckoutSessionRetrieveParams.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> =
+            retrieve(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            params: CheckoutSessionRetrieveParams = CheckoutSessionRetrieveParams.none(),
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> =
+            retrieve(id, params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            params: CheckoutSessionRetrieveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>>
+
+        /** @see retrieve */
+        fun retrieve(
+            params: CheckoutSessionRetrieveParams
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> =
+            retrieve(params, RequestOptions.none())
+
+        /** @see retrieve */
+        fun retrieve(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> =
+            retrieve(id, CheckoutSessionRetrieveParams.none(), requestOptions)
     }
 }
