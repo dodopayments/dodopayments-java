@@ -51,6 +51,12 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    fun customerName(): Optional<String> = body.customerName()
+
+    /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
     fun disableOnDemand(): Optional<DisableOnDemand> = body.disableOnDemand()
 
     /**
@@ -91,6 +97,13 @@ private constructor(
      * unexpected type.
      */
     fun _cancelAtNextBillingDate(): JsonField<Boolean> = body._cancelAtNextBillingDate()
+
+    /**
+     * Returns the raw JSON value of [customerName].
+     *
+     * Unlike [customerName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _customerName(): JsonField<String> = body._customerName()
 
     /**
      * Returns the raw JSON value of [disableOnDemand].
@@ -174,9 +187,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [billing]
          * - [cancelAtNextBillingDate]
+         * - [customerName]
          * - [disableOnDemand]
          * - [metadata]
-         * - [nextBillingDate]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -224,6 +237,22 @@ private constructor(
          */
         fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) = apply {
             body.cancelAtNextBillingDate(cancelAtNextBillingDate)
+        }
+
+        fun customerName(customerName: String?) = apply { body.customerName(customerName) }
+
+        /** Alias for calling [Builder.customerName] with `customerName.orElse(null)`. */
+        fun customerName(customerName: Optional<String>) = customerName(customerName.getOrNull())
+
+        /**
+         * Sets [Builder.customerName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customerName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun customerName(customerName: JsonField<String>) = apply {
+            body.customerName(customerName)
         }
 
         fun disableOnDemand(disableOnDemand: DisableOnDemand?) = apply {
@@ -453,6 +482,7 @@ private constructor(
     private constructor(
         private val billing: JsonField<BillingAddress>,
         private val cancelAtNextBillingDate: JsonField<Boolean>,
+        private val customerName: JsonField<String>,
         private val disableOnDemand: JsonField<DisableOnDemand>,
         private val metadata: JsonField<Metadata>,
         private val nextBillingDate: JsonField<OffsetDateTime>,
@@ -469,6 +499,9 @@ private constructor(
             @JsonProperty("cancel_at_next_billing_date")
             @ExcludeMissing
             cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("customer_name")
+            @ExcludeMissing
+            customerName: JsonField<String> = JsonMissing.of(),
             @JsonProperty("disable_on_demand")
             @ExcludeMissing
             disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of(),
@@ -485,6 +518,7 @@ private constructor(
         ) : this(
             billing,
             cancelAtNextBillingDate,
+            customerName,
             disableOnDemand,
             metadata,
             nextBillingDate,
@@ -507,6 +541,12 @@ private constructor(
          */
         fun cancelAtNextBillingDate(): Optional<Boolean> =
             cancelAtNextBillingDate.getOptional("cancel_at_next_billing_date")
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun customerName(): Optional<String> = customerName.getOptional("customer_name")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -556,6 +596,16 @@ private constructor(
         @JsonProperty("cancel_at_next_billing_date")
         @ExcludeMissing
         fun _cancelAtNextBillingDate(): JsonField<Boolean> = cancelAtNextBillingDate
+
+        /**
+         * Returns the raw JSON value of [customerName].
+         *
+         * Unlike [customerName], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("customer_name")
+        @ExcludeMissing
+        fun _customerName(): JsonField<String> = customerName
 
         /**
          * Returns the raw JSON value of [disableOnDemand].
@@ -623,6 +673,7 @@ private constructor(
 
             private var billing: JsonField<BillingAddress> = JsonMissing.of()
             private var cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of()
+            private var customerName: JsonField<String> = JsonMissing.of()
             private var disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
@@ -634,6 +685,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 billing = body.billing
                 cancelAtNextBillingDate = body.cancelAtNextBillingDate
+                customerName = body.customerName
                 disableOnDemand = body.disableOnDemand
                 metadata = body.metadata
                 nextBillingDate = body.nextBillingDate
@@ -684,6 +736,24 @@ private constructor(
              */
             fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) = apply {
                 this.cancelAtNextBillingDate = cancelAtNextBillingDate
+            }
+
+            fun customerName(customerName: String?) =
+                customerName(JsonField.ofNullable(customerName))
+
+            /** Alias for calling [Builder.customerName] with `customerName.orElse(null)`. */
+            fun customerName(customerName: Optional<String>) =
+                customerName(customerName.getOrNull())
+
+            /**
+             * Sets [Builder.customerName] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.customerName] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun customerName(customerName: JsonField<String>) = apply {
+                this.customerName = customerName
             }
 
             fun disableOnDemand(disableOnDemand: DisableOnDemand?) =
@@ -792,6 +862,7 @@ private constructor(
                 Body(
                     billing,
                     cancelAtNextBillingDate,
+                    customerName,
                     disableOnDemand,
                     metadata,
                     nextBillingDate,
@@ -810,6 +881,7 @@ private constructor(
 
             billing().ifPresent { it.validate() }
             cancelAtNextBillingDate()
+            customerName()
             disableOnDemand().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             nextBillingDate()
@@ -836,6 +908,7 @@ private constructor(
         internal fun validity(): Int =
             (billing.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) +
+                (if (customerName.asKnown().isPresent) 1 else 0) +
                 (disableOnDemand.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
@@ -850,6 +923,7 @@ private constructor(
             return other is Body &&
                 billing == other.billing &&
                 cancelAtNextBillingDate == other.cancelAtNextBillingDate &&
+                customerName == other.customerName &&
                 disableOnDemand == other.disableOnDemand &&
                 metadata == other.metadata &&
                 nextBillingDate == other.nextBillingDate &&
@@ -862,6 +936,7 @@ private constructor(
             Objects.hash(
                 billing,
                 cancelAtNextBillingDate,
+                customerName,
                 disableOnDemand,
                 metadata,
                 nextBillingDate,
@@ -874,7 +949,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     class DisableOnDemand

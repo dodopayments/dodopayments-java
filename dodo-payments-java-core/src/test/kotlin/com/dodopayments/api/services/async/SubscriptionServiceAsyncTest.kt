@@ -117,6 +117,7 @@ internal class SubscriptionServiceAsyncTest {
                             .build()
                     )
                     .cancelAtNextBillingDate(true)
+                    .customerName("customer_name")
                     .disableOnDemand(
                         SubscriptionUpdateParams.DisableOnDemand.builder()
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
