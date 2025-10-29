@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.refunds
 
+import com.dodopayments.api.core.JsonValue
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -17,6 +18,11 @@ internal class RefundCreateParamsTest {
                     .itemId("item_id")
                     .amount(0)
                     .taxInclusive(true)
+                    .build()
+            )
+            .metadata(
+                RefundCreateParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
             .reason("reason")
@@ -35,6 +41,11 @@ internal class RefundCreateParamsTest {
                         .taxInclusive(true)
                         .build()
                 )
+                .metadata(
+                    RefundCreateParams.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .build()
+                )
                 .reason("reason")
                 .build()
 
@@ -47,6 +58,12 @@ internal class RefundCreateParamsTest {
                     .itemId("item_id")
                     .amount(0)
                     .taxInclusive(true)
+                    .build()
+            )
+        assertThat(body.metadata())
+            .contains(
+                RefundCreateParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
         assertThat(body.reason()).contains("reason")
