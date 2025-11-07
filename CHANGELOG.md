@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.56.6 (2025-11-07)
+
+Full Changelog: [v1.56.5...v1.56.6](https://github.com/dodopayments/dodopayments-java/compare/v1.56.5...v1.56.6)
+
+### Features
+
+* **api:** set java and kotlin sonatype publishing to portal ([9172aec](https://github.com/dodopayments/dodopayments-java/commit/9172aec5ef0f10edc7445770137ff86f8735eefc))
+
 ## 1.56.5 (2025-10-31)
 
 Full Changelog: [v1.56.4...v1.56.5](https://github.com/dodopayments/dodopayments-java/compare/v1.56.4...v1.56.5)
