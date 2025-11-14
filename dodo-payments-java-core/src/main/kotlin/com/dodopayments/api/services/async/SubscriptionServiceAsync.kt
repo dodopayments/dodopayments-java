@@ -18,6 +18,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -257,6 +259,35 @@ interface SubscriptionServiceAsync {
             SubscriptionRetrieveUsageHistoryParams.none(),
             requestOptions,
         )
+
+    fun updatePaymentMethod(
+        subscriptionId: String,
+        params: SubscriptionUpdatePaymentMethodParams,
+    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        subscriptionId: String,
+        params: SubscriptionUpdatePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        updatePaymentMethod(
+            params.toBuilder().subscriptionId(subscriptionId).build(),
+            requestOptions,
+        )
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        params: SubscriptionUpdatePaymentMethodParams
+    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        updatePaymentMethod(params, RequestOptions.none())
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        params: SubscriptionUpdatePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse>
 
     /**
      * A view of [SubscriptionServiceAsync] that provides access to raw HTTP responses for each
@@ -503,5 +534,39 @@ interface SubscriptionServiceAsync {
                 SubscriptionRetrieveUsageHistoryParams.none(),
                 requestOptions,
             )
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the same as
+         * [SubscriptionServiceAsync.updatePaymentMethod].
+         */
+        fun updatePaymentMethod(
+            subscriptionId: String,
+            params: SubscriptionUpdatePaymentMethodParams,
+        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+            updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+
+        /** @see updatePaymentMethod */
+        fun updatePaymentMethod(
+            subscriptionId: String,
+            params: SubscriptionUpdatePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+            updatePaymentMethod(
+                params.toBuilder().subscriptionId(subscriptionId).build(),
+                requestOptions,
+            )
+
+        /** @see updatePaymentMethod */
+        fun updatePaymentMethod(
+            params: SubscriptionUpdatePaymentMethodParams
+        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+            updatePaymentMethod(params, RequestOptions.none())
+
+        /** @see updatePaymentMethod */
+        fun updatePaymentMethod(
+            params: SubscriptionUpdatePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>>
     }
 }

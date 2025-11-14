@@ -315,6 +315,7 @@ private constructor(
         private val discountCyclesRemaining: JsonField<Int>,
         private val discountId: JsonField<String>,
         private val expiresAt: JsonField<OffsetDateTime>,
+        private val paymentMethodId: JsonField<String>,
         private val taxId: JsonField<String>,
         private val payloadType: JsonField<PayloadType>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -398,6 +399,9 @@ private constructor(
             @JsonProperty("expires_at")
             @ExcludeMissing
             expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("payment_method_id")
+            @ExcludeMissing
+            paymentMethodId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("payload_type")
             @ExcludeMissing
@@ -429,6 +433,7 @@ private constructor(
             discountCyclesRemaining,
             discountId,
             expiresAt,
+            paymentMethodId,
             taxId,
             payloadType,
             mutableMapOf(),
@@ -462,6 +467,7 @@ private constructor(
                 .discountCyclesRemaining(discountCyclesRemaining)
                 .discountId(discountId)
                 .expiresAt(expiresAt)
+                .paymentMethodId(paymentMethodId)
                 .taxId(taxId)
                 .build()
 
@@ -681,6 +687,14 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
+
+        /**
+         * Saved payment method id used for recurring charges
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
 
         /**
          * Tax identifier provided for this subscription (if applicable)
@@ -935,6 +949,16 @@ private constructor(
         fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
         /**
+         * Returns the raw JSON value of [paymentMethodId].
+         *
+         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_method_id")
+        @ExcludeMissing
+        fun _paymentMethodId(): JsonField<String> = paymentMethodId
+
+        /**
          * Returns the raw JSON value of [taxId].
          *
          * Unlike [taxId], this method doesn't throw if the JSON field has an unexpected type.
@@ -1025,6 +1049,7 @@ private constructor(
             private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
             private var discountId: JsonField<String> = JsonMissing.of()
             private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
             private var payloadType: JsonField<PayloadType> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1057,6 +1082,7 @@ private constructor(
                 discountCyclesRemaining = data.discountCyclesRemaining
                 discountId = data.discountId
                 expiresAt = data.expiresAt
+                paymentMethodId = data.paymentMethodId
                 taxId = data.taxId
                 payloadType = data.payloadType
                 additionalProperties = data.additionalProperties.toMutableMap()
@@ -1480,6 +1506,25 @@ private constructor(
                 this.expiresAt = expiresAt
             }
 
+            /** Saved payment method id used for recurring charges */
+            fun paymentMethodId(paymentMethodId: String?) =
+                paymentMethodId(JsonField.ofNullable(paymentMethodId))
+
+            /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+            fun paymentMethodId(paymentMethodId: Optional<String>) =
+                paymentMethodId(paymentMethodId.getOrNull())
+
+            /**
+             * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+                this.paymentMethodId = paymentMethodId
+            }
+
             /** Tax identifier provided for this subscription (if applicable) */
             fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
 
@@ -1589,6 +1634,7 @@ private constructor(
                     discountCyclesRemaining,
                     discountId,
                     expiresAt,
+                    paymentMethodId,
                     taxId,
                     payloadType,
                     additionalProperties.toMutableMap(),
@@ -1628,6 +1674,7 @@ private constructor(
             discountCyclesRemaining()
             discountId()
             expiresAt()
+            paymentMethodId()
             taxId()
             payloadType().ifPresent { it.validate() }
             validated = true
@@ -1675,6 +1722,7 @@ private constructor(
                 (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
                 (if (discountId.asKnown().isPresent) 1 else 0) +
                 (if (expiresAt.asKnown().isPresent) 1 else 0) +
+                (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0) +
                 (payloadType.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -1836,6 +1884,7 @@ private constructor(
                 discountCyclesRemaining == other.discountCyclesRemaining &&
                 discountId == other.discountId &&
                 expiresAt == other.expiresAt &&
+                paymentMethodId == other.paymentMethodId &&
                 taxId == other.taxId &&
                 payloadType == other.payloadType &&
                 additionalProperties == other.additionalProperties
@@ -1869,6 +1918,7 @@ private constructor(
                 discountCyclesRemaining,
                 discountId,
                 expiresAt,
+                paymentMethodId,
                 taxId,
                 payloadType,
                 additionalProperties,
@@ -1878,7 +1928,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+            "Data{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
     }
 
     /** The event type */

@@ -36,6 +36,11 @@ internal class SubscriptionListResponseTest {
                         .customerId("customer_id")
                         .email("email")
                         .name("name")
+                        .metadata(
+                            CustomerLimitedDetails.Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .phoneNumber("phone_number")
                         .build()
                 )
@@ -61,6 +66,7 @@ internal class SubscriptionListResponseTest {
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
+                .paymentMethodId("payment_method_id")
                 .taxId("tax_id")
                 .build()
 
@@ -84,6 +90,11 @@ internal class SubscriptionListResponseTest {
                     .customerId("customer_id")
                     .email("email")
                     .name("name")
+                    .metadata(
+                        CustomerLimitedDetails.Metadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                            .build()
+                    )
                     .phoneNumber("phone_number")
                     .build()
             )
@@ -114,6 +125,7 @@ internal class SubscriptionListResponseTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(subscriptionListResponse.discountCyclesRemaining()).contains(0)
         assertThat(subscriptionListResponse.discountId()).contains("discount_id")
+        assertThat(subscriptionListResponse.paymentMethodId()).contains("payment_method_id")
         assertThat(subscriptionListResponse.taxId()).contains("tax_id")
     }
 
@@ -139,6 +151,11 @@ internal class SubscriptionListResponseTest {
                         .customerId("customer_id")
                         .email("email")
                         .name("name")
+                        .metadata(
+                            CustomerLimitedDetails.Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .phoneNumber("phone_number")
                         .build()
                 )
@@ -164,6 +181,7 @@ internal class SubscriptionListResponseTest {
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
+                .paymentMethodId("payment_method_id")
                 .taxId("tax_id")
                 .build()
 

@@ -10,6 +10,8 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerListPageAsync
 import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsResponse
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.async.customers.CustomerPortalServiceAsync
 import com.dodopayments.api.services.async.customers.WalletServiceAsync
@@ -121,6 +123,49 @@ interface CustomerServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CustomerListPageAsync> =
         list(CustomerListParams.none(), requestOptions)
+
+    fun retrievePaymentMethods(
+        customerId: String
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse> =
+        retrievePaymentMethods(customerId, CustomerRetrievePaymentMethodsParams.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        params: CustomerRetrievePaymentMethodsParams = CustomerRetrievePaymentMethodsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse> =
+        retrievePaymentMethods(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        params: CustomerRetrievePaymentMethodsParams = CustomerRetrievePaymentMethodsParams.none(),
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse> =
+        retrievePaymentMethods(customerId, params, RequestOptions.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        params: CustomerRetrievePaymentMethodsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse>
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        params: CustomerRetrievePaymentMethodsParams
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse> =
+        retrievePaymentMethods(params, RequestOptions.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerRetrievePaymentMethodsResponse> =
+        retrievePaymentMethods(
+            customerId,
+            CustomerRetrievePaymentMethodsParams.none(),
+            requestOptions,
+        )
 
     /**
      * A view of [CustomerServiceAsync] that provides access to raw HTTP responses for each method.
@@ -255,5 +300,57 @@ interface CustomerServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(CustomerListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /customers/{customer_id}/payment-methods`, but is
+         * otherwise the same as [CustomerServiceAsync.retrievePaymentMethods].
+         */
+        fun retrievePaymentMethods(
+            customerId: String
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>> =
+            retrievePaymentMethods(customerId, CustomerRetrievePaymentMethodsParams.none())
+
+        /** @see retrievePaymentMethods */
+        fun retrievePaymentMethods(
+            customerId: String,
+            params: CustomerRetrievePaymentMethodsParams =
+                CustomerRetrievePaymentMethodsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>> =
+            retrievePaymentMethods(
+                params.toBuilder().customerId(customerId).build(),
+                requestOptions,
+            )
+
+        /** @see retrievePaymentMethods */
+        fun retrievePaymentMethods(
+            customerId: String,
+            params: CustomerRetrievePaymentMethodsParams =
+                CustomerRetrievePaymentMethodsParams.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>> =
+            retrievePaymentMethods(customerId, params, RequestOptions.none())
+
+        /** @see retrievePaymentMethods */
+        fun retrievePaymentMethods(
+            params: CustomerRetrievePaymentMethodsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>>
+
+        /** @see retrievePaymentMethods */
+        fun retrievePaymentMethods(
+            params: CustomerRetrievePaymentMethodsParams
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>> =
+            retrievePaymentMethods(params, RequestOptions.none())
+
+        /** @see retrievePaymentMethods */
+        fun retrievePaymentMethods(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerRetrievePaymentMethodsResponse>> =
+            retrievePaymentMethods(
+                customerId,
+                CustomerRetrievePaymentMethodsParams.none(),
+                requestOptions,
+            )
     }
 }

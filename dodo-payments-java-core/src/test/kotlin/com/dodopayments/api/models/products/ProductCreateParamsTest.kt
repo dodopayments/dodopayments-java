@@ -15,6 +15,7 @@ internal class ProductCreateParamsTest {
     @Test
     fun create() {
         ProductCreateParams.builder()
+            .name("name")
             .price(
                 Price.OneTimePrice.builder()
                     .currency(Currency.AED)
@@ -48,7 +49,6 @@ internal class ProductCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
-            .name("name")
             .build()
     }
 
@@ -56,6 +56,7 @@ internal class ProductCreateParamsTest {
     fun body() {
         val params =
             ProductCreateParams.builder()
+                .name("name")
                 .price(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
@@ -89,11 +90,11 @@ internal class ProductCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
-                .name("name")
                 .build()
 
         val body = params._body()
 
+        assertThat(body.name()).isEqualTo("name")
         assertThat(body.price())
             .isEqualTo(
                 Price.ofOneTime(
@@ -131,13 +132,13 @@ internal class ProductCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
-        assertThat(body.name()).contains("name")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
         val params =
             ProductCreateParams.builder()
+                .name("name")
                 .price(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
@@ -152,6 +153,7 @@ internal class ProductCreateParamsTest {
 
         val body = params._body()
 
+        assertThat(body.name()).isEqualTo("name")
         assertThat(body.price())
             .isEqualTo(
                 Price.ofOneTime(
