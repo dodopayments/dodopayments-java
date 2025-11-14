@@ -10,6 +10,8 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerListPage
 import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsResponse
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
 import com.dodopayments.api.services.blocking.customers.WalletService
@@ -113,6 +115,47 @@ interface CustomerService {
     /** @see list */
     fun list(requestOptions: RequestOptions): CustomerListPage =
         list(CustomerListParams.none(), requestOptions)
+
+    fun retrievePaymentMethods(customerId: String): CustomerRetrievePaymentMethodsResponse =
+        retrievePaymentMethods(customerId, CustomerRetrievePaymentMethodsParams.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        params: CustomerRetrievePaymentMethodsParams = CustomerRetrievePaymentMethodsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CustomerRetrievePaymentMethodsResponse =
+        retrievePaymentMethods(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        params: CustomerRetrievePaymentMethodsParams = CustomerRetrievePaymentMethodsParams.none(),
+    ): CustomerRetrievePaymentMethodsResponse =
+        retrievePaymentMethods(customerId, params, RequestOptions.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        params: CustomerRetrievePaymentMethodsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CustomerRetrievePaymentMethodsResponse
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        params: CustomerRetrievePaymentMethodsParams
+    ): CustomerRetrievePaymentMethodsResponse =
+        retrievePaymentMethods(params, RequestOptions.none())
+
+    /** @see retrievePaymentMethods */
+    fun retrievePaymentMethods(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CustomerRetrievePaymentMethodsResponse =
+        retrievePaymentMethods(
+            customerId,
+            CustomerRetrievePaymentMethodsParams.none(),
+            requestOptions,
+        )
 
     /** A view of [CustomerService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -252,5 +295,63 @@ interface CustomerService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<CustomerListPage> =
             list(CustomerListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /customers/{customer_id}/payment-methods`, but is
+         * otherwise the same as [CustomerService.retrievePaymentMethods].
+         */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            customerId: String
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> =
+            retrievePaymentMethods(customerId, CustomerRetrievePaymentMethodsParams.none())
+
+        /** @see retrievePaymentMethods */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            customerId: String,
+            params: CustomerRetrievePaymentMethodsParams =
+                CustomerRetrievePaymentMethodsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> =
+            retrievePaymentMethods(
+                params.toBuilder().customerId(customerId).build(),
+                requestOptions,
+            )
+
+        /** @see retrievePaymentMethods */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            customerId: String,
+            params: CustomerRetrievePaymentMethodsParams =
+                CustomerRetrievePaymentMethodsParams.none(),
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> =
+            retrievePaymentMethods(customerId, params, RequestOptions.none())
+
+        /** @see retrievePaymentMethods */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            params: CustomerRetrievePaymentMethodsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse>
+
+        /** @see retrievePaymentMethods */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            params: CustomerRetrievePaymentMethodsParams
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> =
+            retrievePaymentMethods(params, RequestOptions.none())
+
+        /** @see retrievePaymentMethods */
+        @MustBeClosed
+        fun retrievePaymentMethods(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> =
+            retrievePaymentMethods(
+                customerId,
+                CustomerRetrievePaymentMethodsParams.none(),
+                requestOptions,
+            )
     }
 }

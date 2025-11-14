@@ -31,6 +31,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistor
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -95,6 +97,13 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
     ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
         // get /subscriptions/{subscription_id}/usage-history
         withRawResponse().retrieveUsageHistory(params, requestOptions).thenApply { it.parse() }
+
+    override fun updatePaymentMethod(
+        params: SubscriptionUpdatePaymentMethodParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        // post /subscriptions/{subscription_id}/update-payment-method
+        withRawResponse().updatePaymentMethod(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         SubscriptionServiceAsync.WithRawResponse {
@@ -343,6 +352,40 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
                                     .params(params)
                                     .response(it)
                                     .build()
+                            }
+                    }
+                }
+        }
+
+        private val updatePaymentMethodHandler: Handler<SubscriptionUpdatePaymentMethodResponse> =
+            jsonHandler<SubscriptionUpdatePaymentMethodResponse>(clientOptions.jsonMapper)
+
+        override fun updatePaymentMethod(
+            params: SubscriptionUpdatePaymentMethodParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("subscriptions", params._pathParam(0), "update-payment-method")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { updatePaymentMethodHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
                             }
                     }
                 }
