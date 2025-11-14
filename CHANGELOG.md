@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.60.0 (2025-11-14)
+
+Full Changelog: [v1.56.6...v1.60.0](https://github.com/dodopayments/dodopayments-java/compare/v1.56.6...v1.60.0)
+
+### Features
+
+* **api:** added update payment method and updated openapi spec to v1.60.0 ([efcb2fb](https://github.com/dodopayments/dodopayments-java/commit/efcb2fb19f7012812148c69b66e6d215677dbab8))
+
+
+### Bug Fixes
+
+* **client:** multi-value header serialization ([87a40e4](https://github.com/dodopayments/dodopayments-java/commit/87a40e4e491b327611cad78e738ddddcda6d876c))
+
 ## 1.56.6 (2025-11-07)
 
 Full Changelog: [v1.56.5...v1.56.6](https://github.com/dodopayments/dodopayments-java/compare/v1.56.5...v1.56.6)
