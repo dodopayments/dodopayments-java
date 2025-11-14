@@ -17,6 +17,7 @@ import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
 import java.time.OffsetDateTime
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -226,5 +227,31 @@ internal class SubscriptionServiceAsyncTest {
 
         val page = pageFuture.get()
         page.response().validate()
+    }
+
+    @Test
+    fun updatePaymentMethod() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val subscriptionServiceAsync = client.subscriptions()
+
+        val responseFuture =
+            subscriptionServiceAsync.updatePaymentMethod(
+                SubscriptionUpdatePaymentMethodParams.builder()
+                    .subscriptionId("subscription_id")
+                    .body(
+                        SubscriptionUpdatePaymentMethodParams.Body.UnionMember0.builder()
+                            .type(SubscriptionUpdatePaymentMethodParams.Body.UnionMember0.Type.NEW)
+                            .returnUrl("return_url")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
     }
 }

@@ -18,6 +18,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPage
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -242,6 +244,34 @@ interface SubscriptionService {
             SubscriptionRetrieveUsageHistoryParams.none(),
             requestOptions,
         )
+
+    fun updatePaymentMethod(
+        subscriptionId: String,
+        params: SubscriptionUpdatePaymentMethodParams,
+    ): SubscriptionUpdatePaymentMethodResponse =
+        updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        subscriptionId: String,
+        params: SubscriptionUpdatePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SubscriptionUpdatePaymentMethodResponse =
+        updatePaymentMethod(
+            params.toBuilder().subscriptionId(subscriptionId).build(),
+            requestOptions,
+        )
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        params: SubscriptionUpdatePaymentMethodParams
+    ): SubscriptionUpdatePaymentMethodResponse = updatePaymentMethod(params, RequestOptions.none())
+
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(
+        params: SubscriptionUpdatePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SubscriptionUpdatePaymentMethodResponse
 
     /**
      * A view of [SubscriptionService] that provides access to raw HTTP responses for each method.
@@ -503,5 +533,43 @@ interface SubscriptionService {
                 SubscriptionRetrieveUsageHistoryParams.none(),
                 requestOptions,
             )
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the same as
+         * [SubscriptionService.updatePaymentMethod].
+         */
+        @MustBeClosed
+        fun updatePaymentMethod(
+            subscriptionId: String,
+            params: SubscriptionUpdatePaymentMethodParams,
+        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+            updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+
+        /** @see updatePaymentMethod */
+        @MustBeClosed
+        fun updatePaymentMethod(
+            subscriptionId: String,
+            params: SubscriptionUpdatePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+            updatePaymentMethod(
+                params.toBuilder().subscriptionId(subscriptionId).build(),
+                requestOptions,
+            )
+
+        /** @see updatePaymentMethod */
+        @MustBeClosed
+        fun updatePaymentMethod(
+            params: SubscriptionUpdatePaymentMethodParams
+        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+            updatePaymentMethod(params, RequestOptions.none())
+
+        /** @see updatePaymentMethod */
+        @MustBeClosed
+        fun updatePaymentMethod(
+            params: SubscriptionUpdatePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>
     }
 }
