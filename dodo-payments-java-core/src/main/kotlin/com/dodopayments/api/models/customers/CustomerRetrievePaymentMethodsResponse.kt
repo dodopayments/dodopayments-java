@@ -12,6 +12,7 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.misc.CountryCode
+import com.dodopayments.api.models.payments.PaymentMethodTypes
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -180,54 +181,42 @@ private constructor(
     class Item
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val connectorPaymentMethods: JsonField<ConnectorPaymentMethods>,
         private val paymentMethod: JsonField<PaymentMethod>,
         private val paymentMethodId: JsonField<String>,
-        private val profileMap: JsonField<ProfileMap>,
         private val card: JsonField<Card>,
         private val lastUsedAt: JsonField<OffsetDateTime>,
+        private val paymentMethodType: JsonField<PaymentMethodTypes>,
         private val recurringEnabled: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("connector_payment_methods")
-            @ExcludeMissing
-            connectorPaymentMethods: JsonField<ConnectorPaymentMethods> = JsonMissing.of(),
             @JsonProperty("payment_method")
             @ExcludeMissing
             paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
             @JsonProperty("payment_method_id")
             @ExcludeMissing
             paymentMethodId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("profile_map")
-            @ExcludeMissing
-            profileMap: JsonField<ProfileMap> = JsonMissing.of(),
             @JsonProperty("card") @ExcludeMissing card: JsonField<Card> = JsonMissing.of(),
             @JsonProperty("last_used_at")
             @ExcludeMissing
             lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("payment_method_type")
+            @ExcludeMissing
+            paymentMethodType: JsonField<PaymentMethodTypes> = JsonMissing.of(),
             @JsonProperty("recurring_enabled")
             @ExcludeMissing
             recurringEnabled: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
-            connectorPaymentMethods,
             paymentMethod,
             paymentMethodId,
-            profileMap,
             card,
             lastUsedAt,
+            paymentMethodType,
             recurringEnabled,
             mutableMapOf(),
         )
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun connectorPaymentMethods(): ConnectorPaymentMethods =
-            connectorPaymentMethods.getRequired("connector_payment_methods")
 
         /**
          * PaymentMethod enum from hyperswitch
@@ -246,12 +235,6 @@ private constructor(
         fun paymentMethodId(): String = paymentMethodId.getRequired("payment_method_id")
 
         /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun profileMap(): ProfileMap = profileMap.getRequired("profile_map")
-
-        /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -267,18 +250,15 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
-        fun recurringEnabled(): Optional<Boolean> =
-            recurringEnabled.getOptional("recurring_enabled")
+        fun paymentMethodType(): Optional<PaymentMethodTypes> =
+            paymentMethodType.getOptional("payment_method_type")
 
         /**
-         * Returns the raw JSON value of [connectorPaymentMethods].
-         *
-         * Unlike [connectorPaymentMethods], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
          */
-        @JsonProperty("connector_payment_methods")
-        @ExcludeMissing
-        fun _connectorPaymentMethods(): JsonField<ConnectorPaymentMethods> = connectorPaymentMethods
+        fun recurringEnabled(): Optional<Boolean> =
+            recurringEnabled.getOptional("recurring_enabled")
 
         /**
          * Returns the raw JSON value of [paymentMethod].
@@ -301,15 +281,6 @@ private constructor(
         fun _paymentMethodId(): JsonField<String> = paymentMethodId
 
         /**
-         * Returns the raw JSON value of [profileMap].
-         *
-         * Unlike [profileMap], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("profile_map")
-        @ExcludeMissing
-        fun _profileMap(): JsonField<ProfileMap> = profileMap
-
-        /**
          * Returns the raw JSON value of [card].
          *
          * Unlike [card], this method doesn't throw if the JSON field has an unexpected type.
@@ -324,6 +295,16 @@ private constructor(
         @JsonProperty("last_used_at")
         @ExcludeMissing
         fun _lastUsedAt(): JsonField<OffsetDateTime> = lastUsedAt
+
+        /**
+         * Returns the raw JSON value of [paymentMethodType].
+         *
+         * Unlike [paymentMethodType], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_method_type")
+        @ExcludeMissing
+        fun _paymentMethodType(): JsonField<PaymentMethodTypes> = paymentMethodType
 
         /**
          * Returns the raw JSON value of [recurringEnabled].
@@ -354,10 +335,8 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .connectorPaymentMethods()
              * .paymentMethod()
              * .paymentMethodId()
-             * .profileMap()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -366,40 +345,24 @@ private constructor(
         /** A builder for [Item]. */
         class Builder internal constructor() {
 
-            private var connectorPaymentMethods: JsonField<ConnectorPaymentMethods>? = null
             private var paymentMethod: JsonField<PaymentMethod>? = null
             private var paymentMethodId: JsonField<String>? = null
-            private var profileMap: JsonField<ProfileMap>? = null
             private var card: JsonField<Card> = JsonMissing.of()
             private var lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var paymentMethodType: JsonField<PaymentMethodTypes> = JsonMissing.of()
             private var recurringEnabled: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(item: Item) = apply {
-                connectorPaymentMethods = item.connectorPaymentMethods
                 paymentMethod = item.paymentMethod
                 paymentMethodId = item.paymentMethodId
-                profileMap = item.profileMap
                 card = item.card
                 lastUsedAt = item.lastUsedAt
+                paymentMethodType = item.paymentMethodType
                 recurringEnabled = item.recurringEnabled
                 additionalProperties = item.additionalProperties.toMutableMap()
             }
-
-            fun connectorPaymentMethods(connectorPaymentMethods: ConnectorPaymentMethods) =
-                connectorPaymentMethods(JsonField.of(connectorPaymentMethods))
-
-            /**
-             * Sets [Builder.connectorPaymentMethods] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.connectorPaymentMethods] with a well-typed
-             * [ConnectorPaymentMethods] value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
-             */
-            fun connectorPaymentMethods(
-                connectorPaymentMethods: JsonField<ConnectorPaymentMethods>
-            ) = apply { this.connectorPaymentMethods = connectorPaymentMethods }
 
             /**
              * PaymentMethod enum from hyperswitch
@@ -434,19 +397,6 @@ private constructor(
                 this.paymentMethodId = paymentMethodId
             }
 
-            fun profileMap(profileMap: ProfileMap) = profileMap(JsonField.of(profileMap))
-
-            /**
-             * Sets [Builder.profileMap] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.profileMap] with a well-typed [ProfileMap] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun profileMap(profileMap: JsonField<ProfileMap>) = apply {
-                this.profileMap = profileMap
-            }
-
             fun card(card: Card?) = card(JsonField.ofNullable(card))
 
             /** Alias for calling [Builder.card] with `card.orElse(null)`. */
@@ -477,6 +427,26 @@ private constructor(
              */
             fun lastUsedAt(lastUsedAt: JsonField<OffsetDateTime>) = apply {
                 this.lastUsedAt = lastUsedAt
+            }
+
+            fun paymentMethodType(paymentMethodType: PaymentMethodTypes?) =
+                paymentMethodType(JsonField.ofNullable(paymentMethodType))
+
+            /**
+             * Alias for calling [Builder.paymentMethodType] with `paymentMethodType.orElse(null)`.
+             */
+            fun paymentMethodType(paymentMethodType: Optional<PaymentMethodTypes>) =
+                paymentMethodType(paymentMethodType.getOrNull())
+
+            /**
+             * Sets [Builder.paymentMethodType] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethodType] with a well-typed
+             * [PaymentMethodTypes] value instead. This method is primarily for setting the field to
+             * an undocumented or not yet supported value.
+             */
+            fun paymentMethodType(paymentMethodType: JsonField<PaymentMethodTypes>) = apply {
+                this.paymentMethodType = paymentMethodType
             }
 
             fun recurringEnabled(recurringEnabled: Boolean?) =
@@ -533,22 +503,19 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .connectorPaymentMethods()
              * .paymentMethod()
              * .paymentMethodId()
-             * .profileMap()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Item =
                 Item(
-                    checkRequired("connectorPaymentMethods", connectorPaymentMethods),
                     checkRequired("paymentMethod", paymentMethod),
                     checkRequired("paymentMethodId", paymentMethodId),
-                    checkRequired("profileMap", profileMap),
                     card,
                     lastUsedAt,
+                    paymentMethodType,
                     recurringEnabled,
                     additionalProperties.toMutableMap(),
                 )
@@ -561,12 +528,11 @@ private constructor(
                 return@apply
             }
 
-            connectorPaymentMethods().validate()
             paymentMethod().validate()
             paymentMethodId()
-            profileMap().validate()
             card().ifPresent { it.validate() }
             lastUsedAt()
+            paymentMethodType().ifPresent { it.validate() }
             recurringEnabled()
             validated = true
         }
@@ -587,122 +553,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (connectorPaymentMethods.asKnown().getOrNull()?.validity() ?: 0) +
-                (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
+            (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
-                (profileMap.asKnown().getOrNull()?.validity() ?: 0) +
                 (card.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (lastUsedAt.asKnown().isPresent) 1 else 0) +
+                (paymentMethodType.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (recurringEnabled.asKnown().isPresent) 1 else 0)
-
-        class ConnectorPaymentMethods
-        @JsonCreator
-        private constructor(
-            @com.fasterxml.jackson.annotation.JsonValue
-            private val additionalProperties: Map<String, JsonValue>
-        ) {
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of
-                 * [ConnectorPaymentMethods].
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [ConnectorPaymentMethods]. */
-            class Builder internal constructor() {
-
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(connectorPaymentMethods: ConnectorPaymentMethods) = apply {
-                    additionalProperties =
-                        connectorPaymentMethods.additionalProperties.toMutableMap()
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [ConnectorPaymentMethods].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 */
-                fun build(): ConnectorPaymentMethods =
-                    ConnectorPaymentMethods(additionalProperties.toImmutable())
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): ConnectorPaymentMethods = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is ConnectorPaymentMethods &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "ConnectorPaymentMethods{additionalProperties=$additionalProperties}"
-        }
 
         /**
          * PaymentMethod enum from hyperswitch
@@ -916,108 +772,6 @@ private constructor(
             override fun hashCode() = value.hashCode()
 
             override fun toString() = value.toString()
-        }
-
-        class ProfileMap
-        @JsonCreator
-        private constructor(
-            @com.fasterxml.jackson.annotation.JsonValue
-            private val additionalProperties: Map<String, JsonValue>
-        ) {
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /** Returns a mutable builder for constructing an instance of [ProfileMap]. */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [ProfileMap]. */
-            class Builder internal constructor() {
-
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(profileMap: ProfileMap) = apply {
-                    additionalProperties = profileMap.additionalProperties.toMutableMap()
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [ProfileMap].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 */
-                fun build(): ProfileMap = ProfileMap(additionalProperties.toImmutable())
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): ProfileMap = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is ProfileMap && additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() = "ProfileMap{additionalProperties=$additionalProperties}"
         }
 
         class Card
@@ -1422,24 +1176,22 @@ private constructor(
             }
 
             return other is Item &&
-                connectorPaymentMethods == other.connectorPaymentMethods &&
                 paymentMethod == other.paymentMethod &&
                 paymentMethodId == other.paymentMethodId &&
-                profileMap == other.profileMap &&
                 card == other.card &&
                 lastUsedAt == other.lastUsedAt &&
+                paymentMethodType == other.paymentMethodType &&
                 recurringEnabled == other.recurringEnabled &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                connectorPaymentMethods,
                 paymentMethod,
                 paymentMethodId,
-                profileMap,
                 card,
                 lastUsedAt,
+                paymentMethodType,
                 recurringEnabled,
                 additionalProperties,
             )
@@ -1448,7 +1200,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Item{connectorPaymentMethods=$connectorPaymentMethods, paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, profileMap=$profileMap, card=$card, lastUsedAt=$lastUsedAt, recurringEnabled=$recurringEnabled, additionalProperties=$additionalProperties}"
+            "Item{paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, card=$card, lastUsedAt=$lastUsedAt, paymentMethodType=$paymentMethodType, recurringEnabled=$recurringEnabled, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
