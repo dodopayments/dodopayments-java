@@ -93,11 +93,11 @@ private constructor(
 
         fun body(body: Body) = apply { this.body = body }
 
-        /** Alias for calling [body] with `Body.ofUnionMember0(unionMember0)`. */
-        fun body(unionMember0: Body.UnionMember0) = body(Body.ofUnionMember0(unionMember0))
+        /** Alias for calling [body] with `Body.ofNew(new_)`. */
+        fun body(new_: Body.New) = body(Body.ofNew(new_))
 
-        /** Alias for calling [body] with `Body.ofUnionMember1(unionMember1)`. */
-        fun body(unionMember1: Body.UnionMember1) = body(Body.ofUnionMember1(unionMember1))
+        /** Alias for calling [body] with `Body.ofExisting(existing)`. */
+        fun body(existing: Body.Existing) = body(Body.ofExisting(existing))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -234,29 +234,29 @@ private constructor(
     @JsonSerialize(using = Body.Serializer::class)
     class Body
     private constructor(
-        private val unionMember0: UnionMember0? = null,
-        private val unionMember1: UnionMember1? = null,
+        private val new_: New? = null,
+        private val existing: Existing? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun new_(): Optional<New> = Optional.ofNullable(new_)
 
-        fun unionMember1(): Optional<UnionMember1> = Optional.ofNullable(unionMember1)
+        fun existing(): Optional<Existing> = Optional.ofNullable(existing)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isNew(): Boolean = new_ != null
 
-        fun isUnionMember1(): Boolean = unionMember1 != null
+        fun isExisting(): Boolean = existing != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asNew(): New = new_.getOrThrow("new_")
 
-        fun asUnionMember1(): UnionMember1 = unionMember1.getOrThrow("unionMember1")
+        fun asExisting(): Existing = existing.getOrThrow("existing")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
-                unionMember1 != null -> visitor.visitUnionMember1(unionMember1)
+                new_ != null -> visitor.visitNew(new_)
+                existing != null -> visitor.visitExisting(existing)
                 else -> visitor.unknown(_json)
             }
 
@@ -269,12 +269,12 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitNew(new_: New) {
+                        new_.validate()
                     }
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) {
-                        unionMember1.validate()
+                    override fun visitExisting(existing: Existing) {
+                        existing.validate()
                     }
                 }
             )
@@ -299,11 +299,9 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitNew(new_: New) = new_.validity()
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) =
-                        unionMember1.validity()
+                    override fun visitExisting(existing: Existing) = existing.validity()
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -314,36 +312,32 @@ private constructor(
                 return true
             }
 
-            return other is Body &&
-                unionMember0 == other.unionMember0 &&
-                unionMember1 == other.unionMember1
+            return other is Body && new_ == other.new_ && existing == other.existing
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, unionMember1)
+        override fun hashCode(): Int = Objects.hash(new_, existing)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Body{unionMember0=$unionMember0}"
-                unionMember1 != null -> "Body{unionMember1=$unionMember1}"
+                new_ != null -> "Body{new_=$new_}"
+                existing != null -> "Body{existing=$existing}"
                 _json != null -> "Body{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Body")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Body(unionMember0 = unionMember0)
+            @JvmStatic fun ofNew(new_: New) = Body(new_ = new_)
 
-            @JvmStatic
-            fun ofUnionMember1(unionMember1: UnionMember1) = Body(unionMember1 = unionMember1)
+            @JvmStatic fun ofExisting(existing: Existing) = Body(existing = existing)
         }
 
         /** An interface that defines how to map each variant of [Body] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitNew(new_: New): T
 
-            fun visitUnionMember1(unionMember1: UnionMember1): T
+            fun visitExisting(existing: Existing): T
 
             /**
              * Maps an unknown variant of [Body] to a value of type [T].
@@ -366,11 +360,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Body(unionMember0 = it, _json = json)
+                            tryDeserialize(node, jacksonTypeRef<New>())?.let {
+                                Body(new_ = it, _json = json)
                             },
-                            tryDeserialize(node, jacksonTypeRef<UnionMember1>())?.let {
-                                Body(unionMember1 = it, _json = json)
+                            tryDeserialize(node, jacksonTypeRef<Existing>())?.let {
+                                Body(existing = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -397,15 +391,15 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
-                    value.unionMember1 != null -> generator.writeObject(value.unionMember1)
+                    value.new_ != null -> generator.writeObject(value.new_)
+                    value.existing != null -> generator.writeObject(value.existing)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Body")
                 }
             }
         }
 
-        class UnionMember0
+        class New
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val type: JsonField<Type>,
@@ -466,7 +460,7 @@ private constructor(
             companion object {
 
                 /**
-                 * Returns a mutable builder for constructing an instance of [UnionMember0].
+                 * Returns a mutable builder for constructing an instance of [New].
                  *
                  * The following fields are required:
                  * ```java
@@ -476,7 +470,7 @@ private constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [UnionMember0]. */
+            /** A builder for [New]. */
             class Builder internal constructor() {
 
                 private var type: JsonField<Type>? = null
@@ -484,10 +478,10 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(unionMember0: UnionMember0) = apply {
-                    type = unionMember0.type
-                    returnUrl = unionMember0.returnUrl
-                    additionalProperties = unionMember0.additionalProperties.toMutableMap()
+                internal fun from(new_: New) = apply {
+                    type = new_.type
+                    returnUrl = new_.returnUrl
+                    additionalProperties = new_.additionalProperties.toMutableMap()
                 }
 
                 fun type(type: Type) = type(JsonField.of(type))
@@ -538,7 +532,7 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [UnionMember0].
+                 * Returns an immutable instance of [New].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
@@ -549,17 +543,13 @@ private constructor(
                  *
                  * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): UnionMember0 =
-                    UnionMember0(
-                        checkRequired("type", type),
-                        returnUrl,
-                        additionalProperties.toMutableMap(),
-                    )
+                fun build(): New =
+                    New(checkRequired("type", type), returnUrl, additionalProperties.toMutableMap())
             }
 
             private var validated: Boolean = false
 
-            fun validate(): UnionMember0 = apply {
+            fun validate(): New = apply {
                 if (validated) {
                     return@apply
                 }
@@ -717,7 +707,7 @@ private constructor(
                     return true
                 }
 
-                return other is UnionMember0 &&
+                return other is New &&
                     type == other.type &&
                     returnUrl == other.returnUrl &&
                     additionalProperties == other.additionalProperties
@@ -730,10 +720,10 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "UnionMember0{type=$type, returnUrl=$returnUrl, additionalProperties=$additionalProperties}"
+                "New{type=$type, returnUrl=$returnUrl, additionalProperties=$additionalProperties}"
         }
 
-        class UnionMember1
+        class Existing
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val paymentMethodId: JsonField<String>,
@@ -795,7 +785,7 @@ private constructor(
             companion object {
 
                 /**
-                 * Returns a mutable builder for constructing an instance of [UnionMember1].
+                 * Returns a mutable builder for constructing an instance of [Existing].
                  *
                  * The following fields are required:
                  * ```java
@@ -806,7 +796,7 @@ private constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [UnionMember1]. */
+            /** A builder for [Existing]. */
             class Builder internal constructor() {
 
                 private var paymentMethodId: JsonField<String>? = null
@@ -814,10 +804,10 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(unionMember1: UnionMember1) = apply {
-                    paymentMethodId = unionMember1.paymentMethodId
-                    type = unionMember1.type
-                    additionalProperties = unionMember1.additionalProperties.toMutableMap()
+                internal fun from(existing: Existing) = apply {
+                    paymentMethodId = existing.paymentMethodId
+                    type = existing.type
+                    additionalProperties = existing.additionalProperties.toMutableMap()
                 }
 
                 fun paymentMethodId(paymentMethodId: String) =
@@ -868,7 +858,7 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [UnionMember1].
+                 * Returns an immutable instance of [Existing].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
@@ -880,8 +870,8 @@ private constructor(
                  *
                  * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): UnionMember1 =
-                    UnionMember1(
+                fun build(): Existing =
+                    Existing(
                         checkRequired("paymentMethodId", paymentMethodId),
                         checkRequired("type", type),
                         additionalProperties.toMutableMap(),
@@ -890,7 +880,7 @@ private constructor(
 
             private var validated: Boolean = false
 
-            fun validate(): UnionMember1 = apply {
+            fun validate(): Existing = apply {
                 if (validated) {
                     return@apply
                 }
@@ -1048,7 +1038,7 @@ private constructor(
                     return true
                 }
 
-                return other is UnionMember1 &&
+                return other is Existing &&
                     paymentMethodId == other.paymentMethodId &&
                     type == other.type &&
                     additionalProperties == other.additionalProperties
@@ -1061,7 +1051,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "UnionMember1{paymentMethodId=$paymentMethodId, type=$type, additionalProperties=$additionalProperties}"
+                "Existing{paymentMethodId=$paymentMethodId, type=$type, additionalProperties=$additionalProperties}"
         }
     }
 
