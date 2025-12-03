@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.61.6 (2025-12-03)
+
+Full Changelog: [v1.61.5...v1.61.6](https://github.com/dodopayments/dodopayments-java/compare/v1.61.5...v1.61.6)
+
+### Bug Fixes
+
+* **client:** cancel okhttp call when future cancelled ([a0b7729](https://github.com/dodopayments/dodopayments-java/commit/a0b7729a820656b8063ca8af65108e87734245ba))
+
+
+### Documentation
+
+* remove `$` for better copy-pasteabality ([2af988f](https://github.com/dodopayments/dodopayments-java/commit/2af988f2f3d140ec6bf732ae2aaa3eeb527d5717))
+
 ## 1.61.5 (2025-11-17)
 
 Full Changelog: [v1.60.0...v1.61.5](https://github.com/dodopayments/dodopayments-java/compare/v1.60.0...v1.61.5)
