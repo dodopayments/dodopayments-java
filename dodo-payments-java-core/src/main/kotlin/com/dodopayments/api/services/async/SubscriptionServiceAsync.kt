@@ -14,6 +14,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionListPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionListParams
+import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
@@ -177,6 +179,32 @@ interface SubscriptionServiceAsync {
         params: SubscriptionChargeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionChargeResponse>
+
+    fun previewChangePlan(
+        subscriptionId: String,
+        params: SubscriptionPreviewChangePlanParams,
+    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(subscriptionId, params, RequestOptions.none())
+
+    /** @see previewChangePlan */
+    fun previewChangePlan(
+        subscriptionId: String,
+        params: SubscriptionPreviewChangePlanParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+
+    /** @see previewChangePlan */
+    fun previewChangePlan(
+        params: SubscriptionPreviewChangePlanParams
+    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(params, RequestOptions.none())
+
+    /** @see previewChangePlan */
+    fun previewChangePlan(
+        params: SubscriptionPreviewChangePlanParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionPreviewChangePlanResponse>
 
     /**
      * Get detailed usage history for a subscription that includes usage-based billing (metered
@@ -482,6 +510,40 @@ interface SubscriptionServiceAsync {
             params: SubscriptionChargeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>>
+
+        /**
+         * Returns a raw HTTP response for `post
+         * /subscriptions/{subscription_id}/change-plan/preview`, but is otherwise the same as
+         * [SubscriptionServiceAsync.previewChangePlan].
+         */
+        fun previewChangePlan(
+            subscriptionId: String,
+            params: SubscriptionPreviewChangePlanParams,
+        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+            previewChangePlan(subscriptionId, params, RequestOptions.none())
+
+        /** @see previewChangePlan */
+        fun previewChangePlan(
+            subscriptionId: String,
+            params: SubscriptionPreviewChangePlanParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+            previewChangePlan(
+                params.toBuilder().subscriptionId(subscriptionId).build(),
+                requestOptions,
+            )
+
+        /** @see previewChangePlan */
+        fun previewChangePlan(
+            params: SubscriptionPreviewChangePlanParams
+        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+            previewChangePlan(params, RequestOptions.none())
+
+        /** @see previewChangePlan */
+        fun previewChangePlan(
+            params: SubscriptionPreviewChangePlanParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>>
 
         /**
          * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but

@@ -43,6 +43,7 @@ private constructor(
     private val subscriptionOnHold: SubscriptionOnHoldWebhookEvent? = null,
     private val subscriptionPlanChanged: SubscriptionPlanChangedWebhookEvent? = null,
     private val subscriptionRenewed: SubscriptionRenewedWebhookEvent? = null,
+    private val subscriptionUpdated: SubscriptionUpdatedWebhookEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -103,6 +104,9 @@ private constructor(
     fun subscriptionRenewed(): Optional<SubscriptionRenewedWebhookEvent> =
         Optional.ofNullable(subscriptionRenewed)
 
+    fun subscriptionUpdated(): Optional<SubscriptionUpdatedWebhookEvent> =
+        Optional.ofNullable(subscriptionUpdated)
+
     fun isDisputeAccepted(): Boolean = disputeAccepted != null
 
     fun isDisputeCancelled(): Boolean = disputeCancelled != null
@@ -144,6 +148,8 @@ private constructor(
     fun isSubscriptionPlanChanged(): Boolean = subscriptionPlanChanged != null
 
     fun isSubscriptionRenewed(): Boolean = subscriptionRenewed != null
+
+    fun isSubscriptionUpdated(): Boolean = subscriptionUpdated != null
 
     fun asDisputeAccepted(): DisputeAcceptedWebhookEvent =
         disputeAccepted.getOrThrow("disputeAccepted")
@@ -202,6 +208,9 @@ private constructor(
     fun asSubscriptionRenewed(): SubscriptionRenewedWebhookEvent =
         subscriptionRenewed.getOrThrow("subscriptionRenewed")
 
+    fun asSubscriptionUpdated(): SubscriptionUpdatedWebhookEvent =
+        subscriptionUpdated.getOrThrow("subscriptionUpdated")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -229,6 +238,7 @@ private constructor(
             subscriptionPlanChanged != null ->
                 visitor.visitSubscriptionPlanChanged(subscriptionPlanChanged)
             subscriptionRenewed != null -> visitor.visitSubscriptionRenewed(subscriptionRenewed)
+            subscriptionUpdated != null -> visitor.visitSubscriptionUpdated(subscriptionUpdated)
             else -> visitor.unknown(_json)
         }
 
@@ -344,6 +354,12 @@ private constructor(
                 ) {
                     subscriptionRenewed.validate()
                 }
+
+                override fun visitSubscriptionUpdated(
+                    subscriptionUpdated: SubscriptionUpdatedWebhookEvent
+                ) {
+                    subscriptionUpdated.validate()
+                }
             }
         )
         validated = true
@@ -439,6 +455,10 @@ private constructor(
                     subscriptionRenewed: SubscriptionRenewedWebhookEvent
                 ) = subscriptionRenewed.validity()
 
+                override fun visitSubscriptionUpdated(
+                    subscriptionUpdated: SubscriptionUpdatedWebhookEvent
+                ) = subscriptionUpdated.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -469,7 +489,8 @@ private constructor(
             subscriptionFailed == other.subscriptionFailed &&
             subscriptionOnHold == other.subscriptionOnHold &&
             subscriptionPlanChanged == other.subscriptionPlanChanged &&
-            subscriptionRenewed == other.subscriptionRenewed
+            subscriptionRenewed == other.subscriptionRenewed &&
+            subscriptionUpdated == other.subscriptionUpdated
     }
 
     override fun hashCode(): Int =
@@ -495,6 +516,7 @@ private constructor(
             subscriptionOnHold,
             subscriptionPlanChanged,
             subscriptionRenewed,
+            subscriptionUpdated,
         )
 
     override fun toString(): String =
@@ -527,6 +549,8 @@ private constructor(
                 "UnwrapWebhookEvent{subscriptionPlanChanged=$subscriptionPlanChanged}"
             subscriptionRenewed != null ->
                 "UnwrapWebhookEvent{subscriptionRenewed=$subscriptionRenewed}"
+            subscriptionUpdated != null ->
+                "UnwrapWebhookEvent{subscriptionUpdated=$subscriptionUpdated}"
             _json != null -> "UnwrapWebhookEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid UnwrapWebhookEvent")
         }
@@ -617,6 +641,10 @@ private constructor(
         @JvmStatic
         fun ofSubscriptionRenewed(subscriptionRenewed: SubscriptionRenewedWebhookEvent) =
             UnwrapWebhookEvent(subscriptionRenewed = subscriptionRenewed)
+
+        @JvmStatic
+        fun ofSubscriptionUpdated(subscriptionUpdated: SubscriptionUpdatedWebhookEvent) =
+            UnwrapWebhookEvent(subscriptionUpdated = subscriptionUpdated)
     }
 
     /**
@@ -668,6 +696,8 @@ private constructor(
         ): T
 
         fun visitSubscriptionRenewed(subscriptionRenewed: SubscriptionRenewedWebhookEvent): T
+
+        fun visitSubscriptionUpdated(subscriptionUpdated: SubscriptionUpdatedWebhookEvent): T
 
         /**
          * Maps an unknown variant of [UnwrapWebhookEvent] to a value of type [T].
@@ -749,6 +779,8 @@ private constructor(
                             },
                         tryDeserialize(node, jacksonTypeRef<SubscriptionRenewedWebhookEvent>())
                             ?.let { UnwrapWebhookEvent(subscriptionRenewed = it, _json = json) },
+                        tryDeserialize(node, jacksonTypeRef<SubscriptionUpdatedWebhookEvent>())
+                            ?.let { UnwrapWebhookEvent(subscriptionUpdated = it, _json = json) },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -798,6 +830,8 @@ private constructor(
                     generator.writeObject(value.subscriptionPlanChanged)
                 value.subscriptionRenewed != null ->
                     generator.writeObject(value.subscriptionRenewed)
+                value.subscriptionUpdated != null ->
+                    generator.writeObject(value.subscriptionUpdated)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid UnwrapWebhookEvent")
             }
