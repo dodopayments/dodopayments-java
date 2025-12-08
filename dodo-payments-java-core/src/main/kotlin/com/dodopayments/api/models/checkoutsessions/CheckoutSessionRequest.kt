@@ -42,6 +42,7 @@ private constructor(
     private val featureFlags: JsonField<FeatureFlags>,
     private val force3ds: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
+    private val minimalAddress: JsonField<Boolean>,
     private val returnUrl: JsonField<String>,
     private val showSavedPaymentMethods: JsonField<Boolean>,
     private val subscriptionData: JsonField<SubscriptionData>,
@@ -77,6 +78,9 @@ private constructor(
         featureFlags: JsonField<FeatureFlags> = JsonMissing.of(),
         @JsonProperty("force_3ds") @ExcludeMissing force3ds: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+        @JsonProperty("minimal_address")
+        @ExcludeMissing
+        minimalAddress: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("return_url") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("show_saved_payment_methods")
         @ExcludeMissing
@@ -96,6 +100,7 @@ private constructor(
         featureFlags,
         force3ds,
         metadata,
+        minimalAddress,
         returnUrl,
         showSavedPaymentMethods,
         subscriptionData,
@@ -190,6 +195,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+    /**
+     * If true, only zipcode is required when confirm is true; other address fields remain optional
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun minimalAddress(): Optional<Boolean> = minimalAddress.getOptional("minimal_address")
 
     /**
      * The url to redirect after payment failure or success.
@@ -309,6 +322,15 @@ private constructor(
     @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
     /**
+     * Returns the raw JSON value of [minimalAddress].
+     *
+     * Unlike [minimalAddress], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("minimal_address")
+    @ExcludeMissing
+    fun _minimalAddress(): JsonField<Boolean> = minimalAddress
+
+    /**
      * Returns the raw JSON value of [returnUrl].
      *
      * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -374,6 +396,7 @@ private constructor(
         private var featureFlags: JsonField<FeatureFlags> = JsonMissing.of()
         private var force3ds: JsonField<Boolean> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
+        private var minimalAddress: JsonField<Boolean> = JsonMissing.of()
         private var returnUrl: JsonField<String> = JsonMissing.of()
         private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
         private var subscriptionData: JsonField<SubscriptionData> = JsonMissing.of()
@@ -393,6 +416,7 @@ private constructor(
             featureFlags = checkoutSessionRequest.featureFlags
             force3ds = checkoutSessionRequest.force3ds
             metadata = checkoutSessionRequest.metadata
+            minimalAddress = checkoutSessionRequest.minimalAddress
             returnUrl = checkoutSessionRequest.returnUrl
             showSavedPaymentMethods = checkoutSessionRequest.showSavedPaymentMethods
             subscriptionData = checkoutSessionRequest.subscriptionData
@@ -626,6 +650,23 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+        /**
+         * If true, only zipcode is required when confirm is true; other address fields remain
+         * optional
+         */
+        fun minimalAddress(minimalAddress: Boolean) = minimalAddress(JsonField.of(minimalAddress))
+
+        /**
+         * Sets [Builder.minimalAddress] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.minimalAddress] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun minimalAddress(minimalAddress: JsonField<Boolean>) = apply {
+            this.minimalAddress = minimalAddress
+        }
+
         /** The url to redirect after payment failure or success. */
         fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
 
@@ -718,6 +759,7 @@ private constructor(
                 featureFlags,
                 force3ds,
                 metadata,
+                minimalAddress,
                 returnUrl,
                 showSavedPaymentMethods,
                 subscriptionData,
@@ -743,6 +785,7 @@ private constructor(
         featureFlags().ifPresent { it.validate() }
         force3ds()
         metadata().ifPresent { it.validate() }
+        minimalAddress()
         returnUrl()
         showSavedPaymentMethods()
         subscriptionData().ifPresent { it.validate() }
@@ -776,6 +819,7 @@ private constructor(
             (featureFlags.asKnown().getOrNull()?.validity() ?: 0) +
             (if (force3ds.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (minimalAddress.asKnown().isPresent) 1 else 0) +
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
             (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
             (subscriptionData.asKnown().getOrNull()?.validity() ?: 0)
@@ -2861,6 +2905,7 @@ private constructor(
             featureFlags == other.featureFlags &&
             force3ds == other.force3ds &&
             metadata == other.metadata &&
+            minimalAddress == other.minimalAddress &&
             returnUrl == other.returnUrl &&
             showSavedPaymentMethods == other.showSavedPaymentMethods &&
             subscriptionData == other.subscriptionData &&
@@ -2880,6 +2925,7 @@ private constructor(
             featureFlags,
             force3ds,
             metadata,
+            minimalAddress,
             returnUrl,
             showSavedPaymentMethods,
             subscriptionData,
@@ -2890,5 +2936,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
 }
