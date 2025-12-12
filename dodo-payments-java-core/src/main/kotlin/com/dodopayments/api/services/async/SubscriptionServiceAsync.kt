@@ -39,10 +39,12 @@ interface SubscriptionServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync
 
+    @Deprecated("deprecated")
     fun create(params: SubscriptionCreateParams): CompletableFuture<SubscriptionCreateResponse> =
         create(params, RequestOptions.none())
 
     /** @see create */
+    @Deprecated("deprecated")
     fun create(
         params: SubscriptionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -336,12 +338,14 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `post /subscriptions`, but is otherwise the same as
          * [SubscriptionServiceAsync.create].
          */
+        @Deprecated("deprecated")
         fun create(
             params: SubscriptionCreateParams
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see create */
+        @Deprecated("deprecated")
         fun create(
             params: SubscriptionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),

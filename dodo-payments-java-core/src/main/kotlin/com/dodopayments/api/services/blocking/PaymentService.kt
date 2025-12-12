@@ -30,10 +30,12 @@ interface PaymentService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService
 
+    @Deprecated("deprecated")
     fun create(params: PaymentCreateParams): PaymentCreateResponse =
         create(params, RequestOptions.none())
 
     /** @see create */
+    @Deprecated("deprecated")
     fun create(
         params: PaymentCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -133,11 +135,13 @@ interface PaymentService {
          * Returns a raw HTTP response for `post /payments`, but is otherwise the same as
          * [PaymentService.create].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun create(params: PaymentCreateParams): HttpResponseFor<PaymentCreateResponse> =
             create(params, RequestOptions.none())
 
         /** @see create */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun create(
             params: PaymentCreateParams,
