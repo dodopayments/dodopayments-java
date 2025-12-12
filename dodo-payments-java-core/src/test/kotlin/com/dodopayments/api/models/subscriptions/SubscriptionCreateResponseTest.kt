@@ -7,6 +7,7 @@ import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -41,6 +42,12 @@ internal class SubscriptionCreateResponseTest {
                 .clientSecret("client_secret")
                 .discountId("discount_id")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .addOneTimeProductCart(
+                    SubscriptionCreateResponse.OneTimeProductCart.builder()
+                        .productId("product_id")
+                        .quantity(0)
+                        .build()
+                )
                 .paymentLink("payment_link")
                 .build()
 
@@ -75,6 +82,13 @@ internal class SubscriptionCreateResponseTest {
         assertThat(subscriptionCreateResponse.discountId()).contains("discount_id")
         assertThat(subscriptionCreateResponse.expiresOn())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(subscriptionCreateResponse.oneTimeProductCart().getOrNull())
+            .containsExactly(
+                SubscriptionCreateResponse.OneTimeProductCart.builder()
+                    .productId("product_id")
+                    .quantity(0)
+                    .build()
+            )
         assertThat(subscriptionCreateResponse.paymentLink()).contains("payment_link")
     }
 
@@ -108,6 +122,12 @@ internal class SubscriptionCreateResponseTest {
                 .clientSecret("client_secret")
                 .discountId("discount_id")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .addOneTimeProductCart(
+                    SubscriptionCreateResponse.OneTimeProductCart.builder()
+                        .productId("product_id")
+                        .quantity(0)
+                        .build()
+                )
                 .paymentLink("payment_link")
                 .build()
 
