@@ -23,6 +23,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+@Deprecated("deprecated")
 class PaymentCreateParams
 private constructor(
     private val body: Body,
