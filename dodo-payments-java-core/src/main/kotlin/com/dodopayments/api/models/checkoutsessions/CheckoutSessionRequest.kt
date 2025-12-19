@@ -44,6 +44,7 @@ private constructor(
     private val metadata: JsonField<Metadata>,
     private val minimalAddress: JsonField<Boolean>,
     private val returnUrl: JsonField<String>,
+    private val shortLink: JsonField<Boolean>,
     private val showSavedPaymentMethods: JsonField<Boolean>,
     private val subscriptionData: JsonField<SubscriptionData>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -82,6 +83,9 @@ private constructor(
         @ExcludeMissing
         minimalAddress: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("return_url") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("short_link")
+        @ExcludeMissing
+        shortLink: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("show_saved_payment_methods")
         @ExcludeMissing
         showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of(),
@@ -102,6 +106,7 @@ private constructor(
         metadata,
         minimalAddress,
         returnUrl,
+        shortLink,
         showSavedPaymentMethods,
         subscriptionData,
         mutableMapOf(),
@@ -211,6 +216,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun returnUrl(): Optional<String> = returnUrl.getOptional("return_url")
+
+    /**
+     * If true, returns a shortened checkout URL. Defaults to false if not specified.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun shortLink(): Optional<Boolean> = shortLink.getOptional("short_link")
 
     /**
      * Display saved payment methods of a returning customer False by default
@@ -338,6 +351,13 @@ private constructor(
     @JsonProperty("return_url") @ExcludeMissing fun _returnUrl(): JsonField<String> = returnUrl
 
     /**
+     * Returns the raw JSON value of [shortLink].
+     *
+     * Unlike [shortLink], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("short_link") @ExcludeMissing fun _shortLink(): JsonField<Boolean> = shortLink
+
+    /**
      * Returns the raw JSON value of [showSavedPaymentMethods].
      *
      * Unlike [showSavedPaymentMethods], this method doesn't throw if the JSON field has an
@@ -398,6 +418,7 @@ private constructor(
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var minimalAddress: JsonField<Boolean> = JsonMissing.of()
         private var returnUrl: JsonField<String> = JsonMissing.of()
+        private var shortLink: JsonField<Boolean> = JsonMissing.of()
         private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
         private var subscriptionData: JsonField<SubscriptionData> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -418,6 +439,7 @@ private constructor(
             metadata = checkoutSessionRequest.metadata
             minimalAddress = checkoutSessionRequest.minimalAddress
             returnUrl = checkoutSessionRequest.returnUrl
+            shortLink = checkoutSessionRequest.shortLink
             showSavedPaymentMethods = checkoutSessionRequest.showSavedPaymentMethods
             subscriptionData = checkoutSessionRequest.subscriptionData
             additionalProperties = checkoutSessionRequest.additionalProperties.toMutableMap()
@@ -682,6 +704,18 @@ private constructor(
          */
         fun returnUrl(returnUrl: JsonField<String>) = apply { this.returnUrl = returnUrl }
 
+        /** If true, returns a shortened checkout URL. Defaults to false if not specified. */
+        fun shortLink(shortLink: Boolean) = shortLink(JsonField.of(shortLink))
+
+        /**
+         * Sets [Builder.shortLink] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.shortLink] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun shortLink(shortLink: JsonField<Boolean>) = apply { this.shortLink = shortLink }
+
         /** Display saved payment methods of a returning customer False by default */
         fun showSavedPaymentMethods(showSavedPaymentMethods: Boolean) =
             showSavedPaymentMethods(JsonField.of(showSavedPaymentMethods))
@@ -761,6 +795,7 @@ private constructor(
                 metadata,
                 minimalAddress,
                 returnUrl,
+                shortLink,
                 showSavedPaymentMethods,
                 subscriptionData,
                 additionalProperties.toMutableMap(),
@@ -787,6 +822,7 @@ private constructor(
         metadata().ifPresent { it.validate() }
         minimalAddress()
         returnUrl()
+        shortLink()
         showSavedPaymentMethods()
         subscriptionData().ifPresent { it.validate() }
         validated = true
@@ -821,6 +857,7 @@ private constructor(
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (minimalAddress.asKnown().isPresent) 1 else 0) +
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
+            (if (shortLink.asKnown().isPresent) 1 else 0) +
             (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
             (subscriptionData.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -1916,6 +1953,7 @@ private constructor(
         private val allowPhoneNumberCollection: JsonField<Boolean>,
         private val allowTaxId: JsonField<Boolean>,
         private val alwaysCreateNewCustomer: JsonField<Boolean>,
+        private val redirectImmediately: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1957,6 +1995,9 @@ private constructor(
             @JsonProperty("always_create_new_customer")
             @ExcludeMissing
             alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("redirect_immediately")
+            @ExcludeMissing
+            redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
             allowCurrencySelection,
             allowCustomerEditingCity,
@@ -1970,6 +2011,7 @@ private constructor(
             allowPhoneNumberCollection,
             allowTaxId,
             alwaysCreateNewCustomer,
+            redirectImmediately,
             mutableMapOf(),
         )
 
@@ -2076,6 +2118,17 @@ private constructor(
          */
         fun alwaysCreateNewCustomer(): Optional<Boolean> =
             alwaysCreateNewCustomer.getOptional("always_create_new_customer")
+
+        /**
+         * If true, redirects the customer immediately after payment completion
+         *
+         * Default is false
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun redirectImmediately(): Optional<Boolean> =
+            redirectImmediately.getOptional("redirect_immediately")
 
         /**
          * Returns the raw JSON value of [allowCurrencySelection].
@@ -2196,6 +2249,16 @@ private constructor(
         @ExcludeMissing
         fun _alwaysCreateNewCustomer(): JsonField<Boolean> = alwaysCreateNewCustomer
 
+        /**
+         * Returns the raw JSON value of [redirectImmediately].
+         *
+         * Unlike [redirectImmediately], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("redirect_immediately")
+        @ExcludeMissing
+        fun _redirectImmediately(): JsonField<Boolean> = redirectImmediately
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2229,6 +2292,7 @@ private constructor(
             private var allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of()
             private var allowTaxId: JsonField<Boolean> = JsonMissing.of()
             private var alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of()
+            private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2245,6 +2309,7 @@ private constructor(
                 allowPhoneNumberCollection = featureFlags.allowPhoneNumberCollection
                 allowTaxId = featureFlags.allowTaxId
                 alwaysCreateNewCustomer = featureFlags.alwaysCreateNewCustomer
+                redirectImmediately = featureFlags.redirectImmediately
                 additionalProperties = featureFlags.additionalProperties.toMutableMap()
             }
 
@@ -2441,6 +2506,25 @@ private constructor(
                 this.alwaysCreateNewCustomer = alwaysCreateNewCustomer
             }
 
+            /**
+             * If true, redirects the customer immediately after payment completion
+             *
+             * Default is false
+             */
+            fun redirectImmediately(redirectImmediately: Boolean) =
+                redirectImmediately(JsonField.of(redirectImmediately))
+
+            /**
+             * Sets [Builder.redirectImmediately] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.redirectImmediately] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun redirectImmediately(redirectImmediately: JsonField<Boolean>) = apply {
+                this.redirectImmediately = redirectImmediately
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2479,6 +2563,7 @@ private constructor(
                     allowPhoneNumberCollection,
                     allowTaxId,
                     alwaysCreateNewCustomer,
+                    redirectImmediately,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -2502,6 +2587,7 @@ private constructor(
             allowPhoneNumberCollection()
             allowTaxId()
             alwaysCreateNewCustomer()
+            redirectImmediately()
             validated = true
         }
 
@@ -2532,7 +2618,8 @@ private constructor(
                 (if (allowDiscountCode.asKnown().isPresent) 1 else 0) +
                 (if (allowPhoneNumberCollection.asKnown().isPresent) 1 else 0) +
                 (if (allowTaxId.asKnown().isPresent) 1 else 0) +
-                (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0)
+                (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) +
+                (if (redirectImmediately.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2552,6 +2639,7 @@ private constructor(
                 allowPhoneNumberCollection == other.allowPhoneNumberCollection &&
                 allowTaxId == other.allowTaxId &&
                 alwaysCreateNewCustomer == other.alwaysCreateNewCustomer &&
+                redirectImmediately == other.redirectImmediately &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -2569,6 +2657,7 @@ private constructor(
                 allowPhoneNumberCollection,
                 allowTaxId,
                 alwaysCreateNewCustomer,
+                redirectImmediately,
                 additionalProperties,
             )
         }
@@ -2576,7 +2665,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "FeatureFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, additionalProperties=$additionalProperties}"
+            "FeatureFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */
@@ -2907,6 +2996,7 @@ private constructor(
             metadata == other.metadata &&
             minimalAddress == other.minimalAddress &&
             returnUrl == other.returnUrl &&
+            shortLink == other.shortLink &&
             showSavedPaymentMethods == other.showSavedPaymentMethods &&
             subscriptionData == other.subscriptionData &&
             additionalProperties == other.additionalProperties
@@ -2927,6 +3017,7 @@ private constructor(
             metadata,
             minimalAddress,
             returnUrl,
+            shortLink,
             showSavedPaymentMethods,
             subscriptionData,
             additionalProperties,
@@ -2936,5 +3027,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, returnUrl=$returnUrl, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
 }

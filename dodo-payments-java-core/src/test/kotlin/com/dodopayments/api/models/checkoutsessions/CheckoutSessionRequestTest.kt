@@ -66,6 +66,7 @@ internal class CheckoutSessionRequestTest {
                         .allowPhoneNumberCollection(true)
                         .allowTaxId(true)
                         .alwaysCreateNewCustomer(true)
+                        .redirectImmediately(true)
                         .build()
                 )
                 .force3ds(true)
@@ -76,6 +77,7 @@ internal class CheckoutSessionRequestTest {
                 )
                 .minimalAddress(true)
                 .returnUrl("return_url")
+                .shortLink(true)
                 .showSavedPaymentMethods(true)
                 .subscriptionData(
                     CheckoutSessionRequest.SubscriptionData.builder()
@@ -147,6 +149,7 @@ internal class CheckoutSessionRequestTest {
                     .allowPhoneNumberCollection(true)
                     .allowTaxId(true)
                     .alwaysCreateNewCustomer(true)
+                    .redirectImmediately(true)
                     .build()
             )
         assertThat(checkoutSessionRequest.force3ds()).contains(true)
@@ -158,6 +161,7 @@ internal class CheckoutSessionRequestTest {
             )
         assertThat(checkoutSessionRequest.minimalAddress()).contains(true)
         assertThat(checkoutSessionRequest.returnUrl()).contains("return_url")
+        assertThat(checkoutSessionRequest.shortLink()).contains(true)
         assertThat(checkoutSessionRequest.showSavedPaymentMethods()).contains(true)
         assertThat(checkoutSessionRequest.subscriptionData())
             .contains(
@@ -225,6 +229,7 @@ internal class CheckoutSessionRequestTest {
                         .allowPhoneNumberCollection(true)
                         .allowTaxId(true)
                         .alwaysCreateNewCustomer(true)
+                        .redirectImmediately(true)
                         .build()
                 )
                 .force3ds(true)
@@ -235,6 +240,7 @@ internal class CheckoutSessionRequestTest {
                 )
                 .minimalAddress(true)
                 .returnUrl("return_url")
+                .shortLink(true)
                 .showSavedPaymentMethods(true)
                 .subscriptionData(
                     CheckoutSessionRequest.SubscriptionData.builder()
