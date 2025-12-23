@@ -43,6 +43,7 @@ private constructor(
     private val force3ds: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
     private val minimalAddress: JsonField<Boolean>,
+    private val paymentMethodId: JsonField<String>,
     private val returnUrl: JsonField<String>,
     private val shortLink: JsonField<Boolean>,
     private val showSavedPaymentMethods: JsonField<Boolean>,
@@ -82,6 +83,9 @@ private constructor(
         @JsonProperty("minimal_address")
         @ExcludeMissing
         minimalAddress: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("payment_method_id")
+        @ExcludeMissing
+        paymentMethodId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("return_url") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("short_link")
         @ExcludeMissing
@@ -105,6 +109,7 @@ private constructor(
         force3ds,
         metadata,
         minimalAddress,
+        paymentMethodId,
         returnUrl,
         shortLink,
         showSavedPaymentMethods,
@@ -208,6 +213,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun minimalAddress(): Optional<Boolean> = minimalAddress.getOptional("minimal_address")
+
+    /**
+     * Optional payment method ID to use for this checkout session. Only allowed when `confirm` is
+     * true. If provided, existing customer id must also be provided.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
 
     /**
      * The url to redirect after payment failure or success.
@@ -344,6 +358,15 @@ private constructor(
     fun _minimalAddress(): JsonField<Boolean> = minimalAddress
 
     /**
+     * Returns the raw JSON value of [paymentMethodId].
+     *
+     * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("payment_method_id")
+    @ExcludeMissing
+    fun _paymentMethodId(): JsonField<String> = paymentMethodId
+
+    /**
      * Returns the raw JSON value of [returnUrl].
      *
      * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -417,6 +440,7 @@ private constructor(
         private var force3ds: JsonField<Boolean> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var minimalAddress: JsonField<Boolean> = JsonMissing.of()
+        private var paymentMethodId: JsonField<String> = JsonMissing.of()
         private var returnUrl: JsonField<String> = JsonMissing.of()
         private var shortLink: JsonField<Boolean> = JsonMissing.of()
         private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
@@ -438,6 +462,7 @@ private constructor(
             force3ds = checkoutSessionRequest.force3ds
             metadata = checkoutSessionRequest.metadata
             minimalAddress = checkoutSessionRequest.minimalAddress
+            paymentMethodId = checkoutSessionRequest.paymentMethodId
             returnUrl = checkoutSessionRequest.returnUrl
             shortLink = checkoutSessionRequest.shortLink
             showSavedPaymentMethods = checkoutSessionRequest.showSavedPaymentMethods
@@ -689,6 +714,28 @@ private constructor(
             this.minimalAddress = minimalAddress
         }
 
+        /**
+         * Optional payment method ID to use for this checkout session. Only allowed when `confirm`
+         * is true. If provided, existing customer id must also be provided.
+         */
+        fun paymentMethodId(paymentMethodId: String?) =
+            paymentMethodId(JsonField.ofNullable(paymentMethodId))
+
+        /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+        fun paymentMethodId(paymentMethodId: Optional<String>) =
+            paymentMethodId(paymentMethodId.getOrNull())
+
+        /**
+         * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+            this.paymentMethodId = paymentMethodId
+        }
+
         /** The url to redirect after payment failure or success. */
         fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
 
@@ -794,6 +841,7 @@ private constructor(
                 force3ds,
                 metadata,
                 minimalAddress,
+                paymentMethodId,
                 returnUrl,
                 shortLink,
                 showSavedPaymentMethods,
@@ -821,6 +869,7 @@ private constructor(
         force3ds()
         metadata().ifPresent { it.validate() }
         minimalAddress()
+        paymentMethodId()
         returnUrl()
         shortLink()
         showSavedPaymentMethods()
@@ -856,6 +905,7 @@ private constructor(
             (if (force3ds.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (minimalAddress.asKnown().isPresent) 1 else 0) +
+            (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
             (if (shortLink.asKnown().isPresent) 1 else 0) +
             (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
@@ -2995,6 +3045,7 @@ private constructor(
             force3ds == other.force3ds &&
             metadata == other.metadata &&
             minimalAddress == other.minimalAddress &&
+            paymentMethodId == other.paymentMethodId &&
             returnUrl == other.returnUrl &&
             shortLink == other.shortLink &&
             showSavedPaymentMethods == other.showSavedPaymentMethods &&
@@ -3016,6 +3067,7 @@ private constructor(
             force3ds,
             metadata,
             minimalAddress,
+            paymentMethodId,
             returnUrl,
             shortLink,
             showSavedPaymentMethods,
@@ -3027,5 +3079,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
 }
