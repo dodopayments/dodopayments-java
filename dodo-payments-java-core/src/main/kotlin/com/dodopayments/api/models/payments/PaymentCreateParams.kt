@@ -110,6 +110,15 @@ private constructor(
     fun paymentLink(): Optional<Boolean> = body.paymentLink()
 
     /**
+     * Optional payment method ID to use for this payment. If provided, customer_id must also be
+     * provided. The payment method will be validated for eligibility with the payment's currency.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun paymentMethodId(): Optional<String> = body.paymentMethodId()
+
+    /**
      * If true, redirects the customer immediately after payment completion False by default
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -213,6 +222,13 @@ private constructor(
      * Unlike [paymentLink], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _paymentLink(): JsonField<Boolean> = body._paymentLink()
+
+    /**
+     * Returns the raw JSON value of [paymentMethodId].
+     *
+     * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _paymentMethodId(): JsonField<String> = body._paymentMethodId()
 
     /**
      * Returns the raw JSON value of [redirectImmediately].
@@ -500,6 +516,30 @@ private constructor(
          */
         fun paymentLink(paymentLink: JsonField<Boolean>) = apply { body.paymentLink(paymentLink) }
 
+        /**
+         * Optional payment method ID to use for this payment. If provided, customer_id must also be
+         * provided. The payment method will be validated for eligibility with the payment's
+         * currency.
+         */
+        fun paymentMethodId(paymentMethodId: String?) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
+        /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+        fun paymentMethodId(paymentMethodId: Optional<String>) =
+            paymentMethodId(paymentMethodId.getOrNull())
+
+        /**
+         * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
         /** If true, redirects the customer immediately after payment completion False by default */
         fun redirectImmediately(redirectImmediately: Boolean) = apply {
             body.redirectImmediately(redirectImmediately)
@@ -743,6 +783,7 @@ private constructor(
         private val force3ds: JsonField<Boolean>,
         private val metadata: JsonField<Metadata>,
         private val paymentLink: JsonField<Boolean>,
+        private val paymentMethodId: JsonField<String>,
         private val redirectImmediately: JsonField<Boolean>,
         private val returnUrl: JsonField<String>,
         private val shortLink: JsonField<Boolean>,
@@ -780,6 +821,9 @@ private constructor(
             @JsonProperty("payment_link")
             @ExcludeMissing
             paymentLink: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("payment_method_id")
+            @ExcludeMissing
+            paymentMethodId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("redirect_immediately")
             @ExcludeMissing
             redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
@@ -803,6 +847,7 @@ private constructor(
             force3ds,
             metadata,
             paymentLink,
+            paymentMethodId,
             redirectImmediately,
             returnUrl,
             shortLink,
@@ -888,6 +933,16 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun paymentLink(): Optional<Boolean> = paymentLink.getOptional("payment_link")
+
+        /**
+         * Optional payment method ID to use for this payment. If provided, customer_id must also be
+         * provided. The payment method will be validated for eligibility with the payment's
+         * currency.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
 
         /**
          * If true, redirects the customer immediately after payment completion False by default
@@ -1012,6 +1067,16 @@ private constructor(
         fun _paymentLink(): JsonField<Boolean> = paymentLink
 
         /**
+         * Returns the raw JSON value of [paymentMethodId].
+         *
+         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_method_id")
+        @ExcludeMissing
+        fun _paymentMethodId(): JsonField<String> = paymentMethodId
+
+        /**
          * Returns the raw JSON value of [redirectImmediately].
          *
          * Unlike [redirectImmediately], this method doesn't throw if the JSON field has an
@@ -1092,6 +1157,7 @@ private constructor(
             private var force3ds: JsonField<Boolean> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var paymentLink: JsonField<Boolean> = JsonMissing.of()
+            private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
             private var returnUrl: JsonField<String> = JsonMissing.of()
             private var shortLink: JsonField<Boolean> = JsonMissing.of()
@@ -1111,6 +1177,7 @@ private constructor(
                 force3ds = body.force3ds
                 metadata = body.metadata
                 paymentLink = body.paymentLink
+                paymentMethodId = body.paymentMethodId
                 redirectImmediately = body.redirectImmediately
                 returnUrl = body.returnUrl
                 shortLink = body.shortLink
@@ -1327,6 +1394,29 @@ private constructor(
             }
 
             /**
+             * Optional payment method ID to use for this payment. If provided, customer_id must
+             * also be provided. The payment method will be validated for eligibility with the
+             * payment's currency.
+             */
+            fun paymentMethodId(paymentMethodId: String?) =
+                paymentMethodId(JsonField.ofNullable(paymentMethodId))
+
+            /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+            fun paymentMethodId(paymentMethodId: Optional<String>) =
+                paymentMethodId(paymentMethodId.getOrNull())
+
+            /**
+             * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+                this.paymentMethodId = paymentMethodId
+            }
+
+            /**
              * If true, redirects the customer immediately after payment completion False by default
              */
             fun redirectImmediately(redirectImmediately: Boolean) =
@@ -1459,6 +1549,7 @@ private constructor(
                     force3ds,
                     metadata,
                     paymentLink,
+                    paymentMethodId,
                     redirectImmediately,
                     returnUrl,
                     shortLink,
@@ -1484,6 +1575,7 @@ private constructor(
             force3ds()
             metadata().ifPresent { it.validate() }
             paymentLink()
+            paymentMethodId()
             redirectImmediately()
             returnUrl()
             shortLink()
@@ -1518,6 +1610,7 @@ private constructor(
                 (if (force3ds.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (paymentLink.asKnown().isPresent) 1 else 0) +
+                (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
                 (if (returnUrl.asKnown().isPresent) 1 else 0) +
                 (if (shortLink.asKnown().isPresent) 1 else 0) +
@@ -1539,6 +1632,7 @@ private constructor(
                 force3ds == other.force3ds &&
                 metadata == other.metadata &&
                 paymentLink == other.paymentLink &&
+                paymentMethodId == other.paymentMethodId &&
                 redirectImmediately == other.redirectImmediately &&
                 returnUrl == other.returnUrl &&
                 shortLink == other.shortLink &&
@@ -1558,6 +1652,7 @@ private constructor(
                 force3ds,
                 metadata,
                 paymentLink,
+                paymentMethodId,
                 redirectImmediately,
                 returnUrl,
                 shortLink,
@@ -1570,7 +1665,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, redirectImmediately=$redirectImmediately, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */

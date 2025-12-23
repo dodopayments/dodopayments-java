@@ -14,30 +14,24 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class CheckoutSessionResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val checkoutUrl: JsonField<String>,
     private val sessionId: JsonField<String>,
+    private val checkoutUrl: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
+        @JsonProperty("session_id") @ExcludeMissing sessionId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("checkout_url")
         @ExcludeMissing
         checkoutUrl: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("session_id") @ExcludeMissing sessionId: JsonField<String> = JsonMissing.of(),
-    ) : this(checkoutUrl, sessionId, mutableMapOf())
-
-    /**
-     * Checkout url
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun checkoutUrl(): String = checkoutUrl.getRequired("checkout_url")
+    ) : this(sessionId, checkoutUrl, mutableMapOf())
 
     /**
      * The ID of the created checkout session
@@ -48,13 +42,12 @@ private constructor(
     fun sessionId(): String = sessionId.getRequired("session_id")
 
     /**
-     * Returns the raw JSON value of [checkoutUrl].
+     * Checkout url (None when payment_method_id is provided)
      *
-     * Unlike [checkoutUrl], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
      */
-    @JsonProperty("checkout_url")
-    @ExcludeMissing
-    fun _checkoutUrl(): JsonField<String> = checkoutUrl
+    fun checkoutUrl(): Optional<String> = checkoutUrl.getOptional("checkout_url")
 
     /**
      * Returns the raw JSON value of [sessionId].
@@ -62,6 +55,15 @@ private constructor(
      * Unlike [sessionId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("session_id") @ExcludeMissing fun _sessionId(): JsonField<String> = sessionId
+
+    /**
+     * Returns the raw JSON value of [checkoutUrl].
+     *
+     * Unlike [checkoutUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("checkout_url")
+    @ExcludeMissing
+    fun _checkoutUrl(): JsonField<String> = checkoutUrl
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -82,7 +84,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .checkoutUrl()
          * .sessionId()
          * ```
          */
@@ -92,28 +93,16 @@ private constructor(
     /** A builder for [CheckoutSessionResponse]. */
     class Builder internal constructor() {
 
-        private var checkoutUrl: JsonField<String>? = null
         private var sessionId: JsonField<String>? = null
+        private var checkoutUrl: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(checkoutSessionResponse: CheckoutSessionResponse) = apply {
-            checkoutUrl = checkoutSessionResponse.checkoutUrl
             sessionId = checkoutSessionResponse.sessionId
+            checkoutUrl = checkoutSessionResponse.checkoutUrl
             additionalProperties = checkoutSessionResponse.additionalProperties.toMutableMap()
         }
-
-        /** Checkout url */
-        fun checkoutUrl(checkoutUrl: String) = checkoutUrl(JsonField.of(checkoutUrl))
-
-        /**
-         * Sets [Builder.checkoutUrl] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.checkoutUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun checkoutUrl(checkoutUrl: JsonField<String>) = apply { this.checkoutUrl = checkoutUrl }
 
         /** The ID of the created checkout session */
         fun sessionId(sessionId: String) = sessionId(JsonField.of(sessionId))
@@ -126,6 +115,21 @@ private constructor(
          * value.
          */
         fun sessionId(sessionId: JsonField<String>) = apply { this.sessionId = sessionId }
+
+        /** Checkout url (None when payment_method_id is provided) */
+        fun checkoutUrl(checkoutUrl: String?) = checkoutUrl(JsonField.ofNullable(checkoutUrl))
+
+        /** Alias for calling [Builder.checkoutUrl] with `checkoutUrl.orElse(null)`. */
+        fun checkoutUrl(checkoutUrl: Optional<String>) = checkoutUrl(checkoutUrl.getOrNull())
+
+        /**
+         * Sets [Builder.checkoutUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.checkoutUrl] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun checkoutUrl(checkoutUrl: JsonField<String>) = apply { this.checkoutUrl = checkoutUrl }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -153,7 +157,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .checkoutUrl()
          * .sessionId()
          * ```
          *
@@ -161,8 +164,8 @@ private constructor(
          */
         fun build(): CheckoutSessionResponse =
             CheckoutSessionResponse(
-                checkRequired("checkoutUrl", checkoutUrl),
                 checkRequired("sessionId", sessionId),
+                checkoutUrl,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -174,8 +177,8 @@ private constructor(
             return@apply
         }
 
-        checkoutUrl()
         sessionId()
+        checkoutUrl()
         validated = true
     }
 
@@ -194,8 +197,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (checkoutUrl.asKnown().isPresent) 1 else 0) +
-            (if (sessionId.asKnown().isPresent) 1 else 0)
+        (if (sessionId.asKnown().isPresent) 1 else 0) +
+            (if (checkoutUrl.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -203,15 +206,15 @@ private constructor(
         }
 
         return other is CheckoutSessionResponse &&
-            checkoutUrl == other.checkoutUrl &&
             sessionId == other.sessionId &&
+            checkoutUrl == other.checkoutUrl &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(checkoutUrl, sessionId, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(sessionId, checkoutUrl, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionResponse{checkoutUrl=$checkoutUrl, sessionId=$sessionId, additionalProperties=$additionalProperties}"
+        "CheckoutSessionResponse{sessionId=$sessionId, checkoutUrl=$checkoutUrl, additionalProperties=$additionalProperties}"
 }
