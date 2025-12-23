@@ -30,6 +30,8 @@ import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.ImageServiceImpl
+import com.dodopayments.api.services.blocking.products.ShortLinkService
+import com.dodopayments.api.services.blocking.products.ShortLinkServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -42,12 +44,16 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
 
     private val images: ImageService by lazy { ImageServiceImpl(clientOptions) }
 
+    private val shortLinks: ShortLinkService by lazy { ShortLinkServiceImpl(clientOptions) }
+
     override fun withRawResponse(): ProductService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService =
         ProductServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageService = images
+
+    override fun shortLinks(): ShortLinkService = shortLinks
 
     override fun create(params: ProductCreateParams, requestOptions: RequestOptions): Product =
         // post /products
@@ -93,6 +99,10 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             ImageServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val shortLinks: ShortLinkService.WithRawResponse by lazy {
+            ShortLinkServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ProductService.WithRawResponse =
@@ -101,6 +111,8 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             )
 
         override fun images(): ImageService.WithRawResponse = images
+
+        override fun shortLinks(): ShortLinkService.WithRawResponse = shortLinks
 
         private val createHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
