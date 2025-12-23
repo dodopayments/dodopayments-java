@@ -17,6 +17,7 @@ import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
+import com.dodopayments.api.services.async.products.ShortLinkServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -35,6 +36,8 @@ interface ProductServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync
 
     fun images(): ImageServiceAsync
+
+    fun shortLinks(): ShortLinkServiceAsync
 
     fun create(params: ProductCreateParams): CompletableFuture<Product> =
         create(params, RequestOptions.none())
@@ -220,6 +223,8 @@ interface ProductServiceAsync {
         ): ProductServiceAsync.WithRawResponse
 
         fun images(): ImageServiceAsync.WithRawResponse
+
+        fun shortLinks(): ShortLinkServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /products`, but is otherwise the same as

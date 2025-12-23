@@ -30,6 +30,8 @@ import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.ImageServiceAsyncImpl
+import com.dodopayments.api.services.async.products.ShortLinkServiceAsync
+import com.dodopayments.api.services.async.products.ShortLinkServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -43,12 +45,18 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     private val images: ImageServiceAsync by lazy { ImageServiceAsyncImpl(clientOptions) }
 
+    private val shortLinks: ShortLinkServiceAsync by lazy {
+        ShortLinkServiceAsyncImpl(clientOptions)
+    }
+
     override fun withRawResponse(): ProductServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync =
         ProductServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageServiceAsync = images
+
+    override fun shortLinks(): ShortLinkServiceAsync = shortLinks
 
     override fun create(
         params: ProductCreateParams,
@@ -109,6 +117,10 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             ImageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val shortLinks: ShortLinkServiceAsync.WithRawResponse by lazy {
+            ShortLinkServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ProductServiceAsync.WithRawResponse =
@@ -117,6 +129,8 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
             )
 
         override fun images(): ImageServiceAsync.WithRawResponse = images
+
+        override fun shortLinks(): ShortLinkServiceAsync.WithRawResponse = shortLinks
 
         private val createHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
