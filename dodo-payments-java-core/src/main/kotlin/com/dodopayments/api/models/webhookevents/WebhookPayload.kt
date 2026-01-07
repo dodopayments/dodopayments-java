@@ -588,6 +588,7 @@ private constructor(
             private val settlementAmount: JsonField<Int>,
             private val settlementCurrency: JsonField<Currency>,
             private val totalAmount: JsonField<Int>,
+            private val cardHolderName: JsonField<String>,
             private val cardIssuingCountry: JsonField<CountryCode>,
             private val cardLastFour: JsonField<String>,
             private val cardNetwork: JsonField<String>,
@@ -654,6 +655,9 @@ private constructor(
                 @JsonProperty("total_amount")
                 @ExcludeMissing
                 totalAmount: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("card_holder_name")
+                @ExcludeMissing
+                cardHolderName: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("card_issuing_country")
                 @ExcludeMissing
                 cardIssuingCountry: JsonField<CountryCode> = JsonMissing.of(),
@@ -724,6 +728,7 @@ private constructor(
                 settlementAmount,
                 settlementCurrency,
                 totalAmount,
+                cardHolderName,
                 cardIssuingCountry,
                 cardLastFour,
                 cardNetwork,
@@ -762,6 +767,7 @@ private constructor(
                     .settlementAmount(settlementAmount)
                     .settlementCurrency(settlementCurrency)
                     .totalAmount(totalAmount)
+                    .cardHolderName(cardHolderName)
                     .cardIssuingCountry(cardIssuingCountry)
                     .cardLastFour(cardLastFour)
                     .cardNetwork(cardNetwork)
@@ -913,6 +919,14 @@ private constructor(
              *   value).
              */
             fun totalAmount(): Int = totalAmount.getRequired("total_amount")
+
+            /**
+             * Cardholder name
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun cardHolderName(): Optional<String> = cardHolderName.getOptional("card_holder_name")
 
             /**
              * ISO2 country code of the card
@@ -1208,6 +1222,16 @@ private constructor(
             fun _totalAmount(): JsonField<Int> = totalAmount
 
             /**
+             * Returns the raw JSON value of [cardHolderName].
+             *
+             * Unlike [cardHolderName], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("card_holder_name")
+            @ExcludeMissing
+            fun _cardHolderName(): JsonField<String> = cardHolderName
+
+            /**
              * Returns the raw JSON value of [cardIssuingCountry].
              *
              * Unlike [cardIssuingCountry], this method doesn't throw if the JSON field has an
@@ -1445,6 +1469,7 @@ private constructor(
                 private var settlementAmount: JsonField<Int>? = null
                 private var settlementCurrency: JsonField<Currency>? = null
                 private var totalAmount: JsonField<Int>? = null
+                private var cardHolderName: JsonField<String> = JsonMissing.of()
                 private var cardIssuingCountry: JsonField<CountryCode> = JsonMissing.of()
                 private var cardLastFour: JsonField<String> = JsonMissing.of()
                 private var cardNetwork: JsonField<String> = JsonMissing.of()
@@ -1482,6 +1507,7 @@ private constructor(
                     settlementAmount = payment.settlementAmount
                     settlementCurrency = payment.settlementCurrency
                     totalAmount = payment.totalAmount
+                    cardHolderName = payment.cardHolderName
                     cardIssuingCountry = payment.cardIssuingCountry
                     cardLastFour = payment.cardLastFour
                     cardNetwork = payment.cardNetwork
@@ -1728,6 +1754,27 @@ private constructor(
                  */
                 fun totalAmount(totalAmount: JsonField<Int>) = apply {
                     this.totalAmount = totalAmount
+                }
+
+                /** Cardholder name */
+                fun cardHolderName(cardHolderName: String?) =
+                    cardHolderName(JsonField.ofNullable(cardHolderName))
+
+                /**
+                 * Alias for calling [Builder.cardHolderName] with `cardHolderName.orElse(null)`.
+                 */
+                fun cardHolderName(cardHolderName: Optional<String>) =
+                    cardHolderName(cardHolderName.getOrNull())
+
+                /**
+                 * Sets [Builder.cardHolderName] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.cardHolderName] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun cardHolderName(cardHolderName: JsonField<String>) = apply {
+                    this.cardHolderName = cardHolderName
                 }
 
                 /** ISO2 country code of the card */
@@ -2171,6 +2218,7 @@ private constructor(
                         checkRequired("settlementAmount", settlementAmount),
                         checkRequired("settlementCurrency", settlementCurrency),
                         checkRequired("totalAmount", totalAmount),
+                        cardHolderName,
                         cardIssuingCountry,
                         cardLastFour,
                         cardNetwork,
@@ -2215,6 +2263,7 @@ private constructor(
                 settlementAmount()
                 settlementCurrency().validate()
                 totalAmount()
+                cardHolderName()
                 cardIssuingCountry().ifPresent { it.validate() }
                 cardLastFour()
                 cardNetwork()
@@ -2267,6 +2316,7 @@ private constructor(
                     (if (settlementAmount.asKnown().isPresent) 1 else 0) +
                     (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (totalAmount.asKnown().isPresent) 1 else 0) +
+                    (if (cardHolderName.asKnown().isPresent) 1 else 0) +
                     (cardIssuingCountry.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (cardLastFour.asKnown().isPresent) 1 else 0) +
                     (if (cardNetwork.asKnown().isPresent) 1 else 0) +
@@ -2434,6 +2484,7 @@ private constructor(
                     settlementAmount == other.settlementAmount &&
                     settlementCurrency == other.settlementCurrency &&
                     totalAmount == other.totalAmount &&
+                    cardHolderName == other.cardHolderName &&
                     cardIssuingCountry == other.cardIssuingCountry &&
                     cardLastFour == other.cardLastFour &&
                     cardNetwork == other.cardNetwork &&
@@ -2472,6 +2523,7 @@ private constructor(
                     settlementAmount,
                     settlementCurrency,
                     totalAmount,
+                    cardHolderName,
                     cardIssuingCountry,
                     cardLastFour,
                     cardNetwork,
@@ -2498,7 +2550,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         /** Response struct representing subscription details */
