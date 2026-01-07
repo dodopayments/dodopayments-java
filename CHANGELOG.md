@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.71.0 (2026-01-07)
+
+Full Changelog: [v1.70.0...v1.71.0](https://github.com/dodopayments/dodopayments-java/compare/v1.70.0...v1.71.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.70.0 ([a16fbbf](https://github.com/dodopayments/dodopayments-java/commit/a16fbbf5b09a73d71a545c5e5a07d53cb849ad98))
+* **client:** add `HttpRequest#url()` method ([301adb0](https://github.com/dodopayments/dodopayments-java/commit/301adb07544935f834f1dff183cfc93bd124d796))
+
+
+### Documentation
+
+* prominently feature MCP server setup in root SDK readmes ([fa44cdc](https://github.com/dodopayments/dodopayments-java/commit/fa44cdcc9919e7cc912a8572f323be18b31c17ca))
+
 ## 1.70.0 (2025-12-23)
 
 Full Changelog: [v1.69.0...v1.70.0](https://github.com/dodopayments/dodopayments-java/compare/v1.69.0...v1.70.0)
