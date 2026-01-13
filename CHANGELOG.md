@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.71.1 (2026-01-13)
+
+Full Changelog: [v1.71.0...v1.71.1](https://github.com/dodopayments/dodopayments-java/compare/v1.71.0...v1.71.1)
+
+### Features
+
+* **client:** allow configuring dispatcher executor service ([d00e32a](https://github.com/dodopayments/dodopayments-java/commit/d00e32a3695bc541cfe71602f7813fbb1b341d38))
+
+
+### Chores
+
+* **internal:** support uploading Maven repo artifacts to stainless package server ([852e21d](https://github.com/dodopayments/dodopayments-java/commit/852e21d428de78704e0a145f24c501bc7ca60891))
+
 ## 1.71.0 (2026-01-07)
 
 Full Changelog: [v1.70.0...v1.71.0](https://github.com/dodopayments/dodopayments-java/compare/v1.70.0...v1.71.0)
