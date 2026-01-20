@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.subscriptions
 
+import com.dodopayments.api.core.JsonValue
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,6 +19,11 @@ internal class SubscriptionChangePlanParamsTest {
             )
             .quantity(0)
             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+            .metadata(
+                SubscriptionChangePlanParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
             .build()
     }
 
@@ -49,6 +55,11 @@ internal class SubscriptionChangePlanParamsTest {
                 )
                 .quantity(0)
                 .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                .metadata(
+                    SubscriptionChangePlanParams.Metadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                        .build()
+                )
                 .build()
 
         val body = params._body()
@@ -59,6 +70,12 @@ internal class SubscriptionChangePlanParamsTest {
         assertThat(body.quantity()).isEqualTo(0)
         assertThat(body.addons().getOrNull())
             .containsExactly(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+        assertThat(body.metadata())
+            .contains(
+                SubscriptionChangePlanParams.Metadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                    .build()
+            )
     }
 
     @Test

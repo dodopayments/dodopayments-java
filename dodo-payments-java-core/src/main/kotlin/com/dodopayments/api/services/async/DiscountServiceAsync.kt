@@ -11,6 +11,7 @@ import com.dodopayments.api.models.discounts.DiscountCreateParams
 import com.dodopayments.api.models.discounts.DiscountDeleteParams
 import com.dodopayments.api.models.discounts.DiscountListPageAsync
 import com.dodopayments.api.models.discounts.DiscountListParams
+import com.dodopayments.api.models.discounts.DiscountRetrieveByCodeParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -155,6 +156,42 @@ interface DiscountServiceAsync {
     /** @see delete */
     fun delete(discountId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
         delete(discountId, DiscountDeleteParams.none(), requestOptions)
+
+    /**
+     * Validate and fetch a discount by its code name (e.g., "SAVE20"). This allows real-time
+     * validation directly against the API using the human-readable discount code instead of
+     * requiring the internal discount_id.
+     */
+    fun retrieveByCode(code: String): CompletableFuture<Discount> =
+        retrieveByCode(code, DiscountRetrieveByCodeParams.none())
+
+    /** @see retrieveByCode */
+    fun retrieveByCode(
+        code: String,
+        params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Discount> =
+        retrieveByCode(params.toBuilder().code(code).build(), requestOptions)
+
+    /** @see retrieveByCode */
+    fun retrieveByCode(
+        code: String,
+        params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
+    ): CompletableFuture<Discount> = retrieveByCode(code, params, RequestOptions.none())
+
+    /** @see retrieveByCode */
+    fun retrieveByCode(
+        params: DiscountRetrieveByCodeParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Discount>
+
+    /** @see retrieveByCode */
+    fun retrieveByCode(params: DiscountRetrieveByCodeParams): CompletableFuture<Discount> =
+        retrieveByCode(params, RequestOptions.none())
+
+    /** @see retrieveByCode */
+    fun retrieveByCode(code: String, requestOptions: RequestOptions): CompletableFuture<Discount> =
+        retrieveByCode(code, DiscountRetrieveByCodeParams.none(), requestOptions)
 
     /**
      * A view of [DiscountServiceAsync] that provides access to raw HTTP responses for each method.
@@ -323,5 +360,46 @@ interface DiscountServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> =
             delete(discountId, DiscountDeleteParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /discounts/code/{code}`, but is otherwise the same
+         * as [DiscountServiceAsync.retrieveByCode].
+         */
+        fun retrieveByCode(code: String): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(code, DiscountRetrieveByCodeParams.none())
+
+        /** @see retrieveByCode */
+        fun retrieveByCode(
+            code: String,
+            params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(params.toBuilder().code(code).build(), requestOptions)
+
+        /** @see retrieveByCode */
+        fun retrieveByCode(
+            code: String,
+            params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
+        ): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(code, params, RequestOptions.none())
+
+        /** @see retrieveByCode */
+        fun retrieveByCode(
+            params: DiscountRetrieveByCodeParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Discount>>
+
+        /** @see retrieveByCode */
+        fun retrieveByCode(
+            params: DiscountRetrieveByCodeParams
+        ): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(params, RequestOptions.none())
+
+        /** @see retrieveByCode */
+        fun retrieveByCode(
+            code: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(code, DiscountRetrieveByCodeParams.none(), requestOptions)
     }
 }
