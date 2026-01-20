@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.73.0 (2026-01-20)
+
+Full Changelog: [v1.71.1...v1.73.0](https://github.com/dodopayments/dodopayments-java/compare/v1.71.1...v1.73.0)
+
+### Features
+
+* **api:** update openapi spec to v1.73.0 ([6667900](https://github.com/dodopayments/dodopayments-java/commit/66679005bc392479b3ca30d7abb8fbc8ba9c6914))
+
+
+### Bug Fixes
+
+* **client:** disallow coercion from float to int ([853571a](https://github.com/dodopayments/dodopayments-java/commit/853571ad3fa4cbde2fad04ca1596ff94aeda5dcb))
+* **client:** fully respect max retries ([174d5bd](https://github.com/dodopayments/dodopayments-java/commit/174d5bdc75664b46d2e3755395e5d02d0d12cfc0))
+* **client:** send retry count header for max retries 0 ([174d5bd](https://github.com/dodopayments/dodopayments-java/commit/174d5bdc75664b46d2e3755395e5d02d0d12cfc0))
+* date time deserialization leniency ([0115d05](https://github.com/dodopayments/dodopayments-java/commit/0115d05dd0d7b41d3ed3fac06deaf6e374f8dd6d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/setup-java` ([ad1150c](https://github.com/dodopayments/dodopayments-java/commit/ad1150c0956eca5d40c63ed22b999697210bbd5f))
+* **internal:** clean up maven repo artifact script and add html documentation to repo root ([b3cfb4b](https://github.com/dodopayments/dodopayments-java/commit/b3cfb4b40dec9075db879c43902ebeec7bb1995f))
+* **internal:** depend on packages directly in example ([174d5bd](https://github.com/dodopayments/dodopayments-java/commit/174d5bdc75664b46d2e3755395e5d02d0d12cfc0))
+* **internal:** improve maven repo docs ([ed47bcd](https://github.com/dodopayments/dodopayments-java/commit/ed47bcdf3d1c71f08a9434481fce1b78bef5e6e9))
+* **internal:** update `actions/checkout` version ([425df16](https://github.com/dodopayments/dodopayments-java/commit/425df1648ae99a3a287d2c243a9276a22d68464e))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/dodopayments/dodopayments-java/issues/3240) in tests ([0115d05](https://github.com/dodopayments/dodopayments-java/commit/0115d05dd0d7b41d3ed3fac06deaf6e374f8dd6d))
+
 ## 1.71.1 (2026-01-13)
 
 Full Changelog: [v1.71.0...v1.71.1](https://github.com/dodopayments/dodopayments-java/compare/v1.71.0...v1.71.1)
