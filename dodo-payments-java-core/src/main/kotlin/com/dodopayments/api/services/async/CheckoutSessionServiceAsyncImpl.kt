@@ -17,6 +17,8 @@ import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionPreviewParams
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionPreviewResponse
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRetrieveParams
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionStatus
@@ -51,6 +53,13 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutSession
     ): CompletableFuture<CheckoutSessionStatus> =
         // get /checkouts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
+
+    override fun preview(
+        params: CheckoutSessionPreviewParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CheckoutSessionPreviewResponse> =
+        // post /checkouts/preview
+        withRawResponse().preview(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CheckoutSessionServiceAsync.WithRawResponse {
@@ -120,6 +129,37 @@ internal constructor(private val clientOptions: ClientOptions) : CheckoutSession
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val previewHandler: Handler<CheckoutSessionPreviewResponse> =
+            jsonHandler<CheckoutSessionPreviewResponse>(clientOptions.jsonMapper)
+
+        override fun preview(
+            params: CheckoutSessionPreviewParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CheckoutSessionPreviewResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("checkouts", "preview")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { previewHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

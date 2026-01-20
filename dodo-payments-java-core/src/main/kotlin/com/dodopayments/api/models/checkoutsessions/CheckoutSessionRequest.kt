@@ -44,6 +44,7 @@ private constructor(
     private val metadata: JsonField<Metadata>,
     private val minimalAddress: JsonField<Boolean>,
     private val paymentMethodId: JsonField<String>,
+    private val productCollectionId: JsonField<String>,
     private val returnUrl: JsonField<String>,
     private val shortLink: JsonField<Boolean>,
     private val showSavedPaymentMethods: JsonField<Boolean>,
@@ -86,6 +87,9 @@ private constructor(
         @JsonProperty("payment_method_id")
         @ExcludeMissing
         paymentMethodId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("product_collection_id")
+        @ExcludeMissing
+        productCollectionId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("return_url") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("short_link")
         @ExcludeMissing
@@ -110,6 +114,7 @@ private constructor(
         metadata,
         minimalAddress,
         paymentMethodId,
+        productCollectionId,
         returnUrl,
         shortLink,
         showSavedPaymentMethods,
@@ -222,6 +227,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
+
+    /**
+     * Product collection ID for collection-based checkout flow
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun productCollectionId(): Optional<String> =
+        productCollectionId.getOptional("product_collection_id")
 
     /**
      * The url to redirect after payment failure or success.
@@ -367,6 +381,16 @@ private constructor(
     fun _paymentMethodId(): JsonField<String> = paymentMethodId
 
     /**
+     * Returns the raw JSON value of [productCollectionId].
+     *
+     * Unlike [productCollectionId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("product_collection_id")
+    @ExcludeMissing
+    fun _productCollectionId(): JsonField<String> = productCollectionId
+
+    /**
      * Returns the raw JSON value of [returnUrl].
      *
      * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -441,6 +465,7 @@ private constructor(
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var minimalAddress: JsonField<Boolean> = JsonMissing.of()
         private var paymentMethodId: JsonField<String> = JsonMissing.of()
+        private var productCollectionId: JsonField<String> = JsonMissing.of()
         private var returnUrl: JsonField<String> = JsonMissing.of()
         private var shortLink: JsonField<Boolean> = JsonMissing.of()
         private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
@@ -463,6 +488,7 @@ private constructor(
             metadata = checkoutSessionRequest.metadata
             minimalAddress = checkoutSessionRequest.minimalAddress
             paymentMethodId = checkoutSessionRequest.paymentMethodId
+            productCollectionId = checkoutSessionRequest.productCollectionId
             returnUrl = checkoutSessionRequest.returnUrl
             shortLink = checkoutSessionRequest.shortLink
             showSavedPaymentMethods = checkoutSessionRequest.showSavedPaymentMethods
@@ -736,6 +762,27 @@ private constructor(
             this.paymentMethodId = paymentMethodId
         }
 
+        /** Product collection ID for collection-based checkout flow */
+        fun productCollectionId(productCollectionId: String?) =
+            productCollectionId(JsonField.ofNullable(productCollectionId))
+
+        /**
+         * Alias for calling [Builder.productCollectionId] with `productCollectionId.orElse(null)`.
+         */
+        fun productCollectionId(productCollectionId: Optional<String>) =
+            productCollectionId(productCollectionId.getOrNull())
+
+        /**
+         * Sets [Builder.productCollectionId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.productCollectionId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun productCollectionId(productCollectionId: JsonField<String>) = apply {
+            this.productCollectionId = productCollectionId
+        }
+
         /** The url to redirect after payment failure or success. */
         fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
 
@@ -842,6 +889,7 @@ private constructor(
                 metadata,
                 minimalAddress,
                 paymentMethodId,
+                productCollectionId,
                 returnUrl,
                 shortLink,
                 showSavedPaymentMethods,
@@ -870,6 +918,7 @@ private constructor(
         metadata().ifPresent { it.validate() }
         minimalAddress()
         paymentMethodId()
+        productCollectionId()
         returnUrl()
         shortLink()
         showSavedPaymentMethods()
@@ -906,6 +955,7 @@ private constructor(
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (minimalAddress.asKnown().isPresent) 1 else 0) +
             (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
+            (if (productCollectionId.asKnown().isPresent) 1 else 0) +
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
             (if (shortLink.asKnown().isPresent) 1 else 0) +
             (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
@@ -3046,6 +3096,7 @@ private constructor(
             metadata == other.metadata &&
             minimalAddress == other.minimalAddress &&
             paymentMethodId == other.paymentMethodId &&
+            productCollectionId == other.productCollectionId &&
             returnUrl == other.returnUrl &&
             shortLink == other.shortLink &&
             showSavedPaymentMethods == other.showSavedPaymentMethods &&
@@ -3068,6 +3119,7 @@ private constructor(
             metadata,
             minimalAddress,
             paymentMethodId,
+            productCollectionId,
             returnUrl,
             shortLink,
             showSavedPaymentMethods,
@@ -3079,5 +3131,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
 }
