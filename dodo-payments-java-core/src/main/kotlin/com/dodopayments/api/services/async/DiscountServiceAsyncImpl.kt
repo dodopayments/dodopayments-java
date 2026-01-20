@@ -23,6 +23,7 @@ import com.dodopayments.api.models.discounts.DiscountDeleteParams
 import com.dodopayments.api.models.discounts.DiscountListPageAsync
 import com.dodopayments.api.models.discounts.DiscountListPageResponse
 import com.dodopayments.api.models.discounts.DiscountListParams
+import com.dodopayments.api.models.discounts.DiscountRetrieveByCodeParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -75,6 +76,13 @@ class DiscountServiceAsyncImpl internal constructor(private val clientOptions: C
     ): CompletableFuture<Void?> =
         // delete /discounts/{discount_id}
         withRawResponse().delete(params, requestOptions).thenAccept {}
+
+    override fun retrieveByCode(
+        params: DiscountRetrieveByCodeParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Discount> =
+        // get /discounts/code/{code}
+        withRawResponse().retrieveByCode(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         DiscountServiceAsync.WithRawResponse {
@@ -248,6 +256,39 @@ class DiscountServiceAsyncImpl internal constructor(private val clientOptions: C
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
                         response.use { deleteHandler.handle(it) }
+                    }
+                }
+        }
+
+        private val retrieveByCodeHandler: Handler<Discount> =
+            jsonHandler<Discount>(clientOptions.jsonMapper)
+
+        override fun retrieveByCode(
+            params: DiscountRetrieveByCodeParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Discount>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("code", params.code().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("discounts", "code", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveByCodeHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }
