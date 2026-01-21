@@ -47,6 +47,7 @@ private constructor(
     private val cardNetwork: JsonField<String>,
     private val cardType: JsonField<String>,
     private val checkoutSessionId: JsonField<String>,
+    private val customFieldResponses: JsonField<List<CustomFieldResponse>>,
     private val discountId: JsonField<String>,
     private val errorCode: JsonField<String>,
     private val errorMessage: JsonField<String>,
@@ -116,6 +117,9 @@ private constructor(
         @JsonProperty("checkout_session_id")
         @ExcludeMissing
         checkoutSessionId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("custom_field_responses")
+        @ExcludeMissing
+        customFieldResponses: JsonField<List<CustomFieldResponse>> = JsonMissing.of(),
         @JsonProperty("discount_id")
         @ExcludeMissing
         discountId: JsonField<String> = JsonMissing.of(),
@@ -171,6 +175,7 @@ private constructor(
         cardNetwork,
         cardType,
         checkoutSessionId,
+        customFieldResponses,
         discountId,
         errorCode,
         errorMessage,
@@ -352,6 +357,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun checkoutSessionId(): Optional<String> = checkoutSessionId.getOptional("checkout_session_id")
+
+    /**
+     * Customer's responses to custom fields collected during checkout
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun customFieldResponses(): Optional<List<CustomFieldResponse>> =
+        customFieldResponses.getOptional("custom_field_responses")
 
     /**
      * The discount id if discount is applied
@@ -633,6 +647,16 @@ private constructor(
     fun _checkoutSessionId(): JsonField<String> = checkoutSessionId
 
     /**
+     * Returns the raw JSON value of [customFieldResponses].
+     *
+     * Unlike [customFieldResponses], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("custom_field_responses")
+    @ExcludeMissing
+    fun _customFieldResponses(): JsonField<List<CustomFieldResponse>> = customFieldResponses
+
+    /**
      * Returns the raw JSON value of [discountId].
      *
      * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -808,6 +832,7 @@ private constructor(
         private var cardNetwork: JsonField<String> = JsonMissing.of()
         private var cardType: JsonField<String> = JsonMissing.of()
         private var checkoutSessionId: JsonField<String> = JsonMissing.of()
+        private var customFieldResponses: JsonField<MutableList<CustomFieldResponse>>? = null
         private var discountId: JsonField<String> = JsonMissing.of()
         private var errorCode: JsonField<String> = JsonMissing.of()
         private var errorMessage: JsonField<String> = JsonMissing.of()
@@ -846,6 +871,7 @@ private constructor(
             cardNetwork = payment.cardNetwork
             cardType = payment.cardType
             checkoutSessionId = payment.checkoutSessionId
+            customFieldResponses = payment.customFieldResponses.map { it.toMutableList() }
             discountId = payment.discountId
             errorCode = payment.errorCode
             errorMessage = payment.errorMessage
@@ -1185,6 +1211,41 @@ private constructor(
             this.checkoutSessionId = checkoutSessionId
         }
 
+        /** Customer's responses to custom fields collected during checkout */
+        fun customFieldResponses(customFieldResponses: List<CustomFieldResponse>?) =
+            customFieldResponses(JsonField.ofNullable(customFieldResponses))
+
+        /**
+         * Alias for calling [Builder.customFieldResponses] with
+         * `customFieldResponses.orElse(null)`.
+         */
+        fun customFieldResponses(customFieldResponses: Optional<List<CustomFieldResponse>>) =
+            customFieldResponses(customFieldResponses.getOrNull())
+
+        /**
+         * Sets [Builder.customFieldResponses] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customFieldResponses] with a well-typed
+         * `List<CustomFieldResponse>` value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun customFieldResponses(customFieldResponses: JsonField<List<CustomFieldResponse>>) =
+            apply {
+                this.customFieldResponses = customFieldResponses.map { it.toMutableList() }
+            }
+
+        /**
+         * Adds a single [CustomFieldResponse] to [customFieldResponses].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addCustomFieldResponse(customFieldResponse: CustomFieldResponse) = apply {
+            customFieldResponses =
+                (customFieldResponses ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("customFieldResponses", it).add(customFieldResponse)
+                }
+        }
+
         /** The discount id if discount is applied */
         fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
@@ -1510,6 +1571,7 @@ private constructor(
                 cardNetwork,
                 cardType,
                 checkoutSessionId,
+                (customFieldResponses ?: JsonMissing.of()).map { it.toImmutable() },
                 discountId,
                 errorCode,
                 errorMessage,
@@ -1555,6 +1617,7 @@ private constructor(
         cardNetwork()
         cardType()
         checkoutSessionId()
+        customFieldResponses().ifPresent { it.forEach { it.validate() } }
         discountId()
         errorCode()
         errorMessage()
@@ -1607,6 +1670,7 @@ private constructor(
             (if (cardNetwork.asKnown().isPresent) 1 else 0) +
             (if (cardType.asKnown().isPresent) 1 else 0) +
             (if (checkoutSessionId.asKnown().isPresent) 1 else 0) +
+            (customFieldResponses.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (discountId.asKnown().isPresent) 1 else 0) +
             (if (errorCode.asKnown().isPresent) 1 else 0) +
             (if (errorMessage.asKnown().isPresent) 1 else 0) +
@@ -2233,6 +2297,204 @@ private constructor(
             "Refund{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
     }
 
+    /** Customer's response to a custom field */
+    class CustomFieldResponse
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val key: JsonField<String>,
+        private val value: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("value") @ExcludeMissing value: JsonField<String> = JsonMissing.of(),
+        ) : this(key, value, mutableMapOf())
+
+        /**
+         * Key matching the custom field definition
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun key(): String = key.getRequired("key")
+
+        /**
+         * Value provided by customer
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun value(): String = value.getRequired("value")
+
+        /**
+         * Returns the raw JSON value of [key].
+         *
+         * Unlike [key], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("key") @ExcludeMissing fun _key(): JsonField<String> = key
+
+        /**
+         * Returns the raw JSON value of [value].
+         *
+         * Unlike [value], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("value") @ExcludeMissing fun _value(): JsonField<String> = value
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [CustomFieldResponse].
+             *
+             * The following fields are required:
+             * ```java
+             * .key()
+             * .value()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [CustomFieldResponse]. */
+        class Builder internal constructor() {
+
+            private var key: JsonField<String>? = null
+            private var value: JsonField<String>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(customFieldResponse: CustomFieldResponse) = apply {
+                key = customFieldResponse.key
+                value = customFieldResponse.value
+                additionalProperties = customFieldResponse.additionalProperties.toMutableMap()
+            }
+
+            /** Key matching the custom field definition */
+            fun key(key: String) = key(JsonField.of(key))
+
+            /**
+             * Sets [Builder.key] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.key] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun key(key: JsonField<String>) = apply { this.key = key }
+
+            /** Value provided by customer */
+            fun value(value: String) = value(JsonField.of(value))
+
+            /**
+             * Sets [Builder.value] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.value] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun value(value: JsonField<String>) = apply { this.value = value }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [CustomFieldResponse].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .key()
+             * .value()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): CustomFieldResponse =
+                CustomFieldResponse(
+                    checkRequired("key", key),
+                    checkRequired("value", value),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): CustomFieldResponse = apply {
+            if (validated) {
+                return@apply
+            }
+
+            key()
+            value()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (key.asKnown().isPresent) 1 else 0) + (if (value.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CustomFieldResponse &&
+                key == other.key &&
+                value == other.value &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(key, value, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "CustomFieldResponse{key=$key, value=$value, additionalProperties=$additionalProperties}"
+    }
+
     class ProductCart
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -2455,6 +2717,7 @@ private constructor(
             cardNetwork == other.cardNetwork &&
             cardType == other.cardType &&
             checkoutSessionId == other.checkoutSessionId &&
+            customFieldResponses == other.customFieldResponses &&
             discountId == other.discountId &&
             errorCode == other.errorCode &&
             errorMessage == other.errorMessage &&
@@ -2494,6 +2757,7 @@ private constructor(
             cardNetwork,
             cardType,
             checkoutSessionId,
+            customFieldResponses,
             discountId,
             errorCode,
             errorMessage,
@@ -2515,5 +2779,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

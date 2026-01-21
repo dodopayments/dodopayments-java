@@ -10,6 +10,7 @@ import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -76,6 +77,9 @@ internal class SubscriptionTest {
                 .taxInclusive(true)
                 .trialPeriodDays(0)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .addCustomFieldResponse(
+                    Subscription.CustomFieldResponse.builder().key("key").value("value").build()
+                )
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -151,6 +155,10 @@ internal class SubscriptionTest {
         assertThat(subscription.trialPeriodDays()).isEqualTo(0)
         assertThat(subscription.cancelledAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(subscription.customFieldResponses().getOrNull())
+            .containsExactly(
+                Subscription.CustomFieldResponse.builder().key("key").value("value").build()
+            )
         assertThat(subscription.discountCyclesRemaining()).contains(0)
         assertThat(subscription.discountId()).contains("discount_id")
         assertThat(subscription.expiresAt())
@@ -221,6 +229,9 @@ internal class SubscriptionTest {
                 .taxInclusive(true)
                 .trialPeriodDays(0)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .addCustomFieldResponse(
+                    Subscription.CustomFieldResponse.builder().key("key").value("value").build()
+                )
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
