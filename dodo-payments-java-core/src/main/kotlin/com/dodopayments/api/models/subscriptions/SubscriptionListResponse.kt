@@ -50,6 +50,7 @@ private constructor(
     private val discountCyclesRemaining: JsonField<Int>,
     private val discountId: JsonField<String>,
     private val paymentMethodId: JsonField<String>,
+    private val productName: JsonField<String>,
     private val taxId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -118,6 +119,9 @@ private constructor(
         @JsonProperty("payment_method_id")
         @ExcludeMissing
         paymentMethodId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("product_name")
+        @ExcludeMissing
+        productName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
     ) : this(
         billing,
@@ -144,6 +148,7 @@ private constructor(
         discountCyclesRemaining,
         discountId,
         paymentMethodId,
+        productName,
         taxId,
         mutableMapOf(),
     )
@@ -345,6 +350,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
+
+    /**
+     * Name of the product associated with this subscription
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun productName(): Optional<String> = productName.getOptional("product_name")
 
     /**
      * Tax identifier provided for this subscription (if applicable)
@@ -563,6 +576,15 @@ private constructor(
     fun _paymentMethodId(): JsonField<String> = paymentMethodId
 
     /**
+     * Returns the raw JSON value of [productName].
+     *
+     * Unlike [productName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("product_name")
+    @ExcludeMissing
+    fun _productName(): JsonField<String> = productName
+
+    /**
      * Returns the raw JSON value of [taxId].
      *
      * Unlike [taxId], this method doesn't throw if the JSON field has an unexpected type.
@@ -640,6 +662,7 @@ private constructor(
         private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
         private var paymentMethodId: JsonField<String> = JsonMissing.of()
+        private var productName: JsonField<String> = JsonMissing.of()
         private var taxId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -669,6 +692,7 @@ private constructor(
             discountCyclesRemaining = subscriptionListResponse.discountCyclesRemaining
             discountId = subscriptionListResponse.discountId
             paymentMethodId = subscriptionListResponse.paymentMethodId
+            productName = subscriptionListResponse.productName
             taxId = subscriptionListResponse.taxId
             additionalProperties = subscriptionListResponse.additionalProperties.toMutableMap()
         }
@@ -1031,6 +1055,21 @@ private constructor(
             this.paymentMethodId = paymentMethodId
         }
 
+        /** Name of the product associated with this subscription */
+        fun productName(productName: String?) = productName(JsonField.ofNullable(productName))
+
+        /** Alias for calling [Builder.productName] with `productName.orElse(null)`. */
+        fun productName(productName: Optional<String>) = productName(productName.getOrNull())
+
+        /**
+         * Sets [Builder.productName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.productName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun productName(productName: JsonField<String>) = apply { this.productName = productName }
+
         /** Tax identifier provided for this subscription (if applicable) */
         fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
 
@@ -1121,6 +1160,7 @@ private constructor(
                 discountCyclesRemaining,
                 discountId,
                 paymentMethodId,
+                productName,
                 taxId,
                 additionalProperties.toMutableMap(),
             )
@@ -1157,6 +1197,7 @@ private constructor(
         discountCyclesRemaining()
         discountId()
         paymentMethodId()
+        productName()
         taxId()
         validated = true
     }
@@ -1200,6 +1241,7 @@ private constructor(
             (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
             (if (discountId.asKnown().isPresent) 1 else 0) +
             (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
+            (if (productName.asKnown().isPresent) 1 else 0) +
             (if (taxId.asKnown().isPresent) 1 else 0)
 
     /** Additional custom data associated with the subscription */
@@ -1332,6 +1374,7 @@ private constructor(
             discountCyclesRemaining == other.discountCyclesRemaining &&
             discountId == other.discountId &&
             paymentMethodId == other.paymentMethodId &&
+            productName == other.productName &&
             taxId == other.taxId &&
             additionalProperties == other.additionalProperties
     }
@@ -1362,6 +1405,7 @@ private constructor(
             discountCyclesRemaining,
             discountId,
             paymentMethodId,
+            productName,
             taxId,
             additionalProperties,
         )
@@ -1370,5 +1414,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, paymentMethodId=$paymentMethodId, taxId=$taxId, additionalProperties=$additionalProperties}"
+        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, paymentMethodId=$paymentMethodId, productName=$productName, taxId=$taxId, additionalProperties=$additionalProperties}"
 }

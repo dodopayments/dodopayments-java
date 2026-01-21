@@ -67,6 +67,7 @@ internal class SubscriptionListResponseTest {
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
                 .paymentMethodId("payment_method_id")
+                .productName("product_name")
                 .taxId("tax_id")
                 .build()
 
@@ -126,6 +127,7 @@ internal class SubscriptionListResponseTest {
         assertThat(subscriptionListResponse.discountCyclesRemaining()).contains(0)
         assertThat(subscriptionListResponse.discountId()).contains("discount_id")
         assertThat(subscriptionListResponse.paymentMethodId()).contains("payment_method_id")
+        assertThat(subscriptionListResponse.productName()).contains("product_name")
         assertThat(subscriptionListResponse.taxId()).contains("tax_id")
     }
 
@@ -182,6 +184,7 @@ internal class SubscriptionListResponseTest {
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
                 .paymentMethodId("payment_method_id")
+                .productName("product_name")
                 .taxId("tax_id")
                 .build()
 
