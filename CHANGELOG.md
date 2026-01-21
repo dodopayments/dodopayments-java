@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.74.0 (2026-01-21)
+
+Full Changelog: [v1.73.0...v1.74.0](https://github.com/dodopayments/dodopayments-java/compare/v1.73.0...v1.74.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.74.0 ([acc32e8](https://github.com/dodopayments/dodopayments-java/commit/acc32e815064fac048637b3b110618f5e62b9d3d))
+
 ## 1.73.0 (2026-01-20)
 
 Full Changelog: [v1.71.1...v1.73.0](https://github.com/dodopayments/dodopayments-java/compare/v1.71.1...v1.73.0)
