@@ -9,12 +9,16 @@ import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class LicenseKeyListParams
 private constructor(
+    private val createdAtGte: OffsetDateTime?,
+    private val createdAtLte: OffsetDateTime?,
     private val customerId: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
@@ -23,6 +27,12 @@ private constructor(
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Filter license keys created on or after this timestamp */
+    fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
+
+    /** Filter license keys created on or before this timestamp */
+    fun createdAtLte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtLte)
 
     /** Filter by customer ID */
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
@@ -58,6 +68,8 @@ private constructor(
     /** A builder for [LicenseKeyListParams]. */
     class Builder internal constructor() {
 
+        private var createdAtGte: OffsetDateTime? = null
+        private var createdAtLte: OffsetDateTime? = null
         private var customerId: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
@@ -68,6 +80,8 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(licenseKeyListParams: LicenseKeyListParams) = apply {
+            createdAtGte = licenseKeyListParams.createdAtGte
+            createdAtLte = licenseKeyListParams.createdAtLte
             customerId = licenseKeyListParams.customerId
             pageNumber = licenseKeyListParams.pageNumber
             pageSize = licenseKeyListParams.pageSize
@@ -76,6 +90,20 @@ private constructor(
             additionalHeaders = licenseKeyListParams.additionalHeaders.toBuilder()
             additionalQueryParams = licenseKeyListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Filter license keys created on or after this timestamp */
+        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+
+        /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
+            createdAtGte(createdAtGte.getOrNull())
+
+        /** Filter license keys created on or before this timestamp */
+        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+
+        /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
+            createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer ID */
         fun customerId(customerId: String?) = apply { this.customerId = customerId }
@@ -226,6 +254,8 @@ private constructor(
          */
         fun build(): LicenseKeyListParams =
             LicenseKeyListParams(
+                createdAtGte,
+                createdAtLte,
                 customerId,
                 pageNumber,
                 pageSize,
@@ -241,6 +271,12 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                createdAtGte?.let {
+                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
+                createdAtLte?.let {
+                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
+                }
                 customerId?.let { put("customer_id", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
@@ -390,6 +426,8 @@ private constructor(
         }
 
         return other is LicenseKeyListParams &&
+            createdAtGte == other.createdAtGte &&
+            createdAtLte == other.createdAtLte &&
             customerId == other.customerId &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
@@ -401,6 +439,8 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            createdAtGte,
+            createdAtLte,
             customerId,
             pageNumber,
             pageSize,
@@ -411,5 +451,5 @@ private constructor(
         )
 
     override fun toString() =
-        "LicenseKeyListParams{customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "LicenseKeyListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

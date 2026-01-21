@@ -594,6 +594,7 @@ private constructor(
             private val cardNetwork: JsonField<String>,
             private val cardType: JsonField<String>,
             private val checkoutSessionId: JsonField<String>,
+            private val customFieldResponses: JsonField<List<Payment.CustomFieldResponse>>,
             private val discountId: JsonField<String>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
@@ -674,6 +675,10 @@ private constructor(
                 @JsonProperty("checkout_session_id")
                 @ExcludeMissing
                 checkoutSessionId: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("custom_field_responses")
+                @ExcludeMissing
+                customFieldResponses: JsonField<List<Payment.CustomFieldResponse>> =
+                    JsonMissing.of(),
                 @JsonProperty("discount_id")
                 @ExcludeMissing
                 discountId: JsonField<String> = JsonMissing.of(),
@@ -738,6 +743,7 @@ private constructor(
                 cardNetwork,
                 cardType,
                 checkoutSessionId,
+                customFieldResponses,
                 discountId,
                 errorCode,
                 errorMessage,
@@ -778,6 +784,7 @@ private constructor(
                     .cardNetwork(cardNetwork)
                     .cardType(cardType)
                     .checkoutSessionId(checkoutSessionId)
+                    .customFieldResponses(customFieldResponses)
                     .discountId(discountId)
                     .errorCode(errorCode)
                     .errorMessage(errorMessage)
@@ -976,6 +983,15 @@ private constructor(
              */
             fun checkoutSessionId(): Optional<String> =
                 checkoutSessionId.getOptional("checkout_session_id")
+
+            /**
+             * Customer's responses to custom fields collected during checkout
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun customFieldResponses(): Optional<List<Payment.CustomFieldResponse>> =
+                customFieldResponses.getOptional("custom_field_responses")
 
             /**
              * The discount id if discount is applied
@@ -1294,6 +1310,17 @@ private constructor(
             fun _checkoutSessionId(): JsonField<String> = checkoutSessionId
 
             /**
+             * Returns the raw JSON value of [customFieldResponses].
+             *
+             * Unlike [customFieldResponses], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("custom_field_responses")
+            @ExcludeMissing
+            fun _customFieldResponses(): JsonField<List<Payment.CustomFieldResponse>> =
+                customFieldResponses
+
+            /**
              * Returns the raw JSON value of [discountId].
              *
              * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected
@@ -1499,6 +1526,9 @@ private constructor(
                 private var cardNetwork: JsonField<String> = JsonMissing.of()
                 private var cardType: JsonField<String> = JsonMissing.of()
                 private var checkoutSessionId: JsonField<String> = JsonMissing.of()
+                private var customFieldResponses:
+                    JsonField<MutableList<Payment.CustomFieldResponse>>? =
+                    null
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
@@ -1538,6 +1568,7 @@ private constructor(
                     cardNetwork = payment.cardNetwork
                     cardType = payment.cardType
                     checkoutSessionId = payment.checkoutSessionId
+                    customFieldResponses = payment.customFieldResponses.map { it.toMutableList() }
                     discountId = payment.discountId
                     errorCode = payment.errorCode
                     errorMessage = payment.errorMessage
@@ -1903,6 +1934,44 @@ private constructor(
                     this.checkoutSessionId = checkoutSessionId
                 }
 
+                /** Customer's responses to custom fields collected during checkout */
+                fun customFieldResponses(customFieldResponses: List<Payment.CustomFieldResponse>?) =
+                    customFieldResponses(JsonField.ofNullable(customFieldResponses))
+
+                /**
+                 * Alias for calling [Builder.customFieldResponses] with
+                 * `customFieldResponses.orElse(null)`.
+                 */
+                fun customFieldResponses(
+                    customFieldResponses: Optional<List<Payment.CustomFieldResponse>>
+                ) = customFieldResponses(customFieldResponses.getOrNull())
+
+                /**
+                 * Sets [Builder.customFieldResponses] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.customFieldResponses] with a well-typed
+                 * `List<Payment.CustomFieldResponse>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
+                 */
+                fun customFieldResponses(
+                    customFieldResponses: JsonField<List<Payment.CustomFieldResponse>>
+                ) = apply {
+                    this.customFieldResponses = customFieldResponses.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Payment.CustomFieldResponse] to [customFieldResponses].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addCustomFieldResponse(customFieldResponse: Payment.CustomFieldResponse) =
+                    apply {
+                        customFieldResponses =
+                            (customFieldResponses ?: JsonField.of(mutableListOf())).also {
+                                checkKnown("customFieldResponses", it).add(customFieldResponse)
+                            }
+                    }
+
                 /** The discount id if discount is applied */
                 fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
@@ -2267,6 +2336,7 @@ private constructor(
                         cardNetwork,
                         cardType,
                         checkoutSessionId,
+                        (customFieldResponses ?: JsonMissing.of()).map { it.toImmutable() },
                         discountId,
                         errorCode,
                         errorMessage,
@@ -2313,6 +2383,7 @@ private constructor(
                 cardNetwork()
                 cardType()
                 checkoutSessionId()
+                customFieldResponses().ifPresent { it.forEach { it.validate() } }
                 discountId()
                 errorCode()
                 errorMessage()
@@ -2367,6 +2438,8 @@ private constructor(
                     (if (cardNetwork.asKnown().isPresent) 1 else 0) +
                     (if (cardType.asKnown().isPresent) 1 else 0) +
                     (if (checkoutSessionId.asKnown().isPresent) 1 else 0) +
+                    (customFieldResponses.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
+                        ?: 0) +
                     (if (discountId.asKnown().isPresent) 1 else 0) +
                     (if (errorCode.asKnown().isPresent) 1 else 0) +
                     (if (errorMessage.asKnown().isPresent) 1 else 0) +
@@ -2536,6 +2609,7 @@ private constructor(
                     cardNetwork == other.cardNetwork &&
                     cardType == other.cardType &&
                     checkoutSessionId == other.checkoutSessionId &&
+                    customFieldResponses == other.customFieldResponses &&
                     discountId == other.discountId &&
                     errorCode == other.errorCode &&
                     errorMessage == other.errorMessage &&
@@ -2576,6 +2650,7 @@ private constructor(
                     cardNetwork,
                     cardType,
                     checkoutSessionId,
+                    customFieldResponses,
                     discountId,
                     errorCode,
                     errorMessage,
@@ -2598,7 +2673,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         /** Response struct representing subscription details */
@@ -2628,6 +2703,7 @@ private constructor(
             private val taxInclusive: JsonField<Boolean>,
             private val trialPeriodDays: JsonField<Int>,
             private val cancelledAt: JsonField<OffsetDateTime>,
+            private val customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>>,
             private val discountCyclesRemaining: JsonField<Int>,
             private val discountId: JsonField<String>,
             private val expiresAt: JsonField<OffsetDateTime>,
@@ -2708,6 +2784,10 @@ private constructor(
                 @JsonProperty("cancelled_at")
                 @ExcludeMissing
                 cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+                @JsonProperty("custom_field_responses")
+                @ExcludeMissing
+                customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>> =
+                    JsonMissing.of(),
                 @JsonProperty("discount_cycles_remaining")
                 @ExcludeMissing
                 discountCyclesRemaining: JsonField<Int> = JsonMissing.of(),
@@ -2748,6 +2828,7 @@ private constructor(
                 taxInclusive,
                 trialPeriodDays,
                 cancelledAt,
+                customFieldResponses,
                 discountCyclesRemaining,
                 discountId,
                 expiresAt,
@@ -2782,6 +2863,7 @@ private constructor(
                     .taxInclusive(taxInclusive)
                     .trialPeriodDays(trialPeriodDays)
                     .cancelledAt(cancelledAt)
+                    .customFieldResponses(customFieldResponses)
                     .discountCyclesRemaining(discountCyclesRemaining)
                     .discountId(discountId)
                     .expiresAt(expiresAt)
@@ -3002,6 +3084,15 @@ private constructor(
              *   (e.g. if the server responded with an unexpected value).
              */
             fun cancelledAt(): Optional<OffsetDateTime> = cancelledAt.getOptional("cancelled_at")
+
+            /**
+             * Customer's responses to custom fields collected during checkout
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun customFieldResponses(): Optional<List<Subscription.CustomFieldResponse>> =
+                customFieldResponses.getOptional("custom_field_responses")
 
             /**
              * Number of remaining discount cycles if discount is applied
@@ -3277,6 +3368,17 @@ private constructor(
             fun _cancelledAt(): JsonField<OffsetDateTime> = cancelledAt
 
             /**
+             * Returns the raw JSON value of [customFieldResponses].
+             *
+             * Unlike [customFieldResponses], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("custom_field_responses")
+            @ExcludeMissing
+            fun _customFieldResponses(): JsonField<List<Subscription.CustomFieldResponse>> =
+                customFieldResponses
+
+            /**
              * Returns the raw JSON value of [discountCyclesRemaining].
              *
              * Unlike [discountCyclesRemaining], this method doesn't throw if the JSON field has an
@@ -3406,6 +3508,9 @@ private constructor(
                 private var taxInclusive: JsonField<Boolean>? = null
                 private var trialPeriodDays: JsonField<Int>? = null
                 private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
+                private var customFieldResponses:
+                    JsonField<MutableList<Subscription.CustomFieldResponse>>? =
+                    null
                 private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
@@ -3439,6 +3544,8 @@ private constructor(
                     taxInclusive = subscription.taxInclusive
                     trialPeriodDays = subscription.trialPeriodDays
                     cancelledAt = subscription.cancelledAt
+                    customFieldResponses =
+                        subscription.customFieldResponses.map { it.toMutableList() }
                     discountCyclesRemaining = subscription.discountCyclesRemaining
                     discountId = subscription.discountId
                     expiresAt = subscription.expiresAt
@@ -3804,6 +3911,45 @@ private constructor(
                     this.cancelledAt = cancelledAt
                 }
 
+                /** Customer's responses to custom fields collected during checkout */
+                fun customFieldResponses(
+                    customFieldResponses: List<Subscription.CustomFieldResponse>?
+                ) = customFieldResponses(JsonField.ofNullable(customFieldResponses))
+
+                /**
+                 * Alias for calling [Builder.customFieldResponses] with
+                 * `customFieldResponses.orElse(null)`.
+                 */
+                fun customFieldResponses(
+                    customFieldResponses: Optional<List<Subscription.CustomFieldResponse>>
+                ) = customFieldResponses(customFieldResponses.getOrNull())
+
+                /**
+                 * Sets [Builder.customFieldResponses] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.customFieldResponses] with a well-typed
+                 * `List<Subscription.CustomFieldResponse>` value instead. This method is primarily
+                 * for setting the field to an undocumented or not yet supported value.
+                 */
+                fun customFieldResponses(
+                    customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>>
+                ) = apply {
+                    this.customFieldResponses = customFieldResponses.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Subscription.CustomFieldResponse] to [customFieldResponses].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addCustomFieldResponse(customFieldResponse: Subscription.CustomFieldResponse) =
+                    apply {
+                        customFieldResponses =
+                            (customFieldResponses ?: JsonField.of(mutableListOf())).also {
+                                checkKnown("customFieldResponses", it).add(customFieldResponse)
+                            }
+                    }
+
                 /** Number of remaining discount cycles if discount is applied */
                 fun discountCyclesRemaining(discountCyclesRemaining: Int?) =
                     discountCyclesRemaining(JsonField.ofNullable(discountCyclesRemaining))
@@ -4000,6 +4146,7 @@ private constructor(
                         checkRequired("taxInclusive", taxInclusive),
                         checkRequired("trialPeriodDays", trialPeriodDays),
                         cancelledAt,
+                        (customFieldResponses ?: JsonMissing.of()).map { it.toImmutable() },
                         discountCyclesRemaining,
                         discountId,
                         expiresAt,
@@ -4040,6 +4187,7 @@ private constructor(
                 taxInclusive()
                 trialPeriodDays()
                 cancelledAt()
+                customFieldResponses().ifPresent { it.forEach { it.validate() } }
                 discountCyclesRemaining()
                 discountId()
                 expiresAt()
@@ -4088,6 +4236,8 @@ private constructor(
                     (if (taxInclusive.asKnown().isPresent) 1 else 0) +
                     (if (trialPeriodDays.asKnown().isPresent) 1 else 0) +
                     (if (cancelledAt.asKnown().isPresent) 1 else 0) +
+                    (customFieldResponses.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
+                        ?: 0) +
                     (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
                     (if (discountId.asKnown().isPresent) 1 else 0) +
                     (if (expiresAt.asKnown().isPresent) 1 else 0) +
@@ -4251,6 +4401,7 @@ private constructor(
                     taxInclusive == other.taxInclusive &&
                     trialPeriodDays == other.trialPeriodDays &&
                     cancelledAt == other.cancelledAt &&
+                    customFieldResponses == other.customFieldResponses &&
                     discountCyclesRemaining == other.discountCyclesRemaining &&
                     discountId == other.discountId &&
                     expiresAt == other.expiresAt &&
@@ -4285,6 +4436,7 @@ private constructor(
                     taxInclusive,
                     trialPeriodDays,
                     cancelledAt,
+                    customFieldResponses,
                     discountCyclesRemaining,
                     discountId,
                     expiresAt,
@@ -4298,7 +4450,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Refund
