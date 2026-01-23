@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.75.0 (2026-01-23)
+
+Full Changelog: [v1.74.0...v1.75.0](https://github.com/dodopayments/dodopayments-java/compare/v1.74.0...v1.75.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.75.0 ([2d85f1e](https://github.com/dodopayments/dodopayments-java/commit/2d85f1e9d8b685d94744b22ec9f020868beec59c))
+* **client:** send `X-Stainless-Kotlin-Version` header ([6a17f92](https://github.com/dodopayments/dodopayments-java/commit/6a17f926da9265ef8b15adaeed028534b5461910))
+
+
+### Bug Fixes
+
+* **client:** preserve time zone in lenient date-time parsing ([3127afd](https://github.com/dodopayments/dodopayments-java/commit/3127afdd2b6b28d092971f743f78f8a439211c19))
+* **tests:** add missing query/header params ([f9cc1e3](https://github.com/dodopayments/dodopayments-java/commit/f9cc1e37e7aadffae5e9864909c3fc9b3c8db3f1))
+
+
+### Chores
+
+* **internal:** correct cache invalidation for `SKIP_MOCK_TESTS` ([dde8efc](https://github.com/dodopayments/dodopayments-java/commit/dde8efc564ba5a16b5647eb004edff8a05ce404e))
+* **internal:** update maven repo doc to include authentication ([c91a6c0](https://github.com/dodopayments/dodopayments-java/commit/c91a6c03954cdd2096db46231b5a265a116e34e1))
+
 ## 1.74.0 (2026-01-21)
 
 Full Changelog: [v1.73.0...v1.74.0](https://github.com/dodopayments/dodopayments-java/compare/v1.73.0...v1.74.0)
