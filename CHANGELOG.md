@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.75.1 (2026-01-24)
+
+Full Changelog: [v1.75.0...v1.75.1](https://github.com/dodopayments/dodopayments-java/compare/v1.75.0...v1.75.1)
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([68ee340](https://github.com/dodopayments/dodopayments-java/commit/68ee340011d15d84d05de846b3973d3d7a1d3a31))
+
 ## 1.75.0 (2026-01-23)
 
 Full Changelog: [v1.74.0...v1.75.0](https://github.com/dodopayments/dodopayments-java/compare/v1.74.0...v1.75.0)
