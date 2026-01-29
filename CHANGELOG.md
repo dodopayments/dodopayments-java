@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.75.2 (2026-01-29)
+
+Full Changelog: [v1.75.1...v1.75.2](https://github.com/dodopayments/dodopayments-java/compare/v1.75.1...v1.75.2)
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([f6266a4](https://github.com/dodopayments/dodopayments-java/commit/f6266a4169f850b526272b410239032a17c146f3))
+
 ## 1.75.1 (2026-01-24)
 
 Full Changelog: [v1.75.0...v1.75.1](https://github.com/dodopayments/dodopayments-java/compare/v1.75.0...v1.75.1)
