@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.78.0 (2026-02-02)
+
+Full Changelog: [v1.75.2...v1.78.0](https://github.com/dodopayments/dodopayments-java/compare/v1.75.2...v1.78.0)
+
+### Features
+
+* **api:** updated openapi spec for v1.78.1 ([5942255](https://github.com/dodopayments/dodopayments-java/commit/5942255ea7e5098f4c7d8191a8e33112428744b3))
+
+
+### Chores
+
+* **internal:** allow passing args to `./scripts/test` ([b28ef96](https://github.com/dodopayments/dodopayments-java/commit/b28ef96a40ba5cd9bba285c9f48ad468f3f9f813))
+
 ## 1.75.2 (2026-01-29)
 
 Full Changelog: [v1.75.1...v1.75.2](https://github.com/dodopayments/dodopayments-java/compare/v1.75.1...v1.75.2)
