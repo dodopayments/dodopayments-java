@@ -190,6 +190,7 @@ internal class SubscriptionServiceAsyncTest {
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
+                    .onPaymentFailure(SubscriptionChangePlanParams.OnPaymentFailure.PREVENT_CHANGE)
                     .build()
             )
 
@@ -255,6 +256,9 @@ internal class SubscriptionServiceAsyncTest {
                         SubscriptionPreviewChangePlanParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
+                    )
+                    .onPaymentFailure(
+                        SubscriptionPreviewChangePlanParams.OnPaymentFailure.PREVENT_CHANGE
                     )
                     .build()
             )

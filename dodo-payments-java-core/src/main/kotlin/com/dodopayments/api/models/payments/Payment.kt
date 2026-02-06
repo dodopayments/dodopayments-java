@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.payments
 
+import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -57,6 +58,7 @@ private constructor(
     private val paymentMethod: JsonField<String>,
     private val paymentMethodType: JsonField<String>,
     private val productCart: JsonField<List<ProductCart>>,
+    private val refundStatus: JsonField<RefundStatus>,
     private val settlementTax: JsonField<Int>,
     private val status: JsonField<IntentStatus>,
     private val subscriptionId: JsonField<String>,
@@ -143,6 +145,9 @@ private constructor(
         @JsonProperty("product_cart")
         @ExcludeMissing
         productCart: JsonField<List<ProductCart>> = JsonMissing.of(),
+        @JsonProperty("refund_status")
+        @ExcludeMissing
+        refundStatus: JsonField<RefundStatus> = JsonMissing.of(),
         @JsonProperty("settlement_tax")
         @ExcludeMissing
         settlementTax: JsonField<Int> = JsonMissing.of(),
@@ -185,6 +190,7 @@ private constructor(
         paymentMethod,
         paymentMethodType,
         productCart,
+        refundStatus,
         settlementTax,
         status,
         subscriptionId,
@@ -438,6 +444,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun productCart(): Optional<List<ProductCart>> = productCart.getOptional("product_cart")
+
+    /**
+     * Summary of the refund status for this payment. None if no succeeded refunds exist.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun refundStatus(): Optional<RefundStatus> = refundStatus.getOptional("refund_status")
 
     /**
      * This represents the portion of settlement_amount that corresponds to taxes collected.
@@ -731,6 +745,15 @@ private constructor(
     fun _productCart(): JsonField<List<ProductCart>> = productCart
 
     /**
+     * Returns the raw JSON value of [refundStatus].
+     *
+     * Unlike [refundStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("refund_status")
+    @ExcludeMissing
+    fun _refundStatus(): JsonField<RefundStatus> = refundStatus
+
+    /**
      * Returns the raw JSON value of [settlementTax].
      *
      * Unlike [settlementTax], this method doesn't throw if the JSON field has an unexpected type.
@@ -842,6 +865,7 @@ private constructor(
         private var paymentMethod: JsonField<String> = JsonMissing.of()
         private var paymentMethodType: JsonField<String> = JsonMissing.of()
         private var productCart: JsonField<MutableList<ProductCart>>? = null
+        private var refundStatus: JsonField<RefundStatus> = JsonMissing.of()
         private var settlementTax: JsonField<Int> = JsonMissing.of()
         private var status: JsonField<IntentStatus> = JsonMissing.of()
         private var subscriptionId: JsonField<String> = JsonMissing.of()
@@ -881,6 +905,7 @@ private constructor(
             paymentMethod = payment.paymentMethod
             paymentMethodType = payment.paymentMethodType
             productCart = payment.productCart.map { it.toMutableList() }
+            refundStatus = payment.refundStatus
             settlementTax = payment.settlementTax
             status = payment.status
             subscriptionId = payment.subscriptionId
@@ -1407,6 +1432,25 @@ private constructor(
                 }
         }
 
+        /** Summary of the refund status for this payment. None if no succeeded refunds exist. */
+        fun refundStatus(refundStatus: RefundStatus?) =
+            refundStatus(JsonField.ofNullable(refundStatus))
+
+        /** Alias for calling [Builder.refundStatus] with `refundStatus.orElse(null)`. */
+        fun refundStatus(refundStatus: Optional<RefundStatus>) =
+            refundStatus(refundStatus.getOrNull())
+
+        /**
+         * Sets [Builder.refundStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.refundStatus] with a well-typed [RefundStatus] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun refundStatus(refundStatus: JsonField<RefundStatus>) = apply {
+            this.refundStatus = refundStatus
+        }
+
         /**
          * This represents the portion of settlement_amount that corresponds to taxes collected.
          * Especially relevant for adaptive pricing where the tax component must be tracked
@@ -1581,6 +1625,7 @@ private constructor(
                 paymentMethod,
                 paymentMethodType,
                 (productCart ?: JsonMissing.of()).map { it.toImmutable() },
+                refundStatus,
                 settlementTax,
                 status,
                 subscriptionId,
@@ -1627,6 +1672,7 @@ private constructor(
         paymentMethod()
         paymentMethodType()
         productCart().ifPresent { it.forEach { it.validate() } }
+        refundStatus().ifPresent { it.validate() }
         settlementTax()
         status().ifPresent { it.validate() }
         subscriptionId()
@@ -1680,6 +1726,7 @@ private constructor(
             (if (paymentMethod.asKnown().isPresent) 1 else 0) +
             (if (paymentMethodType.asKnown().isPresent) 1 else 0) +
             (productCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (refundStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (settlementTax.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (if (subscriptionId.asKnown().isPresent) 1 else 0) +
@@ -2691,6 +2738,137 @@ private constructor(
             "ProductCart{productId=$productId, quantity=$quantity, additionalProperties=$additionalProperties}"
     }
 
+    /** Summary of the refund status for this payment. None if no succeeded refunds exist. */
+    class RefundStatus @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val PARTIAL = of("partial")
+
+            @JvmField val FULL = of("full")
+
+            @JvmStatic fun of(value: String) = RefundStatus(JsonField.of(value))
+        }
+
+        /** An enum containing [RefundStatus]'s known values. */
+        enum class Known {
+            PARTIAL,
+            FULL,
+        }
+
+        /**
+         * An enum containing [RefundStatus]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [RefundStatus] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            PARTIAL,
+            FULL,
+            /**
+             * An enum member indicating that [RefundStatus] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                PARTIAL -> Value.PARTIAL
+                FULL -> Value.FULL
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                PARTIAL -> Known.PARTIAL
+                FULL -> Known.FULL
+                else -> throw DodoPaymentsInvalidDataException("Unknown RefundStatus: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                DodoPaymentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): RefundStatus = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is RefundStatus && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -2727,6 +2905,7 @@ private constructor(
             paymentMethod == other.paymentMethod &&
             paymentMethodType == other.paymentMethodType &&
             productCart == other.productCart &&
+            refundStatus == other.refundStatus &&
             settlementTax == other.settlementTax &&
             status == other.status &&
             subscriptionId == other.subscriptionId &&
@@ -2767,6 +2946,7 @@ private constructor(
             paymentMethod,
             paymentMethodType,
             productCart,
+            refundStatus,
             settlementTax,
             status,
             subscriptionId,
@@ -2779,5 +2959,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

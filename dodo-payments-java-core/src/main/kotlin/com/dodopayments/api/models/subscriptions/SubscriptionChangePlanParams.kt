@@ -74,6 +74,18 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
+     * Controls behavior when the plan change payment fails.
+     * - `prevent_change`: Keep subscription on current plan until payment succeeds
+     * - `apply_change` (default): Apply plan change immediately regardless of payment outcome
+     *
+     * If not specified, uses the business-level default setting.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun onPaymentFailure(): Optional<OnPaymentFailure> = body.onPaymentFailure()
+
+    /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
@@ -108,6 +120,14 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<Metadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [onPaymentFailure].
+     *
+     * Unlike [onPaymentFailure], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _onPaymentFailure(): JsonField<OnPaymentFailure> = body._onPaymentFailure()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -247,6 +267,32 @@ private constructor(
          * value.
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+
+        /**
+         * Controls behavior when the plan change payment fails.
+         * - `prevent_change`: Keep subscription on current plan until payment succeeds
+         * - `apply_change` (default): Apply plan change immediately regardless of payment outcome
+         *
+         * If not specified, uses the business-level default setting.
+         */
+        fun onPaymentFailure(onPaymentFailure: OnPaymentFailure?) = apply {
+            body.onPaymentFailure(onPaymentFailure)
+        }
+
+        /** Alias for calling [Builder.onPaymentFailure] with `onPaymentFailure.orElse(null)`. */
+        fun onPaymentFailure(onPaymentFailure: Optional<OnPaymentFailure>) =
+            onPaymentFailure(onPaymentFailure.getOrNull())
+
+        /**
+         * Sets [Builder.onPaymentFailure] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.onPaymentFailure] with a well-typed [OnPaymentFailure]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun onPaymentFailure(onPaymentFailure: JsonField<OnPaymentFailure>) = apply {
+            body.onPaymentFailure(onPaymentFailure)
+        }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -408,6 +454,7 @@ private constructor(
         private val quantity: JsonField<Int>,
         private val addons: JsonField<List<AttachAddon>>,
         private val metadata: JsonField<Metadata>,
+        private val onPaymentFailure: JsonField<OnPaymentFailure>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -426,7 +473,18 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
-        ) : this(productId, prorationBillingMode, quantity, addons, metadata, mutableMapOf())
+            @JsonProperty("on_payment_failure")
+            @ExcludeMissing
+            onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of(),
+        ) : this(
+            productId,
+            prorationBillingMode,
+            quantity,
+            addons,
+            metadata,
+            onPaymentFailure,
+            mutableMapOf(),
+        )
 
         /**
          * Unique identifier of the product to subscribe to
@@ -470,6 +528,19 @@ private constructor(
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
+         * Controls behavior when the plan change payment fails.
+         * - `prevent_change`: Keep subscription on current plan until payment succeeds
+         * - `apply_change` (default): Apply plan change immediately regardless of payment outcome
+         *
+         * If not specified, uses the business-level default setting.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun onPaymentFailure(): Optional<OnPaymentFailure> =
+            onPaymentFailure.getOptional("on_payment_failure")
+
+        /**
          * Returns the raw JSON value of [productId].
          *
          * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
@@ -507,6 +578,16 @@ private constructor(
          */
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
+        /**
+         * Returns the raw JSON value of [onPaymentFailure].
+         *
+         * Unlike [onPaymentFailure], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("on_payment_failure")
+        @ExcludeMissing
+        fun _onPaymentFailure(): JsonField<OnPaymentFailure> = onPaymentFailure
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -542,6 +623,7 @@ private constructor(
             private var quantity: JsonField<Int>? = null
             private var addons: JsonField<MutableList<AttachAddon>>? = null
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -551,6 +633,7 @@ private constructor(
                 quantity = body.quantity
                 addons = body.addons.map { it.toMutableList() }
                 metadata = body.metadata
+                onPaymentFailure = body.onPaymentFailure
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -643,6 +726,34 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+            /**
+             * Controls behavior when the plan change payment fails.
+             * - `prevent_change`: Keep subscription on current plan until payment succeeds
+             * - `apply_change` (default): Apply plan change immediately regardless of payment
+             *   outcome
+             *
+             * If not specified, uses the business-level default setting.
+             */
+            fun onPaymentFailure(onPaymentFailure: OnPaymentFailure?) =
+                onPaymentFailure(JsonField.ofNullable(onPaymentFailure))
+
+            /**
+             * Alias for calling [Builder.onPaymentFailure] with `onPaymentFailure.orElse(null)`.
+             */
+            fun onPaymentFailure(onPaymentFailure: Optional<OnPaymentFailure>) =
+                onPaymentFailure(onPaymentFailure.getOrNull())
+
+            /**
+             * Sets [Builder.onPaymentFailure] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.onPaymentFailure] with a well-typed
+             * [OnPaymentFailure] value instead. This method is primarily for setting the field to
+             * an undocumented or not yet supported value.
+             */
+            fun onPaymentFailure(onPaymentFailure: JsonField<OnPaymentFailure>) = apply {
+                this.onPaymentFailure = onPaymentFailure
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -683,6 +794,7 @@ private constructor(
                     checkRequired("quantity", quantity),
                     (addons ?: JsonMissing.of()).map { it.toImmutable() },
                     metadata,
+                    onPaymentFailure,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -699,6 +811,7 @@ private constructor(
             quantity()
             addons().ifPresent { it.forEach { it.validate() } }
             metadata().ifPresent { it.validate() }
+            onPaymentFailure().ifPresent { it.validate() }
             validated = true
         }
 
@@ -722,7 +835,8 @@ private constructor(
                 (prorationBillingMode.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (quantity.asKnown().isPresent) 1 else 0) +
                 (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0)
+                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -735,6 +849,7 @@ private constructor(
                 quantity == other.quantity &&
                 addons == other.addons &&
                 metadata == other.metadata &&
+                onPaymentFailure == other.onPaymentFailure &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -745,6 +860,7 @@ private constructor(
                 quantity,
                 addons,
                 metadata,
+                onPaymentFailure,
                 additionalProperties,
             )
         }
@@ -752,7 +868,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, addons=$addons, metadata=$metadata, additionalProperties=$additionalProperties}"
+            "Body{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, addons=$addons, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
     }
 
     /** Proration Billing Mode */
@@ -994,6 +1110,144 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * Controls behavior when the plan change payment fails.
+     * - `prevent_change`: Keep subscription on current plan until payment succeeds
+     * - `apply_change` (default): Apply plan change immediately regardless of payment outcome
+     *
+     * If not specified, uses the business-level default setting.
+     */
+    class OnPaymentFailure @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val PREVENT_CHANGE = of("prevent_change")
+
+            @JvmField val APPLY_CHANGE = of("apply_change")
+
+            @JvmStatic fun of(value: String) = OnPaymentFailure(JsonField.of(value))
+        }
+
+        /** An enum containing [OnPaymentFailure]'s known values. */
+        enum class Known {
+            PREVENT_CHANGE,
+            APPLY_CHANGE,
+        }
+
+        /**
+         * An enum containing [OnPaymentFailure]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [OnPaymentFailure] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            PREVENT_CHANGE,
+            APPLY_CHANGE,
+            /**
+             * An enum member indicating that [OnPaymentFailure] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                PREVENT_CHANGE -> Value.PREVENT_CHANGE
+                APPLY_CHANGE -> Value.APPLY_CHANGE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                PREVENT_CHANGE -> Known.PREVENT_CHANGE
+                APPLY_CHANGE -> Known.APPLY_CHANGE
+                else -> throw DodoPaymentsInvalidDataException("Unknown OnPaymentFailure: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                DodoPaymentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): OnPaymentFailure = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is OnPaymentFailure && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {
