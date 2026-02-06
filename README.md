@@ -62,13 +62,14 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 
 // Configures using the `dodopayments.apiKey`, `dodopayments.webhookKey` and `dodopayments.baseUrl` system properties
 // Or configures using the `DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_WEBHOOK_KEY` and `DODO_PAYMENTS_BASE_URL` environment variables
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 CheckoutSessionRequest params = CheckoutSessionRequest.builder()
-    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+    .addProductCart(ProductItemReq.builder()
         .productId("product_id")
         .quantity(0)
         .build())
@@ -167,6 +168,7 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `dodopayments.apiKey`, `dodopayments.webhookKey` and `dodopayments.baseUrl` system properties
@@ -174,7 +176,7 @@ import java.util.concurrent.CompletableFuture;
 DodoPaymentsClient client = DodoPaymentsOkHttpClient.fromEnv();
 
 CheckoutSessionRequest params = CheckoutSessionRequest.builder()
-    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+    .addProductCart(ProductItemReq.builder()
         .productId("product_id")
         .quantity(0)
         .build())
@@ -190,6 +192,7 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `dodopayments.apiKey`, `dodopayments.webhookKey` and `dodopayments.baseUrl` system properties
@@ -197,7 +200,7 @@ import java.util.concurrent.CompletableFuture;
 DodoPaymentsClientAsync client = DodoPaymentsOkHttpClientAsync.fromEnv();
 
 CheckoutSessionRequest params = CheckoutSessionRequest.builder()
-    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+    .addProductCart(ProductItemReq.builder()
         .productId("product_id")
         .quantity(0)
         .build())
@@ -267,9 +270,10 @@ import com.dodopayments.api.core.http.HttpResponseFor;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 
 CheckoutSessionRequest params = CheckoutSessionRequest.builder()
-    .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+    .addProductCart(ProductItemReq.builder()
         .productId("product_id")
         .quantity(0)
         .build())
@@ -620,10 +624,11 @@ To set a documented parameter or property to an undocumented or not yet supporte
 ```java
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 
 CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
     .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .addProductCart(ProductItemReq.builder()
             .productId("product_id")
             .quantity(0)
             .build())
@@ -678,10 +683,11 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](dodo-pay
 import com.dodopayments.api.core.JsonMissing;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCreateParams;
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRequest;
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq;
 
 CheckoutSessionCreateParams params = CheckoutSessionCreateParams.builder()
     .checkoutSessionRequest(CheckoutSessionRequest.builder()
-        .addProductCart(CheckoutSessionRequest.ProductCart.builder()
+        .addProductCart(ProductItemReq.builder()
             .productId("product_id")
             .quantity(0)
             .build())
