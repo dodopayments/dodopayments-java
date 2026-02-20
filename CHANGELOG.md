@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.84.1 (2026-02-20)
+
+Full Changelog: [v1.84.0...v1.84.1](https://github.com/dodopayments/dodopayments-java/compare/v1.84.0...v1.84.1)
+
+### Bug Fixes
+
+* resolve compile errors in WebhookPayload by using correct type aliases and fixing swapped constructor args ([16c78c1](https://github.com/dodopayments/dodopayments-java/commit/16c78c1cc0d4d54846667a6f3b46c953b2cbf461))
+
 ## 1.84.0 (2026-02-20)
 
 Full Changelog: [v1.82.0...v1.84.0](https://github.com/dodopayments/dodopayments-java/compare/v1.82.0...v1.84.0)
