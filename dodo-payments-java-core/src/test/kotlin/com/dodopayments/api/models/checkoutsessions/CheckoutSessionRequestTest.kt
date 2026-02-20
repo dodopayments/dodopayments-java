@@ -121,6 +121,7 @@ internal class CheckoutSessionRequestTest {
                         .allowCustomerEditingName(true)
                         .allowCustomerEditingState(true)
                         .allowCustomerEditingStreet(true)
+                        .allowCustomerEditingTaxId(true)
                         .allowCustomerEditingZipcode(true)
                         .allowDiscountCode(true)
                         .allowPhoneNumberCollection(true)
@@ -155,6 +156,7 @@ internal class CheckoutSessionRequestTest {
                         .trialPeriodDays(0)
                         .build()
                 )
+                .taxId("tax_id")
                 .build()
 
         assertThat(checkoutSessionRequest.productCart())
@@ -267,6 +269,7 @@ internal class CheckoutSessionRequestTest {
                     .allowCustomerEditingName(true)
                     .allowCustomerEditingState(true)
                     .allowCustomerEditingStreet(true)
+                    .allowCustomerEditingTaxId(true)
                     .allowCustomerEditingZipcode(true)
                     .allowDiscountCode(true)
                     .allowPhoneNumberCollection(true)
@@ -303,6 +306,7 @@ internal class CheckoutSessionRequestTest {
                     .trialPeriodDays(0)
                     .build()
             )
+        assertThat(checkoutSessionRequest.taxId()).contains("tax_id")
     }
 
     @Test
@@ -409,6 +413,7 @@ internal class CheckoutSessionRequestTest {
                         .allowCustomerEditingName(true)
                         .allowCustomerEditingState(true)
                         .allowCustomerEditingStreet(true)
+                        .allowCustomerEditingTaxId(true)
                         .allowCustomerEditingZipcode(true)
                         .allowDiscountCode(true)
                         .allowPhoneNumberCollection(true)
@@ -443,6 +448,7 @@ internal class CheckoutSessionRequestTest {
                         .trialPeriodDays(0)
                         .build()
                 )
+                .taxId("tax_id")
                 .build()
 
         val roundtrippedCheckoutSessionRequest =

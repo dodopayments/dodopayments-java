@@ -46,6 +46,7 @@ private constructor(
     private val shortLink: JsonField<Boolean>,
     private val showSavedPaymentMethods: JsonField<Boolean>,
     private val subscriptionData: JsonField<SubscriptionData>,
+    private val taxId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -100,6 +101,7 @@ private constructor(
         @JsonProperty("subscription_data")
         @ExcludeMissing
         subscriptionData: JsonField<SubscriptionData> = JsonMissing.of(),
+        @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
     ) : this(
         productCart,
         allowedPaymentMethodTypes,
@@ -120,6 +122,7 @@ private constructor(
         shortLink,
         showSavedPaymentMethods,
         subscriptionData,
+        taxId,
         mutableMapOf(),
     )
 
@@ -279,6 +282,14 @@ private constructor(
      */
     fun subscriptionData(): Optional<SubscriptionData> =
         subscriptionData.getOptional("subscription_data")
+
+    /**
+     * Tax ID for the customer (e.g. VAT number). Requires billing_address with country.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun taxId(): Optional<String> = taxId.getOptional("tax_id")
 
     /**
      * Returns the raw JSON value of [productCart].
@@ -444,6 +455,13 @@ private constructor(
     @ExcludeMissing
     fun _subscriptionData(): JsonField<SubscriptionData> = subscriptionData
 
+    /**
+     * Returns the raw JSON value of [taxId].
+     *
+     * Unlike [taxId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("tax_id") @ExcludeMissing fun _taxId(): JsonField<String> = taxId
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -491,6 +509,7 @@ private constructor(
         private var shortLink: JsonField<Boolean> = JsonMissing.of()
         private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
         private var subscriptionData: JsonField<SubscriptionData> = JsonMissing.of()
+        private var taxId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -515,6 +534,7 @@ private constructor(
             shortLink = checkoutSessionRequest.shortLink
             showSavedPaymentMethods = checkoutSessionRequest.showSavedPaymentMethods
             subscriptionData = checkoutSessionRequest.subscriptionData
+            taxId = checkoutSessionRequest.taxId
             additionalProperties = checkoutSessionRequest.additionalProperties.toMutableMap()
         }
 
@@ -898,6 +918,20 @@ private constructor(
             this.subscriptionData = subscriptionData
         }
 
+        /** Tax ID for the customer (e.g. VAT number). Requires billing_address with country. */
+        fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
+
+        /** Alias for calling [Builder.taxId] with `taxId.orElse(null)`. */
+        fun taxId(taxId: Optional<String>) = taxId(taxId.getOrNull())
+
+        /**
+         * Sets [Builder.taxId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.taxId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun taxId(taxId: JsonField<String>) = apply { this.taxId = taxId }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -950,6 +984,7 @@ private constructor(
                 shortLink,
                 showSavedPaymentMethods,
                 subscriptionData,
+                taxId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -980,6 +1015,7 @@ private constructor(
         shortLink()
         showSavedPaymentMethods()
         subscriptionData().ifPresent { it.validate() }
+        taxId()
         validated = true
     }
 
@@ -1017,7 +1053,8 @@ private constructor(
             (if (returnUrl.asKnown().isPresent) 1 else 0) +
             (if (shortLink.asKnown().isPresent) 1 else 0) +
             (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
-            (subscriptionData.asKnown().getOrNull()?.validity() ?: 0)
+            (subscriptionData.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (taxId.asKnown().isPresent) 1 else 0)
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */
     class Metadata
@@ -1144,6 +1181,7 @@ private constructor(
             shortLink == other.shortLink &&
             showSavedPaymentMethods == other.showSavedPaymentMethods &&
             subscriptionData == other.subscriptionData &&
+            taxId == other.taxId &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1168,6 +1206,7 @@ private constructor(
             shortLink,
             showSavedPaymentMethods,
             subscriptionData,
+            taxId,
             additionalProperties,
         )
     }
@@ -1175,5 +1214,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customFields=$customFields, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, confirm=$confirm, customFields=$customFields, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, taxId=$taxId, additionalProperties=$additionalProperties}"
 }

@@ -6,6 +6,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.payments.BillingAddress
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -25,6 +26,22 @@ internal class SubscriptionUpdateParamsTest {
                     .build()
             )
             .cancelAtNextBillingDate(true)
+            .addCreditEntitlementCart(
+                SubscriptionUpdateParams.CreditEntitlementCart.builder()
+                    .creditEntitlementId("credit_entitlement_id")
+                    .creditsAmount("credits_amount")
+                    .expiresAfterDays(0)
+                    .lowBalanceThresholdPercent(0)
+                    .maxRolloverCount(0)
+                    .overageChargeAtBilling(true)
+                    .overageEnabled(true)
+                    .overageLimit("overage_limit")
+                    .rolloverEnabled(true)
+                    .rolloverPercentage(0)
+                    .rolloverTimeframeCount(0)
+                    .rolloverTimeframeInterval(TimeInterval.DAY)
+                    .build()
+            )
             .customerName("customer_name")
             .disableOnDemand(
                 SubscriptionUpdateParams.DisableOnDemand.builder()
@@ -66,6 +83,22 @@ internal class SubscriptionUpdateParamsTest {
                         .build()
                 )
                 .cancelAtNextBillingDate(true)
+                .addCreditEntitlementCart(
+                    SubscriptionUpdateParams.CreditEntitlementCart.builder()
+                        .creditEntitlementId("credit_entitlement_id")
+                        .creditsAmount("credits_amount")
+                        .expiresAfterDays(0)
+                        .lowBalanceThresholdPercent(0)
+                        .maxRolloverCount(0)
+                        .overageChargeAtBilling(true)
+                        .overageEnabled(true)
+                        .overageLimit("overage_limit")
+                        .rolloverEnabled(true)
+                        .rolloverPercentage(0)
+                        .rolloverTimeframeCount(0)
+                        .rolloverTimeframeInterval(TimeInterval.DAY)
+                        .build()
+                )
                 .customerName("customer_name")
                 .disableOnDemand(
                     SubscriptionUpdateParams.DisableOnDemand.builder()
@@ -95,6 +128,23 @@ internal class SubscriptionUpdateParamsTest {
                     .build()
             )
         assertThat(body.cancelAtNextBillingDate()).contains(true)
+        assertThat(body.creditEntitlementCart().getOrNull())
+            .containsExactly(
+                SubscriptionUpdateParams.CreditEntitlementCart.builder()
+                    .creditEntitlementId("credit_entitlement_id")
+                    .creditsAmount("credits_amount")
+                    .expiresAfterDays(0)
+                    .lowBalanceThresholdPercent(0)
+                    .maxRolloverCount(0)
+                    .overageChargeAtBilling(true)
+                    .overageEnabled(true)
+                    .overageLimit("overage_limit")
+                    .rolloverEnabled(true)
+                    .rolloverPercentage(0)
+                    .rolloverTimeframeCount(0)
+                    .rolloverTimeframeInterval(TimeInterval.DAY)
+                    .build()
+            )
         assertThat(body.customerName()).contains("customer_name")
         assertThat(body.disableOnDemand())
             .contains(

@@ -31,6 +31,12 @@ private constructor(
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
 
     /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun email(): Optional<String> = body.email()
+
+    /**
      * Additional metadata for the customer
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -49,6 +55,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun phoneNumber(): Optional<String> = body.phoneNumber()
+
+    /**
+     * Returns the raw JSON value of [email].
+     *
+     * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _email(): JsonField<String> = body._email()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -115,11 +128,25 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [email]
          * - [metadata]
          * - [name]
          * - [phoneNumber]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        fun email(email: String?) = apply { body.email(email) }
+
+        /** Alias for calling [Builder.email] with `email.orElse(null)`. */
+        fun email(email: Optional<String>) = email(email.getOrNull())
+
+        /**
+         * Sets [Builder.email] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.email] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun email(email: JsonField<String>) = apply { body.email(email) }
 
         /** Additional metadata for the customer */
         fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
@@ -309,6 +336,7 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val email: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val name: JsonField<String>,
         private val phoneNumber: JsonField<String>,
@@ -317,6 +345,7 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -324,7 +353,13 @@ private constructor(
             @JsonProperty("phone_number")
             @ExcludeMissing
             phoneNumber: JsonField<String> = JsonMissing.of(),
-        ) : this(metadata, name, phoneNumber, mutableMapOf())
+        ) : this(email, metadata, name, phoneNumber, mutableMapOf())
+
+        /**
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun email(): Optional<String> = email.getOptional("email")
 
         /**
          * Additional metadata for the customer
@@ -345,6 +380,13 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun phoneNumber(): Optional<String> = phoneNumber.getOptional("phone_number")
+
+        /**
+         * Returns the raw JSON value of [email].
+         *
+         * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -390,6 +432,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var email: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var phoneNumber: JsonField<String> = JsonMissing.of()
@@ -397,11 +440,26 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                email = body.email
                 metadata = body.metadata
                 name = body.name
                 phoneNumber = body.phoneNumber
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
+
+            fun email(email: String?) = email(JsonField.ofNullable(email))
+
+            /** Alias for calling [Builder.email] with `email.orElse(null)`. */
+            fun email(email: Optional<String>) = email(email.getOrNull())
+
+            /**
+             * Sets [Builder.email] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.email] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun email(email: JsonField<String>) = apply { this.email = email }
 
             /** Additional metadata for the customer */
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
@@ -473,7 +531,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(metadata, name, phoneNumber, additionalProperties.toMutableMap())
+                Body(email, metadata, name, phoneNumber, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -483,6 +541,7 @@ private constructor(
                 return@apply
             }
 
+            email()
             metadata().ifPresent { it.validate() }
             name()
             phoneNumber()
@@ -505,7 +564,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (email.asKnown().isPresent) 1 else 0) +
+                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (if (phoneNumber.asKnown().isPresent) 1 else 0)
 
@@ -515,6 +575,7 @@ private constructor(
             }
 
             return other is Body &&
+                email == other.email &&
                 metadata == other.metadata &&
                 name == other.name &&
                 phoneNumber == other.phoneNumber &&
@@ -522,13 +583,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(metadata, name, phoneNumber, additionalProperties)
+            Objects.hash(email, metadata, name, phoneNumber, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{metadata=$metadata, name=$name, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
+            "Body{email=$email, metadata=$metadata, name=$name, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata for the customer */
