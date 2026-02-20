@@ -15,17 +15,21 @@ internal class AddMeterToPriceTest {
             AddMeterToPrice.builder()
                 .meterId("meter_id")
                 .pricePerUnit("10.50")
+                .creditEntitlementId("credit_entitlement_id")
                 .description("description")
                 .freeThreshold(0L)
                 .measurementUnit("measurement_unit")
+                .meterUnitsPerCredit("meter_units_per_credit")
                 .name("name")
                 .build()
 
         assertThat(addMeterToPrice.meterId()).isEqualTo("meter_id")
         assertThat(addMeterToPrice.pricePerUnit()).isEqualTo("10.50")
+        assertThat(addMeterToPrice.creditEntitlementId()).contains("credit_entitlement_id")
         assertThat(addMeterToPrice.description()).contains("description")
         assertThat(addMeterToPrice.freeThreshold()).contains(0L)
         assertThat(addMeterToPrice.measurementUnit()).contains("measurement_unit")
+        assertThat(addMeterToPrice.meterUnitsPerCredit()).contains("meter_units_per_credit")
         assertThat(addMeterToPrice.name()).contains("name")
     }
 
@@ -36,9 +40,11 @@ internal class AddMeterToPriceTest {
             AddMeterToPrice.builder()
                 .meterId("meter_id")
                 .pricePerUnit("10.50")
+                .creditEntitlementId("credit_entitlement_id")
                 .description("description")
                 .freeThreshold(0L)
                 .measurementUnit("measurement_unit")
+                .meterUnitsPerCredit("meter_units_per_credit")
                 .name("name")
                 .build()
 

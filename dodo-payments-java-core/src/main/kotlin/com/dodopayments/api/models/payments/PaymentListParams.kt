@@ -23,6 +23,7 @@ private constructor(
     private val customerId: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
+    private val productId: String?,
     private val status: Status?,
     private val subscriptionId: String?,
     private val additionalHeaders: Headers,
@@ -46,6 +47,9 @@ private constructor(
 
     /** Page size default is 10 max is 100 */
     fun pageSize(): Optional<Int> = Optional.ofNullable(pageSize)
+
+    /** Filter by product id */
+    fun productId(): Optional<String> = Optional.ofNullable(productId)
 
     /** Filter by status */
     fun status(): Optional<Status> = Optional.ofNullable(status)
@@ -78,6 +82,7 @@ private constructor(
         private var customerId: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
+        private var productId: String? = null
         private var status: Status? = null
         private var subscriptionId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -91,6 +96,7 @@ private constructor(
             customerId = paymentListParams.customerId
             pageNumber = paymentListParams.pageNumber
             pageSize = paymentListParams.pageSize
+            productId = paymentListParams.productId
             status = paymentListParams.status
             subscriptionId = paymentListParams.subscriptionId
             additionalHeaders = paymentListParams.additionalHeaders.toBuilder()
@@ -148,6 +154,12 @@ private constructor(
 
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
+
+        /** Filter by product id */
+        fun productId(productId: String?) = apply { this.productId = productId }
+
+        /** Alias for calling [Builder.productId] with `productId.orElse(null)`. */
+        fun productId(productId: Optional<String>) = productId(productId.getOrNull())
 
         /** Filter by status */
         fun status(status: Status?) = apply { this.status = status }
@@ -273,6 +285,7 @@ private constructor(
                 customerId,
                 pageNumber,
                 pageSize,
+                productId,
                 status,
                 subscriptionId,
                 additionalHeaders.build(),
@@ -295,6 +308,7 @@ private constructor(
                 customerId?.let { put("customer_id", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
+                productId?.let { put("product_id", it) }
                 status?.let { put("status", it.toString()) }
                 subscriptionId?.let { put("subscription_id", it) }
                 putAll(additionalQueryParams)
@@ -496,6 +510,7 @@ private constructor(
             customerId == other.customerId &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
+            productId == other.productId &&
             status == other.status &&
             subscriptionId == other.subscriptionId &&
             additionalHeaders == other.additionalHeaders &&
@@ -510,6 +525,7 @@ private constructor(
             customerId,
             pageNumber,
             pageSize,
+            productId,
             status,
             subscriptionId,
             additionalHeaders,
@@ -517,5 +533,5 @@ private constructor(
         )
 
     override fun toString() =
-        "PaymentListParams{brandId=$brandId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PaymentListParams{brandId=$brandId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

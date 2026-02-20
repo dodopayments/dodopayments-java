@@ -25,6 +25,7 @@ private constructor(
     private val allowCustomerEditingName: JsonField<Boolean>,
     private val allowCustomerEditingState: JsonField<Boolean>,
     private val allowCustomerEditingStreet: JsonField<Boolean>,
+    private val allowCustomerEditingTaxId: JsonField<Boolean>,
     private val allowCustomerEditingZipcode: JsonField<Boolean>,
     private val allowDiscountCode: JsonField<Boolean>,
     private val allowPhoneNumberCollection: JsonField<Boolean>,
@@ -57,6 +58,9 @@ private constructor(
         @JsonProperty("allow_customer_editing_street")
         @ExcludeMissing
         allowCustomerEditingStreet: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_tax_id")
+        @ExcludeMissing
+        allowCustomerEditingTaxId: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("allow_customer_editing_zipcode")
         @ExcludeMissing
         allowCustomerEditingZipcode: JsonField<Boolean> = JsonMissing.of(),
@@ -83,6 +87,7 @@ private constructor(
         allowCustomerEditingName,
         allowCustomerEditingState,
         allowCustomerEditingStreet,
+        allowCustomerEditingTaxId,
         allowCustomerEditingZipcode,
         allowDiscountCode,
         allowPhoneNumberCollection,
@@ -144,6 +149,13 @@ private constructor(
      */
     fun allowCustomerEditingStreet(): Optional<Boolean> =
         allowCustomerEditingStreet.getOptional("allow_customer_editing_street")
+
+    /**
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun allowCustomerEditingTaxId(): Optional<Boolean> =
+        allowCustomerEditingTaxId.getOptional("allow_customer_editing_tax_id")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -278,6 +290,16 @@ private constructor(
     fun _allowCustomerEditingStreet(): JsonField<Boolean> = allowCustomerEditingStreet
 
     /**
+     * Returns the raw JSON value of [allowCustomerEditingTaxId].
+     *
+     * Unlike [allowCustomerEditingTaxId], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("allow_customer_editing_tax_id")
+    @ExcludeMissing
+    fun _allowCustomerEditingTaxId(): JsonField<Boolean> = allowCustomerEditingTaxId
+
+    /**
      * Returns the raw JSON value of [allowCustomerEditingZipcode].
      *
      * Unlike [allowCustomerEditingZipcode], this method doesn't throw if the JSON field has an
@@ -362,6 +384,7 @@ private constructor(
         private var allowCustomerEditingName: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingState: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingStreet: JsonField<Boolean> = JsonMissing.of()
+        private var allowCustomerEditingTaxId: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingZipcode: JsonField<Boolean> = JsonMissing.of()
         private var allowDiscountCode: JsonField<Boolean> = JsonMissing.of()
         private var allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of()
@@ -379,6 +402,7 @@ private constructor(
             allowCustomerEditingName = checkoutSessionFlags.allowCustomerEditingName
             allowCustomerEditingState = checkoutSessionFlags.allowCustomerEditingState
             allowCustomerEditingStreet = checkoutSessionFlags.allowCustomerEditingStreet
+            allowCustomerEditingTaxId = checkoutSessionFlags.allowCustomerEditingTaxId
             allowCustomerEditingZipcode = checkoutSessionFlags.allowCustomerEditingZipcode
             allowDiscountCode = checkoutSessionFlags.allowDiscountCode
             allowPhoneNumberCollection = checkoutSessionFlags.allowPhoneNumberCollection
@@ -489,6 +513,20 @@ private constructor(
          */
         fun allowCustomerEditingStreet(allowCustomerEditingStreet: JsonField<Boolean>) = apply {
             this.allowCustomerEditingStreet = allowCustomerEditingStreet
+        }
+
+        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: Boolean) =
+            allowCustomerEditingTaxId(JsonField.of(allowCustomerEditingTaxId))
+
+        /**
+         * Sets [Builder.allowCustomerEditingTaxId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowCustomerEditingTaxId] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: JsonField<Boolean>) = apply {
+            this.allowCustomerEditingTaxId = allowCustomerEditingTaxId
         }
 
         fun allowCustomerEditingZipcode(allowCustomerEditingZipcode: Boolean) =
@@ -631,6 +669,7 @@ private constructor(
                 allowCustomerEditingName,
                 allowCustomerEditingState,
                 allowCustomerEditingStreet,
+                allowCustomerEditingTaxId,
                 allowCustomerEditingZipcode,
                 allowDiscountCode,
                 allowPhoneNumberCollection,
@@ -655,6 +694,7 @@ private constructor(
         allowCustomerEditingName()
         allowCustomerEditingState()
         allowCustomerEditingStreet()
+        allowCustomerEditingTaxId()
         allowCustomerEditingZipcode()
         allowDiscountCode()
         allowPhoneNumberCollection()
@@ -686,6 +726,7 @@ private constructor(
             (if (allowCustomerEditingName.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingState.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingStreet.asKnown().isPresent) 1 else 0) +
+            (if (allowCustomerEditingTaxId.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingZipcode.asKnown().isPresent) 1 else 0) +
             (if (allowDiscountCode.asKnown().isPresent) 1 else 0) +
             (if (allowPhoneNumberCollection.asKnown().isPresent) 1 else 0) +
@@ -706,6 +747,7 @@ private constructor(
             allowCustomerEditingName == other.allowCustomerEditingName &&
             allowCustomerEditingState == other.allowCustomerEditingState &&
             allowCustomerEditingStreet == other.allowCustomerEditingStreet &&
+            allowCustomerEditingTaxId == other.allowCustomerEditingTaxId &&
             allowCustomerEditingZipcode == other.allowCustomerEditingZipcode &&
             allowDiscountCode == other.allowDiscountCode &&
             allowPhoneNumberCollection == other.allowPhoneNumberCollection &&
@@ -724,6 +766,7 @@ private constructor(
             allowCustomerEditingName,
             allowCustomerEditingState,
             allowCustomerEditingStreet,
+            allowCustomerEditingTaxId,
             allowCustomerEditingZipcode,
             allowDiscountCode,
             allowPhoneNumberCollection,
@@ -737,5 +780,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, additionalProperties=$additionalProperties}"
+        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, additionalProperties=$additionalProperties}"
 }
