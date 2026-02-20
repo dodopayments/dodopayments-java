@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.84.0 (2026-02-20)
+
+Full Changelog: [v1.82.0...v1.84.0](https://github.com/dodopayments/dodopayments-java/compare/v1.82.0...v1.84.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.84.0 ([2c4ee42](https://github.com/dodopayments/dodopayments-java/commit/2c4ee423e513e7e07dbdfd5d8c256b45e72189f1))
+* **client:** add connection pooling option ([0b14a30](https://github.com/dodopayments/dodopayments-java/commit/0b14a301ed9852cd60d3795ab2fbc827be61c389))
+
+
+### Chores
+
+* **internal:** make `OkHttp` constructor internal ([1d40ac4](https://github.com/dodopayments/dodopayments-java/commit/1d40ac48bec630fddc82c305f777096201350514))
+* **internal:** remove unnecessary base URL ([d2cf85a](https://github.com/dodopayments/dodopayments-java/commit/d2cf85a0406cb876f372dd07cf7bc5c771e95e88))
+* **internal:** update `TestServerExtension` comment ([ab4a7bd](https://github.com/dodopayments/dodopayments-java/commit/ab4a7bd619d43b224e29b946a86436a3c4ff07e1))
+
 ## 1.82.0 (2026-02-07)
 
 Full Changelog: [v1.81.0...v1.82.0](https://github.com/dodopayments/dodopayments-java/compare/v1.81.0...v1.82.0)
