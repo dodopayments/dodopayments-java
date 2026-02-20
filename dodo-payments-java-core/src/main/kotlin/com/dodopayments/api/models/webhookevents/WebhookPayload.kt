@@ -667,7 +667,7 @@ private constructor(
             private val cardNetwork: JsonField<String>,
             private val cardType: JsonField<String>,
             private val checkoutSessionId: JsonField<String>,
-            private val customFieldResponses: JsonField<List<Payment.CustomFieldResponse>>,
+            private val customFieldResponses: JsonField<List<GlobalPayment.CustomFieldResponse>>,
             private val discountId: JsonField<String>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
@@ -751,7 +751,7 @@ private constructor(
                 checkoutSessionId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("custom_field_responses")
                 @ExcludeMissing
-                customFieldResponses: JsonField<List<Payment.CustomFieldResponse>> =
+                customFieldResponses: JsonField<List<GlobalPayment.CustomFieldResponse>> =
                     JsonMissing.of(),
                 @JsonProperty("discount_id")
                 @ExcludeMissing
@@ -829,8 +829,8 @@ private constructor(
                 paymentLink,
                 paymentMethod,
                 paymentMethodType,
-                productCart,
                 refundStatus,
+                productCart,
                 settlementTax,
                 status,
                 subscriptionId,
@@ -1069,7 +1069,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun customFieldResponses(): Optional<List<Payment.CustomFieldResponse>> =
+            fun customFieldResponses(): Optional<List<GlobalPayment.CustomFieldResponse>> =
                 customFieldResponses.getOptional("custom_field_responses")
 
             /**
@@ -1152,7 +1152,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun refundStatus(): Optional<Payment.RefundStatus> =
+            fun refundStatus(): Optional<GlobalPayment.RefundStatus> =
                 refundStatus.getOptional("refund_status")
 
             /**
@@ -1405,7 +1405,7 @@ private constructor(
              */
             @JsonProperty("custom_field_responses")
             @ExcludeMissing
-            fun _customFieldResponses(): JsonField<List<Payment.CustomFieldResponse>> =
+            fun _customFieldResponses(): JsonField<List<GlobalPayment.CustomFieldResponse>> =
                 customFieldResponses
 
             /**
@@ -1506,7 +1506,7 @@ private constructor(
              */
             @JsonProperty("refund_status")
             @ExcludeMissing
-            fun _refundStatus(): JsonField<Payment.RefundStatus> = refundStatus
+            fun _refundStatus(): JsonField<GlobalPayment.RefundStatus> = refundStatus
 
             /**
              * Returns the raw JSON value of [settlementTax].
@@ -1625,7 +1625,7 @@ private constructor(
                 private var cardType: JsonField<String> = JsonMissing.of()
                 private var checkoutSessionId: JsonField<String> = JsonMissing.of()
                 private var customFieldResponses:
-                    JsonField<MutableList<Payment.CustomFieldResponse>>? =
+                    JsonField<MutableList<GlobalPayment.CustomFieldResponse>>? =
                     null
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var errorCode: JsonField<String> = JsonMissing.of()
@@ -2035,7 +2035,7 @@ private constructor(
                 }
 
                 /** Customer's responses to custom fields collected during checkout */
-                fun customFieldResponses(customFieldResponses: List<Payment.CustomFieldResponse>?) =
+                fun customFieldResponses(customFieldResponses: List<GlobalPayment.CustomFieldResponse>?) =
                     customFieldResponses(JsonField.ofNullable(customFieldResponses))
 
                 /**
@@ -2043,28 +2043,28 @@ private constructor(
                  * `customFieldResponses.orElse(null)`.
                  */
                 fun customFieldResponses(
-                    customFieldResponses: Optional<List<Payment.CustomFieldResponse>>
+                    customFieldResponses: Optional<List<GlobalPayment.CustomFieldResponse>>
                 ) = customFieldResponses(customFieldResponses.getOrNull())
 
                 /**
                  * Sets [Builder.customFieldResponses] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.customFieldResponses] with a well-typed
-                 * `List<Payment.CustomFieldResponse>` value instead. This method is primarily for
+                 * `List<GlobalPayment.CustomFieldResponse>` value instead. This method is primarily for
                  * setting the field to an undocumented or not yet supported value.
                  */
                 fun customFieldResponses(
-                    customFieldResponses: JsonField<List<Payment.CustomFieldResponse>>
+                    customFieldResponses: JsonField<List<GlobalPayment.CustomFieldResponse>>
                 ) = apply {
                     this.customFieldResponses = customFieldResponses.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Payment.CustomFieldResponse] to [customFieldResponses].
+                 * Adds a single [GlobalPayment.CustomFieldResponse] to [customFieldResponses].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addCustomFieldResponse(customFieldResponse: Payment.CustomFieldResponse) =
+                fun addCustomFieldResponse(customFieldResponse: GlobalPayment.CustomFieldResponse) =
                     apply {
                         customFieldResponses =
                             (customFieldResponses ?: JsonField.of(mutableListOf())).also {
@@ -2250,21 +2250,21 @@ private constructor(
                  * Summary of the refund status for this payment. None if no succeeded refunds
                  * exist.
                  */
-                fun refundStatus(refundStatus: Payment.RefundStatus?) =
+                fun refundStatus(refundStatus: GlobalPayment.RefundStatus?) =
                     refundStatus(JsonField.ofNullable(refundStatus))
 
                 /** Alias for calling [Builder.refundStatus] with `refundStatus.orElse(null)`. */
-                fun refundStatus(refundStatus: Optional<Payment.RefundStatus>) =
+                fun refundStatus(refundStatus: Optional<GlobalPayment.RefundStatus>) =
                     refundStatus(refundStatus.getOrNull())
 
                 /**
                  * Sets [Builder.refundStatus] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.refundStatus] with a well-typed
-                 * [Payment.RefundStatus] value instead. This method is primarily for setting the
+                 * [GlobalPayment.RefundStatus] value instead. This method is primarily for setting the
                  * field to an undocumented or not yet supported value.
                  */
-                fun refundStatus(refundStatus: JsonField<Payment.RefundStatus>) = apply {
+                fun refundStatus(refundStatus: JsonField<GlobalPayment.RefundStatus>) = apply {
                     this.refundStatus = refundStatus
                 }
 
@@ -2467,8 +2467,8 @@ private constructor(
                         paymentLink,
                         paymentMethod,
                         paymentMethodType,
-                        (productCart ?: JsonMissing.of()).map { it.toImmutable() },
                         refundStatus,
+                        (productCart ?: JsonMissing.of()).map { it.toImmutable() },
                         settlementTax,
                         status,
                         subscriptionId,
@@ -2811,7 +2811,7 @@ private constructor(
             private val billing: JsonField<BillingAddress>,
             private val cancelAtNextBillingDate: JsonField<Boolean>,
             private val createdAt: JsonField<OffsetDateTime>,
-            private val creditEntitlementCart: JsonField<List<Subscription.CreditEntitlementCart>>,
+            private val creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>>,
             private val currency: JsonField<Currency>,
             private val customer: JsonField<CustomerLimitedDetails>,
             private val metadata: JsonField<GlobalSubscription.Metadata>,
@@ -2833,7 +2833,7 @@ private constructor(
             private val taxInclusive: JsonField<Boolean>,
             private val trialPeriodDays: JsonField<Int>,
             private val cancelledAt: JsonField<OffsetDateTime>,
-            private val customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>>,
+            private val customFieldResponses: JsonField<List<GlobalSubscription.CustomFieldResponse>>,
             private val discountCyclesRemaining: JsonField<Int>,
             private val discountId: JsonField<String>,
             private val expiresAt: JsonField<OffsetDateTime>,
@@ -2859,7 +2859,7 @@ private constructor(
                 createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
                 @JsonProperty("credit_entitlement_cart")
                 @ExcludeMissing
-                creditEntitlementCart: JsonField<List<Subscription.CreditEntitlementCart>> =
+                creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>> =
                     JsonMissing.of(),
                 @JsonProperty("currency")
                 @ExcludeMissing
@@ -2925,7 +2925,7 @@ private constructor(
                 cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of(),
                 @JsonProperty("custom_field_responses")
                 @ExcludeMissing
-                customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>> =
+                customFieldResponses: JsonField<List<GlobalSubscription.CustomFieldResponse>> =
                     JsonMissing.of(),
                 @JsonProperty("discount_cycles_remaining")
                 @ExcludeMissing
@@ -3058,7 +3058,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun creditEntitlementCart(): List<Subscription.CreditEntitlementCart> =
+            fun creditEntitlementCart(): List<GlobalSubscription.CreditEntitlementCart> =
                 creditEntitlementCart.getRequired("credit_entitlement_cart")
 
             /**
@@ -3095,7 +3095,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun meterCreditEntitlementCart(): List<Subscription.MeterCreditEntitlementCart> =
+            fun meterCreditEntitlementCart(): List<GlobalSubscription.MeterCreditEntitlementCart> =
                 meterCreditEntitlementCart.getRequired("meter_credit_entitlement_cart")
 
             /**
@@ -3254,7 +3254,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun customFieldResponses(): Optional<List<Subscription.CustomFieldResponse>> =
+            fun customFieldResponses(): Optional<List<GlobalSubscription.CustomFieldResponse>> =
                 customFieldResponses.getOptional("custom_field_responses")
 
             /**
@@ -3352,7 +3352,7 @@ private constructor(
              */
             @JsonProperty("credit_entitlement_cart")
             @ExcludeMissing
-            fun _creditEntitlementCart(): JsonField<List<Subscription.CreditEntitlementCart>> =
+            fun _creditEntitlementCart(): JsonField<List<GlobalSubscription.CreditEntitlementCart>> =
                 creditEntitlementCart
 
             /**
@@ -3394,7 +3394,7 @@ private constructor(
             @JsonProperty("meter_credit_entitlement_cart")
             @ExcludeMissing
             fun _meterCreditEntitlementCart():
-                JsonField<List<Subscription.MeterCreditEntitlementCart>> =
+                JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>> =
                 meterCreditEntitlementCart
 
             /**
@@ -3561,7 +3561,7 @@ private constructor(
              */
             @JsonProperty("custom_field_responses")
             @ExcludeMissing
-            fun _customFieldResponses(): JsonField<List<Subscription.CustomFieldResponse>> =
+            fun _customFieldResponses(): JsonField<List<GlobalSubscription.CustomFieldResponse>> =
                 customFieldResponses
 
             /**
@@ -3678,7 +3678,7 @@ private constructor(
                 private var cancelAtNextBillingDate: JsonField<Boolean>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var creditEntitlementCart:
-                    JsonField<MutableList<Subscription.CreditEntitlementCart>>? =
+                    JsonField<MutableList<GlobalSubscription.CreditEntitlementCart>>? =
                     null
                 private var currency: JsonField<Currency>? = null
                 private var customer: JsonField<CustomerLimitedDetails>? = null
@@ -3703,7 +3703,7 @@ private constructor(
                 private var trialPeriodDays: JsonField<Int>? = null
                 private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var customFieldResponses:
-                    JsonField<MutableList<Subscription.CustomFieldResponse>>? =
+                    JsonField<MutableList<GlobalSubscription.CustomFieldResponse>>? =
                     null
                 private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
                 private var discountId: JsonField<String> = JsonMissing.of()
@@ -3822,30 +3822,30 @@ private constructor(
 
                 /** Credit entitlement cart settings for this subscription */
                 fun creditEntitlementCart(
-                    creditEntitlementCart: List<Subscription.CreditEntitlementCart>
+                    creditEntitlementCart: List<GlobalSubscription.CreditEntitlementCart>
                 ) = creditEntitlementCart(JsonField.of(creditEntitlementCart))
 
                 /**
                  * Sets [Builder.creditEntitlementCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.creditEntitlementCart] with a well-typed
-                 * `List<Subscription.CreditEntitlementCart>` value instead. This method is
+                 * `List<GlobalSubscription.CreditEntitlementCart>` value instead. This method is
                  * primarily for setting the field to an undocumented or not yet supported value.
                  */
                 fun creditEntitlementCart(
-                    creditEntitlementCart: JsonField<List<Subscription.CreditEntitlementCart>>
+                    creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>>
                 ) = apply {
                     this.creditEntitlementCart = creditEntitlementCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Subscription.CreditEntitlementCart] to
+                 * Adds a single [GlobalSubscription.CreditEntitlementCart] to
                  * [Builder.creditEntitlementCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
                 fun addCreditEntitlementCart(
-                    creditEntitlementCart: Subscription.CreditEntitlementCart
+                    creditEntitlementCart: GlobalSubscription.CreditEntitlementCart
                 ) = apply {
                     this.creditEntitlementCart =
                         (this.creditEntitlementCart ?: JsonField.of(mutableListOf())).also {
@@ -3895,32 +3895,32 @@ private constructor(
 
                 /** Meter credit entitlement cart settings for this subscription */
                 fun meterCreditEntitlementCart(
-                    meterCreditEntitlementCart: List<Subscription.MeterCreditEntitlementCart>
+                    meterCreditEntitlementCart: List<GlobalSubscription.MeterCreditEntitlementCart>
                 ) = meterCreditEntitlementCart(JsonField.of(meterCreditEntitlementCart))
 
                 /**
                  * Sets [Builder.meterCreditEntitlementCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.meterCreditEntitlementCart] with a well-typed
-                 * `List<Subscription.MeterCreditEntitlementCart>` value instead. This method is
+                 * `List<GlobalSubscription.MeterCreditEntitlementCart>` value instead. This method is
                  * primarily for setting the field to an undocumented or not yet supported value.
                  */
                 fun meterCreditEntitlementCart(
                     meterCreditEntitlementCart:
-                        JsonField<List<Subscription.MeterCreditEntitlementCart>>
+                        JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>>
                 ) = apply {
                     this.meterCreditEntitlementCart =
                         meterCreditEntitlementCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Subscription.MeterCreditEntitlementCart] to
+                 * Adds a single [GlobalSubscription.MeterCreditEntitlementCart] to
                  * [Builder.meterCreditEntitlementCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
                 fun addMeterCreditEntitlementCart(
-                    meterCreditEntitlementCart: Subscription.MeterCreditEntitlementCart
+                    meterCreditEntitlementCart: GlobalSubscription.MeterCreditEntitlementCart
                 ) = apply {
                     this.meterCreditEntitlementCart =
                         (this.meterCreditEntitlementCart ?: JsonField.of(mutableListOf())).also {
@@ -4180,7 +4180,7 @@ private constructor(
 
                 /** Customer's responses to custom fields collected during checkout */
                 fun customFieldResponses(
-                    customFieldResponses: List<Subscription.CustomFieldResponse>?
+                    customFieldResponses: List<GlobalSubscription.CustomFieldResponse>?
                 ) = customFieldResponses(JsonField.ofNullable(customFieldResponses))
 
                 /**
@@ -4188,28 +4188,28 @@ private constructor(
                  * `customFieldResponses.orElse(null)`.
                  */
                 fun customFieldResponses(
-                    customFieldResponses: Optional<List<Subscription.CustomFieldResponse>>
+                    customFieldResponses: Optional<List<GlobalSubscription.CustomFieldResponse>>
                 ) = customFieldResponses(customFieldResponses.getOrNull())
 
                 /**
                  * Sets [Builder.customFieldResponses] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.customFieldResponses] with a well-typed
-                 * `List<Subscription.CustomFieldResponse>` value instead. This method is primarily
+                 * `List<GlobalSubscription.CustomFieldResponse>` value instead. This method is primarily
                  * for setting the field to an undocumented or not yet supported value.
                  */
                 fun customFieldResponses(
-                    customFieldResponses: JsonField<List<Subscription.CustomFieldResponse>>
+                    customFieldResponses: JsonField<List<GlobalSubscription.CustomFieldResponse>>
                 ) = apply {
                     this.customFieldResponses = customFieldResponses.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Subscription.CustomFieldResponse] to [customFieldResponses].
+                 * Adds a single [GlobalSubscription.CustomFieldResponse] to [customFieldResponses].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addCustomFieldResponse(customFieldResponse: Subscription.CustomFieldResponse) =
+                fun addCustomFieldResponse(customFieldResponse: GlobalSubscription.CustomFieldResponse) =
                     apply {
                         customFieldResponses =
                             (customFieldResponses ?: JsonField.of(mutableListOf())).also {
