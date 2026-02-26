@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.84.2 (2026-02-26)
+
+Full Changelog: [v1.84.1...v1.84.2](https://github.com/dodopayments/dodopayments-java/compare/v1.84.1...v1.84.2)
+
+### Bug Fixes
+
+* set Accept header in more places ([0f66dc5](https://github.com/dodopayments/dodopayments-java/commit/0f66dc514ecb2af92beaef07be9cdf012911aeb8))
+
+
+### Chores
+
+* drop apache dependency ([dbbaa89](https://github.com/dodopayments/dodopayments-java/commit/dbbaa8987502ea343c53ef5941a57ba790828b53))
+* **internal:** expand imports ([3504e8f](https://github.com/dodopayments/dodopayments-java/commit/3504e8f051e4ea817c82cc84f65288b4712da9c0))
+* make `Properties` more resilient to `null` ([3eaf195](https://github.com/dodopayments/dodopayments-java/commit/3eaf195b84e6181da5fb45309035eb0aea220aa8))
+
 ## 1.84.1 (2026-02-20)
 
 Full Changelog: [v1.84.0...v1.84.1](https://github.com/dodopayments/dodopayments-java/compare/v1.84.0...v1.84.1)
