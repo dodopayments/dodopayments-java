@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.86.1 (2026-03-01)
+
+Full Changelog: [v1.86.0...v1.86.1](https://github.com/dodopayments/dodopayments-java/compare/v1.86.0...v1.86.1)
+
+### Bug Fixes
+
+* resolve ktfmt lint failures in webhook-related models ([9e408ba](https://github.com/dodopayments/dodopayments-java/commit/9e408ba77450e7beb1560be77166aa8bb29e4363))
+
 ## 1.86.0 (2026-03-01)
 
 Full Changelog: [v1.84.2...v1.86.0](https://github.com/dodopayments/dodopayments-java/compare/v1.84.2...v1.86.0)
