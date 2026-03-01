@@ -12,6 +12,8 @@ import com.dodopayments.api.services.blocking.BrandService
 import com.dodopayments.api.services.blocking.BrandServiceImpl
 import com.dodopayments.api.services.blocking.CheckoutSessionService
 import com.dodopayments.api.services.blocking.CheckoutSessionServiceImpl
+import com.dodopayments.api.services.blocking.CreditEntitlementService
+import com.dodopayments.api.services.blocking.CreditEntitlementServiceImpl
 import com.dodopayments.api.services.blocking.CustomerService
 import com.dodopayments.api.services.blocking.CustomerServiceImpl
 import com.dodopayments.api.services.blocking.DiscountService
@@ -125,6 +127,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val balances: BalanceService by lazy { BalanceServiceImpl(clientOptionsWithUserAgent) }
 
+    private val creditEntitlements: CreditEntitlementService by lazy {
+        CreditEntitlementServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): DodoPaymentsClientAsync = async
 
     override fun withRawResponse(): DodoPaymentsClient.WithRawResponse = withRawResponse
@@ -173,6 +179,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
     override fun meters(): MeterService = meters
 
     override fun balances(): BalanceService = balances
+
+    override fun creditEntitlements(): CreditEntitlementService = creditEntitlements
 
     override fun close() = clientOptions.close()
 
@@ -263,6 +271,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
             BalanceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val creditEntitlements: CreditEntitlementService.WithRawResponse by lazy {
+            CreditEntitlementServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): DodoPaymentsClient.WithRawResponse =
@@ -312,5 +324,8 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
         override fun meters(): MeterService.WithRawResponse = meters
 
         override fun balances(): BalanceService.WithRawResponse = balances
+
+        override fun creditEntitlements(): CreditEntitlementService.WithRawResponse =
+            creditEntitlements
     }
 }

@@ -69,7 +69,7 @@ internal class PaymentTest {
                 )
                 .paymentId("payment_id")
                 .addRefund(
-                    Payment.Refund.builder()
+                    RefundListItem.builder()
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isPartial(true)
@@ -91,7 +91,7 @@ internal class PaymentTest {
                 .cardType("card_type")
                 .checkoutSessionId("checkout_session_id")
                 .addCustomFieldResponse(
-                    Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                    CustomFieldResponse.builder().key("key").value("value").build()
                 )
                 .discountId("discount_id")
                 .errorCode("error_code")
@@ -102,9 +102,9 @@ internal class PaymentTest {
                 .paymentMethod("payment_method")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
-                    Payment.ProductCart.builder().productId("product_id").quantity(0).build()
+                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
                 )
-                .refundStatus(Payment.RefundStatus.PARTIAL)
+                .refundStatus(PaymentRefundStatus.PARTIAL)
                 .settlementTax(0)
                 .status(IntentStatus.SUCCEEDED)
                 .subscriptionId("subscription_id")
@@ -164,7 +164,7 @@ internal class PaymentTest {
         assertThat(payment.paymentId()).isEqualTo("payment_id")
         assertThat(payment.refunds())
             .containsExactly(
-                Payment.Refund.builder()
+                RefundListItem.builder()
                     .businessId("business_id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .isPartial(true)
@@ -186,9 +186,7 @@ internal class PaymentTest {
         assertThat(payment.cardType()).contains("card_type")
         assertThat(payment.checkoutSessionId()).contains("checkout_session_id")
         assertThat(payment.customFieldResponses().getOrNull())
-            .containsExactly(
-                Payment.CustomFieldResponse.builder().key("key").value("value").build()
-            )
+            .containsExactly(CustomFieldResponse.builder().key("key").value("value").build())
         assertThat(payment.discountId()).contains("discount_id")
         assertThat(payment.errorCode()).contains("error_code")
         assertThat(payment.errorMessage()).contains("error_message")
@@ -199,9 +197,9 @@ internal class PaymentTest {
         assertThat(payment.paymentMethodType()).contains("payment_method_type")
         assertThat(payment.productCart().getOrNull())
             .containsExactly(
-                Payment.ProductCart.builder().productId("product_id").quantity(0).build()
+                OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
             )
-        assertThat(payment.refundStatus()).contains(Payment.RefundStatus.PARTIAL)
+        assertThat(payment.refundStatus()).contains(PaymentRefundStatus.PARTIAL)
         assertThat(payment.settlementTax()).contains(0)
         assertThat(payment.status()).contains(IntentStatus.SUCCEEDED)
         assertThat(payment.subscriptionId()).contains("subscription_id")
@@ -261,7 +259,7 @@ internal class PaymentTest {
                 )
                 .paymentId("payment_id")
                 .addRefund(
-                    Payment.Refund.builder()
+                    RefundListItem.builder()
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .isPartial(true)
@@ -283,7 +281,7 @@ internal class PaymentTest {
                 .cardType("card_type")
                 .checkoutSessionId("checkout_session_id")
                 .addCustomFieldResponse(
-                    Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                    CustomFieldResponse.builder().key("key").value("value").build()
                 )
                 .discountId("discount_id")
                 .errorCode("error_code")
@@ -294,9 +292,9 @@ internal class PaymentTest {
                 .paymentMethod("payment_method")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
-                    Payment.ProductCart.builder().productId("product_id").quantity(0).build()
+                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
                 )
-                .refundStatus(Payment.RefundStatus.PARTIAL)
+                .refundStatus(PaymentRefundStatus.PARTIAL)
                 .settlementTax(0)
                 .status(IntentStatus.SUCCEEDED)
                 .subscriptionId("subscription_id")

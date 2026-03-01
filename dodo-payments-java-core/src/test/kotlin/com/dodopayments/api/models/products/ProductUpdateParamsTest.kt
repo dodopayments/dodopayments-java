@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -19,22 +20,18 @@ internal class ProductUpdateParamsTest {
             .addAddon("string")
             .brandId("brand_id")
             .addCreditEntitlement(
-                ProductUpdateParams.CreditEntitlement.builder()
+                AttachCreditEntitlement.builder()
                     .creditEntitlementId("credit_entitlement_id")
                     .creditsAmount("credits_amount")
-                    .creditsReduceOverage(true)
                     .currency(Currency.AED)
                     .expiresAfterDays(0)
                     .lowBalanceThresholdPercent(0)
                     .maxRolloverCount(0)
-                    .overageChargeAtBilling(true)
+                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                     .overageEnabled(true)
                     .overageLimit("overage_limit")
-                    .preserveOverageAtReset(true)
                     .pricePerUnit("price_per_unit")
-                    .prorationBehavior(
-                        ProductUpdateParams.CreditEntitlement.ProrationBehavior.PRORATE
-                    )
+                    .prorationBehavior(CbbProrationBehavior.PRORATE)
                     .rolloverEnabled(true)
                     .rolloverPercentage(0)
                     .rolloverTimeframeCount(0)
@@ -97,22 +94,18 @@ internal class ProductUpdateParamsTest {
                 .addAddon("string")
                 .brandId("brand_id")
                 .addCreditEntitlement(
-                    ProductUpdateParams.CreditEntitlement.builder()
+                    AttachCreditEntitlement.builder()
                         .creditEntitlementId("credit_entitlement_id")
                         .creditsAmount("credits_amount")
-                        .creditsReduceOverage(true)
                         .currency(Currency.AED)
                         .expiresAfterDays(0)
                         .lowBalanceThresholdPercent(0)
                         .maxRolloverCount(0)
-                        .overageChargeAtBilling(true)
+                        .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                         .overageEnabled(true)
                         .overageLimit("overage_limit")
-                        .preserveOverageAtReset(true)
                         .pricePerUnit("price_per_unit")
-                        .prorationBehavior(
-                            ProductUpdateParams.CreditEntitlement.ProrationBehavior.PRORATE
-                        )
+                        .prorationBehavior(CbbProrationBehavior.PRORATE)
                         .rolloverEnabled(true)
                         .rolloverPercentage(0)
                         .rolloverTimeframeCount(0)
@@ -163,22 +156,18 @@ internal class ProductUpdateParamsTest {
         assertThat(body.brandId()).contains("brand_id")
         assertThat(body.creditEntitlements().getOrNull())
             .containsExactly(
-                ProductUpdateParams.CreditEntitlement.builder()
+                AttachCreditEntitlement.builder()
                     .creditEntitlementId("credit_entitlement_id")
                     .creditsAmount("credits_amount")
-                    .creditsReduceOverage(true)
                     .currency(Currency.AED)
                     .expiresAfterDays(0)
                     .lowBalanceThresholdPercent(0)
                     .maxRolloverCount(0)
-                    .overageChargeAtBilling(true)
+                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                     .overageEnabled(true)
                     .overageLimit("overage_limit")
-                    .preserveOverageAtReset(true)
                     .pricePerUnit("price_per_unit")
-                    .prorationBehavior(
-                        ProductUpdateParams.CreditEntitlement.ProrationBehavior.PRORATE
-                    )
+                    .prorationBehavior(CbbProrationBehavior.PRORATE)
                     .rolloverEnabled(true)
                     .rolloverPercentage(0)
                     .rolloverTimeframeCount(0)

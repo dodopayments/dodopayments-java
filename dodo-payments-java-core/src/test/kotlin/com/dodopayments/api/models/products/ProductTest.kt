@@ -4,6 +4,7 @@ package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -29,11 +30,9 @@ internal class ProductTest {
                         .creditEntitlementName("credit_entitlement_name")
                         .creditEntitlementUnit("credit_entitlement_unit")
                         .creditsAmount("credits_amount")
-                        .creditsReduceOverage(true)
-                        .overageChargeAtBilling(true)
+                        .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                         .overageEnabled(true)
-                        .preserveOverageAtReset(true)
-                        .prorationBehavior(Product.CreditEntitlement.ProrationBehavior.PRORATE)
+                        .prorationBehavior(CbbProrationBehavior.PRORATE)
                         .rolloverEnabled(true)
                         .trialCreditsExpireAfterTrial(true)
                         .currency(Currency.AED)
@@ -106,11 +105,9 @@ internal class ProductTest {
                     .creditEntitlementName("credit_entitlement_name")
                     .creditEntitlementUnit("credit_entitlement_unit")
                     .creditsAmount("credits_amount")
-                    .creditsReduceOverage(true)
-                    .overageChargeAtBilling(true)
+                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                     .overageEnabled(true)
-                    .preserveOverageAtReset(true)
-                    .prorationBehavior(Product.CreditEntitlement.ProrationBehavior.PRORATE)
+                    .prorationBehavior(CbbProrationBehavior.PRORATE)
                     .rolloverEnabled(true)
                     .trialCreditsExpireAfterTrial(true)
                     .currency(Currency.AED)
@@ -191,11 +188,9 @@ internal class ProductTest {
                         .creditEntitlementName("credit_entitlement_name")
                         .creditEntitlementUnit("credit_entitlement_unit")
                         .creditsAmount("credits_amount")
-                        .creditsReduceOverage(true)
-                        .overageChargeAtBilling(true)
+                        .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                         .overageEnabled(true)
-                        .preserveOverageAtReset(true)
-                        .prorationBehavior(Product.CreditEntitlement.ProrationBehavior.PRORATE)
+                        .prorationBehavior(CbbProrationBehavior.PRORATE)
                         .rolloverEnabled(true)
                         .trialCreditsExpireAfterTrial(true)
                         .currency(Currency.AED)
