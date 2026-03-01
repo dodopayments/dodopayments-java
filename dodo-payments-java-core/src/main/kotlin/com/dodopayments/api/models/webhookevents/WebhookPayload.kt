@@ -1792,9 +1792,9 @@ private constructor(
                 /**
                  * Sets [Builder.disputes] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.disputes] with a well-typed `List<GlobalDispute>`
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.disputes] with a well-typed
+                 * `List<GlobalDispute>` value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun disputes(disputes: JsonField<List<GlobalDispute>>) = apply {
                     this.disputes = disputes.map { it.toMutableList() }
@@ -1818,9 +1818,9 @@ private constructor(
                 /**
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.metadata] with a well-typed [GlobalPayment.Metadata]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.metadata] with a well-typed
+                 * [GlobalPayment.Metadata] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalPayment.Metadata>) = apply {
                     this.metadata = metadata
@@ -2816,7 +2816,8 @@ private constructor(
             private val billing: JsonField<BillingAddress>,
             private val cancelAtNextBillingDate: JsonField<Boolean>,
             private val createdAt: JsonField<OffsetDateTime>,
-            private val creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>>,
+            private val creditEntitlementCart:
+                JsonField<List<GlobalSubscription.CreditEntitlementCart>>,
             private val currency: JsonField<Currency>,
             private val customer: JsonField<CustomerLimitedDetails>,
             private val metadata: JsonField<GlobalSubscription.Metadata>,
@@ -3356,8 +3357,8 @@ private constructor(
              */
             @JsonProperty("credit_entitlement_cart")
             @ExcludeMissing
-            fun _creditEntitlementCart(): JsonField<List<GlobalSubscription.CreditEntitlementCart>> =
-                creditEntitlementCart
+            fun _creditEntitlementCart():
+                JsonField<List<GlobalSubscription.CreditEntitlementCart>> = creditEntitlementCart
 
             /**
              * Returns the raw JSON value of [currency].
@@ -3882,14 +3883,15 @@ private constructor(
                 }
 
                 /** Additional custom data associated with the subscription */
-                fun metadata(metadata: GlobalSubscription.Metadata) = metadata(JsonField.of(metadata))
+                fun metadata(metadata: GlobalSubscription.Metadata) =
+                    metadata(JsonField.of(metadata))
 
                 /**
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.metadata] with a well-typed
-                 * [GlobalSubscription.Metadata] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalSubscription.Metadata] value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalSubscription.Metadata>) = apply {
                     this.metadata = metadata
@@ -3904,8 +3906,8 @@ private constructor(
                  * Sets [Builder.meterCreditEntitlementCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.meterCreditEntitlementCart] with a well-typed
-                 * `List<GlobalSubscription.MeterCreditEntitlementCart>` value instead. This method is
-                 * primarily for setting the field to an undocumented or not yet supported value.
+                 * `List<GlobalSubscription.MeterCreditEntitlementCart>` value instead. This method
+                 * is primarily for setting the field to an undocumented or not yet supported value.
                  */
                 fun meterCreditEntitlementCart(
                     meterCreditEntitlementCart:
@@ -3938,8 +3940,8 @@ private constructor(
                  * Sets [Builder.meters] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.meters] with a well-typed
-                 * `List<GlobalSubscription.Meter>` value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
+                 * `List<GlobalSubscription.Meter>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun meters(meters: JsonField<List<GlobalSubscription.Meter>>) = apply {
                     this.meters = meters.map { it.toMutableList() }
@@ -5162,9 +5164,9 @@ private constructor(
                 /**
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.metadata] with a well-typed [GlobalRefund.Metadata]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.metadata] with a well-typed
+                 * [GlobalRefund.Metadata] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalRefund.Metadata>) = apply {
                     this.metadata = metadata
@@ -7320,7 +7322,8 @@ private constructor(
                 overageBefore: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("transaction_type")
                 @ExcludeMissing
-                transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType> = JsonMissing.of(),
+                transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType> =
+                    JsonMissing.of(),
                 @JsonProperty("description")
                 @ExcludeMissing
                 description: JsonField<String> = JsonMissing.of(),
@@ -7606,7 +7609,8 @@ private constructor(
              */
             @JsonProperty("transaction_type")
             @ExcludeMissing
-            fun _transactionType(): JsonField<GlobalCreditLedgerEntry.TransactionType> = transactionType
+            fun _transactionType(): JsonField<GlobalCreditLedgerEntry.TransactionType> =
+                transactionType
 
             /**
              * Returns the raw JSON value of [description].
@@ -7706,7 +7710,8 @@ private constructor(
                 private var isCredit: JsonField<Boolean>? = null
                 private var overageAfter: JsonField<String>? = null
                 private var overageBefore: JsonField<String>? = null
-                private var transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType>? = null
+                private var transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType>? =
+                    null
                 private var description: JsonField<String> = JsonMissing.of()
                 private var grantId: JsonField<String> = JsonMissing.of()
                 private var referenceId: JsonField<String> = JsonMissing.of()
@@ -7883,13 +7888,12 @@ private constructor(
                  * Sets [Builder.transactionType] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.transactionType] with a well-typed
-                 * [GlobalCreditLedgerEntry.TransactionType] value instead. This method is primarily for
-                 * setting the field to an undocumented or not yet supported value.
+                 * [GlobalCreditLedgerEntry.TransactionType] value instead. This method is primarily
+                 * for setting the field to an undocumented or not yet supported value.
                  */
-                fun transactionType(transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType>) =
-                    apply {
-                        this.transactionType = transactionType
-                    }
+                fun transactionType(
+                    transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType>
+                ) = apply { this.transactionType = transactionType }
 
                 fun description(description: String?) =
                     description(JsonField.ofNullable(description))
