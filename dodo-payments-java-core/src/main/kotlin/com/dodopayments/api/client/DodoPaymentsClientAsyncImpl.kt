@@ -12,6 +12,8 @@ import com.dodopayments.api.services.async.BrandServiceAsync
 import com.dodopayments.api.services.async.BrandServiceAsyncImpl
 import com.dodopayments.api.services.async.CheckoutSessionServiceAsync
 import com.dodopayments.api.services.async.CheckoutSessionServiceAsyncImpl
+import com.dodopayments.api.services.async.CreditEntitlementServiceAsync
+import com.dodopayments.api.services.async.CreditEntitlementServiceAsyncImpl
 import com.dodopayments.api.services.async.CustomerServiceAsync
 import com.dodopayments.api.services.async.CustomerServiceAsyncImpl
 import com.dodopayments.api.services.async.DiscountServiceAsync
@@ -148,6 +150,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         BalanceServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val creditEntitlements: CreditEntitlementServiceAsync by lazy {
+        CreditEntitlementServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): DodoPaymentsClient = sync
 
     override fun withRawResponse(): DodoPaymentsClientAsync.WithRawResponse = withRawResponse
@@ -196,6 +202,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun meters(): MeterServiceAsync = meters
 
     override fun balances(): BalanceServiceAsync = balances
+
+    override fun creditEntitlements(): CreditEntitlementServiceAsync = creditEntitlements
 
     override fun close() = clientOptions.close()
 
@@ -286,6 +294,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             BalanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val creditEntitlements: CreditEntitlementServiceAsync.WithRawResponse by lazy {
+            CreditEntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): DodoPaymentsClientAsync.WithRawResponse =
@@ -336,5 +348,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         override fun meters(): MeterServiceAsync.WithRawResponse = meters
 
         override fun balances(): BalanceServiceAsync.WithRawResponse = balances
+
+        override fun creditEntitlements(): CreditEntitlementServiceAsync.WithRawResponse =
+            creditEntitlements
     }
 }

@@ -23,6 +23,7 @@ private constructor(
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val status: Status?,
+    private val subscriptionId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -44,6 +45,9 @@ private constructor(
 
     /** Filter by status */
     fun status(): Optional<Status> = Optional.ofNullable(status)
+
+    /** Filter by subscription id */
+    fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -70,6 +74,7 @@ private constructor(
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var status: Status? = null
+        private var subscriptionId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -81,6 +86,7 @@ private constructor(
             pageNumber = refundListParams.pageNumber
             pageSize = refundListParams.pageSize
             status = refundListParams.status
+            subscriptionId = refundListParams.subscriptionId
             additionalHeaders = refundListParams.additionalHeaders.toBuilder()
             additionalQueryParams = refundListParams.additionalQueryParams.toBuilder()
         }
@@ -136,6 +142,13 @@ private constructor(
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<Status>) = status(status.getOrNull())
+
+        /** Filter by subscription id */
+        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
+
+        /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
+        fun subscriptionId(subscriptionId: Optional<String>) =
+            subscriptionId(subscriptionId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -248,6 +261,7 @@ private constructor(
                 pageNumber,
                 pageSize,
                 status,
+                subscriptionId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -268,6 +282,7 @@ private constructor(
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 status?.let { put("status", it.toString()) }
+                subscriptionId?.let { put("subscription_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -424,6 +439,7 @@ private constructor(
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             status == other.status &&
+            subscriptionId == other.subscriptionId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -436,10 +452,11 @@ private constructor(
             pageNumber,
             pageSize,
             status,
+            subscriptionId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "RefundListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "RefundListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -5,6 +5,7 @@ package com.dodopayments.api.models.subscriptions
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
+import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -43,10 +44,7 @@ internal class SubscriptionCreateResponseTest {
                 .discountId("discount_id")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addOneTimeProductCart(
-                    SubscriptionCreateResponse.OneTimeProductCart.builder()
-                        .productId("product_id")
-                        .quantity(0)
-                        .build()
+                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
                 )
                 .paymentLink("payment_link")
                 .build()
@@ -84,10 +82,7 @@ internal class SubscriptionCreateResponseTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(subscriptionCreateResponse.oneTimeProductCart().getOrNull())
             .containsExactly(
-                SubscriptionCreateResponse.OneTimeProductCart.builder()
-                    .productId("product_id")
-                    .quantity(0)
-                    .build()
+                OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
             )
         assertThat(subscriptionCreateResponse.paymentLink()).contains("payment_link")
     }
@@ -123,10 +118,7 @@ internal class SubscriptionCreateResponseTest {
                 .discountId("discount_id")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addOneTimeProductCart(
-                    SubscriptionCreateResponse.OneTimeProductCart.builder()
-                        .productId("product_id")
-                        .quantity(0)
-                        .build()
+                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
                 )
                 .paymentLink("payment_link")
                 .build()

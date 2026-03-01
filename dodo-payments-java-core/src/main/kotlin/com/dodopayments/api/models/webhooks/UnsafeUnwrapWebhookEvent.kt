@@ -22,6 +22,14 @@ import java.util.Optional
 @JsonSerialize(using = UnsafeUnwrapWebhookEvent.Serializer::class)
 class UnsafeUnwrapWebhookEvent
 private constructor(
+    private val creditAdded: CreditAddedWebhookEvent? = null,
+    private val creditBalanceLow: CreditBalanceLowWebhookEvent? = null,
+    private val creditDeducted: CreditDeductedWebhookEvent? = null,
+    private val creditExpired: CreditExpiredWebhookEvent? = null,
+    private val creditManualAdjustment: CreditManualAdjustmentWebhookEvent? = null,
+    private val creditOverageCharged: CreditOverageChargedWebhookEvent? = null,
+    private val creditRolledOver: CreditRolledOverWebhookEvent? = null,
+    private val creditRolloverForfeited: CreditRolloverForfeitedWebhookEvent? = null,
     private val disputeAccepted: DisputeAcceptedWebhookEvent? = null,
     private val disputeCancelled: DisputeCancelledWebhookEvent? = null,
     private val disputeChallenged: DisputeChallengedWebhookEvent? = null,
@@ -46,6 +54,27 @@ private constructor(
     private val subscriptionUpdated: SubscriptionUpdatedWebhookEvent? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun creditAdded(): Optional<CreditAddedWebhookEvent> = Optional.ofNullable(creditAdded)
+
+    fun creditBalanceLow(): Optional<CreditBalanceLowWebhookEvent> =
+        Optional.ofNullable(creditBalanceLow)
+
+    fun creditDeducted(): Optional<CreditDeductedWebhookEvent> = Optional.ofNullable(creditDeducted)
+
+    fun creditExpired(): Optional<CreditExpiredWebhookEvent> = Optional.ofNullable(creditExpired)
+
+    fun creditManualAdjustment(): Optional<CreditManualAdjustmentWebhookEvent> =
+        Optional.ofNullable(creditManualAdjustment)
+
+    fun creditOverageCharged(): Optional<CreditOverageChargedWebhookEvent> =
+        Optional.ofNullable(creditOverageCharged)
+
+    fun creditRolledOver(): Optional<CreditRolledOverWebhookEvent> =
+        Optional.ofNullable(creditRolledOver)
+
+    fun creditRolloverForfeited(): Optional<CreditRolloverForfeitedWebhookEvent> =
+        Optional.ofNullable(creditRolloverForfeited)
 
     fun disputeAccepted(): Optional<DisputeAcceptedWebhookEvent> =
         Optional.ofNullable(disputeAccepted)
@@ -107,6 +136,22 @@ private constructor(
     fun subscriptionUpdated(): Optional<SubscriptionUpdatedWebhookEvent> =
         Optional.ofNullable(subscriptionUpdated)
 
+    fun isCreditAdded(): Boolean = creditAdded != null
+
+    fun isCreditBalanceLow(): Boolean = creditBalanceLow != null
+
+    fun isCreditDeducted(): Boolean = creditDeducted != null
+
+    fun isCreditExpired(): Boolean = creditExpired != null
+
+    fun isCreditManualAdjustment(): Boolean = creditManualAdjustment != null
+
+    fun isCreditOverageCharged(): Boolean = creditOverageCharged != null
+
+    fun isCreditRolledOver(): Boolean = creditRolledOver != null
+
+    fun isCreditRolloverForfeited(): Boolean = creditRolloverForfeited != null
+
     fun isDisputeAccepted(): Boolean = disputeAccepted != null
 
     fun isDisputeCancelled(): Boolean = disputeCancelled != null
@@ -150,6 +195,27 @@ private constructor(
     fun isSubscriptionRenewed(): Boolean = subscriptionRenewed != null
 
     fun isSubscriptionUpdated(): Boolean = subscriptionUpdated != null
+
+    fun asCreditAdded(): CreditAddedWebhookEvent = creditAdded.getOrThrow("creditAdded")
+
+    fun asCreditBalanceLow(): CreditBalanceLowWebhookEvent =
+        creditBalanceLow.getOrThrow("creditBalanceLow")
+
+    fun asCreditDeducted(): CreditDeductedWebhookEvent = creditDeducted.getOrThrow("creditDeducted")
+
+    fun asCreditExpired(): CreditExpiredWebhookEvent = creditExpired.getOrThrow("creditExpired")
+
+    fun asCreditManualAdjustment(): CreditManualAdjustmentWebhookEvent =
+        creditManualAdjustment.getOrThrow("creditManualAdjustment")
+
+    fun asCreditOverageCharged(): CreditOverageChargedWebhookEvent =
+        creditOverageCharged.getOrThrow("creditOverageCharged")
+
+    fun asCreditRolledOver(): CreditRolledOverWebhookEvent =
+        creditRolledOver.getOrThrow("creditRolledOver")
+
+    fun asCreditRolloverForfeited(): CreditRolloverForfeitedWebhookEvent =
+        creditRolloverForfeited.getOrThrow("creditRolloverForfeited")
 
     fun asDisputeAccepted(): DisputeAcceptedWebhookEvent =
         disputeAccepted.getOrThrow("disputeAccepted")
@@ -215,6 +281,16 @@ private constructor(
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
+            creditAdded != null -> visitor.visitCreditAdded(creditAdded)
+            creditBalanceLow != null -> visitor.visitCreditBalanceLow(creditBalanceLow)
+            creditDeducted != null -> visitor.visitCreditDeducted(creditDeducted)
+            creditExpired != null -> visitor.visitCreditExpired(creditExpired)
+            creditManualAdjustment != null ->
+                visitor.visitCreditManualAdjustment(creditManualAdjustment)
+            creditOverageCharged != null -> visitor.visitCreditOverageCharged(creditOverageCharged)
+            creditRolledOver != null -> visitor.visitCreditRolledOver(creditRolledOver)
+            creditRolloverForfeited != null ->
+                visitor.visitCreditRolloverForfeited(creditRolloverForfeited)
             disputeAccepted != null -> visitor.visitDisputeAccepted(disputeAccepted)
             disputeCancelled != null -> visitor.visitDisputeCancelled(disputeCancelled)
             disputeChallenged != null -> visitor.visitDisputeChallenged(disputeChallenged)
@@ -251,6 +327,44 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
+                override fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent) {
+                    creditAdded.validate()
+                }
+
+                override fun visitCreditBalanceLow(creditBalanceLow: CreditBalanceLowWebhookEvent) {
+                    creditBalanceLow.validate()
+                }
+
+                override fun visitCreditDeducted(creditDeducted: CreditDeductedWebhookEvent) {
+                    creditDeducted.validate()
+                }
+
+                override fun visitCreditExpired(creditExpired: CreditExpiredWebhookEvent) {
+                    creditExpired.validate()
+                }
+
+                override fun visitCreditManualAdjustment(
+                    creditManualAdjustment: CreditManualAdjustmentWebhookEvent
+                ) {
+                    creditManualAdjustment.validate()
+                }
+
+                override fun visitCreditOverageCharged(
+                    creditOverageCharged: CreditOverageChargedWebhookEvent
+                ) {
+                    creditOverageCharged.validate()
+                }
+
+                override fun visitCreditRolledOver(creditRolledOver: CreditRolledOverWebhookEvent) {
+                    creditRolledOver.validate()
+                }
+
+                override fun visitCreditRolloverForfeited(
+                    creditRolloverForfeited: CreditRolloverForfeitedWebhookEvent
+                ) {
+                    creditRolloverForfeited.validate()
+                }
+
                 override fun visitDisputeAccepted(disputeAccepted: DisputeAcceptedWebhookEvent) {
                     disputeAccepted.validate()
                 }
@@ -382,6 +496,33 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
+                override fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent) =
+                    creditAdded.validity()
+
+                override fun visitCreditBalanceLow(creditBalanceLow: CreditBalanceLowWebhookEvent) =
+                    creditBalanceLow.validity()
+
+                override fun visitCreditDeducted(creditDeducted: CreditDeductedWebhookEvent) =
+                    creditDeducted.validity()
+
+                override fun visitCreditExpired(creditExpired: CreditExpiredWebhookEvent) =
+                    creditExpired.validity()
+
+                override fun visitCreditManualAdjustment(
+                    creditManualAdjustment: CreditManualAdjustmentWebhookEvent
+                ) = creditManualAdjustment.validity()
+
+                override fun visitCreditOverageCharged(
+                    creditOverageCharged: CreditOverageChargedWebhookEvent
+                ) = creditOverageCharged.validity()
+
+                override fun visitCreditRolledOver(creditRolledOver: CreditRolledOverWebhookEvent) =
+                    creditRolledOver.validity()
+
+                override fun visitCreditRolloverForfeited(
+                    creditRolloverForfeited: CreditRolloverForfeitedWebhookEvent
+                ) = creditRolloverForfeited.validity()
+
                 override fun visitDisputeAccepted(disputeAccepted: DisputeAcceptedWebhookEvent) =
                     disputeAccepted.validity()
 
@@ -469,6 +610,14 @@ private constructor(
         }
 
         return other is UnsafeUnwrapWebhookEvent &&
+            creditAdded == other.creditAdded &&
+            creditBalanceLow == other.creditBalanceLow &&
+            creditDeducted == other.creditDeducted &&
+            creditExpired == other.creditExpired &&
+            creditManualAdjustment == other.creditManualAdjustment &&
+            creditOverageCharged == other.creditOverageCharged &&
+            creditRolledOver == other.creditRolledOver &&
+            creditRolloverForfeited == other.creditRolloverForfeited &&
             disputeAccepted == other.disputeAccepted &&
             disputeCancelled == other.disputeCancelled &&
             disputeChallenged == other.disputeChallenged &&
@@ -495,6 +644,14 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            creditAdded,
+            creditBalanceLow,
+            creditDeducted,
+            creditExpired,
+            creditManualAdjustment,
+            creditOverageCharged,
+            creditRolledOver,
+            creditRolloverForfeited,
             disputeAccepted,
             disputeCancelled,
             disputeChallenged,
@@ -521,6 +678,19 @@ private constructor(
 
     override fun toString(): String =
         when {
+            creditAdded != null -> "UnsafeUnwrapWebhookEvent{creditAdded=$creditAdded}"
+            creditBalanceLow != null ->
+                "UnsafeUnwrapWebhookEvent{creditBalanceLow=$creditBalanceLow}"
+            creditDeducted != null -> "UnsafeUnwrapWebhookEvent{creditDeducted=$creditDeducted}"
+            creditExpired != null -> "UnsafeUnwrapWebhookEvent{creditExpired=$creditExpired}"
+            creditManualAdjustment != null ->
+                "UnsafeUnwrapWebhookEvent{creditManualAdjustment=$creditManualAdjustment}"
+            creditOverageCharged != null ->
+                "UnsafeUnwrapWebhookEvent{creditOverageCharged=$creditOverageCharged}"
+            creditRolledOver != null ->
+                "UnsafeUnwrapWebhookEvent{creditRolledOver=$creditRolledOver}"
+            creditRolloverForfeited != null ->
+                "UnsafeUnwrapWebhookEvent{creditRolloverForfeited=$creditRolloverForfeited}"
             disputeAccepted != null -> "UnsafeUnwrapWebhookEvent{disputeAccepted=$disputeAccepted}"
             disputeCancelled != null ->
                 "UnsafeUnwrapWebhookEvent{disputeCancelled=$disputeCancelled}"
@@ -562,6 +732,39 @@ private constructor(
         }
 
     companion object {
+
+        @JvmStatic
+        fun ofCreditAdded(creditAdded: CreditAddedWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditAdded = creditAdded)
+
+        @JvmStatic
+        fun ofCreditBalanceLow(creditBalanceLow: CreditBalanceLowWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditBalanceLow = creditBalanceLow)
+
+        @JvmStatic
+        fun ofCreditDeducted(creditDeducted: CreditDeductedWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditDeducted = creditDeducted)
+
+        @JvmStatic
+        fun ofCreditExpired(creditExpired: CreditExpiredWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditExpired = creditExpired)
+
+        @JvmStatic
+        fun ofCreditManualAdjustment(creditManualAdjustment: CreditManualAdjustmentWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditManualAdjustment = creditManualAdjustment)
+
+        @JvmStatic
+        fun ofCreditOverageCharged(creditOverageCharged: CreditOverageChargedWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditOverageCharged = creditOverageCharged)
+
+        @JvmStatic
+        fun ofCreditRolledOver(creditRolledOver: CreditRolledOverWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(creditRolledOver = creditRolledOver)
+
+        @JvmStatic
+        fun ofCreditRolloverForfeited(
+            creditRolloverForfeited: CreditRolloverForfeitedWebhookEvent
+        ) = UnsafeUnwrapWebhookEvent(creditRolloverForfeited = creditRolloverForfeited)
 
         @JvmStatic
         fun ofDisputeAccepted(disputeAccepted: DisputeAcceptedWebhookEvent) =
@@ -659,6 +862,26 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent): T
+
+        fun visitCreditBalanceLow(creditBalanceLow: CreditBalanceLowWebhookEvent): T
+
+        fun visitCreditDeducted(creditDeducted: CreditDeductedWebhookEvent): T
+
+        fun visitCreditExpired(creditExpired: CreditExpiredWebhookEvent): T
+
+        fun visitCreditManualAdjustment(
+            creditManualAdjustment: CreditManualAdjustmentWebhookEvent
+        ): T
+
+        fun visitCreditOverageCharged(creditOverageCharged: CreditOverageChargedWebhookEvent): T
+
+        fun visitCreditRolledOver(creditRolledOver: CreditRolledOverWebhookEvent): T
+
+        fun visitCreditRolloverForfeited(
+            creditRolloverForfeited: CreditRolloverForfeitedWebhookEvent
+        ): T
+
         fun visitDisputeAccepted(disputeAccepted: DisputeAcceptedWebhookEvent): T
 
         fun visitDisputeCancelled(disputeCancelled: DisputeCancelledWebhookEvent): T
@@ -728,6 +951,33 @@ private constructor(
 
             val bestMatches =
                 sequenceOf(
+                        tryDeserialize(node, jacksonTypeRef<CreditAddedWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(creditAdded = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CreditBalanceLowWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(creditBalanceLow = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CreditDeductedWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(creditDeducted = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CreditExpiredWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(creditExpired = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CreditManualAdjustmentWebhookEvent>())
+                            ?.let {
+                                UnsafeUnwrapWebhookEvent(creditManualAdjustment = it, _json = json)
+                            },
+                        tryDeserialize(node, jacksonTypeRef<CreditOverageChargedWebhookEvent>())
+                            ?.let {
+                                UnsafeUnwrapWebhookEvent(creditOverageCharged = it, _json = json)
+                            },
+                        tryDeserialize(node, jacksonTypeRef<CreditRolledOverWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(creditRolledOver = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CreditRolloverForfeitedWebhookEvent>())
+                            ?.let {
+                                UnsafeUnwrapWebhookEvent(creditRolloverForfeited = it, _json = json)
+                            },
                         tryDeserialize(node, jacksonTypeRef<DisputeAcceptedWebhookEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(disputeAccepted = it, _json = json)
                         },
@@ -827,6 +1077,17 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
+                value.creditAdded != null -> generator.writeObject(value.creditAdded)
+                value.creditBalanceLow != null -> generator.writeObject(value.creditBalanceLow)
+                value.creditDeducted != null -> generator.writeObject(value.creditDeducted)
+                value.creditExpired != null -> generator.writeObject(value.creditExpired)
+                value.creditManualAdjustment != null ->
+                    generator.writeObject(value.creditManualAdjustment)
+                value.creditOverageCharged != null ->
+                    generator.writeObject(value.creditOverageCharged)
+                value.creditRolledOver != null -> generator.writeObject(value.creditRolledOver)
+                value.creditRolloverForfeited != null ->
+                    generator.writeObject(value.creditRolloverForfeited)
                 value.disputeAccepted != null -> generator.writeObject(value.disputeAccepted)
                 value.disputeCancelled != null -> generator.writeObject(value.disputeCancelled)
                 value.disputeChallenged != null -> generator.writeObject(value.disputeChallenged)

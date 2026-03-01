@@ -7,6 +7,8 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.customers.Customer
 import com.dodopayments.api.models.customers.CustomerCreateParams
+import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
 import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
@@ -123,6 +125,50 @@ interface CustomerServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CustomerListPageAsync> =
         list(CustomerListParams.none(), requestOptions)
+
+    /** List all credit entitlements for a customer with their current balances */
+    fun listCreditEntitlements(
+        customerId: String
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
+        listCreditEntitlements(customerId, CustomerListCreditEntitlementsParams.none())
+
+    /** @see listCreditEntitlements */
+    fun listCreditEntitlements(
+        customerId: String,
+        params: CustomerListCreditEntitlementsParams = CustomerListCreditEntitlementsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
+        listCreditEntitlements(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see listCreditEntitlements */
+    fun listCreditEntitlements(
+        customerId: String,
+        params: CustomerListCreditEntitlementsParams = CustomerListCreditEntitlementsParams.none(),
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
+        listCreditEntitlements(customerId, params, RequestOptions.none())
+
+    /** @see listCreditEntitlements */
+    fun listCreditEntitlements(
+        params: CustomerListCreditEntitlementsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse>
+
+    /** @see listCreditEntitlements */
+    fun listCreditEntitlements(
+        params: CustomerListCreditEntitlementsParams
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
+        listCreditEntitlements(params, RequestOptions.none())
+
+    /** @see listCreditEntitlements */
+    fun listCreditEntitlements(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
+        listCreditEntitlements(
+            customerId,
+            CustomerListCreditEntitlementsParams.none(),
+            requestOptions,
+        )
 
     fun retrievePaymentMethods(
         customerId: String
@@ -300,6 +346,58 @@ interface CustomerServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(CustomerListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /customers/{customer_id}/credit-entitlements`, but
+         * is otherwise the same as [CustomerServiceAsync.listCreditEntitlements].
+         */
+        fun listCreditEntitlements(
+            customerId: String
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>> =
+            listCreditEntitlements(customerId, CustomerListCreditEntitlementsParams.none())
+
+        /** @see listCreditEntitlements */
+        fun listCreditEntitlements(
+            customerId: String,
+            params: CustomerListCreditEntitlementsParams =
+                CustomerListCreditEntitlementsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>> =
+            listCreditEntitlements(
+                params.toBuilder().customerId(customerId).build(),
+                requestOptions,
+            )
+
+        /** @see listCreditEntitlements */
+        fun listCreditEntitlements(
+            customerId: String,
+            params: CustomerListCreditEntitlementsParams =
+                CustomerListCreditEntitlementsParams.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>> =
+            listCreditEntitlements(customerId, params, RequestOptions.none())
+
+        /** @see listCreditEntitlements */
+        fun listCreditEntitlements(
+            params: CustomerListCreditEntitlementsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>>
+
+        /** @see listCreditEntitlements */
+        fun listCreditEntitlements(
+            params: CustomerListCreditEntitlementsParams
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>> =
+            listCreditEntitlements(params, RequestOptions.none())
+
+        /** @see listCreditEntitlements */
+        fun listCreditEntitlements(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerListCreditEntitlementsResponse>> =
+            listCreditEntitlements(
+                customerId,
+                CustomerListCreditEntitlementsParams.none(),
+                requestOptions,
+            )
 
         /**
          * Returns a raw HTTP response for `get /customers/{customer_id}/payment-methods`, but is

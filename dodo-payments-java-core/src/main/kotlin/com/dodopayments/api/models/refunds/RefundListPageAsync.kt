@@ -5,6 +5,7 @@ package com.dodopayments.api.models.refunds
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.payments.RefundListItem
 import com.dodopayments.api.services.async.RefundServiceAsync
 import java.util.Objects
 import java.util.concurrent.CompletableFuture
@@ -19,14 +20,14 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: RefundListParams,
     private val response: RefundListPageResponse,
-) : PageAsync<RefundListResponse> {
+) : PageAsync<RefundListItem> {
 
     /**
      * Delegates to [RefundListPageResponse], but gracefully handles missing data.
      *
      * @see RefundListPageResponse.items
      */
-    override fun items(): List<RefundListResponse> =
+    override fun items(): List<RefundListItem> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -38,7 +39,7 @@ private constructor(
 
     override fun nextPage(): CompletableFuture<RefundListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<RefundListResponse> =
+    fun autoPager(): AutoPagerAsync<RefundListItem> =
         AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */

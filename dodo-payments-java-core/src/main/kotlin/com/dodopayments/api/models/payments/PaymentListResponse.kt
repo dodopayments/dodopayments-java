@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.disputes.DisputeStatus
 import com.dodopayments.api.models.misc.Currency
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -32,10 +33,12 @@ private constructor(
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
     private val totalAmount: JsonField<Int>,
+    private val disputeStatus: JsonField<DisputeStatus>,
     private val invoiceId: JsonField<String>,
     private val invoiceUrl: JsonField<String>,
     private val paymentMethod: JsonField<String>,
     private val paymentMethodType: JsonField<String>,
+    private val refundStatus: JsonField<PaymentRefundStatus>,
     private val status: JsonField<IntentStatus>,
     private val subscriptionId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -62,6 +65,9 @@ private constructor(
         @JsonProperty("total_amount")
         @ExcludeMissing
         totalAmount: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("dispute_status")
+        @ExcludeMissing
+        disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
         @JsonProperty("invoice_id") @ExcludeMissing invoiceId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("invoice_url")
         @ExcludeMissing
@@ -72,6 +78,9 @@ private constructor(
         @JsonProperty("payment_method_type")
         @ExcludeMissing
         paymentMethodType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("refund_status")
+        @ExcludeMissing
+        refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<IntentStatus> = JsonMissing.of(),
         @JsonProperty("subscription_id")
         @ExcludeMissing
@@ -86,10 +95,12 @@ private constructor(
         metadata,
         paymentId,
         totalAmount,
+        disputeStatus,
         invoiceId,
         invoiceUrl,
         paymentMethod,
         paymentMethodType,
+        refundStatus,
         status,
         subscriptionId,
         mutableMapOf(),
@@ -151,6 +162,14 @@ private constructor(
     fun totalAmount(): Int = totalAmount.getRequired("total_amount")
 
     /**
+     * The most recent dispute status for this payment. None if no disputes exist.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun disputeStatus(): Optional<DisputeStatus> = disputeStatus.getOptional("dispute_status")
+
+    /**
      * Invoice ID for this payment. Uses India-specific invoice ID if available.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -177,6 +196,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun paymentMethodType(): Optional<String> = paymentMethodType.getOptional("payment_method_type")
+
+    /**
+     * Summary of the refund status for this payment. None if no succeeded refunds exist.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun refundStatus(): Optional<PaymentRefundStatus> = refundStatus.getOptional("refund_status")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -263,6 +290,15 @@ private constructor(
     @JsonProperty("total_amount") @ExcludeMissing fun _totalAmount(): JsonField<Int> = totalAmount
 
     /**
+     * Returns the raw JSON value of [disputeStatus].
+     *
+     * Unlike [disputeStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("dispute_status")
+    @ExcludeMissing
+    fun _disputeStatus(): JsonField<DisputeStatus> = disputeStatus
+
+    /**
      * Returns the raw JSON value of [invoiceId].
      *
      * Unlike [invoiceId], this method doesn't throw if the JSON field has an unexpected type.
@@ -294,6 +330,15 @@ private constructor(
     @JsonProperty("payment_method_type")
     @ExcludeMissing
     fun _paymentMethodType(): JsonField<String> = paymentMethodType
+
+    /**
+     * Returns the raw JSON value of [refundStatus].
+     *
+     * Unlike [refundStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("refund_status")
+    @ExcludeMissing
+    fun _refundStatus(): JsonField<PaymentRefundStatus> = refundStatus
 
     /**
      * Returns the raw JSON value of [status].
@@ -356,10 +401,12 @@ private constructor(
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
         private var totalAmount: JsonField<Int>? = null
+        private var disputeStatus: JsonField<DisputeStatus> = JsonMissing.of()
         private var invoiceId: JsonField<String> = JsonMissing.of()
         private var invoiceUrl: JsonField<String> = JsonMissing.of()
         private var paymentMethod: JsonField<String> = JsonMissing.of()
         private var paymentMethodType: JsonField<String> = JsonMissing.of()
+        private var refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of()
         private var status: JsonField<IntentStatus> = JsonMissing.of()
         private var subscriptionId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -375,10 +422,12 @@ private constructor(
             metadata = paymentListResponse.metadata
             paymentId = paymentListResponse.paymentId
             totalAmount = paymentListResponse.totalAmount
+            disputeStatus = paymentListResponse.disputeStatus
             invoiceId = paymentListResponse.invoiceId
             invoiceUrl = paymentListResponse.invoiceUrl
             paymentMethod = paymentListResponse.paymentMethod
             paymentMethodType = paymentListResponse.paymentMethodType
+            refundStatus = paymentListResponse.refundStatus
             status = paymentListResponse.status
             subscriptionId = paymentListResponse.subscriptionId
             additionalProperties = paymentListResponse.additionalProperties.toMutableMap()
@@ -488,6 +537,25 @@ private constructor(
          */
         fun totalAmount(totalAmount: JsonField<Int>) = apply { this.totalAmount = totalAmount }
 
+        /** The most recent dispute status for this payment. None if no disputes exist. */
+        fun disputeStatus(disputeStatus: DisputeStatus?) =
+            disputeStatus(JsonField.ofNullable(disputeStatus))
+
+        /** Alias for calling [Builder.disputeStatus] with `disputeStatus.orElse(null)`. */
+        fun disputeStatus(disputeStatus: Optional<DisputeStatus>) =
+            disputeStatus(disputeStatus.getOrNull())
+
+        /**
+         * Sets [Builder.disputeStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.disputeStatus] with a well-typed [DisputeStatus] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun disputeStatus(disputeStatus: JsonField<DisputeStatus>) = apply {
+            this.disputeStatus = disputeStatus
+        }
+
         /** Invoice ID for this payment. Uses India-specific invoice ID if available. */
         fun invoiceId(invoiceId: String?) = invoiceId(JsonField.ofNullable(invoiceId))
 
@@ -552,6 +620,25 @@ private constructor(
          */
         fun paymentMethodType(paymentMethodType: JsonField<String>) = apply {
             this.paymentMethodType = paymentMethodType
+        }
+
+        /** Summary of the refund status for this payment. None if no succeeded refunds exist. */
+        fun refundStatus(refundStatus: PaymentRefundStatus?) =
+            refundStatus(JsonField.ofNullable(refundStatus))
+
+        /** Alias for calling [Builder.refundStatus] with `refundStatus.orElse(null)`. */
+        fun refundStatus(refundStatus: Optional<PaymentRefundStatus>) =
+            refundStatus(refundStatus.getOrNull())
+
+        /**
+         * Sets [Builder.refundStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.refundStatus] with a well-typed [PaymentRefundStatus]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun refundStatus(refundStatus: JsonField<PaymentRefundStatus>) = apply {
+            this.refundStatus = refundStatus
         }
 
         fun status(status: IntentStatus?) = status(JsonField.ofNullable(status))
@@ -636,10 +723,12 @@ private constructor(
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
                 checkRequired("totalAmount", totalAmount),
+                disputeStatus,
                 invoiceId,
                 invoiceUrl,
                 paymentMethod,
                 paymentMethodType,
+                refundStatus,
                 status,
                 subscriptionId,
                 additionalProperties.toMutableMap(),
@@ -662,10 +751,12 @@ private constructor(
         metadata().validate()
         paymentId()
         totalAmount()
+        disputeStatus().ifPresent { it.validate() }
         invoiceId()
         invoiceUrl()
         paymentMethod()
         paymentMethodType()
+        refundStatus().ifPresent { it.validate() }
         status().ifPresent { it.validate() }
         subscriptionId()
         validated = true
@@ -695,10 +786,12 @@ private constructor(
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
             (if (totalAmount.asKnown().isPresent) 1 else 0) +
+            (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (invoiceId.asKnown().isPresent) 1 else 0) +
             (if (invoiceUrl.asKnown().isPresent) 1 else 0) +
             (if (paymentMethod.asKnown().isPresent) 1 else 0) +
             (if (paymentMethodType.asKnown().isPresent) 1 else 0) +
+            (refundStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (if (subscriptionId.asKnown().isPresent) 1 else 0)
 
@@ -816,10 +909,12 @@ private constructor(
             metadata == other.metadata &&
             paymentId == other.paymentId &&
             totalAmount == other.totalAmount &&
+            disputeStatus == other.disputeStatus &&
             invoiceId == other.invoiceId &&
             invoiceUrl == other.invoiceUrl &&
             paymentMethod == other.paymentMethod &&
             paymentMethodType == other.paymentMethodType &&
+            refundStatus == other.refundStatus &&
             status == other.status &&
             subscriptionId == other.subscriptionId &&
             additionalProperties == other.additionalProperties
@@ -836,10 +931,12 @@ private constructor(
             metadata,
             paymentId,
             totalAmount,
+            disputeStatus,
             invoiceId,
             invoiceUrl,
             paymentMethod,
             paymentMethodType,
+            refundStatus,
             status,
             subscriptionId,
             additionalProperties,
@@ -849,5 +946,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, metadata=$metadata, paymentId=$paymentId, totalAmount=$totalAmount, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, metadata=$metadata, paymentId=$paymentId, totalAmount=$totalAmount, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }

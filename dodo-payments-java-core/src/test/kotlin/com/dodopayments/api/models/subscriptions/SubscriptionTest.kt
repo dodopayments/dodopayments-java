@@ -4,9 +4,11 @@ package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.BillingAddress
+import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -38,7 +40,7 @@ internal class SubscriptionTest {
                         .creditEntitlementName("credit_entitlement_name")
                         .creditsAmount("credits_amount")
                         .overageBalance("overage_balance")
-                        .overageChargeAtBilling(true)
+                        .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                         .overageEnabled(true)
                         .productId("product_id")
                         .remainingBalance("remaining_balance")
@@ -88,8 +90,8 @@ internal class SubscriptionTest {
                         .measurementUnit("measurement_unit")
                         .meterId("meter_id")
                         .name("name")
-                        .pricePerUnit("10.50")
                         .description("description")
+                        .pricePerUnit("10.50")
                         .build()
                 )
                 .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -108,7 +110,7 @@ internal class SubscriptionTest {
                 .trialPeriodDays(0)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addCustomFieldResponse(
-                    Subscription.CustomFieldResponse.builder().key("key").value("value").build()
+                    CustomFieldResponse.builder().key("key").value("value").build()
                 )
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")
@@ -141,7 +143,7 @@ internal class SubscriptionTest {
                     .creditEntitlementName("credit_entitlement_name")
                     .creditsAmount("credits_amount")
                     .overageBalance("overage_balance")
-                    .overageChargeAtBilling(true)
+                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                     .overageEnabled(true)
                     .productId("product_id")
                     .remainingBalance("remaining_balance")
@@ -195,8 +197,8 @@ internal class SubscriptionTest {
                     .measurementUnit("measurement_unit")
                     .meterId("meter_id")
                     .name("name")
-                    .pricePerUnit("10.50")
                     .description("description")
+                    .pricePerUnit("10.50")
                     .build()
             )
         assertThat(subscription.nextBillingDate())
@@ -218,9 +220,7 @@ internal class SubscriptionTest {
         assertThat(subscription.cancelledAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(subscription.customFieldResponses().getOrNull())
-            .containsExactly(
-                Subscription.CustomFieldResponse.builder().key("key").value("value").build()
-            )
+            .containsExactly(CustomFieldResponse.builder().key("key").value("value").build())
         assertThat(subscription.discountCyclesRemaining()).contains(0)
         assertThat(subscription.discountId()).contains("discount_id")
         assertThat(subscription.expiresAt())
@@ -252,7 +252,7 @@ internal class SubscriptionTest {
                         .creditEntitlementName("credit_entitlement_name")
                         .creditsAmount("credits_amount")
                         .overageBalance("overage_balance")
-                        .overageChargeAtBilling(true)
+                        .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                         .overageEnabled(true)
                         .productId("product_id")
                         .remainingBalance("remaining_balance")
@@ -302,8 +302,8 @@ internal class SubscriptionTest {
                         .measurementUnit("measurement_unit")
                         .meterId("meter_id")
                         .name("name")
-                        .pricePerUnit("10.50")
                         .description("description")
+                        .pricePerUnit("10.50")
                         .build()
                 )
                 .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -322,7 +322,7 @@ internal class SubscriptionTest {
                 .trialPeriodDays(0)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addCustomFieldResponse(
-                    Subscription.CustomFieldResponse.builder().key("key").value("value").build()
+                    CustomFieldResponse.builder().key("key").value("value").build()
                 )
                 .discountCyclesRemaining(0)
                 .discountId("discount_id")

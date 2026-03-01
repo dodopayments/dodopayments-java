@@ -1081,7 +1081,6 @@ private constructor(
         private val expiresAfterDays: JsonField<Int>,
         private val lowBalanceThresholdPercent: JsonField<Int>,
         private val maxRolloverCount: JsonField<Int>,
-        private val overageChargeAtBilling: JsonField<Boolean>,
         private val overageEnabled: JsonField<Boolean>,
         private val overageLimit: JsonField<String>,
         private val rolloverEnabled: JsonField<Boolean>,
@@ -1108,9 +1107,6 @@ private constructor(
             @JsonProperty("max_rollover_count")
             @ExcludeMissing
             maxRolloverCount: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("overage_charge_at_billing")
-            @ExcludeMissing
-            overageChargeAtBilling: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("overage_enabled")
             @ExcludeMissing
             overageEnabled: JsonField<Boolean> = JsonMissing.of(),
@@ -1135,7 +1131,6 @@ private constructor(
             expiresAfterDays,
             lowBalanceThresholdPercent,
             maxRolloverCount,
-            overageChargeAtBilling,
             overageEnabled,
             overageLimit,
             rolloverEnabled,
@@ -1175,13 +1170,6 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun maxRolloverCount(): Optional<Int> = maxRolloverCount.getOptional("max_rollover_count")
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun overageChargeAtBilling(): Optional<Boolean> =
-            overageChargeAtBilling.getOptional("overage_charge_at_billing")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1271,16 +1259,6 @@ private constructor(
         @JsonProperty("max_rollover_count")
         @ExcludeMissing
         fun _maxRolloverCount(): JsonField<Int> = maxRolloverCount
-
-        /**
-         * Returns the raw JSON value of [overageChargeAtBilling].
-         *
-         * Unlike [overageChargeAtBilling], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("overage_charge_at_billing")
-        @ExcludeMissing
-        fun _overageChargeAtBilling(): JsonField<Boolean> = overageChargeAtBilling
 
         /**
          * Returns the raw JSON value of [overageEnabled].
@@ -1375,7 +1353,6 @@ private constructor(
             private var expiresAfterDays: JsonField<Int> = JsonMissing.of()
             private var lowBalanceThresholdPercent: JsonField<Int> = JsonMissing.of()
             private var maxRolloverCount: JsonField<Int> = JsonMissing.of()
-            private var overageChargeAtBilling: JsonField<Boolean> = JsonMissing.of()
             private var overageEnabled: JsonField<Boolean> = JsonMissing.of()
             private var overageLimit: JsonField<String> = JsonMissing.of()
             private var rolloverEnabled: JsonField<Boolean> = JsonMissing.of()
@@ -1391,7 +1368,6 @@ private constructor(
                 expiresAfterDays = creditEntitlementCart.expiresAfterDays
                 lowBalanceThresholdPercent = creditEntitlementCart.lowBalanceThresholdPercent
                 maxRolloverCount = creditEntitlementCart.maxRolloverCount
-                overageChargeAtBilling = creditEntitlementCart.overageChargeAtBilling
                 overageEnabled = creditEntitlementCart.overageEnabled
                 overageLimit = creditEntitlementCart.overageLimit
                 rolloverEnabled = creditEntitlementCart.rolloverEnabled
@@ -1514,35 +1490,6 @@ private constructor(
              */
             fun maxRolloverCount(maxRolloverCount: JsonField<Int>) = apply {
                 this.maxRolloverCount = maxRolloverCount
-            }
-
-            fun overageChargeAtBilling(overageChargeAtBilling: Boolean?) =
-                overageChargeAtBilling(JsonField.ofNullable(overageChargeAtBilling))
-
-            /**
-             * Alias for [Builder.overageChargeAtBilling].
-             *
-             * This unboxed primitive overload exists for backwards compatibility.
-             */
-            fun overageChargeAtBilling(overageChargeAtBilling: Boolean) =
-                overageChargeAtBilling(overageChargeAtBilling as Boolean?)
-
-            /**
-             * Alias for calling [Builder.overageChargeAtBilling] with
-             * `overageChargeAtBilling.orElse(null)`.
-             */
-            fun overageChargeAtBilling(overageChargeAtBilling: Optional<Boolean>) =
-                overageChargeAtBilling(overageChargeAtBilling.getOrNull())
-
-            /**
-             * Sets [Builder.overageChargeAtBilling] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.overageChargeAtBilling] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun overageChargeAtBilling(overageChargeAtBilling: JsonField<Boolean>) = apply {
-                this.overageChargeAtBilling = overageChargeAtBilling
             }
 
             fun overageEnabled(overageEnabled: Boolean?) =
@@ -1732,7 +1679,6 @@ private constructor(
                     expiresAfterDays,
                     lowBalanceThresholdPercent,
                     maxRolloverCount,
-                    overageChargeAtBilling,
                     overageEnabled,
                     overageLimit,
                     rolloverEnabled,
@@ -1755,7 +1701,6 @@ private constructor(
             expiresAfterDays()
             lowBalanceThresholdPercent()
             maxRolloverCount()
-            overageChargeAtBilling()
             overageEnabled()
             overageLimit()
             rolloverEnabled()
@@ -1786,7 +1731,6 @@ private constructor(
                 (if (expiresAfterDays.asKnown().isPresent) 1 else 0) +
                 (if (lowBalanceThresholdPercent.asKnown().isPresent) 1 else 0) +
                 (if (maxRolloverCount.asKnown().isPresent) 1 else 0) +
-                (if (overageChargeAtBilling.asKnown().isPresent) 1 else 0) +
                 (if (overageEnabled.asKnown().isPresent) 1 else 0) +
                 (if (overageLimit.asKnown().isPresent) 1 else 0) +
                 (if (rolloverEnabled.asKnown().isPresent) 1 else 0) +
@@ -1805,7 +1749,6 @@ private constructor(
                 expiresAfterDays == other.expiresAfterDays &&
                 lowBalanceThresholdPercent == other.lowBalanceThresholdPercent &&
                 maxRolloverCount == other.maxRolloverCount &&
-                overageChargeAtBilling == other.overageChargeAtBilling &&
                 overageEnabled == other.overageEnabled &&
                 overageLimit == other.overageLimit &&
                 rolloverEnabled == other.rolloverEnabled &&
@@ -1822,7 +1765,6 @@ private constructor(
                 expiresAfterDays,
                 lowBalanceThresholdPercent,
                 maxRolloverCount,
-                overageChargeAtBilling,
                 overageEnabled,
                 overageLimit,
                 rolloverEnabled,
@@ -1836,7 +1778,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CreditEntitlementCart{creditEntitlementId=$creditEntitlementId, creditsAmount=$creditsAmount, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageChargeAtBilling=$overageChargeAtBilling, overageEnabled=$overageEnabled, overageLimit=$overageLimit, rolloverEnabled=$rolloverEnabled, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
+            "CreditEntitlementCart{creditEntitlementId=$creditEntitlementId, creditsAmount=$creditsAmount, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageEnabled=$overageEnabled, overageLimit=$overageLimit, rolloverEnabled=$rolloverEnabled, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
     }
 
     class DisableOnDemand
