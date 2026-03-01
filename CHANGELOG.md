@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.86.2 (2026-03-01)
+
+Full Changelog: [v1.86.1...v1.86.2](https://github.com/dodopayments/dodopayments-java/compare/v1.86.1...v1.86.2)
+
+### Features
+
+* **api:** added more models ([86973ab](https://github.com/dodopayments/dodopayments-java/commit/86973ab8ee8a642682dd9f257b599e5a5c275b03))
+
 ## 1.86.1 (2026-03-01)
 
 Full Changelog: [v1.86.0...v1.86.1](https://github.com/dodopayments/dodopayments-java/compare/v1.86.0...v1.86.1)
