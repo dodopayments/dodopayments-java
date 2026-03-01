@@ -35,6 +35,9 @@ import com.dodopayments.api.models.payments.RefundListItem
 import com.dodopayments.api.models.refunds.Refund as GlobalRefund
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.dodopayments.api.models.subscriptions.AddonCartResponseItem
+import com.dodopayments.api.models.subscriptions.CreditEntitlementCartResponse
+import com.dodopayments.api.models.subscriptions.MeterCartResponseItem
+import com.dodopayments.api.models.subscriptions.MeterCreditEntitlementCartResponse
 import com.dodopayments.api.models.subscriptions.Subscription as GlobalSubscription
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -2816,14 +2819,13 @@ private constructor(
             private val billing: JsonField<BillingAddress>,
             private val cancelAtNextBillingDate: JsonField<Boolean>,
             private val createdAt: JsonField<OffsetDateTime>,
-            private val creditEntitlementCart:
-                JsonField<List<GlobalSubscription.CreditEntitlementCart>>,
+            private val creditEntitlementCart: JsonField<List<CreditEntitlementCartResponse>>,
             private val currency: JsonField<Currency>,
             private val customer: JsonField<CustomerLimitedDetails>,
             private val metadata: JsonField<GlobalSubscription.Metadata>,
             private val meterCreditEntitlementCart:
-                JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>>,
-            private val meters: JsonField<List<GlobalSubscription.Meter>>,
+                JsonField<List<MeterCreditEntitlementCartResponse>>,
+            private val meters: JsonField<List<MeterCartResponseItem>>,
             private val nextBillingDate: JsonField<OffsetDateTime>,
             private val onDemand: JsonField<Boolean>,
             private val paymentFrequencyCount: JsonField<Int>,
@@ -2865,7 +2867,7 @@ private constructor(
                 createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
                 @JsonProperty("credit_entitlement_cart")
                 @ExcludeMissing
-                creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>> =
+                creditEntitlementCart: JsonField<List<CreditEntitlementCartResponse>> =
                     JsonMissing.of(),
                 @JsonProperty("currency")
                 @ExcludeMissing
@@ -2878,12 +2880,11 @@ private constructor(
                 metadata: JsonField<GlobalSubscription.Metadata> = JsonMissing.of(),
                 @JsonProperty("meter_credit_entitlement_cart")
                 @ExcludeMissing
-                meterCreditEntitlementCart:
-                    JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>> =
+                meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>> =
                     JsonMissing.of(),
                 @JsonProperty("meters")
                 @ExcludeMissing
-                meters: JsonField<List<GlobalSubscription.Meter>> = JsonMissing.of(),
+                meters: JsonField<List<MeterCartResponseItem>> = JsonMissing.of(),
                 @JsonProperty("next_billing_date")
                 @ExcludeMissing
                 nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -3063,7 +3064,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun creditEntitlementCart(): List<GlobalSubscription.CreditEntitlementCart> =
+            fun creditEntitlementCart(): List<CreditEntitlementCartResponse> =
                 creditEntitlementCart.getRequired("credit_entitlement_cart")
 
             /**
@@ -3100,7 +3101,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun meterCreditEntitlementCart(): List<GlobalSubscription.MeterCreditEntitlementCart> =
+            fun meterCreditEntitlementCart(): List<MeterCreditEntitlementCartResponse> =
                 meterCreditEntitlementCart.getRequired("meter_credit_entitlement_cart")
 
             /**
@@ -3110,7 +3111,7 @@ private constructor(
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun meters(): List<GlobalSubscription.Meter> = meters.getRequired("meters")
+            fun meters(): List<MeterCartResponseItem> = meters.getRequired("meters")
 
             /**
              * Timestamp of the next scheduled billing. Indicates the end of current billing period
@@ -3357,8 +3358,8 @@ private constructor(
              */
             @JsonProperty("credit_entitlement_cart")
             @ExcludeMissing
-            fun _creditEntitlementCart():
-                JsonField<List<GlobalSubscription.CreditEntitlementCart>> = creditEntitlementCart
+            fun _creditEntitlementCart(): JsonField<List<CreditEntitlementCartResponse>> =
+                creditEntitlementCart
 
             /**
              * Returns the raw JSON value of [currency].
@@ -3398,8 +3399,7 @@ private constructor(
              */
             @JsonProperty("meter_credit_entitlement_cart")
             @ExcludeMissing
-            fun _meterCreditEntitlementCart():
-                JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>> =
+            fun _meterCreditEntitlementCart(): JsonField<List<MeterCreditEntitlementCartResponse>> =
                 meterCreditEntitlementCart
 
             /**
@@ -3409,7 +3409,7 @@ private constructor(
              */
             @JsonProperty("meters")
             @ExcludeMissing
-            fun _meters(): JsonField<List<GlobalSubscription.Meter>> = meters
+            fun _meters(): JsonField<List<MeterCartResponseItem>> = meters
 
             /**
              * Returns the raw JSON value of [nextBillingDate].
@@ -3682,15 +3682,15 @@ private constructor(
                 private var cancelAtNextBillingDate: JsonField<Boolean>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var creditEntitlementCart:
-                    JsonField<MutableList<GlobalSubscription.CreditEntitlementCart>>? =
+                    JsonField<MutableList<CreditEntitlementCartResponse>>? =
                     null
                 private var currency: JsonField<Currency>? = null
                 private var customer: JsonField<CustomerLimitedDetails>? = null
                 private var metadata: JsonField<GlobalSubscription.Metadata>? = null
                 private var meterCreditEntitlementCart:
-                    JsonField<MutableList<GlobalSubscription.MeterCreditEntitlementCart>>? =
+                    JsonField<MutableList<MeterCreditEntitlementCartResponse>>? =
                     null
-                private var meters: JsonField<MutableList<GlobalSubscription.Meter>>? = null
+                private var meters: JsonField<MutableList<MeterCartResponseItem>>? = null
                 private var nextBillingDate: JsonField<OffsetDateTime>? = null
                 private var onDemand: JsonField<Boolean>? = null
                 private var paymentFrequencyCount: JsonField<Int>? = null
@@ -3825,36 +3825,34 @@ private constructor(
 
                 /** Credit entitlement cart settings for this subscription */
                 fun creditEntitlementCart(
-                    creditEntitlementCart: List<GlobalSubscription.CreditEntitlementCart>
+                    creditEntitlementCart: List<CreditEntitlementCartResponse>
                 ) = creditEntitlementCart(JsonField.of(creditEntitlementCart))
 
                 /**
                  * Sets [Builder.creditEntitlementCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.creditEntitlementCart] with a well-typed
-                 * `List<GlobalSubscription.CreditEntitlementCart>` value instead. This method is
-                 * primarily for setting the field to an undocumented or not yet supported value.
+                 * `List<CreditEntitlementCartResponse>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun creditEntitlementCart(
-                    creditEntitlementCart: JsonField<List<GlobalSubscription.CreditEntitlementCart>>
+                    creditEntitlementCart: JsonField<List<CreditEntitlementCartResponse>>
                 ) = apply {
                     this.creditEntitlementCart = creditEntitlementCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [GlobalSubscription.CreditEntitlementCart] to
-                 * [Builder.creditEntitlementCart].
+                 * Adds a single [CreditEntitlementCartResponse] to [Builder.creditEntitlementCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addCreditEntitlementCart(
-                    creditEntitlementCart: GlobalSubscription.CreditEntitlementCart
-                ) = apply {
-                    this.creditEntitlementCart =
-                        (this.creditEntitlementCart ?: JsonField.of(mutableListOf())).also {
-                            checkKnown("creditEntitlementCart", it).add(creditEntitlementCart)
-                        }
-                }
+                fun addCreditEntitlementCart(creditEntitlementCart: CreditEntitlementCartResponse) =
+                    apply {
+                        this.creditEntitlementCart =
+                            (this.creditEntitlementCart ?: JsonField.of(mutableListOf())).also {
+                                checkKnown("creditEntitlementCart", it).add(creditEntitlementCart)
+                            }
+                    }
 
                 /** Currency used for the subscription payments */
                 fun currency(currency: Currency) = currency(JsonField.of(currency))
@@ -3899,32 +3897,31 @@ private constructor(
 
                 /** Meter credit entitlement cart settings for this subscription */
                 fun meterCreditEntitlementCart(
-                    meterCreditEntitlementCart: List<GlobalSubscription.MeterCreditEntitlementCart>
+                    meterCreditEntitlementCart: List<MeterCreditEntitlementCartResponse>
                 ) = meterCreditEntitlementCart(JsonField.of(meterCreditEntitlementCart))
 
                 /**
                  * Sets [Builder.meterCreditEntitlementCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.meterCreditEntitlementCart] with a well-typed
-                 * `List<GlobalSubscription.MeterCreditEntitlementCart>` value instead. This method
-                 * is primarily for setting the field to an undocumented or not yet supported value.
+                 * `List<MeterCreditEntitlementCartResponse>` value instead. This method is
+                 * primarily for setting the field to an undocumented or not yet supported value.
                  */
                 fun meterCreditEntitlementCart(
-                    meterCreditEntitlementCart:
-                        JsonField<List<GlobalSubscription.MeterCreditEntitlementCart>>
+                    meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>>
                 ) = apply {
                     this.meterCreditEntitlementCart =
                         meterCreditEntitlementCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [GlobalSubscription.MeterCreditEntitlementCart] to
+                 * Adds a single [MeterCreditEntitlementCartResponse] to
                  * [Builder.meterCreditEntitlementCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
                 fun addMeterCreditEntitlementCart(
-                    meterCreditEntitlementCart: GlobalSubscription.MeterCreditEntitlementCart
+                    meterCreditEntitlementCart: MeterCreditEntitlementCartResponse
                 ) = apply {
                     this.meterCreditEntitlementCart =
                         (this.meterCreditEntitlementCart ?: JsonField.of(mutableListOf())).also {
@@ -3934,25 +3931,25 @@ private constructor(
                 }
 
                 /** Meters associated with this subscription (for usage-based billing) */
-                fun meters(meters: List<GlobalSubscription.Meter>) = meters(JsonField.of(meters))
+                fun meters(meters: List<MeterCartResponseItem>) = meters(JsonField.of(meters))
 
                 /**
                  * Sets [Builder.meters] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.meters] with a well-typed
-                 * `List<GlobalSubscription.Meter>` value instead. This method is primarily for
-                 * setting the field to an undocumented or not yet supported value.
+                 * `List<MeterCartResponseItem>` value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
                  */
-                fun meters(meters: JsonField<List<GlobalSubscription.Meter>>) = apply {
+                fun meters(meters: JsonField<List<MeterCartResponseItem>>) = apply {
                     this.meters = meters.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [GlobalSubscription.Meter] to [meters].
+                 * Adds a single [MeterCartResponseItem] to [meters].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addMeter(meter: GlobalSubscription.Meter) = apply {
+                fun addMeter(meter: MeterCartResponseItem) = apply {
                     meters =
                         (meters ?: JsonField.of(mutableListOf())).also {
                             checkKnown("meters", it).add(meter)
