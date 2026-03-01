@@ -11,6 +11,7 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
+import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -33,7 +34,7 @@ private constructor(
     private val clientSecret: JsonField<String>,
     private val discountId: JsonField<String>,
     private val expiresOn: JsonField<OffsetDateTime>,
-    private val oneTimeProductCart: JsonField<List<OneTimeProductCart>>,
+    private val oneTimeProductCart: JsonField<List<OneTimeProductCartItem>>,
     private val paymentLink: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -65,7 +66,7 @@ private constructor(
         expiresOn: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("one_time_product_cart")
         @ExcludeMissing
-        oneTimeProductCart: JsonField<List<OneTimeProductCart>> = JsonMissing.of(),
+        oneTimeProductCart: JsonField<List<OneTimeProductCartItem>> = JsonMissing.of(),
         @JsonProperty("payment_link")
         @ExcludeMissing
         paymentLink: JsonField<String> = JsonMissing.of(),
@@ -162,7 +163,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun oneTimeProductCart(): Optional<List<OneTimeProductCart>> =
+    fun oneTimeProductCart(): Optional<List<OneTimeProductCartItem>> =
         oneTimeProductCart.getOptional("one_time_product_cart")
 
     /**
@@ -257,7 +258,7 @@ private constructor(
      */
     @JsonProperty("one_time_product_cart")
     @ExcludeMissing
-    fun _oneTimeProductCart(): JsonField<List<OneTimeProductCart>> = oneTimeProductCart
+    fun _oneTimeProductCart(): JsonField<List<OneTimeProductCartItem>> = oneTimeProductCart
 
     /**
      * Returns the raw JSON value of [paymentLink].
@@ -310,7 +311,7 @@ private constructor(
         private var clientSecret: JsonField<String> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
         private var expiresOn: JsonField<OffsetDateTime> = JsonMissing.of()
-        private var oneTimeProductCart: JsonField<MutableList<OneTimeProductCart>>? = null
+        private var oneTimeProductCart: JsonField<MutableList<OneTimeProductCartItem>>? = null
         private var paymentLink: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -474,32 +475,33 @@ private constructor(
         fun expiresOn(expiresOn: JsonField<OffsetDateTime>) = apply { this.expiresOn = expiresOn }
 
         /** One time products associated with the purchase of subscription */
-        fun oneTimeProductCart(oneTimeProductCart: List<OneTimeProductCart>?) =
+        fun oneTimeProductCart(oneTimeProductCart: List<OneTimeProductCartItem>?) =
             oneTimeProductCart(JsonField.ofNullable(oneTimeProductCart))
 
         /**
          * Alias for calling [Builder.oneTimeProductCart] with `oneTimeProductCart.orElse(null)`.
          */
-        fun oneTimeProductCart(oneTimeProductCart: Optional<List<OneTimeProductCart>>) =
+        fun oneTimeProductCart(oneTimeProductCart: Optional<List<OneTimeProductCartItem>>) =
             oneTimeProductCart(oneTimeProductCart.getOrNull())
 
         /**
          * Sets [Builder.oneTimeProductCart] to an arbitrary JSON value.
          *
          * You should usually call [Builder.oneTimeProductCart] with a well-typed
-         * `List<OneTimeProductCart>` value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * `List<OneTimeProductCartItem>` value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
          */
-        fun oneTimeProductCart(oneTimeProductCart: JsonField<List<OneTimeProductCart>>) = apply {
-            this.oneTimeProductCart = oneTimeProductCart.map { it.toMutableList() }
-        }
+        fun oneTimeProductCart(oneTimeProductCart: JsonField<List<OneTimeProductCartItem>>) =
+            apply {
+                this.oneTimeProductCart = oneTimeProductCart.map { it.toMutableList() }
+            }
 
         /**
-         * Adds a single [OneTimeProductCart] to [Builder.oneTimeProductCart].
+         * Adds a single [OneTimeProductCartItem] to [Builder.oneTimeProductCart].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addOneTimeProductCart(oneTimeProductCart: OneTimeProductCart) = apply {
+        fun addOneTimeProductCart(oneTimeProductCart: OneTimeProductCartItem) = apply {
             this.oneTimeProductCart =
                 (this.oneTimeProductCart ?: JsonField.of(mutableListOf())).also {
                     checkKnown("oneTimeProductCart", it).add(oneTimeProductCart)
@@ -720,202 +722,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
-    }
-
-    class OneTimeProductCart
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val productId: JsonField<String>,
-        private val quantity: JsonField<Int>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("product_id")
-            @ExcludeMissing
-            productId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
-        ) : this(productId, quantity, mutableMapOf())
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun productId(): String = productId.getRequired("product_id")
-
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun quantity(): Int = quantity.getRequired("quantity")
-
-        /**
-         * Returns the raw JSON value of [productId].
-         *
-         * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
-
-        /**
-         * Returns the raw JSON value of [quantity].
-         *
-         * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [OneTimeProductCart].
-             *
-             * The following fields are required:
-             * ```java
-             * .productId()
-             * .quantity()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [OneTimeProductCart]. */
-        class Builder internal constructor() {
-
-            private var productId: JsonField<String>? = null
-            private var quantity: JsonField<Int>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(oneTimeProductCart: OneTimeProductCart) = apply {
-                productId = oneTimeProductCart.productId
-                quantity = oneTimeProductCart.quantity
-                additionalProperties = oneTimeProductCart.additionalProperties.toMutableMap()
-            }
-
-            fun productId(productId: String) = productId(JsonField.of(productId))
-
-            /**
-             * Sets [Builder.productId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.productId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun productId(productId: JsonField<String>) = apply { this.productId = productId }
-
-            fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
-
-            /**
-             * Sets [Builder.quantity] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.quantity] with a well-typed [Int] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [OneTimeProductCart].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .productId()
-             * .quantity()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): OneTimeProductCart =
-                OneTimeProductCart(
-                    checkRequired("productId", productId),
-                    checkRequired("quantity", quantity),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): OneTimeProductCart = apply {
-            if (validated) {
-                return@apply
-            }
-
-            productId()
-            quantity()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: DodoPaymentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (productId.asKnown().isPresent) 1 else 0) +
-                (if (quantity.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is OneTimeProductCart &&
-                productId == other.productId &&
-                quantity == other.quantity &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(productId, quantity, additionalProperties)
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "OneTimeProductCart{productId=$productId, quantity=$quantity, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

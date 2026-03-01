@@ -16,6 +16,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionListPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionListParams
 import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanResponse
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
@@ -207,6 +209,53 @@ interface SubscriptionServiceAsync {
         params: SubscriptionPreviewChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionPreviewChangePlanResponse>
+
+    fun retrieveCreditUsage(
+        subscriptionId: String
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(
+        subscriptionId: String,
+        params: SubscriptionRetrieveCreditUsageParams =
+            SubscriptionRetrieveCreditUsageParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(
+            params.toBuilder().subscriptionId(subscriptionId).build(),
+            requestOptions,
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(
+        subscriptionId: String,
+        params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(),
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(
+        params: SubscriptionRetrieveCreditUsageParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse>
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(
+        params: SubscriptionRetrieveCreditUsageParams
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(params, RequestOptions.none())
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(
+        subscriptionId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(
+            subscriptionId,
+            SubscriptionRetrieveCreditUsageParams.none(),
+            requestOptions,
+        )
 
     /**
      * Get detailed usage history for a subscription that includes usage-based billing (metered
@@ -548,6 +597,58 @@ interface SubscriptionServiceAsync {
             params: SubscriptionPreviewChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/credit-usage`, but
+         * is otherwise the same as [SubscriptionServiceAsync.retrieveCreditUsage].
+         */
+        fun retrieveCreditUsage(
+            subscriptionId: String
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(
+            subscriptionId: String,
+            params: SubscriptionRetrieveCreditUsageParams =
+                SubscriptionRetrieveCreditUsageParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(
+                params.toBuilder().subscriptionId(subscriptionId).build(),
+                requestOptions,
+            )
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(
+            subscriptionId: String,
+            params: SubscriptionRetrieveCreditUsageParams =
+                SubscriptionRetrieveCreditUsageParams.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(
+            params: SubscriptionRetrieveCreditUsageParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>>
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(
+            params: SubscriptionRetrieveCreditUsageParams
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(params, RequestOptions.none())
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(
+            subscriptionId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(
+                subscriptionId,
+                SubscriptionRetrieveCreditUsageParams.none(),
+                requestOptions,
+            )
 
         /**
          * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but

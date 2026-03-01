@@ -5,6 +5,8 @@ package com.dodopayments.api.models.webhooks
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
+import com.dodopayments.api.models.creditentitlements.balances.CreditLedgerEntry
 import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
@@ -13,9 +15,13 @@ import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.BillingAddress
+import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.dodopayments.api.models.payments.IntentStatus
+import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.Payment
+import com.dodopayments.api.models.payments.PaymentRefundStatus
+import com.dodopayments.api.models.payments.RefundListItem
 import com.dodopayments.api.models.refunds.Refund
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.dodopayments.api.models.subscriptions.AddonCartResponseItem
@@ -31,6 +37,827 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 
 internal class UnsafeUnwrapWebhookEventTest {
+
+    @Test
+    fun ofCreditAdded() {
+        val creditAdded =
+            CreditAddedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditAddedWebhookEvent.Type.CREDIT_ADDED)
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofCreditAdded(creditAdded)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).contains(creditAdded)
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditAddedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditAdded(
+                CreditAddedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditAddedWebhookEvent.Type.CREDIT_ADDED)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditBalanceLow() {
+        val creditBalanceLow =
+            CreditBalanceLowWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditBalanceLowWebhookEvent.Data.builder()
+                        .availableBalance("available_balance")
+                        .creditEntitlementId("credit_entitlement_id")
+                        .creditEntitlementName("credit_entitlement_name")
+                        .customerId("customer_id")
+                        .subscriptionCreditsAmount("subscription_credits_amount")
+                        .subscriptionId("subscription_id")
+                        .thresholdAmount("threshold_amount")
+                        .thresholdPercent(0)
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditBalanceLowWebhookEvent.Type.CREDIT_BALANCE_LOW)
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofCreditBalanceLow(creditBalanceLow)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).contains(creditBalanceLow)
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditBalanceLowRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditBalanceLow(
+                CreditBalanceLowWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditBalanceLowWebhookEvent.Data.builder()
+                            .availableBalance("available_balance")
+                            .creditEntitlementId("credit_entitlement_id")
+                            .creditEntitlementName("credit_entitlement_name")
+                            .customerId("customer_id")
+                            .subscriptionCreditsAmount("subscription_credits_amount")
+                            .subscriptionId("subscription_id")
+                            .thresholdAmount("threshold_amount")
+                            .thresholdPercent(0)
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditBalanceLowWebhookEvent.Type.CREDIT_BALANCE_LOW)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditDeducted() {
+        val creditDeducted =
+            CreditDeductedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditDeductedWebhookEvent.Type.CREDIT_DEDUCTED)
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofCreditDeducted(creditDeducted)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).contains(creditDeducted)
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditDeductedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditDeducted(
+                CreditDeductedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditDeductedWebhookEvent.Type.CREDIT_DEDUCTED)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditExpired() {
+        val creditExpired =
+            CreditExpiredWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditExpiredWebhookEvent.Type.CREDIT_EXPIRED)
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofCreditExpired(creditExpired)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).contains(creditExpired)
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditExpiredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditExpired(
+                CreditExpiredWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditExpiredWebhookEvent.Type.CREDIT_EXPIRED)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditManualAdjustment() {
+        val creditManualAdjustment =
+            CreditManualAdjustmentWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditManualAdjustmentWebhookEvent.Type.CREDIT_MANUAL_ADJUSTMENT)
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditManualAdjustment(creditManualAdjustment)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment())
+            .contains(creditManualAdjustment)
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditManualAdjustmentRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditManualAdjustment(
+                CreditManualAdjustmentWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditManualAdjustmentWebhookEvent.Type.CREDIT_MANUAL_ADJUSTMENT)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditOverageCharged() {
+        val creditOverageCharged =
+            CreditOverageChargedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditOverageChargedWebhookEvent.Type.CREDIT_OVERAGE_CHARGED)
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditOverageCharged(creditOverageCharged)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).contains(creditOverageCharged)
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditOverageChargedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditOverageCharged(
+                CreditOverageChargedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditOverageChargedWebhookEvent.Type.CREDIT_OVERAGE_CHARGED)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditRolledOver() {
+        val creditRolledOver =
+            CreditRolledOverWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditRolledOverWebhookEvent.Type.CREDIT_ROLLED_OVER)
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofCreditRolledOver(creditRolledOver)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).contains(creditRolledOver)
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditRolledOverRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditRolledOver(
+                CreditRolledOverWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditRolledOverWebhookEvent.Type.CREDIT_ROLLED_OVER)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofCreditRolloverForfeited() {
+        val creditRolloverForfeited =
+            CreditRolloverForfeitedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditRolloverForfeitedWebhookEvent.Type.CREDIT_ROLLOVER_FORFEITED)
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditRolloverForfeited(creditRolloverForfeited)
+
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited())
+            .contains(creditRolloverForfeited)
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditRolloverForfeitedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofCreditRolloverForfeited(
+                CreditRolloverForfeitedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditRolloverForfeitedWebhookEvent.Type.CREDIT_ROLLOVER_FORFEITED)
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
 
     @Test
     fun ofDisputeAccepted() {
@@ -56,6 +883,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeAccepted(disputeAccepted)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).contains(disputeAccepted)
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -138,6 +973,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeCancelled(disputeCancelled)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).contains(disputeCancelled)
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -221,6 +1064,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofDisputeChallenged(disputeChallenged)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).contains(disputeChallenged)
@@ -303,6 +1154,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeExpired(disputeExpired)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -385,6 +1244,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeLost(disputeLost)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -467,6 +1334,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeOpened(disputeOpened)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -549,6 +1424,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDisputeWon(disputeWon)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -635,6 +1518,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofLicenseKeyCreated(licenseKeyCreated)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -750,7 +1641,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .paymentId("payment_id")
                         .addRefund(
-                            Payment.Refund.builder()
+                            RefundListItem.builder()
                                 .businessId("business_id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .isPartial(true)
@@ -772,7 +1663,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .cardType("card_type")
                         .checkoutSessionId("checkout_session_id")
                         .addCustomFieldResponse(
-                            Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountId("discount_id")
                         .errorCode("error_code")
@@ -783,12 +1674,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            Payment.ProductCart.builder()
+                            OneTimeProductCartItem.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
                         )
-                        .refundStatus(Payment.RefundStatus.PARTIAL)
+                        .refundStatus(PaymentRefundStatus.PARTIAL)
                         .settlementTax(0)
                         .status(IntentStatus.SUCCEEDED)
                         .subscriptionId("subscription_id")
@@ -802,6 +1693,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPaymentCancelled(paymentCancelled)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -882,7 +1781,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .paymentId("payment_id")
                             .addRefund(
-                                Payment.Refund.builder()
+                                RefundListItem.builder()
                                     .businessId("business_id")
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .isPartial(true)
@@ -904,10 +1803,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .cardType("card_type")
                             .checkoutSessionId("checkout_session_id")
                             .addCustomFieldResponse(
-                                Payment.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountId("discount_id")
                             .errorCode("error_code")
@@ -918,12 +1814,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                Payment.ProductCart.builder()
+                                OneTimeProductCartItem.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
                             )
-                            .refundStatus(Payment.RefundStatus.PARTIAL)
+                            .refundStatus(PaymentRefundStatus.PARTIAL)
                             .settlementTax(0)
                             .status(IntentStatus.SUCCEEDED)
                             .subscriptionId("subscription_id")
@@ -999,7 +1895,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .paymentId("payment_id")
                         .addRefund(
-                            Payment.Refund.builder()
+                            RefundListItem.builder()
                                 .businessId("business_id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .isPartial(true)
@@ -1021,7 +1917,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .cardType("card_type")
                         .checkoutSessionId("checkout_session_id")
                         .addCustomFieldResponse(
-                            Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountId("discount_id")
                         .errorCode("error_code")
@@ -1032,12 +1928,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            Payment.ProductCart.builder()
+                            OneTimeProductCartItem.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
                         )
-                        .refundStatus(Payment.RefundStatus.PARTIAL)
+                        .refundStatus(PaymentRefundStatus.PARTIAL)
                         .settlementTax(0)
                         .status(IntentStatus.SUCCEEDED)
                         .subscriptionId("subscription_id")
@@ -1051,6 +1947,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPaymentFailed(paymentFailed)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -1131,7 +2035,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .paymentId("payment_id")
                             .addRefund(
-                                Payment.Refund.builder()
+                                RefundListItem.builder()
                                     .businessId("business_id")
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .isPartial(true)
@@ -1153,10 +2057,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .cardType("card_type")
                             .checkoutSessionId("checkout_session_id")
                             .addCustomFieldResponse(
-                                Payment.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountId("discount_id")
                             .errorCode("error_code")
@@ -1167,12 +2068,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                Payment.ProductCart.builder()
+                                OneTimeProductCartItem.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
                             )
-                            .refundStatus(Payment.RefundStatus.PARTIAL)
+                            .refundStatus(PaymentRefundStatus.PARTIAL)
                             .settlementTax(0)
                             .status(IntentStatus.SUCCEEDED)
                             .subscriptionId("subscription_id")
@@ -1248,7 +2149,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .paymentId("payment_id")
                         .addRefund(
-                            Payment.Refund.builder()
+                            RefundListItem.builder()
                                 .businessId("business_id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .isPartial(true)
@@ -1270,7 +2171,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .cardType("card_type")
                         .checkoutSessionId("checkout_session_id")
                         .addCustomFieldResponse(
-                            Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountId("discount_id")
                         .errorCode("error_code")
@@ -1281,12 +2182,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            Payment.ProductCart.builder()
+                            OneTimeProductCartItem.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
                         )
-                        .refundStatus(Payment.RefundStatus.PARTIAL)
+                        .refundStatus(PaymentRefundStatus.PARTIAL)
                         .settlementTax(0)
                         .status(IntentStatus.SUCCEEDED)
                         .subscriptionId("subscription_id")
@@ -1301,6 +2202,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofPaymentProcessing(paymentProcessing)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -1381,7 +2290,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .paymentId("payment_id")
                             .addRefund(
-                                Payment.Refund.builder()
+                                RefundListItem.builder()
                                     .businessId("business_id")
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .isPartial(true)
@@ -1403,10 +2312,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .cardType("card_type")
                             .checkoutSessionId("checkout_session_id")
                             .addCustomFieldResponse(
-                                Payment.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountId("discount_id")
                             .errorCode("error_code")
@@ -1417,12 +2323,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                Payment.ProductCart.builder()
+                                OneTimeProductCartItem.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
                             )
-                            .refundStatus(Payment.RefundStatus.PARTIAL)
+                            .refundStatus(PaymentRefundStatus.PARTIAL)
                             .settlementTax(0)
                             .status(IntentStatus.SUCCEEDED)
                             .subscriptionId("subscription_id")
@@ -1498,7 +2404,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .paymentId("payment_id")
                         .addRefund(
-                            Payment.Refund.builder()
+                            RefundListItem.builder()
                                 .businessId("business_id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .isPartial(true)
@@ -1520,7 +2426,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .cardType("card_type")
                         .checkoutSessionId("checkout_session_id")
                         .addCustomFieldResponse(
-                            Payment.CustomFieldResponse.builder().key("key").value("value").build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountId("discount_id")
                         .errorCode("error_code")
@@ -1531,12 +2437,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            Payment.ProductCart.builder()
+                            OneTimeProductCartItem.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
                         )
-                        .refundStatus(Payment.RefundStatus.PARTIAL)
+                        .refundStatus(PaymentRefundStatus.PARTIAL)
                         .settlementTax(0)
                         .status(IntentStatus.SUCCEEDED)
                         .subscriptionId("subscription_id")
@@ -1550,6 +2456,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPaymentSucceeded(paymentSucceeded)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -1630,7 +2544,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .paymentId("payment_id")
                             .addRefund(
-                                Payment.Refund.builder()
+                                RefundListItem.builder()
                                     .businessId("business_id")
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .isPartial(true)
@@ -1652,10 +2566,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .cardType("card_type")
                             .checkoutSessionId("checkout_session_id")
                             .addCustomFieldResponse(
-                                Payment.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountId("discount_id")
                             .errorCode("error_code")
@@ -1666,12 +2577,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                Payment.ProductCart.builder()
+                                OneTimeProductCartItem.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
                             )
-                            .refundStatus(Payment.RefundStatus.PARTIAL)
+                            .refundStatus(PaymentRefundStatus.PARTIAL)
                             .settlementTax(0)
                             .status(IntentStatus.SUCCEEDED)
                             .subscriptionId("subscription_id")
@@ -1735,6 +2646,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofRefundFailed(refundFailed)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -1853,6 +2772,14 @@ internal class UnsafeUnwrapWebhookEventTest {
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofRefundSucceeded(refundSucceeded)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -1956,7 +2883,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -2006,8 +2933,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2026,10 +2953,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -2045,6 +2969,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionActive(subscriptionActive)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -2101,7 +3033,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -2151,8 +3083,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2171,10 +3103,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -2224,7 +3153,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -2274,8 +3203,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2294,10 +3223,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -2313,6 +3239,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionCancelled(subscriptionCancelled)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -2369,7 +3303,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -2419,8 +3353,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2439,10 +3373,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -2492,7 +3423,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -2542,8 +3473,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2562,10 +3493,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -2581,6 +3509,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionExpired(subscriptionExpired)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -2637,7 +3573,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -2687,8 +3623,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2707,10 +3643,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -2760,7 +3693,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -2810,8 +3743,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2830,10 +3763,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -2849,6 +3779,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionFailed(subscriptionFailed)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -2905,7 +3843,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -2955,8 +3893,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2975,10 +3913,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -3028,7 +3963,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -3078,8 +4013,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3098,10 +4033,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -3117,6 +4049,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionOnHold(subscriptionOnHold)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -3173,7 +4113,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -3223,8 +4163,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3243,10 +4183,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -3296,7 +4233,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -3346,8 +4283,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3366,10 +4303,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -3385,6 +4319,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionPlanChanged(subscriptionPlanChanged)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -3442,7 +4384,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -3492,8 +4434,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3512,10 +4454,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -3565,7 +4504,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -3615,8 +4554,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3635,10 +4574,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -3654,6 +4590,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionRenewed(subscriptionRenewed)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -3710,7 +4654,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -3760,8 +4704,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3780,10 +4724,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
@@ -3833,7 +4774,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .creditEntitlementName("credit_entitlement_name")
                                 .creditsAmount("credits_amount")
                                 .overageBalance("overage_balance")
-                                .overageChargeAtBilling(true)
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                 .overageEnabled(true)
                                 .productId("product_id")
                                 .remainingBalance("remaining_balance")
@@ -3883,8 +4824,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .measurementUnit("measurement_unit")
                                 .meterId("meter_id")
                                 .name("name")
-                                .pricePerUnit("10.50")
                                 .description("description")
+                                .pricePerUnit("10.50")
                                 .build()
                         )
                         .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -3903,10 +4844,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .trialPeriodDays(0)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
-                            Subscription.CustomFieldResponse.builder()
-                                .key("key")
-                                .value("value")
-                                .build()
+                            CustomFieldResponse.builder().key("key").value("value").build()
                         )
                         .discountCyclesRemaining(0)
                         .discountId("discount_id")
@@ -3922,6 +4860,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofSubscriptionUpdated(subscriptionUpdated)
 
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
@@ -3978,7 +4924,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .creditEntitlementName("credit_entitlement_name")
                                     .creditsAmount("credits_amount")
                                     .overageBalance("overage_balance")
-                                    .overageChargeAtBilling(true)
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
                                     .overageEnabled(true)
                                     .productId("product_id")
                                     .remainingBalance("remaining_balance")
@@ -4028,8 +4974,8 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .measurementUnit("measurement_unit")
                                     .meterId("meter_id")
                                     .name("name")
-                                    .pricePerUnit("10.50")
                                     .description("description")
+                                    .pricePerUnit("10.50")
                                     .build()
                             )
                             .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -4048,10 +4994,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .trialPeriodDays(0)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
-                                Subscription.CustomFieldResponse.builder()
-                                    .key("key")
-                                    .value("value")
-                                    .build()
+                                CustomFieldResponse.builder().key("key").value("value").build()
                             )
                             .discountCyclesRemaining(0)
                             .discountId("discount_id")
