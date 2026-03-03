@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.86.3 (2026-03-03)
+
+Full Changelog: [v1.86.2...v1.86.3](https://github.com/dodopayments/dodopayments-java/compare/v1.86.2...v1.86.3)
+
+### Chores
+
+* **tests:** update webhook tests ([56fff46](https://github.com/dodopayments/dodopayments-java/commit/56fff46dae3aaa99c823545ca99f60b273542d1b))
+
 ## 1.86.2 (2026-03-01)
 
 Full Changelog: [v1.86.1...v1.86.2](https://github.com/dodopayments/dodopayments-java/compare/v1.86.1...v1.86.2)
