@@ -27,6 +27,7 @@ private constructor(
     private val prorationBillingMode: JsonField<ProrationBillingMode>,
     private val quantity: JsonField<Int>,
     private val addons: JsonField<List<AttachAddon>>,
+    private val discountCode: JsonField<String>,
     private val metadata: JsonField<Metadata>,
     private val onPaymentFailure: JsonField<OnPaymentFailure>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -42,6 +43,9 @@ private constructor(
         @JsonProperty("addons")
         @ExcludeMissing
         addons: JsonField<List<AttachAddon>> = JsonMissing.of(),
+        @JsonProperty("discount_code")
+        @ExcludeMissing
+        discountCode: JsonField<String> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("on_payment_failure")
         @ExcludeMissing
@@ -51,6 +55,7 @@ private constructor(
         prorationBillingMode,
         quantity,
         addons,
+        discountCode,
         metadata,
         onPaymentFailure,
         mutableMapOf(),
@@ -88,6 +93,17 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun addons(): Optional<List<AttachAddon>> = addons.getOptional("addons")
+
+    /**
+     * Optional discount code to apply to the new plan. If provided, validates and applies the
+     * discount to the plan change. If not provided and the subscription has an existing discount
+     * with `preserve_on_plan_change=true`, the existing discount will be preserved (if applicable
+     * to the new product).
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
 
     /**
      * Metadata for the payment. If not passed, the metadata of the subscription will be taken
@@ -142,6 +158,15 @@ private constructor(
     @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<AttachAddon>> = addons
 
     /**
+     * Returns the raw JSON value of [discountCode].
+     *
+     * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("discount_code")
+    @ExcludeMissing
+    fun _discountCode(): JsonField<String> = discountCode
+
+    /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -192,6 +217,7 @@ private constructor(
         private var prorationBillingMode: JsonField<ProrationBillingMode>? = null
         private var quantity: JsonField<Int>? = null
         private var addons: JsonField<MutableList<AttachAddon>>? = null
+        private var discountCode: JsonField<String> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -202,6 +228,7 @@ private constructor(
             prorationBillingMode = updateSubscriptionPlanReq.prorationBillingMode
             quantity = updateSubscriptionPlanReq.quantity
             addons = updateSubscriptionPlanReq.addons.map { it.toMutableList() }
+            discountCode = updateSubscriptionPlanReq.discountCode
             metadata = updateSubscriptionPlanReq.metadata
             onPaymentFailure = updateSubscriptionPlanReq.onPaymentFailure
             additionalProperties = updateSubscriptionPlanReq.additionalProperties.toMutableMap()
@@ -272,6 +299,28 @@ private constructor(
                 (addons ?: JsonField.of(mutableListOf())).also {
                     checkKnown("addons", it).add(addon)
                 }
+        }
+
+        /**
+         * Optional discount code to apply to the new plan. If provided, validates and applies the
+         * discount to the plan change. If not provided and the subscription has an existing
+         * discount with `preserve_on_plan_change=true`, the existing discount will be preserved (if
+         * applicable to the new product).
+         */
+        fun discountCode(discountCode: String?) = discountCode(JsonField.ofNullable(discountCode))
+
+        /** Alias for calling [Builder.discountCode] with `discountCode.orElse(null)`. */
+        fun discountCode(discountCode: Optional<String>) = discountCode(discountCode.getOrNull())
+
+        /**
+         * Sets [Builder.discountCode] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountCode] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun discountCode(discountCode: JsonField<String>) = apply {
+            this.discountCode = discountCode
         }
 
         /**
@@ -355,6 +404,7 @@ private constructor(
                 checkRequired("prorationBillingMode", prorationBillingMode),
                 checkRequired("quantity", quantity),
                 (addons ?: JsonMissing.of()).map { it.toImmutable() },
+                discountCode,
                 metadata,
                 onPaymentFailure,
                 additionalProperties.toMutableMap(),
@@ -372,6 +422,7 @@ private constructor(
         prorationBillingMode().validate()
         quantity()
         addons().ifPresent { it.forEach { it.validate() } }
+        discountCode()
         metadata().ifPresent { it.validate() }
         onPaymentFailure().ifPresent { it.validate() }
         validated = true
@@ -396,6 +447,7 @@ private constructor(
             (prorationBillingMode.asKnown().getOrNull()?.validity() ?: 0) +
             (if (quantity.asKnown().isPresent) 1 else 0) +
             (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (discountCode.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -788,6 +840,7 @@ private constructor(
             prorationBillingMode == other.prorationBillingMode &&
             quantity == other.quantity &&
             addons == other.addons &&
+            discountCode == other.discountCode &&
             metadata == other.metadata &&
             onPaymentFailure == other.onPaymentFailure &&
             additionalProperties == other.additionalProperties
@@ -799,6 +852,7 @@ private constructor(
             prorationBillingMode,
             quantity,
             addons,
+            discountCode,
             metadata,
             onPaymentFailure,
             additionalProperties,
@@ -808,5 +862,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, addons=$addons, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
+        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, addons=$addons, discountCode=$discountCode, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
 }
