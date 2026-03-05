@@ -21,6 +21,7 @@ internal class UpdateSubscriptionPlanReqTest {
                 )
                 .quantity(0)
                 .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                .discountCode("discount_code")
                 .metadata(
                     UpdateSubscriptionPlanReq.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -35,6 +36,7 @@ internal class UpdateSubscriptionPlanReqTest {
         assertThat(updateSubscriptionPlanReq.quantity()).isEqualTo(0)
         assertThat(updateSubscriptionPlanReq.addons().getOrNull())
             .containsExactly(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+        assertThat(updateSubscriptionPlanReq.discountCode()).contains("discount_code")
         assertThat(updateSubscriptionPlanReq.metadata())
             .contains(
                 UpdateSubscriptionPlanReq.Metadata.builder()
@@ -56,6 +58,7 @@ internal class UpdateSubscriptionPlanReqTest {
                 )
                 .quantity(0)
                 .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                .discountCode("discount_code")
                 .metadata(
                     UpdateSubscriptionPlanReq.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
