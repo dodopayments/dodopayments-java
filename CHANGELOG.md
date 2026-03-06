@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.87.2 (2026-03-06)
+
+Full Changelog: [v1.87.1...v1.87.2](https://github.com/dodopayments/dodopayments-java/compare/v1.87.1...v1.87.2)
+
+### Chores
+
+* **ci:** upgrade deprecated gradle-build-action to setup-gradle in test job ([04d65c2](https://github.com/dodopayments/dodopayments-java/commit/04d65c278776ef9aec827145c8df5ebfde6c2876))
+
 ## 1.87.1 (2026-03-06)
 
 Full Changelog: [v1.87.0...v1.87.1](https://github.com/dodopayments/dodopayments-java/compare/v1.87.0...v1.87.1)
