@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.87.3 (2026-03-11)
+
+Full Changelog: [v1.87.2...v1.87.3](https://github.com/dodopayments/dodopayments-java/compare/v1.87.2...v1.87.3)
+
+### Bug Fixes
+
+* **client:** incorrect `Retry-After` parsing ([958639b](https://github.com/dodopayments/dodopayments-java/commit/958639b46328c59331002e8d5845fdfd3eabc15d))
+
+
+### Chores
+
+* **ci:** skip uploading artifacts on stainless-internal branches ([7e0d4f5](https://github.com/dodopayments/dodopayments-java/commit/7e0d4f5baffb0dc503c143e32f626cebf603d3d2))
+
 ## 1.87.2 (2026-03-06)
 
 Full Changelog: [v1.87.1...v1.87.2](https://github.com/dodopayments/dodopayments-java/compare/v1.87.1...v1.87.2)
