@@ -243,6 +243,10 @@ private constructor(
         fun lastUsedAt(): Optional<OffsetDateTime> = lastUsedAt.getOptional("last_used_at")
 
         /**
+         * All supported payment method types (from Hyperswitch).
+         *
+         * Used for disabled-payment-methods filtering and validation.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -420,6 +424,11 @@ private constructor(
                 this.lastUsedAt = lastUsedAt
             }
 
+            /**
+             * All supported payment method types (from Hyperswitch).
+             *
+             * Used for disabled-payment-methods filtering and validation.
+             */
             fun paymentMethodType(paymentMethodType: PaymentMethodTypes?) =
                 paymentMethodType(JsonField.ofNullable(paymentMethodType))
 

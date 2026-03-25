@@ -41,6 +41,7 @@ internal class CheckoutSessionRequestTest {
                         .build()
                 )
                 .billingCurrency(Currency.AED)
+                .cancelUrl("cancel_url")
                 .confirm(true)
                 .addCustomField(
                     CustomField.builder()
@@ -181,6 +182,7 @@ internal class CheckoutSessionRequestTest {
                     .build()
             )
         assertThat(checkoutSessionRequest.billingCurrency()).contains(Currency.AED)
+        assertThat(checkoutSessionRequest.cancelUrl()).contains("cancel_url")
         assertThat(checkoutSessionRequest.confirm()).contains(true)
         assertThat(checkoutSessionRequest.customFields().getOrNull())
             .containsExactly(
@@ -333,6 +335,7 @@ internal class CheckoutSessionRequestTest {
                         .build()
                 )
                 .billingCurrency(Currency.AED)
+                .cancelUrl("cancel_url")
                 .confirm(true)
                 .addCustomField(
                     CustomField.builder()
