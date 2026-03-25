@@ -14,6 +14,7 @@ import kotlin.jvm.optionals.getOrNull
 class CustomerPortalCreateParams
 private constructor(
     private val customerId: String?,
+    private val returnUrl: String?,
     private val sendEmail: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -21,6 +22,12 @@ private constructor(
 ) : Params {
 
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
+
+    /**
+     * Optional return URL for this session. Overrides the business-level default. This URL will be
+     * shown as a "Return to {business}" back button in the portal.
+     */
+    fun returnUrl(): Optional<String> = Optional.ofNullable(returnUrl)
 
     /** If true, will send link to user. */
     fun sendEmail(): Optional<Boolean> = Optional.ofNullable(sendEmail)
@@ -50,6 +57,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var customerId: String? = null
+        private var returnUrl: String? = null
         private var sendEmail: Boolean? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -58,6 +66,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(customerPortalCreateParams: CustomerPortalCreateParams) = apply {
             customerId = customerPortalCreateParams.customerId
+            returnUrl = customerPortalCreateParams.returnUrl
             sendEmail = customerPortalCreateParams.sendEmail
             additionalHeaders = customerPortalCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = customerPortalCreateParams.additionalQueryParams.toBuilder()
@@ -69,6 +78,15 @@ private constructor(
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
+
+        /**
+         * Optional return URL for this session. Overrides the business-level default. This URL will
+         * be shown as a "Return to {business}" back button in the portal.
+         */
+        fun returnUrl(returnUrl: String?) = apply { this.returnUrl = returnUrl }
+
+        /** Alias for calling [Builder.returnUrl] with `returnUrl.orElse(null)`. */
+        fun returnUrl(returnUrl: Optional<String>) = returnUrl(returnUrl.getOrNull())
 
         /** If true, will send link to user. */
         fun sendEmail(sendEmail: Boolean?) = apply { this.sendEmail = sendEmail }
@@ -211,6 +229,7 @@ private constructor(
         fun build(): CustomerPortalCreateParams =
             CustomerPortalCreateParams(
                 customerId,
+                returnUrl,
                 sendEmail,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -232,6 +251,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                returnUrl?.let { put("return_url", it) }
                 sendEmail?.let { put("send_email", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -244,6 +264,7 @@ private constructor(
 
         return other is CustomerPortalCreateParams &&
             customerId == other.customerId &&
+            returnUrl == other.returnUrl &&
             sendEmail == other.sendEmail &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
@@ -253,6 +274,7 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             customerId,
+            returnUrl,
             sendEmail,
             additionalHeaders,
             additionalQueryParams,
@@ -260,5 +282,5 @@ private constructor(
         )
 
     override fun toString() =
-        "CustomerPortalCreateParams{customerId=$customerId, sendEmail=$sendEmail, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "CustomerPortalCreateParams{customerId=$customerId, returnUrl=$returnUrl, sendEmail=$sendEmail, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

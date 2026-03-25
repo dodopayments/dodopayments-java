@@ -76,7 +76,7 @@ private constructor(
     /**
      * Theme of the page (determines which mode - light/dark/system - to use)
      *
-     * Default is `System`.
+     * If not provided, uses the business-configured theme from business_themes table.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -235,9 +235,12 @@ private constructor(
         /**
          * Theme of the page (determines which mode - light/dark/system - to use)
          *
-         * Default is `System`.
+         * If not provided, uses the business-configured theme from business_themes table.
          */
-        fun theme(theme: Theme) = theme(JsonField.of(theme))
+        fun theme(theme: Theme?) = theme(JsonField.ofNullable(theme))
+
+        /** Alias for calling [Builder.theme] with `theme.orElse(null)`. */
+        fun theme(theme: Optional<Theme>) = theme(theme.getOrNull())
 
         /**
          * Sets [Builder.theme] to an arbitrary JSON value.
@@ -338,7 +341,7 @@ private constructor(
     /**
      * Theme of the page (determines which mode - light/dark/system - to use)
      *
-     * Default is `System`.
+     * If not provided, uses the business-configured theme from business_themes table.
      */
     class Theme @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
