@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.core.handlers.emptyHandler
 import com.dodopayments.api.core.handlers.errorBodyHandler
 import com.dodopayments.api.core.handlers.errorHandler
 import com.dodopayments.api.core.handlers.jsonHandler
@@ -18,6 +19,7 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.customers.Customer
 import com.dodopayments.api.models.customers.CustomerCreateParams
+import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
@@ -84,6 +86,13 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
     ): CompletableFuture<CustomerListPageAsync> =
         // get /customers
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun deletePaymentMethod(
+        params: CustomerDeletePaymentMethodParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        // delete /customers/{customer_id}/payment-methods/{payment_method_id}
+        withRawResponse().deletePaymentMethod(params, requestOptions).thenAccept {}
 
     override fun listCreditEntitlements(
         params: CustomerListCreditEntitlementsParams,
@@ -256,6 +265,38 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
                                     .response(it)
                                     .build()
                             }
+                    }
+                }
+        }
+
+        private val deletePaymentMethodHandler: Handler<Void?> = emptyHandler()
+
+        override fun deletePaymentMethod(
+            params: CustomerDeletePaymentMethodParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("paymentMethodId", params.paymentMethodId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "customers",
+                        params._pathParam(0),
+                        "payment-methods",
+                        params._pathParam(1),
+                    )
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response.use { deletePaymentMethodHandler.handle(it) }
                     }
                 }
         }
