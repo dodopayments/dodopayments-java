@@ -4,9 +4,11 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.customers.Customer
 import com.dodopayments.api.models.customers.CustomerCreateParams
+import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
@@ -125,6 +127,33 @@ interface CustomerServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CustomerListPageAsync> =
         list(CustomerListParams.none(), requestOptions)
+
+    fun deletePaymentMethod(
+        paymentMethodId: String,
+        params: CustomerDeletePaymentMethodParams,
+    ): CompletableFuture<Void?> =
+        deletePaymentMethod(paymentMethodId, params, RequestOptions.none())
+
+    /** @see deletePaymentMethod */
+    fun deletePaymentMethod(
+        paymentMethodId: String,
+        params: CustomerDeletePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> =
+        deletePaymentMethod(
+            params.toBuilder().paymentMethodId(paymentMethodId).build(),
+            requestOptions,
+        )
+
+    /** @see deletePaymentMethod */
+    fun deletePaymentMethod(params: CustomerDeletePaymentMethodParams): CompletableFuture<Void?> =
+        deletePaymentMethod(params, RequestOptions.none())
+
+    /** @see deletePaymentMethod */
+    fun deletePaymentMethod(
+        params: CustomerDeletePaymentMethodParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
 
     /** List all credit entitlements for a customer with their current balances */
     fun listCreditEntitlements(
@@ -346,6 +375,39 @@ interface CustomerServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CustomerListPageAsync>> =
             list(CustomerListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete
+         * /customers/{customer_id}/payment-methods/{payment_method_id}`, but is otherwise the same
+         * as [CustomerServiceAsync.deletePaymentMethod].
+         */
+        fun deletePaymentMethod(
+            paymentMethodId: String,
+            params: CustomerDeletePaymentMethodParams,
+        ): CompletableFuture<HttpResponse> =
+            deletePaymentMethod(paymentMethodId, params, RequestOptions.none())
+
+        /** @see deletePaymentMethod */
+        fun deletePaymentMethod(
+            paymentMethodId: String,
+            params: CustomerDeletePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            deletePaymentMethod(
+                params.toBuilder().paymentMethodId(paymentMethodId).build(),
+                requestOptions,
+            )
+
+        /** @see deletePaymentMethod */
+        fun deletePaymentMethod(
+            params: CustomerDeletePaymentMethodParams
+        ): CompletableFuture<HttpResponse> = deletePaymentMethod(params, RequestOptions.none())
+
+        /** @see deletePaymentMethod */
+        fun deletePaymentMethod(
+            params: CustomerDeletePaymentMethodParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `get /customers/{customer_id}/credit-entitlements`, but
