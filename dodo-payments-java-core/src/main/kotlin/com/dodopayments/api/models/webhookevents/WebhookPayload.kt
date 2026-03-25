@@ -2846,7 +2846,7 @@ private constructor(
             private val discountId: JsonField<String>,
             private val expiresAt: JsonField<OffsetDateTime>,
             private val paymentMethodId: JsonField<String>,
-            private val scheduledChange: JsonField<Subscription.ScheduledChange>,
+            private val scheduledChange: JsonField<GlobalSubscription.ScheduledChange>,
             private val taxId: JsonField<String>,
             private val payloadType: JsonField<PayloadType>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -2948,7 +2948,7 @@ private constructor(
                 paymentMethodId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("scheduled_change")
                 @ExcludeMissing
-                scheduledChange: JsonField<Subscription.ScheduledChange> = JsonMissing.of(),
+                scheduledChange: JsonField<GlobalSubscription.ScheduledChange> = JsonMissing.of(),
                 @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("payload_type")
                 @ExcludeMissing
@@ -3309,7 +3309,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun scheduledChange(): Optional<Subscription.ScheduledChange> =
+            fun scheduledChange(): Optional<GlobalSubscription.ScheduledChange> =
                 scheduledChange.getOptional("scheduled_change")
 
             /**
@@ -3631,7 +3631,7 @@ private constructor(
              */
             @JsonProperty("scheduled_change")
             @ExcludeMissing
-            fun _scheduledChange(): JsonField<Subscription.ScheduledChange> = scheduledChange
+            fun _scheduledChange(): JsonField<GlobalSubscription.ScheduledChange> = scheduledChange
 
             /**
              * Returns the raw JSON value of [taxId].
@@ -3737,7 +3737,7 @@ private constructor(
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var paymentMethodId: JsonField<String> = JsonMissing.of()
-                private var scheduledChange: JsonField<Subscription.ScheduledChange> =
+                private var scheduledChange: JsonField<GlobalSubscription.ScheduledChange> =
                     JsonMissing.of()
                 private var taxId: JsonField<String> = JsonMissing.of()
                 private var payloadType: JsonField<PayloadType>? = null
@@ -4332,26 +4332,25 @@ private constructor(
                 }
 
                 /** Scheduled plan change details, if any */
-                fun scheduledChange(scheduledChange: Subscription.ScheduledChange?) =
+                fun scheduledChange(scheduledChange: GlobalSubscription.ScheduledChange?) =
                     scheduledChange(JsonField.ofNullable(scheduledChange))
 
                 /**
                  * Alias for calling [Builder.scheduledChange] with `scheduledChange.orElse(null)`.
                  */
-                fun scheduledChange(scheduledChange: Optional<Subscription.ScheduledChange>) =
+                fun scheduledChange(scheduledChange: Optional<GlobalSubscription.ScheduledChange>) =
                     scheduledChange(scheduledChange.getOrNull())
 
                 /**
                  * Sets [Builder.scheduledChange] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.scheduledChange] with a well-typed
-                 * [Subscription.ScheduledChange] value instead. This method is primarily for
+                 * [GlobalSubscription.ScheduledChange] value instead. This method is primarily for
                  * setting the field to an undocumented or not yet supported value.
                  */
-                fun scheduledChange(scheduledChange: JsonField<Subscription.ScheduledChange>) =
-                    apply {
-                        this.scheduledChange = scheduledChange
-                    }
+                fun scheduledChange(
+                    scheduledChange: JsonField<GlobalSubscription.ScheduledChange>
+                ) = apply { this.scheduledChange = scheduledChange }
 
                 /** Tax identifier provided for this subscription (if applicable) */
                 fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
