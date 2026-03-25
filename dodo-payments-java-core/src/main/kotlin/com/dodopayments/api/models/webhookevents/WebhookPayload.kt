@@ -5620,6 +5620,7 @@ private constructor(
             private val disputeStage: JsonField<DisputeStage>,
             private val disputeStatus: JsonField<DisputeStatus>,
             private val paymentId: JsonField<String>,
+            private val isResolvedByRdr: JsonField<Boolean>,
             private val reason: JsonField<String>,
             private val remarks: JsonField<String>,
             private val payloadType: JsonField<PayloadType>,
@@ -5655,6 +5656,9 @@ private constructor(
                 @JsonProperty("payment_id")
                 @ExcludeMissing
                 paymentId: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("is_resolved_by_rdr")
+                @ExcludeMissing
+                isResolvedByRdr: JsonField<Boolean> = JsonMissing.of(),
                 @JsonProperty("reason")
                 @ExcludeMissing
                 reason: JsonField<String> = JsonMissing.of(),
@@ -5674,6 +5678,7 @@ private constructor(
                 disputeStage,
                 disputeStatus,
                 paymentId,
+                isResolvedByRdr,
                 reason,
                 remarks,
                 payloadType,
@@ -5691,6 +5696,7 @@ private constructor(
                     .disputeStage(disputeStage)
                     .disputeStatus(disputeStatus)
                     .paymentId(paymentId)
+                    .isResolvedByRdr(isResolvedByRdr)
                     .reason(reason)
                     .remarks(remarks)
                     .build()
@@ -5775,6 +5781,15 @@ private constructor(
              *   value).
              */
             fun paymentId(): String = paymentId.getRequired("payment_id")
+
+            /**
+             * Whether the dispute was resolved by Rapid Dispute Resolution
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun isResolvedByRdr(): Optional<Boolean> =
+                isResolvedByRdr.getOptional("is_resolved_by_rdr")
 
             /**
              * Reason for the dispute
@@ -5885,6 +5900,16 @@ private constructor(
             fun _paymentId(): JsonField<String> = paymentId
 
             /**
+             * Returns the raw JSON value of [isResolvedByRdr].
+             *
+             * Unlike [isResolvedByRdr], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("is_resolved_by_rdr")
+            @ExcludeMissing
+            fun _isResolvedByRdr(): JsonField<Boolean> = isResolvedByRdr
+
+            /**
              * Returns the raw JSON value of [reason].
              *
              * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
@@ -5954,6 +5979,7 @@ private constructor(
                 private var disputeStage: JsonField<DisputeStage>? = null
                 private var disputeStatus: JsonField<DisputeStatus>? = null
                 private var paymentId: JsonField<String>? = null
+                private var isResolvedByRdr: JsonField<Boolean> = JsonMissing.of()
                 private var reason: JsonField<String> = JsonMissing.of()
                 private var remarks: JsonField<String> = JsonMissing.of()
                 private var payloadType: JsonField<PayloadType>? = null
@@ -5970,6 +5996,7 @@ private constructor(
                     disputeStage = dispute.disputeStage
                     disputeStatus = dispute.disputeStatus
                     paymentId = dispute.paymentId
+                    isResolvedByRdr = dispute.isResolvedByRdr
                     reason = dispute.reason
                     remarks = dispute.remarks
                     payloadType = dispute.payloadType
@@ -6101,6 +6128,35 @@ private constructor(
                  */
                 fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
+                /** Whether the dispute was resolved by Rapid Dispute Resolution */
+                fun isResolvedByRdr(isResolvedByRdr: Boolean?) =
+                    isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
+
+                /**
+                 * Alias for [Builder.isResolvedByRdr].
+                 *
+                 * This unboxed primitive overload exists for backwards compatibility.
+                 */
+                fun isResolvedByRdr(isResolvedByRdr: Boolean) =
+                    isResolvedByRdr(isResolvedByRdr as Boolean?)
+
+                /**
+                 * Alias for calling [Builder.isResolvedByRdr] with `isResolvedByRdr.orElse(null)`.
+                 */
+                fun isResolvedByRdr(isResolvedByRdr: Optional<Boolean>) =
+                    isResolvedByRdr(isResolvedByRdr.getOrNull())
+
+                /**
+                 * Sets [Builder.isResolvedByRdr] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.isResolvedByRdr] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun isResolvedByRdr(isResolvedByRdr: JsonField<Boolean>) = apply {
+                    this.isResolvedByRdr = isResolvedByRdr
+                }
+
                 /** Reason for the dispute */
                 fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
 
@@ -6198,6 +6254,7 @@ private constructor(
                         checkRequired("disputeStage", disputeStage),
                         checkRequired("disputeStatus", disputeStatus),
                         checkRequired("paymentId", paymentId),
+                        isResolvedByRdr,
                         reason,
                         remarks,
                         checkRequired("payloadType", payloadType),
@@ -6221,6 +6278,7 @@ private constructor(
                 disputeStage().validate()
                 disputeStatus().validate()
                 paymentId()
+                isResolvedByRdr()
                 reason()
                 remarks()
                 payloadType().validate()
@@ -6252,6 +6310,7 @@ private constructor(
                     (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
                     (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
+                    (if (isResolvedByRdr.asKnown().isPresent) 1 else 0) +
                     (if (reason.asKnown().isPresent) 1 else 0) +
                     (if (remarks.asKnown().isPresent) 1 else 0) +
                     (payloadType.asKnown().getOrNull()?.validity() ?: 0)
@@ -6398,6 +6457,7 @@ private constructor(
                     disputeStage == other.disputeStage &&
                     disputeStatus == other.disputeStatus &&
                     paymentId == other.paymentId &&
+                    isResolvedByRdr == other.isResolvedByRdr &&
                     reason == other.reason &&
                     remarks == other.remarks &&
                     payloadType == other.payloadType &&
@@ -6415,6 +6475,7 @@ private constructor(
                     disputeStage,
                     disputeStatus,
                     paymentId,
+                    isResolvedByRdr,
                     reason,
                     remarks,
                     payloadType,
@@ -6425,7 +6486,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, reason=$reason, remarks=$remarks, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, reason=$reason, remarks=$remarks, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class LicenseKey
