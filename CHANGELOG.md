@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.92.0 (2026-03-25)
+
+Full Changelog: [v1.87.3...v1.92.0](https://github.com/dodopayments/dodopayments-java/compare/v1.87.3...v1.92.0)
+
+### Features
+
+* **api:** added cancel change plan endpoint ([fb61513](https://github.com/dodopayments/dodopayments-java/commit/fb615132b52a2345345545738dba8054c7283b19))
+* **api:** manual updates ([a3100ef](https://github.com/dodopayments/dodopayments-java/commit/a3100ef8d824a72b7cd26a9ccc3c033154612587))
+* **api:** updated openapi spec to 1.92.1 ([5b26d10](https://github.com/dodopayments/dodopayments-java/commit/5b26d10e070391289248be5fdb9efbf92c6601e6))
+* **api:** updated openapi spec to v1.92.3 ([fd3e229](https://github.com/dodopayments/dodopayments-java/commit/fd3e229c7a9cf108b1c89285e24c7bfb91515dd5))
+
+
+### Chores
+
+* **ci:** skip lint on metadata-only changes ([698587d](https://github.com/dodopayments/dodopayments-java/commit/698587db0d35f610693c5f7619fd2f6212fe00df))
+* **internal:** update gitignore ([21184a0](https://github.com/dodopayments/dodopayments-java/commit/21184a0b58b8b275128118820d21701380a389b3))
+* **tests:** bump steady to v0.19.6 ([c78b0fe](https://github.com/dodopayments/dodopayments-java/commit/c78b0fe737d4a389a023207480d065012ca483eb))
+* **tests:** bump steady to v0.19.7 ([dc813ad](https://github.com/dodopayments/dodopayments-java/commit/dc813adfbd8f8daf9b1ab51533c67f36c866ac7a))
+
 ## 1.87.3 (2026-03-21)
 
 Full Changelog: [v1.87.2...v1.87.3](https://github.com/dodopayments/dodopayments-java/compare/v1.87.2...v1.87.3)
