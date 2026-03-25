@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.invoices.payments.PaymentRetrievePayoutParams
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -57,6 +58,40 @@ interface PaymentServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> =
         retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+
+    fun retrievePayout(payoutId: String): CompletableFuture<HttpResponse> =
+        retrievePayout(payoutId, PaymentRetrievePayoutParams.none())
+
+    /** @see retrievePayout */
+    fun retrievePayout(
+        payoutId: String,
+        params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse> =
+        retrievePayout(params.toBuilder().payoutId(payoutId).build(), requestOptions)
+
+    /** @see retrievePayout */
+    fun retrievePayout(
+        payoutId: String,
+        params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
+    ): CompletableFuture<HttpResponse> = retrievePayout(payoutId, params, RequestOptions.none())
+
+    /** @see retrievePayout */
+    fun retrievePayout(
+        params: PaymentRetrievePayoutParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<HttpResponse>
+
+    /** @see retrievePayout */
+    fun retrievePayout(params: PaymentRetrievePayoutParams): CompletableFuture<HttpResponse> =
+        retrievePayout(params, RequestOptions.none())
+
+    /** @see retrievePayout */
+    fun retrievePayout(
+        payoutId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<HttpResponse> =
+        retrievePayout(payoutId, PaymentRetrievePayoutParams.none(), requestOptions)
 
     fun retrieveRefund(refundId: String): CompletableFuture<HttpResponse> =
         retrieveRefund(refundId, PaymentRetrieveRefundParams.none())
@@ -143,6 +178,44 @@ interface PaymentServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponse> =
             retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /invoices/payouts/{payout_id}`, but is otherwise the
+         * same as [PaymentServiceAsync.retrievePayout].
+         */
+        fun retrievePayout(payoutId: String): CompletableFuture<HttpResponse> =
+            retrievePayout(payoutId, PaymentRetrievePayoutParams.none())
+
+        /** @see retrievePayout */
+        fun retrievePayout(
+            payoutId: String,
+            params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            retrievePayout(params.toBuilder().payoutId(payoutId).build(), requestOptions)
+
+        /** @see retrievePayout */
+        fun retrievePayout(
+            payoutId: String,
+            params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
+        ): CompletableFuture<HttpResponse> = retrievePayout(payoutId, params, RequestOptions.none())
+
+        /** @see retrievePayout */
+        fun retrievePayout(
+            params: PaymentRetrievePayoutParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see retrievePayout */
+        fun retrievePayout(params: PaymentRetrievePayoutParams): CompletableFuture<HttpResponse> =
+            retrievePayout(params, RequestOptions.none())
+
+        /** @see retrievePayout */
+        fun retrievePayout(
+            payoutId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            retrievePayout(payoutId, PaymentRetrievePayoutParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /invoices/refunds/{refund_id}`, but is otherwise the
