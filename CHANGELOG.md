@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.92.1 (2026-03-27)
+
+Full Changelog: [v1.92.0...v1.92.1](https://github.com/dodopayments/dodopayments-java/compare/v1.92.0...v1.92.1)
+
+### Chores
+
+* **internal:** update multipart form array serialization ([c941225](https://github.com/dodopayments/dodopayments-java/commit/c941225e3856390e9185bc81bcd21432142740b2))
+
 ## 1.92.0 (2026-03-25)
 
 Full Changelog: [v1.87.3...v1.92.0](https://github.com/dodopayments/dodopayments-java/compare/v1.87.3...v1.92.0)
