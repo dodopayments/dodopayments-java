@@ -42,6 +42,198 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class UnwrapWebhookEventTest {
 
     @Test
+    fun ofAbandonedCheckoutDetected() {
+        val abandonedCheckoutDetected =
+            AbandonedCheckoutDetectedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    AbandonedCheckoutDetectedWebhookEvent.Data.builder()
+                        .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .abandonmentReason(
+                            AbandonedCheckoutDetectedWebhookEvent.Data.AbandonmentReason
+                                .PAYMENT_FAILED
+                        )
+                        .customerId("customer_id")
+                        .paymentId("payment_id")
+                        .status(AbandonedCheckoutDetectedWebhookEvent.Data.Status.ABANDONED)
+                        .recoveredPaymentId("recovered_payment_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(AbandonedCheckoutDetectedWebhookEvent.Type.ABANDONED_CHECKOUT_DETECTED)
+                .build()
+
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofAbandonedCheckoutDetected(abandonedCheckoutDetected)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected())
+            .contains(abandonedCheckoutDetected)
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofAbandonedCheckoutDetectedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofAbandonedCheckoutDetected(
+                AbandonedCheckoutDetectedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        AbandonedCheckoutDetectedWebhookEvent.Data.builder()
+                            .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .abandonmentReason(
+                                AbandonedCheckoutDetectedWebhookEvent.Data.AbandonmentReason
+                                    .PAYMENT_FAILED
+                            )
+                            .customerId("customer_id")
+                            .paymentId("payment_id")
+                            .status(AbandonedCheckoutDetectedWebhookEvent.Data.Status.ABANDONED)
+                            .recoveredPaymentId("recovered_payment_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(AbandonedCheckoutDetectedWebhookEvent.Type.ABANDONED_CHECKOUT_DETECTED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofAbandonedCheckoutRecovered() {
+        val abandonedCheckoutRecovered =
+            AbandonedCheckoutRecoveredWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
+                        .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .abandonmentReason(
+                            AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
+                                .PAYMENT_FAILED
+                        )
+                        .customerId("customer_id")
+                        .paymentId("payment_id")
+                        .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
+                        .recoveredPaymentId("recovered_payment_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(AbandonedCheckoutRecoveredWebhookEvent.Type.ABANDONED_CHECKOUT_RECOVERED)
+                .build()
+
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofAbandonedCheckoutRecovered(abandonedCheckoutRecovered)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered())
+            .contains(abandonedCheckoutRecovered)
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofAbandonedCheckoutRecoveredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofAbandonedCheckoutRecovered(
+                AbandonedCheckoutRecoveredWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
+                            .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .abandonmentReason(
+                                AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
+                                    .PAYMENT_FAILED
+                            )
+                            .customerId("customer_id")
+                            .paymentId("payment_id")
+                            .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
+                            .recoveredPaymentId("recovered_payment_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(AbandonedCheckoutRecoveredWebhookEvent.Type.ABANDONED_CHECKOUT_RECOVERED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
     fun ofCreditAdded() {
         val creditAdded =
             CreditAddedWebhookEvent.builder()
@@ -72,6 +264,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditAdded(creditAdded)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).contains(creditAdded)
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -87,6 +281,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -168,6 +364,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditBalanceLow(creditBalanceLow)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).contains(creditBalanceLow)
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -183,6 +381,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -264,6 +464,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditDeducted(creditDeducted)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).contains(creditDeducted)
@@ -279,6 +481,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -368,6 +572,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditExpired(creditExpired)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -383,6 +589,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -472,6 +680,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditManualAdjustment(creditManualAdjustment)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -487,6 +697,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -576,6 +788,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditOverageCharged(creditOverageCharged)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -591,6 +805,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -680,6 +896,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditRolledOver(creditRolledOver)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -695,6 +913,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -785,6 +1005,8 @@ internal class UnwrapWebhookEventTest {
         val unwrapWebhookEvent =
             UnwrapWebhookEvent.ofCreditRolloverForfeited(creditRolloverForfeited)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -800,6 +1022,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -883,6 +1107,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeAccepted(disputeAccepted)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -898,6 +1124,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -975,6 +1203,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeCancelled(disputeCancelled)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -990,6 +1220,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1067,6 +1299,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeChallenged(disputeChallenged)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1082,6 +1316,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1159,6 +1395,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeExpired(disputeExpired)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1174,6 +1412,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1251,6 +1491,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeLost(disputeLost)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1266,6 +1508,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).contains(disputeLost)
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1343,6 +1587,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeOpened(disputeOpened)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1358,6 +1604,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).contains(disputeOpened)
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1435,6 +1683,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofDisputeWon(disputeWon)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1450,6 +1700,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).contains(disputeWon)
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1503,6 +1755,182 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
+    fun ofDunningRecovered() {
+        val dunningRecovered =
+            DunningRecoveredWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    DunningRecoveredWebhookEvent.Data.builder()
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .status(DunningRecoveredWebhookEvent.Data.Status.RECOVERING)
+                        .subscriptionId("subscription_id")
+                        .triggerState(DunningRecoveredWebhookEvent.Data.TriggerState.ON_HOLD)
+                        .paymentId("payment_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(DunningRecoveredWebhookEvent.Type.DUNNING_RECOVERED)
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofDunningRecovered(dunningRecovered)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).contains(dunningRecovered)
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofDunningRecoveredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofDunningRecovered(
+                DunningRecoveredWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        DunningRecoveredWebhookEvent.Data.builder()
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .status(DunningRecoveredWebhookEvent.Data.Status.RECOVERING)
+                            .subscriptionId("subscription_id")
+                            .triggerState(DunningRecoveredWebhookEvent.Data.TriggerState.ON_HOLD)
+                            .paymentId("payment_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(DunningRecoveredWebhookEvent.Type.DUNNING_RECOVERED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDunningStarted() {
+        val dunningStarted =
+            DunningStartedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    DunningStartedWebhookEvent.Data.builder()
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .status(DunningStartedWebhookEvent.Data.Status.RECOVERING)
+                        .subscriptionId("subscription_id")
+                        .triggerState(DunningStartedWebhookEvent.Data.TriggerState.ON_HOLD)
+                        .paymentId("payment_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(DunningStartedWebhookEvent.Type.DUNNING_STARTED)
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofDunningStarted(dunningStarted)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).contains(dunningStarted)
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofDunningStartedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofDunningStarted(
+                DunningStartedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        DunningStartedWebhookEvent.Data.builder()
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .status(DunningStartedWebhookEvent.Data.Status.RECOVERING)
+                            .subscriptionId("subscription_id")
+                            .triggerState(DunningStartedWebhookEvent.Data.TriggerState.ON_HOLD)
+                            .paymentId("payment_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(DunningStartedWebhookEvent.Type.DUNNING_STARTED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
     fun ofLicenseKeyCreated() {
         val licenseKeyCreated =
             LicenseKeyCreatedWebhookEvent.builder()
@@ -1529,6 +1957,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofLicenseKeyCreated(licenseKeyCreated)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1544,6 +1974,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).contains(licenseKeyCreated)
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1705,6 +2137,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofPaymentCancelled(paymentCancelled)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1720,6 +2154,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).contains(paymentCancelled)
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1961,6 +2397,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofPaymentFailed(paymentFailed)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -1976,6 +2414,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).contains(paymentFailed)
@@ -2217,6 +2657,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofPaymentProcessing(paymentProcessing)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -2232,6 +2674,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2473,6 +2917,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofPaymentSucceeded(paymentSucceeded)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -2488,6 +2934,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2664,6 +3112,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofRefundFailed(refundFailed)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -2679,6 +3129,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2790,6 +3242,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofRefundSucceeded(refundSucceeded)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -2805,6 +3259,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3004,6 +3460,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionActive(subscriptionActive)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -3019,6 +3477,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3309,6 +3769,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionCancelled(subscriptionCancelled)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -3324,6 +3786,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3614,6 +4078,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionExpired(subscriptionExpired)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -3629,6 +4095,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3919,6 +4387,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionFailed(subscriptionFailed)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -3934,6 +4404,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4224,6 +4696,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionOnHold(subscriptionOnHold)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -4239,6 +4713,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4530,6 +5006,8 @@ internal class UnwrapWebhookEventTest {
         val unwrapWebhookEvent =
             UnwrapWebhookEvent.ofSubscriptionPlanChanged(subscriptionPlanChanged)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -4545,6 +5023,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4835,6 +5315,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionRenewed(subscriptionRenewed)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -4850,6 +5332,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5140,6 +5624,8 @@ internal class UnwrapWebhookEventTest {
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofSubscriptionUpdated(subscriptionUpdated)
 
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
         assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
         assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
@@ -5155,6 +5641,8 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
         assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
