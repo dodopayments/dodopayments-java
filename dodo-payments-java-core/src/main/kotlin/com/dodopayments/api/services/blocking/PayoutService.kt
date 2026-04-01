@@ -7,6 +7,7 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.payouts.PayoutListPage
 import com.dodopayments.api.models.payouts.PayoutListParams
+import com.dodopayments.api.services.blocking.payouts.BreakupService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -23,6 +24,8 @@ interface PayoutService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutService
+
+    fun breakup(): BreakupService
 
     fun list(): PayoutListPage = list(PayoutListParams.none())
 
@@ -49,6 +52,8 @@ interface PayoutService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutService.WithRawResponse
+
+        fun breakup(): BreakupService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /payouts`, but is otherwise the same as

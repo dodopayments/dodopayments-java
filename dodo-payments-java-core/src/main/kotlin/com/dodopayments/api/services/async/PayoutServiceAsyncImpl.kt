@@ -17,6 +17,8 @@ import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.payouts.PayoutListPageAsync
 import com.dodopayments.api.models.payouts.PayoutListPageResponse
 import com.dodopayments.api.models.payouts.PayoutListParams
+import com.dodopayments.api.services.async.payouts.BreakupServiceAsync
+import com.dodopayments.api.services.async.payouts.BreakupServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -27,10 +29,14 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
         WithRawResponseImpl(clientOptions)
     }
 
+    private val breakup: BreakupServiceAsync by lazy { BreakupServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): PayoutServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync =
         PayoutServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun breakup(): BreakupServiceAsync = breakup
 
     override fun list(
         params: PayoutListParams,
@@ -45,12 +51,18 @@ class PayoutServiceAsyncImpl internal constructor(private val clientOptions: Cli
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val breakup: BreakupServiceAsync.WithRawResponse by lazy {
+            BreakupServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): PayoutServiceAsync.WithRawResponse =
             PayoutServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun breakup(): BreakupServiceAsync.WithRawResponse = breakup
 
         private val listHandler: Handler<PayoutListPageResponse> =
             jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)

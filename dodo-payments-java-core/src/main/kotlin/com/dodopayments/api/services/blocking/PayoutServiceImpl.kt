@@ -17,6 +17,8 @@ import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.payouts.PayoutListPage
 import com.dodopayments.api.models.payouts.PayoutListPageResponse
 import com.dodopayments.api.models.payouts.PayoutListParams
+import com.dodopayments.api.services.blocking.payouts.BreakupService
+import com.dodopayments.api.services.blocking.payouts.BreakupServiceImpl
 import java.util.function.Consumer
 
 class PayoutServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -26,10 +28,14 @@ class PayoutServiceImpl internal constructor(private val clientOptions: ClientOp
         WithRawResponseImpl(clientOptions)
     }
 
+    private val breakup: BreakupService by lazy { BreakupServiceImpl(clientOptions) }
+
     override fun withRawResponse(): PayoutService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutService =
         PayoutServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun breakup(): BreakupService = breakup
 
     override fun list(params: PayoutListParams, requestOptions: RequestOptions): PayoutListPage =
         // get /payouts
@@ -41,12 +47,18 @@ class PayoutServiceImpl internal constructor(private val clientOptions: ClientOp
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
+        private val breakup: BreakupService.WithRawResponse by lazy {
+            BreakupServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): PayoutService.WithRawResponse =
             PayoutServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun breakup(): BreakupService.WithRawResponse = breakup
 
         private val listHandler: Handler<PayoutListPageResponse> =
             jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)
