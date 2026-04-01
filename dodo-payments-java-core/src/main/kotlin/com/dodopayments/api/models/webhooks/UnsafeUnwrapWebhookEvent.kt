@@ -22,6 +22,8 @@ import java.util.Optional
 @JsonSerialize(using = UnsafeUnwrapWebhookEvent.Serializer::class)
 class UnsafeUnwrapWebhookEvent
 private constructor(
+    private val abandonedCheckoutDetected: AbandonedCheckoutDetectedWebhookEvent? = null,
+    private val abandonedCheckoutRecovered: AbandonedCheckoutRecoveredWebhookEvent? = null,
     private val creditAdded: CreditAddedWebhookEvent? = null,
     private val creditBalanceLow: CreditBalanceLowWebhookEvent? = null,
     private val creditDeducted: CreditDeductedWebhookEvent? = null,
@@ -37,6 +39,8 @@ private constructor(
     private val disputeLost: DisputeLostWebhookEvent? = null,
     private val disputeOpened: DisputeOpenedWebhookEvent? = null,
     private val disputeWon: DisputeWonWebhookEvent? = null,
+    private val dunningRecovered: DunningRecoveredWebhookEvent? = null,
+    private val dunningStarted: DunningStartedWebhookEvent? = null,
     private val licenseKeyCreated: LicenseKeyCreatedWebhookEvent? = null,
     private val paymentCancelled: PaymentCancelledWebhookEvent? = null,
     private val paymentFailed: PaymentFailedWebhookEvent? = null,
@@ -54,6 +58,12 @@ private constructor(
     private val subscriptionUpdated: SubscriptionUpdatedWebhookEvent? = null,
     private val _json: JsonValue? = null,
 ) {
+
+    fun abandonedCheckoutDetected(): Optional<AbandonedCheckoutDetectedWebhookEvent> =
+        Optional.ofNullable(abandonedCheckoutDetected)
+
+    fun abandonedCheckoutRecovered(): Optional<AbandonedCheckoutRecoveredWebhookEvent> =
+        Optional.ofNullable(abandonedCheckoutRecovered)
 
     fun creditAdded(): Optional<CreditAddedWebhookEvent> = Optional.ofNullable(creditAdded)
 
@@ -92,6 +102,11 @@ private constructor(
     fun disputeOpened(): Optional<DisputeOpenedWebhookEvent> = Optional.ofNullable(disputeOpened)
 
     fun disputeWon(): Optional<DisputeWonWebhookEvent> = Optional.ofNullable(disputeWon)
+
+    fun dunningRecovered(): Optional<DunningRecoveredWebhookEvent> =
+        Optional.ofNullable(dunningRecovered)
+
+    fun dunningStarted(): Optional<DunningStartedWebhookEvent> = Optional.ofNullable(dunningStarted)
 
     fun licenseKeyCreated(): Optional<LicenseKeyCreatedWebhookEvent> =
         Optional.ofNullable(licenseKeyCreated)
@@ -136,6 +151,10 @@ private constructor(
     fun subscriptionUpdated(): Optional<SubscriptionUpdatedWebhookEvent> =
         Optional.ofNullable(subscriptionUpdated)
 
+    fun isAbandonedCheckoutDetected(): Boolean = abandonedCheckoutDetected != null
+
+    fun isAbandonedCheckoutRecovered(): Boolean = abandonedCheckoutRecovered != null
+
     fun isCreditAdded(): Boolean = creditAdded != null
 
     fun isCreditBalanceLow(): Boolean = creditBalanceLow != null
@@ -166,6 +185,10 @@ private constructor(
 
     fun isDisputeWon(): Boolean = disputeWon != null
 
+    fun isDunningRecovered(): Boolean = dunningRecovered != null
+
+    fun isDunningStarted(): Boolean = dunningStarted != null
+
     fun isLicenseKeyCreated(): Boolean = licenseKeyCreated != null
 
     fun isPaymentCancelled(): Boolean = paymentCancelled != null
@@ -195,6 +218,12 @@ private constructor(
     fun isSubscriptionRenewed(): Boolean = subscriptionRenewed != null
 
     fun isSubscriptionUpdated(): Boolean = subscriptionUpdated != null
+
+    fun asAbandonedCheckoutDetected(): AbandonedCheckoutDetectedWebhookEvent =
+        abandonedCheckoutDetected.getOrThrow("abandonedCheckoutDetected")
+
+    fun asAbandonedCheckoutRecovered(): AbandonedCheckoutRecoveredWebhookEvent =
+        abandonedCheckoutRecovered.getOrThrow("abandonedCheckoutRecovered")
 
     fun asCreditAdded(): CreditAddedWebhookEvent = creditAdded.getOrThrow("creditAdded")
 
@@ -233,6 +262,11 @@ private constructor(
     fun asDisputeOpened(): DisputeOpenedWebhookEvent = disputeOpened.getOrThrow("disputeOpened")
 
     fun asDisputeWon(): DisputeWonWebhookEvent = disputeWon.getOrThrow("disputeWon")
+
+    fun asDunningRecovered(): DunningRecoveredWebhookEvent =
+        dunningRecovered.getOrThrow("dunningRecovered")
+
+    fun asDunningStarted(): DunningStartedWebhookEvent = dunningStarted.getOrThrow("dunningStarted")
 
     fun asLicenseKeyCreated(): LicenseKeyCreatedWebhookEvent =
         licenseKeyCreated.getOrThrow("licenseKeyCreated")
@@ -281,6 +315,10 @@ private constructor(
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
+            abandonedCheckoutDetected != null ->
+                visitor.visitAbandonedCheckoutDetected(abandonedCheckoutDetected)
+            abandonedCheckoutRecovered != null ->
+                visitor.visitAbandonedCheckoutRecovered(abandonedCheckoutRecovered)
             creditAdded != null -> visitor.visitCreditAdded(creditAdded)
             creditBalanceLow != null -> visitor.visitCreditBalanceLow(creditBalanceLow)
             creditDeducted != null -> visitor.visitCreditDeducted(creditDeducted)
@@ -298,6 +336,8 @@ private constructor(
             disputeLost != null -> visitor.visitDisputeLost(disputeLost)
             disputeOpened != null -> visitor.visitDisputeOpened(disputeOpened)
             disputeWon != null -> visitor.visitDisputeWon(disputeWon)
+            dunningRecovered != null -> visitor.visitDunningRecovered(dunningRecovered)
+            dunningStarted != null -> visitor.visitDunningStarted(dunningStarted)
             licenseKeyCreated != null -> visitor.visitLicenseKeyCreated(licenseKeyCreated)
             paymentCancelled != null -> visitor.visitPaymentCancelled(paymentCancelled)
             paymentFailed != null -> visitor.visitPaymentFailed(paymentFailed)
@@ -327,6 +367,18 @@ private constructor(
 
         accept(
             object : Visitor<Unit> {
+                override fun visitAbandonedCheckoutDetected(
+                    abandonedCheckoutDetected: AbandonedCheckoutDetectedWebhookEvent
+                ) {
+                    abandonedCheckoutDetected.validate()
+                }
+
+                override fun visitAbandonedCheckoutRecovered(
+                    abandonedCheckoutRecovered: AbandonedCheckoutRecoveredWebhookEvent
+                ) {
+                    abandonedCheckoutRecovered.validate()
+                }
+
                 override fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent) {
                     creditAdded.validate()
                 }
@@ -393,6 +445,14 @@ private constructor(
 
                 override fun visitDisputeWon(disputeWon: DisputeWonWebhookEvent) {
                     disputeWon.validate()
+                }
+
+                override fun visitDunningRecovered(dunningRecovered: DunningRecoveredWebhookEvent) {
+                    dunningRecovered.validate()
+                }
+
+                override fun visitDunningStarted(dunningStarted: DunningStartedWebhookEvent) {
+                    dunningStarted.validate()
                 }
 
                 override fun visitLicenseKeyCreated(
@@ -496,6 +556,14 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
+                override fun visitAbandonedCheckoutDetected(
+                    abandonedCheckoutDetected: AbandonedCheckoutDetectedWebhookEvent
+                ) = abandonedCheckoutDetected.validity()
+
+                override fun visitAbandonedCheckoutRecovered(
+                    abandonedCheckoutRecovered: AbandonedCheckoutRecoveredWebhookEvent
+                ) = abandonedCheckoutRecovered.validity()
+
                 override fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent) =
                     creditAdded.validity()
 
@@ -544,6 +612,12 @@ private constructor(
 
                 override fun visitDisputeWon(disputeWon: DisputeWonWebhookEvent) =
                     disputeWon.validity()
+
+                override fun visitDunningRecovered(dunningRecovered: DunningRecoveredWebhookEvent) =
+                    dunningRecovered.validity()
+
+                override fun visitDunningStarted(dunningStarted: DunningStartedWebhookEvent) =
+                    dunningStarted.validity()
 
                 override fun visitLicenseKeyCreated(
                     licenseKeyCreated: LicenseKeyCreatedWebhookEvent
@@ -610,6 +684,8 @@ private constructor(
         }
 
         return other is UnsafeUnwrapWebhookEvent &&
+            abandonedCheckoutDetected == other.abandonedCheckoutDetected &&
+            abandonedCheckoutRecovered == other.abandonedCheckoutRecovered &&
             creditAdded == other.creditAdded &&
             creditBalanceLow == other.creditBalanceLow &&
             creditDeducted == other.creditDeducted &&
@@ -625,6 +701,8 @@ private constructor(
             disputeLost == other.disputeLost &&
             disputeOpened == other.disputeOpened &&
             disputeWon == other.disputeWon &&
+            dunningRecovered == other.dunningRecovered &&
+            dunningStarted == other.dunningStarted &&
             licenseKeyCreated == other.licenseKeyCreated &&
             paymentCancelled == other.paymentCancelled &&
             paymentFailed == other.paymentFailed &&
@@ -644,6 +722,8 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            abandonedCheckoutDetected,
+            abandonedCheckoutRecovered,
             creditAdded,
             creditBalanceLow,
             creditDeducted,
@@ -659,6 +739,8 @@ private constructor(
             disputeLost,
             disputeOpened,
             disputeWon,
+            dunningRecovered,
+            dunningStarted,
             licenseKeyCreated,
             paymentCancelled,
             paymentFailed,
@@ -678,6 +760,10 @@ private constructor(
 
     override fun toString(): String =
         when {
+            abandonedCheckoutDetected != null ->
+                "UnsafeUnwrapWebhookEvent{abandonedCheckoutDetected=$abandonedCheckoutDetected}"
+            abandonedCheckoutRecovered != null ->
+                "UnsafeUnwrapWebhookEvent{abandonedCheckoutRecovered=$abandonedCheckoutRecovered}"
             creditAdded != null -> "UnsafeUnwrapWebhookEvent{creditAdded=$creditAdded}"
             creditBalanceLow != null ->
                 "UnsafeUnwrapWebhookEvent{creditBalanceLow=$creditBalanceLow}"
@@ -700,6 +786,9 @@ private constructor(
             disputeLost != null -> "UnsafeUnwrapWebhookEvent{disputeLost=$disputeLost}"
             disputeOpened != null -> "UnsafeUnwrapWebhookEvent{disputeOpened=$disputeOpened}"
             disputeWon != null -> "UnsafeUnwrapWebhookEvent{disputeWon=$disputeWon}"
+            dunningRecovered != null ->
+                "UnsafeUnwrapWebhookEvent{dunningRecovered=$dunningRecovered}"
+            dunningStarted != null -> "UnsafeUnwrapWebhookEvent{dunningStarted=$dunningStarted}"
             licenseKeyCreated != null ->
                 "UnsafeUnwrapWebhookEvent{licenseKeyCreated=$licenseKeyCreated}"
             paymentCancelled != null ->
@@ -732,6 +821,16 @@ private constructor(
         }
 
     companion object {
+
+        @JvmStatic
+        fun ofAbandonedCheckoutDetected(
+            abandonedCheckoutDetected: AbandonedCheckoutDetectedWebhookEvent
+        ) = UnsafeUnwrapWebhookEvent(abandonedCheckoutDetected = abandonedCheckoutDetected)
+
+        @JvmStatic
+        fun ofAbandonedCheckoutRecovered(
+            abandonedCheckoutRecovered: AbandonedCheckoutRecoveredWebhookEvent
+        ) = UnsafeUnwrapWebhookEvent(abandonedCheckoutRecovered = abandonedCheckoutRecovered)
 
         @JvmStatic
         fun ofCreditAdded(creditAdded: CreditAddedWebhookEvent) =
@@ -793,6 +892,14 @@ private constructor(
         @JvmStatic
         fun ofDisputeWon(disputeWon: DisputeWonWebhookEvent) =
             UnsafeUnwrapWebhookEvent(disputeWon = disputeWon)
+
+        @JvmStatic
+        fun ofDunningRecovered(dunningRecovered: DunningRecoveredWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(dunningRecovered = dunningRecovered)
+
+        @JvmStatic
+        fun ofDunningStarted(dunningStarted: DunningStartedWebhookEvent) =
+            UnsafeUnwrapWebhookEvent(dunningStarted = dunningStarted)
 
         @JvmStatic
         fun ofLicenseKeyCreated(licenseKeyCreated: LicenseKeyCreatedWebhookEvent) =
@@ -862,6 +969,14 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        fun visitAbandonedCheckoutDetected(
+            abandonedCheckoutDetected: AbandonedCheckoutDetectedWebhookEvent
+        ): T
+
+        fun visitAbandonedCheckoutRecovered(
+            abandonedCheckoutRecovered: AbandonedCheckoutRecoveredWebhookEvent
+        ): T
+
         fun visitCreditAdded(creditAdded: CreditAddedWebhookEvent): T
 
         fun visitCreditBalanceLow(creditBalanceLow: CreditBalanceLowWebhookEvent): T
@@ -895,6 +1010,10 @@ private constructor(
         fun visitDisputeOpened(disputeOpened: DisputeOpenedWebhookEvent): T
 
         fun visitDisputeWon(disputeWon: DisputeWonWebhookEvent): T
+
+        fun visitDunningRecovered(dunningRecovered: DunningRecoveredWebhookEvent): T
+
+        fun visitDunningStarted(dunningStarted: DunningStartedWebhookEvent): T
 
         fun visitLicenseKeyCreated(licenseKeyCreated: LicenseKeyCreatedWebhookEvent): T
 
@@ -951,6 +1070,26 @@ private constructor(
 
             val bestMatches =
                 sequenceOf(
+                        tryDeserialize(
+                                node,
+                                jacksonTypeRef<AbandonedCheckoutDetectedWebhookEvent>(),
+                            )
+                            ?.let {
+                                UnsafeUnwrapWebhookEvent(
+                                    abandonedCheckoutDetected = it,
+                                    _json = json,
+                                )
+                            },
+                        tryDeserialize(
+                                node,
+                                jacksonTypeRef<AbandonedCheckoutRecoveredWebhookEvent>(),
+                            )
+                            ?.let {
+                                UnsafeUnwrapWebhookEvent(
+                                    abandonedCheckoutRecovered = it,
+                                    _json = json,
+                                )
+                            },
                         tryDeserialize(node, jacksonTypeRef<CreditAddedWebhookEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(creditAdded = it, _json = json)
                         },
@@ -998,6 +1137,12 @@ private constructor(
                         },
                         tryDeserialize(node, jacksonTypeRef<DisputeWonWebhookEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(disputeWon = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DunningRecoveredWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(dunningRecovered = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DunningStartedWebhookEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(dunningStarted = it, _json = json)
                         },
                         tryDeserialize(node, jacksonTypeRef<LicenseKeyCreatedWebhookEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(licenseKeyCreated = it, _json = json)
@@ -1077,6 +1222,10 @@ private constructor(
             provider: SerializerProvider,
         ) {
             when {
+                value.abandonedCheckoutDetected != null ->
+                    generator.writeObject(value.abandonedCheckoutDetected)
+                value.abandonedCheckoutRecovered != null ->
+                    generator.writeObject(value.abandonedCheckoutRecovered)
                 value.creditAdded != null -> generator.writeObject(value.creditAdded)
                 value.creditBalanceLow != null -> generator.writeObject(value.creditBalanceLow)
                 value.creditDeducted != null -> generator.writeObject(value.creditDeducted)
@@ -1095,6 +1244,8 @@ private constructor(
                 value.disputeLost != null -> generator.writeObject(value.disputeLost)
                 value.disputeOpened != null -> generator.writeObject(value.disputeOpened)
                 value.disputeWon != null -> generator.writeObject(value.disputeWon)
+                value.dunningRecovered != null -> generator.writeObject(value.dunningRecovered)
+                value.dunningStarted != null -> generator.writeObject(value.dunningStarted)
                 value.licenseKeyCreated != null -> generator.writeObject(value.licenseKeyCreated)
                 value.paymentCancelled != null -> generator.writeObject(value.paymentCancelled)
                 value.paymentFailed != null -> generator.writeObject(value.paymentFailed)

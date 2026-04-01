@@ -131,6 +131,7 @@ internal class SubscriptionServiceAsyncTest {
                             .build()
                     )
                     .cancelAtNextBillingDate(true)
+                    .cancelReason(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
                     .addCreditEntitlementCart(
                         SubscriptionUpdateParams.CreditEntitlementCart.builder()
                             .creditEntitlementId("credit_entitlement_id")
