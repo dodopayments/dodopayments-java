@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.93.0 (2026-04-01)
+
+Full Changelog: [v1.92.1...v1.93.0](https://github.com/dodopayments/dodopayments-java/compare/v1.92.1...v1.93.0)
+
+### Features
+
+* **api:** updated openapi spec to v1.93.0 ([cdf6555](https://github.com/dodopayments/dodopayments-java/commit/cdf65555e368517dc6f792dc9ef54e50dee12bf7))
+
+
+### Chores
+
+* **tests:** bump steady to v0.20.1 ([f67795b](https://github.com/dodopayments/dodopayments-java/commit/f67795bdbd89292f7aa220efd550b119032ea92e))
+* **tests:** bump steady to v0.20.2 ([310482f](https://github.com/dodopayments/dodopayments-java/commit/310482fd9954a7d3ef7d449df6dcb763b985a750))
+
 ## 1.92.1 (2026-03-27)
 
 Full Changelog: [v1.92.0...v1.92.1](https://github.com/dodopayments/dodopayments-java/compare/v1.92.0...v1.92.1)
