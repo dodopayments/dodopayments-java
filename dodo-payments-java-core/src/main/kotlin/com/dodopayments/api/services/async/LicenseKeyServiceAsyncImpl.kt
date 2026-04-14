@@ -17,6 +17,7 @@ import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyCreateParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyListPageAsync
 import com.dodopayments.api.models.licensekeys.LicenseKeyListPageResponse
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
@@ -38,6 +39,14 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync =
         LicenseKeyServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    override fun create(
+        params: LicenseKeyCreateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<LicenseKey> =
+        // post /license_keys
+        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+
+    @Deprecated("deprecated")
     override fun retrieve(
         params: LicenseKeyRetrieveParams,
         requestOptions: RequestOptions,
@@ -45,6 +54,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
         // get /license_keys/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun update(
         params: LicenseKeyUpdateParams,
         requestOptions: RequestOptions,
@@ -52,6 +62,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
         // patch /license_keys/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun list(
         params: LicenseKeyListParams,
         requestOptions: RequestOptions,
@@ -72,9 +83,41 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
+        private val createHandler: Handler<LicenseKey> =
+            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
+
+        override fun create(
+            params: LicenseKeyCreateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<LicenseKey>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("license_keys")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { createHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
         private val retrieveHandler: Handler<LicenseKey> =
             jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun retrieve(
             params: LicenseKeyRetrieveParams,
             requestOptions: RequestOptions,
@@ -108,6 +151,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
         private val updateHandler: Handler<LicenseKey> =
             jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun update(
             params: LicenseKeyUpdateParams,
             requestOptions: RequestOptions,
@@ -142,6 +186,7 @@ class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions:
         private val listHandler: Handler<LicenseKeyListPageResponse> =
             jsonHandler<LicenseKeyListPageResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun list(
             params: LicenseKeyListParams,
             requestOptions: RequestOptions,

@@ -15,6 +15,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+@Deprecated("deprecated")
 class LicenseKeyListParams
 private constructor(
     private val createdAtGte: OffsetDateTime?,
@@ -23,6 +24,7 @@ private constructor(
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val productId: String?,
+    private val source: Source?,
     private val status: Status?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -45,6 +47,9 @@ private constructor(
 
     /** Filter by product ID */
     fun productId(): Optional<String> = Optional.ofNullable(productId)
+
+    /** Filter by license key source */
+    fun source(): Optional<Source> = Optional.ofNullable(source)
 
     /** Filter by license key status */
     fun status(): Optional<Status> = Optional.ofNullable(status)
@@ -74,6 +79,7 @@ private constructor(
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var productId: String? = null
+        private var source: Source? = null
         private var status: Status? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -86,6 +92,7 @@ private constructor(
             pageNumber = licenseKeyListParams.pageNumber
             pageSize = licenseKeyListParams.pageSize
             productId = licenseKeyListParams.productId
+            source = licenseKeyListParams.source
             status = licenseKeyListParams.status
             additionalHeaders = licenseKeyListParams.additionalHeaders.toBuilder()
             additionalQueryParams = licenseKeyListParams.additionalQueryParams.toBuilder()
@@ -142,6 +149,12 @@ private constructor(
 
         /** Alias for calling [Builder.productId] with `productId.orElse(null)`. */
         fun productId(productId: Optional<String>) = productId(productId.getOrNull())
+
+        /** Filter by license key source */
+        fun source(source: Source?) = apply { this.source = source }
+
+        /** Alias for calling [Builder.source] with `source.orElse(null)`. */
+        fun source(source: Optional<Source>) = source(source.getOrNull())
 
         /** Filter by license key status */
         fun status(status: Status?) = apply { this.status = status }
@@ -260,6 +273,7 @@ private constructor(
                 pageNumber,
                 pageSize,
                 productId,
+                source,
                 status,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -281,10 +295,139 @@ private constructor(
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 productId?.let { put("product_id", it) }
+                source?.let { put("source", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** Filter by license key source */
+    class Source @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val AUTO = of("auto")
+
+            @JvmField val IMPORT = of("import")
+
+            @JvmStatic fun of(value: String) = Source(JsonField.of(value))
+        }
+
+        /** An enum containing [Source]'s known values. */
+        enum class Known {
+            AUTO,
+            IMPORT,
+        }
+
+        /**
+         * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Source] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            AUTO,
+            IMPORT,
+            /** An enum member indicating that [Source] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                AUTO -> Value.AUTO
+                IMPORT -> Value.IMPORT
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                AUTO -> Known.AUTO
+                IMPORT -> Known.IMPORT
+                else -> throw DodoPaymentsInvalidDataException("Unknown Source: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                DodoPaymentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        fun validate(): Source = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Source && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /** Filter by license key status */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -432,6 +575,7 @@ private constructor(
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             productId == other.productId &&
+            source == other.source &&
             status == other.status &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -445,11 +589,12 @@ private constructor(
             pageNumber,
             pageSize,
             productId,
+            source,
             status,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "LicenseKeyListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "LicenseKeyListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, source=$source, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
