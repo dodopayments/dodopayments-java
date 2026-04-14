@@ -11,6 +11,7 @@ import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see LicenseKeyService.list */
+@Deprecated("deprecated")
 class LicenseKeyListPage
 private constructor(
     private val service: LicenseKeyService,

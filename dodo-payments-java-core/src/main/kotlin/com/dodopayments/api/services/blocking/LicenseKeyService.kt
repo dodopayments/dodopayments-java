@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyCreateParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyListPage
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
@@ -27,9 +28,19 @@ interface LicenseKeyService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyService
 
+    fun create(params: LicenseKeyCreateParams): LicenseKey = create(params, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        params: LicenseKeyCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): LicenseKey
+
+    @Deprecated("deprecated")
     fun retrieve(id: String): LicenseKey = retrieve(id, LicenseKeyRetrieveParams.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         id: String,
         params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
@@ -37,28 +48,34 @@ interface LicenseKeyService {
     ): LicenseKey = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         id: String,
         params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
     ): LicenseKey = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         params: LicenseKeyRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKey
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(params: LicenseKeyRetrieveParams): LicenseKey =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(id: String, requestOptions: RequestOptions): LicenseKey =
         retrieve(id, LicenseKeyRetrieveParams.none(), requestOptions)
 
+    @Deprecated("deprecated")
     fun update(id: String): LicenseKey = update(id, LicenseKeyUpdateParams.none())
 
     /** @see update */
+    @Deprecated("deprecated")
     fun update(
         id: String,
         params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
@@ -66,37 +83,44 @@ interface LicenseKeyService {
     ): LicenseKey = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
+    @Deprecated("deprecated")
     fun update(
         id: String,
         params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
     ): LicenseKey = update(id, params, RequestOptions.none())
 
     /** @see update */
+    @Deprecated("deprecated")
     fun update(
         params: LicenseKeyUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKey
 
     /** @see update */
+    @Deprecated("deprecated")
     fun update(params: LicenseKeyUpdateParams): LicenseKey = update(params, RequestOptions.none())
 
     /** @see update */
+    @Deprecated("deprecated")
     fun update(id: String, requestOptions: RequestOptions): LicenseKey =
         update(id, LicenseKeyUpdateParams.none(), requestOptions)
 
-    fun list(): LicenseKeyListPage = list(LicenseKeyListParams.none())
+    @Deprecated("deprecated") fun list(): LicenseKeyListPage = list(LicenseKeyListParams.none())
 
     /** @see list */
+    @Deprecated("deprecated")
     fun list(
         params: LicenseKeyListParams = LicenseKeyListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): LicenseKeyListPage
 
     /** @see list */
+    @Deprecated("deprecated")
     fun list(params: LicenseKeyListParams = LicenseKeyListParams.none()): LicenseKeyListPage =
         list(params, RequestOptions.none())
 
     /** @see list */
+    @Deprecated("deprecated")
     fun list(requestOptions: RequestOptions): LicenseKeyListPage =
         list(LicenseKeyListParams.none(), requestOptions)
 
@@ -113,14 +137,31 @@ interface LicenseKeyService {
         ): LicenseKeyService.WithRawResponse
 
         /**
+         * Returns a raw HTTP response for `post /license_keys`, but is otherwise the same as
+         * [LicenseKeyService.create].
+         */
+        @MustBeClosed
+        fun create(params: LicenseKeyCreateParams): HttpResponseFor<LicenseKey> =
+            create(params, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            params: LicenseKeyCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<LicenseKey>
+
+        /**
          * Returns a raw HTTP response for `get /license_keys/{id}`, but is otherwise the same as
          * [LicenseKeyService.retrieve].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(id: String): HttpResponseFor<LicenseKey> =
             retrieve(id, LicenseKeyRetrieveParams.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -129,6 +170,7 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             id: String,
@@ -136,6 +178,7 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             params: LicenseKeyRetrieveParams,
@@ -143,11 +186,13 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey>
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(params: LicenseKeyRetrieveParams): HttpResponseFor<LicenseKey> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<LicenseKey> =
             retrieve(id, LicenseKeyRetrieveParams.none(), requestOptions)
@@ -156,11 +201,13 @@ interface LicenseKeyService {
          * Returns a raw HTTP response for `patch /license_keys/{id}`, but is otherwise the same as
          * [LicenseKeyService.update].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(id: String): HttpResponseFor<LicenseKey> =
             update(id, LicenseKeyUpdateParams.none())
 
         /** @see update */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(
             id: String,
@@ -169,6 +216,7 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey> = update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(
             id: String,
@@ -176,6 +224,7 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey> = update(id, params, RequestOptions.none())
 
         /** @see update */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(
             params: LicenseKeyUpdateParams,
@@ -183,11 +232,13 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKey>
 
         /** @see update */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(params: LicenseKeyUpdateParams): HttpResponseFor<LicenseKey> =
             update(params, RequestOptions.none())
 
         /** @see update */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun update(id: String, requestOptions: RequestOptions): HttpResponseFor<LicenseKey> =
             update(id, LicenseKeyUpdateParams.none(), requestOptions)
@@ -196,10 +247,12 @@ interface LicenseKeyService {
          * Returns a raw HTTP response for `get /license_keys`, but is otherwise the same as
          * [LicenseKeyService.list].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(): HttpResponseFor<LicenseKeyListPage> = list(LicenseKeyListParams.none())
 
         /** @see list */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(
             params: LicenseKeyListParams = LicenseKeyListParams.none(),
@@ -207,12 +260,14 @@ interface LicenseKeyService {
         ): HttpResponseFor<LicenseKeyListPage>
 
         /** @see list */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(
             params: LicenseKeyListParams = LicenseKeyListParams.none()
         ): HttpResponseFor<LicenseKeyListPage> = list(params, RequestOptions.none())
 
         /** @see list */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<LicenseKeyListPage> =
             list(LicenseKeyListParams.none(), requestOptions)
