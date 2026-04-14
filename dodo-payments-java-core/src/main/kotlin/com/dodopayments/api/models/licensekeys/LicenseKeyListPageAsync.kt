@@ -13,6 +13,7 @@ import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see LicenseKeyServiceAsync.list */
+@Deprecated("deprecated")
 class LicenseKeyListPageAsync
 private constructor(
     private val service: LicenseKeyServiceAsync,
