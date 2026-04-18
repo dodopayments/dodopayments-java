@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.95.1 (2026-04-18)
+
+Full Changelog: [v1.95.0...v1.95.1](https://github.com/dodopayments/dodopayments-java/compare/v1.95.0...v1.95.1)
+
+### Chores
+
+* **tests:** bump steady to v0.22.1 ([923ba95](https://github.com/dodopayments/dodopayments-java/commit/923ba95c45f1ef3cf592ed94b9bffe71fca6f4f1))
+
 ## 1.95.0 (2026-04-14)
 
 Full Changelog: [v1.94.0...v1.95.0](https://github.com/dodopayments/dodopayments-java/compare/v1.94.0...v1.95.0)
