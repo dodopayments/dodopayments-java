@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.96.0 (2026-04-28)
+
+Full Changelog: [v1.95.1...v1.96.0](https://github.com/dodopayments/dodopayments-java/compare/v1.95.1...v1.96.0)
+
+### Features
+
+* support setting headers via env ([f144082](https://github.com/dodopayments/dodopayments-java/commit/f144082b21a0d1c3ff78c758e771a0e2cbaaa472))
+
 ## 1.95.1 (2026-04-18)
 
 Full Changelog: [v1.95.0...v1.95.1](https://github.com/dodopayments/dodopayments-java/compare/v1.95.0...v1.95.1)
