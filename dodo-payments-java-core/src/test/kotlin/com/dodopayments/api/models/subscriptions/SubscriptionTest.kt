@@ -109,7 +109,7 @@ internal class SubscriptionTest {
                 .taxInclusive(true)
                 .trialPeriodDays(0)
                 .cancellationComment("cancellation_comment")
-                .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addCustomFieldResponse(
                     CustomFieldResponse.builder().key("key").value("value").build()
@@ -119,10 +119,10 @@ internal class SubscriptionTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentMethodId("payment_method_id")
                 .scheduledChange(
-                    Subscription.ScheduledChange.builder()
+                    ScheduledPlanChange.builder()
                         .id("id")
                         .addAddon(
-                            Subscription.ScheduledChange.Addon.builder()
+                            ScheduledPlanChange.Addon.builder()
                                 .addonId("addon_id")
                                 .name("name")
                                 .quantity(0)
@@ -238,8 +238,7 @@ internal class SubscriptionTest {
         assertThat(subscription.taxInclusive()).isEqualTo(true)
         assertThat(subscription.trialPeriodDays()).isEqualTo(0)
         assertThat(subscription.cancellationComment()).contains("cancellation_comment")
-        assertThat(subscription.cancellationFeedback())
-            .contains(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+        assertThat(subscription.cancellationFeedback()).contains(CancellationFeedback.TOO_EXPENSIVE)
         assertThat(subscription.cancelledAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(subscription.customFieldResponses().getOrNull())
@@ -251,10 +250,10 @@ internal class SubscriptionTest {
         assertThat(subscription.paymentMethodId()).contains("payment_method_id")
         assertThat(subscription.scheduledChange())
             .contains(
-                Subscription.ScheduledChange.builder()
+                ScheduledPlanChange.builder()
                     .id("id")
                     .addAddon(
-                        Subscription.ScheduledChange.Addon.builder()
+                        ScheduledPlanChange.Addon.builder()
                             .addonId("addon_id")
                             .name("name")
                             .quantity(0)
@@ -363,7 +362,7 @@ internal class SubscriptionTest {
                 .taxInclusive(true)
                 .trialPeriodDays(0)
                 .cancellationComment("cancellation_comment")
-                .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                 .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addCustomFieldResponse(
                     CustomFieldResponse.builder().key("key").value("value").build()
@@ -373,10 +372,10 @@ internal class SubscriptionTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentMethodId("payment_method_id")
                 .scheduledChange(
-                    Subscription.ScheduledChange.builder()
+                    ScheduledPlanChange.builder()
                         .id("id")
                         .addAddon(
-                            Subscription.ScheduledChange.Addon.builder()
+                            ScheduledPlanChange.Addon.builder()
                                 .addonId("addon_id")
                                 .name("name")
                                 .quantity(0)

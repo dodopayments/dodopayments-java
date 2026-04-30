@@ -35,12 +35,12 @@ internal class GrantServiceAsyncTest {
                 .build()
         val grantServiceAsync = client.entitlements().grants()
 
-        val responseFuture =
+        val entitlementGrantFuture =
             grantServiceAsync.revoke(
                 GrantRevokeParams.builder().id("id").grantId("grant_id").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val entitlementGrant = entitlementGrantFuture.get()
+        entitlementGrant.validate()
     }
 }

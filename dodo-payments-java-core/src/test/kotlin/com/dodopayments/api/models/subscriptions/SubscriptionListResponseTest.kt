@@ -69,10 +69,10 @@ internal class SubscriptionListResponseTest {
                 .paymentMethodId("payment_method_id")
                 .productName("product_name")
                 .scheduledChange(
-                    SubscriptionListResponse.ScheduledChange.builder()
+                    ScheduledPlanChange.builder()
                         .id("id")
                         .addAddon(
-                            SubscriptionListResponse.ScheduledChange.Addon.builder()
+                            ScheduledPlanChange.Addon.builder()
                                 .addonId("addon_id")
                                 .name("name")
                                 .quantity(0)
@@ -148,10 +148,10 @@ internal class SubscriptionListResponseTest {
         assertThat(subscriptionListResponse.productName()).contains("product_name")
         assertThat(subscriptionListResponse.scheduledChange())
             .contains(
-                SubscriptionListResponse.ScheduledChange.builder()
+                ScheduledPlanChange.builder()
                     .id("id")
                     .addAddon(
-                        SubscriptionListResponse.ScheduledChange.Addon.builder()
+                        ScheduledPlanChange.Addon.builder()
                             .addonId("addon_id")
                             .name("name")
                             .quantity(0)
@@ -223,10 +223,10 @@ internal class SubscriptionListResponseTest {
                 .paymentMethodId("payment_method_id")
                 .productName("product_name")
                 .scheduledChange(
-                    SubscriptionListResponse.ScheduledChange.builder()
+                    ScheduledPlanChange.builder()
                         .id("id")
                         .addAddon(
-                            SubscriptionListResponse.ScheduledChange.Addon.builder()
+                            ScheduledPlanChange.Addon.builder()
                                 .addonId("addon_id")
                                 .name("name")
                                 .quantity(0)
