@@ -790,7 +790,7 @@ private constructor(
             private val paymentLink: JsonField<String>,
             private val paymentMethod: JsonField<String>,
             private val paymentMethodType: JsonField<String>,
-            private val productCart: JsonField<List<Payment.ProductCart>>,
+            private val productCart: JsonField<List<GlobalPayment.ProductCart>>,
             private val refundStatus: JsonField<PaymentRefundStatus>,
             private val settlementTax: JsonField<Int>,
             private val status: JsonField<IntentStatus>,
@@ -892,7 +892,7 @@ private constructor(
                 paymentMethodType: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("product_cart")
                 @ExcludeMissing
-                productCart: JsonField<List<Payment.ProductCart>> = JsonMissing.of(),
+                productCart: JsonField<List<GlobalPayment.ProductCart>> = JsonMissing.of(),
                 @JsonProperty("refund_status")
                 @ExcludeMissing
                 refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of(),
@@ -1256,7 +1256,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun productCart(): Optional<List<Payment.ProductCart>> =
+            fun productCart(): Optional<List<GlobalPayment.ProductCart>> =
                 productCart.getOptional("product_cart")
 
             /**
@@ -1608,7 +1608,7 @@ private constructor(
              */
             @JsonProperty("product_cart")
             @ExcludeMissing
-            fun _productCart(): JsonField<List<Payment.ProductCart>> = productCart
+            fun _productCart(): JsonField<List<GlobalPayment.ProductCart>> = productCart
 
             /**
              * Returns the raw JSON value of [refundStatus].
@@ -1746,7 +1746,7 @@ private constructor(
                 private var paymentLink: JsonField<String> = JsonMissing.of()
                 private var paymentMethod: JsonField<String> = JsonMissing.of()
                 private var paymentMethodType: JsonField<String> = JsonMissing.of()
-                private var productCart: JsonField<MutableList<Payment.ProductCart>>? = null
+                private var productCart: JsonField<MutableList<GlobalPayment.ProductCart>>? = null
                 private var refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of()
                 private var settlementTax: JsonField<Int> = JsonMissing.of()
                 private var status: JsonField<IntentStatus> = JsonMissing.of()
@@ -2326,30 +2326,30 @@ private constructor(
                 }
 
                 /** List of products purchased in a one-time payment */
-                fun productCart(productCart: List<Payment.ProductCart>?) =
+                fun productCart(productCart: List<GlobalPayment.ProductCart>?) =
                     productCart(JsonField.ofNullable(productCart))
 
                 /** Alias for calling [Builder.productCart] with `productCart.orElse(null)`. */
-                fun productCart(productCart: Optional<List<Payment.ProductCart>>) =
+                fun productCart(productCart: Optional<List<GlobalPayment.ProductCart>>) =
                     productCart(productCart.getOrNull())
 
                 /**
                  * Sets [Builder.productCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.productCart] with a well-typed
-                 * `List<Payment.ProductCart>` value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
+                 * `List<GlobalPayment.ProductCart>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
-                fun productCart(productCart: JsonField<List<Payment.ProductCart>>) = apply {
+                fun productCart(productCart: JsonField<List<GlobalPayment.ProductCart>>) = apply {
                     this.productCart = productCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Payment.ProductCart] to [Builder.productCart].
+                 * Adds a single [GlobalPayment.ProductCart] to [Builder.productCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addProductCart(productCart: Payment.ProductCart) = apply {
+                fun addProductCart(productCart: GlobalPayment.ProductCart) = apply {
                     this.productCart =
                         (this.productCart ?: JsonField.of(mutableListOf())).also {
                             checkKnown("productCart", it).add(productCart)
@@ -11665,8 +11665,8 @@ private constructor(
                  * Sets [Builder.status] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.status] with a well-typed
-                 * [GlobalEntitlementGrant.Status] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalEntitlementGrant.Status] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun status(status: JsonField<GlobalEntitlementGrant.Status>) = apply {
                     this.status = status
