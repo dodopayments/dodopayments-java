@@ -115,6 +115,18 @@ private constructor(
     fun force3ds(): Optional<Boolean> = body.force3ds()
 
     /**
+     * Override the merchant-level mandate floor (in INR paise) for INR e-mandates on Indian-card
+     * recurring payments. The mandate amount sent to the processor is `max(this_floor,
+     * actual_billing_amount)`, so this is effectively the customer-facing authorization ceiling
+     * whenever billing is lower. When unset, the merchant setting applies; when that's also unset,
+     * the system default of ₹15,000 applies.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun mandateMinAmountInrPaise(): Optional<Int> = body.mandateMinAmountInrPaise()
+
+    /**
      * Additional metadata for the subscription Defaults to empty if not specified
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -161,6 +173,16 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun redirectImmediately(): Optional<Boolean> = body.redirectImmediately()
+
+    /**
+     * If true, the customer's phone number is required to create this subscription. Typically set
+     * alongside `payment_link=true` so merchants can enforce phone collection on the hosted payment
+     * page. Defaults to false.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun requirePhoneNumber(): Optional<Boolean> = body.requirePhoneNumber()
 
     /**
      * Optional URL to redirect after successful subscription creation
@@ -269,6 +291,14 @@ private constructor(
     fun _force3ds(): JsonField<Boolean> = body._force3ds()
 
     /**
+     * Returns the raw JSON value of [mandateMinAmountInrPaise].
+     *
+     * Unlike [mandateMinAmountInrPaise], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _mandateMinAmountInrPaise(): JsonField<Int> = body._mandateMinAmountInrPaise()
+
+    /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -311,6 +341,14 @@ private constructor(
      * type.
      */
     fun _redirectImmediately(): JsonField<Boolean> = body._redirectImmediately()
+
+    /**
+     * Returns the raw JSON value of [requirePhoneNumber].
+     *
+     * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _requirePhoneNumber(): JsonField<Boolean> = body._requirePhoneNumber()
 
     /**
      * Returns the raw JSON value of [returnUrl].
@@ -584,6 +622,43 @@ private constructor(
          */
         fun force3ds(force3ds: JsonField<Boolean>) = apply { body.force3ds(force3ds) }
 
+        /**
+         * Override the merchant-level mandate floor (in INR paise) for INR e-mandates on
+         * Indian-card recurring payments. The mandate amount sent to the processor is
+         * `max(this_floor, actual_billing_amount)`, so this is effectively the customer-facing
+         * authorization ceiling whenever billing is lower. When unset, the merchant setting
+         * applies; when that's also unset, the system default of ₹15,000 applies.
+         */
+        fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Int?) = apply {
+            body.mandateMinAmountInrPaise(mandateMinAmountInrPaise)
+        }
+
+        /**
+         * Alias for [Builder.mandateMinAmountInrPaise].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Int) =
+            mandateMinAmountInrPaise(mandateMinAmountInrPaise as Int?)
+
+        /**
+         * Alias for calling [Builder.mandateMinAmountInrPaise] with
+         * `mandateMinAmountInrPaise.orElse(null)`.
+         */
+        fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Optional<Int>) =
+            mandateMinAmountInrPaise(mandateMinAmountInrPaise.getOrNull())
+
+        /**
+         * Sets [Builder.mandateMinAmountInrPaise] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.mandateMinAmountInrPaise] with a well-typed [Int] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: JsonField<Int>) = apply {
+            body.mandateMinAmountInrPaise(mandateMinAmountInrPaise)
+        }
+
         /** Additional metadata for the subscription Defaults to empty if not specified */
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
@@ -704,6 +779,26 @@ private constructor(
          */
         fun redirectImmediately(redirectImmediately: JsonField<Boolean>) = apply {
             body.redirectImmediately(redirectImmediately)
+        }
+
+        /**
+         * If true, the customer's phone number is required to create this subscription. Typically
+         * set alongside `payment_link=true` so merchants can enforce phone collection on the hosted
+         * payment page. Defaults to false.
+         */
+        fun requirePhoneNumber(requirePhoneNumber: Boolean) = apply {
+            body.requirePhoneNumber(requirePhoneNumber)
+        }
+
+        /**
+         * Sets [Builder.requirePhoneNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) = apply {
+            body.requirePhoneNumber(requirePhoneNumber)
         }
 
         /** Optional URL to redirect after successful subscription creation */
@@ -968,12 +1063,14 @@ private constructor(
         private val billingCurrency: JsonField<Currency>,
         private val discountCode: JsonField<String>,
         private val force3ds: JsonField<Boolean>,
+        private val mandateMinAmountInrPaise: JsonField<Int>,
         private val metadata: JsonField<Metadata>,
         private val onDemand: JsonField<OnDemandSubscription>,
         private val oneTimeProductCart: JsonField<List<OneTimeProductCart>>,
         private val paymentLink: JsonField<Boolean>,
         private val paymentMethodId: JsonField<String>,
         private val redirectImmediately: JsonField<Boolean>,
+        private val requirePhoneNumber: JsonField<Boolean>,
         private val returnUrl: JsonField<String>,
         private val shortLink: JsonField<Boolean>,
         private val showSavedPaymentMethods: JsonField<Boolean>,
@@ -1009,6 +1106,9 @@ private constructor(
             @JsonProperty("force_3ds")
             @ExcludeMissing
             force3ds: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("mandate_min_amount_inr_paise")
+            @ExcludeMissing
+            mandateMinAmountInrPaise: JsonField<Int> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -1027,6 +1127,9 @@ private constructor(
             @JsonProperty("redirect_immediately")
             @ExcludeMissing
             redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("require_phone_number")
+            @ExcludeMissing
+            requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("return_url")
             @ExcludeMissing
             returnUrl: JsonField<String> = JsonMissing.of(),
@@ -1050,12 +1153,14 @@ private constructor(
             billingCurrency,
             discountCode,
             force3ds,
+            mandateMinAmountInrPaise,
             metadata,
             onDemand,
             oneTimeProductCart,
             paymentLink,
             paymentMethodId,
             redirectImmediately,
+            requirePhoneNumber,
             returnUrl,
             shortLink,
             showSavedPaymentMethods,
@@ -1143,6 +1248,19 @@ private constructor(
         fun force3ds(): Optional<Boolean> = force3ds.getOptional("force_3ds")
 
         /**
+         * Override the merchant-level mandate floor (in INR paise) for INR e-mandates on
+         * Indian-card recurring payments. The mandate amount sent to the processor is
+         * `max(this_floor, actual_billing_amount)`, so this is effectively the customer-facing
+         * authorization ceiling whenever billing is lower. When unset, the merchant setting
+         * applies; when that's also unset, the system default of ₹15,000 applies.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun mandateMinAmountInrPaise(): Optional<Int> =
+            mandateMinAmountInrPaise.getOptional("mandate_min_amount_inr_paise")
+
+        /**
          * Additional metadata for the subscription Defaults to empty if not specified
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1192,6 +1310,17 @@ private constructor(
          */
         fun redirectImmediately(): Optional<Boolean> =
             redirectImmediately.getOptional("redirect_immediately")
+
+        /**
+         * If true, the customer's phone number is required to create this subscription. Typically
+         * set alongside `payment_link=true` so merchants can enforce phone collection on the hosted
+         * payment page. Defaults to false.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun requirePhoneNumber(): Optional<Boolean> =
+            requirePhoneNumber.getOptional("require_phone_number")
 
         /**
          * Optional URL to redirect after successful subscription creation
@@ -1312,6 +1441,16 @@ private constructor(
         @JsonProperty("force_3ds") @ExcludeMissing fun _force3ds(): JsonField<Boolean> = force3ds
 
         /**
+         * Returns the raw JSON value of [mandateMinAmountInrPaise].
+         *
+         * Unlike [mandateMinAmountInrPaise], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("mandate_min_amount_inr_paise")
+        @ExcludeMissing
+        fun _mandateMinAmountInrPaise(): JsonField<Int> = mandateMinAmountInrPaise
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -1365,6 +1504,16 @@ private constructor(
         @JsonProperty("redirect_immediately")
         @ExcludeMissing
         fun _redirectImmediately(): JsonField<Boolean> = redirectImmediately
+
+        /**
+         * Returns the raw JSON value of [requirePhoneNumber].
+         *
+         * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("require_phone_number")
+        @ExcludeMissing
+        fun _requirePhoneNumber(): JsonField<Boolean> = requirePhoneNumber
 
         /**
          * Returns the raw JSON value of [returnUrl].
@@ -1448,12 +1597,14 @@ private constructor(
             private var billingCurrency: JsonField<Currency> = JsonMissing.of()
             private var discountCode: JsonField<String> = JsonMissing.of()
             private var force3ds: JsonField<Boolean> = JsonMissing.of()
+            private var mandateMinAmountInrPaise: JsonField<Int> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var onDemand: JsonField<OnDemandSubscription> = JsonMissing.of()
             private var oneTimeProductCart: JsonField<MutableList<OneTimeProductCart>>? = null
             private var paymentLink: JsonField<Boolean> = JsonMissing.of()
             private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
+            private var requirePhoneNumber: JsonField<Boolean> = JsonMissing.of()
             private var returnUrl: JsonField<String> = JsonMissing.of()
             private var shortLink: JsonField<Boolean> = JsonMissing.of()
             private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
@@ -1473,12 +1624,14 @@ private constructor(
                 billingCurrency = body.billingCurrency
                 discountCode = body.discountCode
                 force3ds = body.force3ds
+                mandateMinAmountInrPaise = body.mandateMinAmountInrPaise
                 metadata = body.metadata
                 onDemand = body.onDemand
                 oneTimeProductCart = body.oneTimeProductCart.map { it.toMutableList() }
                 paymentLink = body.paymentLink
                 paymentMethodId = body.paymentMethodId
                 redirectImmediately = body.redirectImmediately
+                requirePhoneNumber = body.requirePhoneNumber
                 returnUrl = body.returnUrl
                 shortLink = body.shortLink
                 showSavedPaymentMethods = body.showSavedPaymentMethods
@@ -1682,6 +1835,42 @@ private constructor(
              */
             fun force3ds(force3ds: JsonField<Boolean>) = apply { this.force3ds = force3ds }
 
+            /**
+             * Override the merchant-level mandate floor (in INR paise) for INR e-mandates on
+             * Indian-card recurring payments. The mandate amount sent to the processor is
+             * `max(this_floor, actual_billing_amount)`, so this is effectively the customer-facing
+             * authorization ceiling whenever billing is lower. When unset, the merchant setting
+             * applies; when that's also unset, the system default of ₹15,000 applies.
+             */
+            fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Int?) =
+                mandateMinAmountInrPaise(JsonField.ofNullable(mandateMinAmountInrPaise))
+
+            /**
+             * Alias for [Builder.mandateMinAmountInrPaise].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Int) =
+                mandateMinAmountInrPaise(mandateMinAmountInrPaise as Int?)
+
+            /**
+             * Alias for calling [Builder.mandateMinAmountInrPaise] with
+             * `mandateMinAmountInrPaise.orElse(null)`.
+             */
+            fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: Optional<Int>) =
+                mandateMinAmountInrPaise(mandateMinAmountInrPaise.getOrNull())
+
+            /**
+             * Sets [Builder.mandateMinAmountInrPaise] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mandateMinAmountInrPaise] with a well-typed [Int]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun mandateMinAmountInrPaise(mandateMinAmountInrPaise: JsonField<Int>) = apply {
+                this.mandateMinAmountInrPaise = mandateMinAmountInrPaise
+            }
+
             /** Additional metadata for the subscription Defaults to empty if not specified */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -1810,6 +1999,25 @@ private constructor(
              */
             fun redirectImmediately(redirectImmediately: JsonField<Boolean>) = apply {
                 this.redirectImmediately = redirectImmediately
+            }
+
+            /**
+             * If true, the customer's phone number is required to create this subscription.
+             * Typically set alongside `payment_link=true` so merchants can enforce phone collection
+             * on the hosted payment page. Defaults to false.
+             */
+            fun requirePhoneNumber(requirePhoneNumber: Boolean) =
+                requirePhoneNumber(JsonField.of(requirePhoneNumber))
+
+            /**
+             * Sets [Builder.requirePhoneNumber] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) = apply {
+                this.requirePhoneNumber = requirePhoneNumber
             }
 
             /** Optional URL to redirect after successful subscription creation */
@@ -1956,12 +2164,14 @@ private constructor(
                     billingCurrency,
                     discountCode,
                     force3ds,
+                    mandateMinAmountInrPaise,
                     metadata,
                     onDemand,
                     (oneTimeProductCart ?: JsonMissing.of()).map { it.toImmutable() },
                     paymentLink,
                     paymentMethodId,
                     redirectImmediately,
+                    requirePhoneNumber,
                     returnUrl,
                     shortLink,
                     showSavedPaymentMethods,
@@ -1987,12 +2197,14 @@ private constructor(
             billingCurrency().ifPresent { it.validate() }
             discountCode()
             force3ds()
+            mandateMinAmountInrPaise()
             metadata().ifPresent { it.validate() }
             onDemand().ifPresent { it.validate() }
             oneTimeProductCart().ifPresent { it.forEach { it.validate() } }
             paymentLink()
             paymentMethodId()
             redirectImmediately()
+            requirePhoneNumber()
             returnUrl()
             shortLink()
             showSavedPaymentMethods()
@@ -2027,12 +2239,14 @@ private constructor(
                 (billingCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discountCode.asKnown().isPresent) 1 else 0) +
                 (if (force3ds.asKnown().isPresent) 1 else 0) +
+                (if (mandateMinAmountInrPaise.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (onDemand.asKnown().getOrNull()?.validity() ?: 0) +
                 (oneTimeProductCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (paymentLink.asKnown().isPresent) 1 else 0) +
                 (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
+                (if (requirePhoneNumber.asKnown().isPresent) 1 else 0) +
                 (if (returnUrl.asKnown().isPresent) 1 else 0) +
                 (if (shortLink.asKnown().isPresent) 1 else 0) +
                 (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
@@ -2054,12 +2268,14 @@ private constructor(
                 billingCurrency == other.billingCurrency &&
                 discountCode == other.discountCode &&
                 force3ds == other.force3ds &&
+                mandateMinAmountInrPaise == other.mandateMinAmountInrPaise &&
                 metadata == other.metadata &&
                 onDemand == other.onDemand &&
                 oneTimeProductCart == other.oneTimeProductCart &&
                 paymentLink == other.paymentLink &&
                 paymentMethodId == other.paymentMethodId &&
                 redirectImmediately == other.redirectImmediately &&
+                requirePhoneNumber == other.requirePhoneNumber &&
                 returnUrl == other.returnUrl &&
                 shortLink == other.shortLink &&
                 showSavedPaymentMethods == other.showSavedPaymentMethods &&
@@ -2079,12 +2295,14 @@ private constructor(
                 billingCurrency,
                 discountCode,
                 force3ds,
+                mandateMinAmountInrPaise,
                 metadata,
                 onDemand,
                 oneTimeProductCart,
                 paymentLink,
                 paymentMethodId,
                 redirectImmediately,
+                requirePhoneNumber,
                 returnUrl,
                 shortLink,
                 showSavedPaymentMethods,
@@ -2097,7 +2315,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, customer=$customer, productId=$productId, quantity=$quantity, addons=$addons, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, onDemand=$onDemand, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, customer=$customer, productId=$productId, quantity=$quantity, addons=$addons, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, mandateMinAmountInrPaise=$mandateMinAmountInrPaise, metadata=$metadata, onDemand=$onDemand, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata for the subscription Defaults to empty if not specified */

@@ -56,6 +56,15 @@ private constructor(
     fun productCart(): List<ProductCart> = body.productCart()
 
     /**
+     * Whether adaptive currency fees should be included in the price (true) or added on top
+     * (false). If not specified, defaults to the business-level setting.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> = body.adaptiveCurrencyFeesInclusive()
+
+    /**
      * List of payment methods allowed during checkout.
      *
      * Customers will **never** see payment methods that are **not** in this list. However, adding a
@@ -127,6 +136,16 @@ private constructor(
     fun redirectImmediately(): Optional<Boolean> = body.redirectImmediately()
 
     /**
+     * If true, the customer's phone number is required to create this payment. Typically set
+     * alongside `payment_link=true` so merchants can enforce phone collection on the hosted payment
+     * page. Defaults to false.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun requirePhoneNumber(): Optional<Boolean> = body.requirePhoneNumber()
+
+    /**
      * Optional URL to redirect the customer after payment. Must be a valid URL if provided.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -178,6 +197,14 @@ private constructor(
      * Unlike [productCart], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _productCart(): JsonField<List<ProductCart>> = body._productCart()
+
+    /**
+     * Returns the raw JSON value of [adaptiveCurrencyFeesInclusive].
+     *
+     * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _adaptiveCurrencyFeesInclusive(): JsonField<Boolean> = body._adaptiveCurrencyFeesInclusive()
 
     /**
      * Returns the raw JSON value of [allowedPaymentMethodTypes].
@@ -237,6 +264,14 @@ private constructor(
      * type.
      */
     fun _redirectImmediately(): JsonField<Boolean> = body._redirectImmediately()
+
+    /**
+     * Returns the raw JSON value of [requirePhoneNumber].
+     *
+     * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    fun _requirePhoneNumber(): JsonField<Boolean> = body._requirePhoneNumber()
 
     /**
      * Returns the raw JSON value of [returnUrl].
@@ -314,8 +349,8 @@ private constructor(
          * - [billing]
          * - [customer]
          * - [productCart]
+         * - [adaptiveCurrencyFeesInclusive]
          * - [allowedPaymentMethodTypes]
-         * - [billingCurrency]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -375,6 +410,41 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addProductCart(productCart: ProductCart) = apply { body.addProductCart(productCart) }
+
+        /**
+         * Whether adaptive currency fees should be included in the price (true) or added on top
+         * (false). If not specified, defaults to the business-level setting.
+         */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) = apply {
+            body.adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive)
+        }
+
+        /**
+         * Alias for [Builder.adaptiveCurrencyFeesInclusive].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) =
+            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
+
+        /**
+         * Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with
+         * `adaptiveCurrencyFeesInclusive.orElse(null)`.
+         */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) =
+            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
+
+        /**
+         * Sets [Builder.adaptiveCurrencyFeesInclusive] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed
+         * [Boolean] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: JsonField<Boolean>) =
+            apply {
+                body.adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive)
+            }
 
         /**
          * List of payment methods allowed during checkout.
@@ -550,6 +620,26 @@ private constructor(
          */
         fun redirectImmediately(redirectImmediately: JsonField<Boolean>) = apply {
             body.redirectImmediately(redirectImmediately)
+        }
+
+        /**
+         * If true, the customer's phone number is required to create this payment. Typically set
+         * alongside `payment_link=true` so merchants can enforce phone collection on the hosted
+         * payment page. Defaults to false.
+         */
+        fun requirePhoneNumber(requirePhoneNumber: Boolean) = apply {
+            body.requirePhoneNumber(requirePhoneNumber)
+        }
+
+        /**
+         * Sets [Builder.requirePhoneNumber] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) = apply {
+            body.requirePhoneNumber(requirePhoneNumber)
         }
 
         /** Optional URL to redirect the customer after payment. Must be a valid URL if provided. */
@@ -773,6 +863,7 @@ private constructor(
         private val billing: JsonField<BillingAddress>,
         private val customer: JsonField<CustomerRequest>,
         private val productCart: JsonField<List<ProductCart>>,
+        private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
         private val allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>,
         private val billingCurrency: JsonField<Currency>,
         private val discountCode: JsonField<String>,
@@ -781,6 +872,7 @@ private constructor(
         private val paymentLink: JsonField<Boolean>,
         private val paymentMethodId: JsonField<String>,
         private val redirectImmediately: JsonField<Boolean>,
+        private val requirePhoneNumber: JsonField<Boolean>,
         private val returnUrl: JsonField<String>,
         private val shortLink: JsonField<Boolean>,
         private val showSavedPaymentMethods: JsonField<Boolean>,
@@ -799,6 +891,9 @@ private constructor(
             @JsonProperty("product_cart")
             @ExcludeMissing
             productCart: JsonField<List<ProductCart>> = JsonMissing.of(),
+            @JsonProperty("adaptive_currency_fees_inclusive")
+            @ExcludeMissing
+            adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("allowed_payment_method_types")
             @ExcludeMissing
             allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>> = JsonMissing.of(),
@@ -823,6 +918,9 @@ private constructor(
             @JsonProperty("redirect_immediately")
             @ExcludeMissing
             redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("require_phone_number")
+            @ExcludeMissing
+            requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("return_url")
             @ExcludeMissing
             returnUrl: JsonField<String> = JsonMissing.of(),
@@ -837,6 +935,7 @@ private constructor(
             billing,
             customer,
             productCart,
+            adaptiveCurrencyFeesInclusive,
             allowedPaymentMethodTypes,
             billingCurrency,
             discountCode,
@@ -845,6 +944,7 @@ private constructor(
             paymentLink,
             paymentMethodId,
             redirectImmediately,
+            requirePhoneNumber,
             returnUrl,
             shortLink,
             showSavedPaymentMethods,
@@ -875,6 +975,16 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun productCart(): List<ProductCart> = productCart.getRequired("product_cart")
+
+        /**
+         * Whether adaptive currency fees should be included in the price (true) or added on top
+         * (false). If not specified, defaults to the business-level setting.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> =
+            adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
 
         /**
          * List of payment methods allowed during checkout.
@@ -950,6 +1060,17 @@ private constructor(
             redirectImmediately.getOptional("redirect_immediately")
 
         /**
+         * If true, the customer's phone number is required to create this payment. Typically set
+         * alongside `payment_link=true` so merchants can enforce phone collection on the hosted
+         * payment page. Defaults to false.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun requirePhoneNumber(): Optional<Boolean> =
+            requirePhoneNumber.getOptional("require_phone_number")
+
+        /**
          * Optional URL to redirect the customer after payment. Must be a valid URL if provided.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1007,6 +1128,16 @@ private constructor(
         @JsonProperty("product_cart")
         @ExcludeMissing
         fun _productCart(): JsonField<List<ProductCart>> = productCart
+
+        /**
+         * Returns the raw JSON value of [adaptiveCurrencyFeesInclusive].
+         *
+         * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has
+         * an unexpected type.
+         */
+        @JsonProperty("adaptive_currency_fees_inclusive")
+        @ExcludeMissing
+        fun _adaptiveCurrencyFeesInclusive(): JsonField<Boolean> = adaptiveCurrencyFeesInclusive
 
         /**
          * Returns the raw JSON value of [allowedPaymentMethodTypes].
@@ -1083,6 +1214,16 @@ private constructor(
         fun _redirectImmediately(): JsonField<Boolean> = redirectImmediately
 
         /**
+         * Returns the raw JSON value of [requirePhoneNumber].
+         *
+         * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("require_phone_number")
+        @ExcludeMissing
+        fun _requirePhoneNumber(): JsonField<Boolean> = requirePhoneNumber
+
+        /**
          * Returns the raw JSON value of [returnUrl].
          *
          * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
@@ -1146,6 +1287,7 @@ private constructor(
             private var billing: JsonField<BillingAddress>? = null
             private var customer: JsonField<CustomerRequest>? = null
             private var productCart: JsonField<MutableList<ProductCart>>? = null
+            private var adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of()
             private var allowedPaymentMethodTypes: JsonField<MutableList<PaymentMethodTypes>>? =
                 null
             private var billingCurrency: JsonField<Currency> = JsonMissing.of()
@@ -1155,6 +1297,7 @@ private constructor(
             private var paymentLink: JsonField<Boolean> = JsonMissing.of()
             private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
+            private var requirePhoneNumber: JsonField<Boolean> = JsonMissing.of()
             private var returnUrl: JsonField<String> = JsonMissing.of()
             private var shortLink: JsonField<Boolean> = JsonMissing.of()
             private var showSavedPaymentMethods: JsonField<Boolean> = JsonMissing.of()
@@ -1166,6 +1309,7 @@ private constructor(
                 billing = body.billing
                 customer = body.customer
                 productCart = body.productCart.map { it.toMutableList() }
+                adaptiveCurrencyFeesInclusive = body.adaptiveCurrencyFeesInclusive
                 allowedPaymentMethodTypes =
                     body.allowedPaymentMethodTypes.map { it.toMutableList() }
                 billingCurrency = body.billingCurrency
@@ -1175,6 +1319,7 @@ private constructor(
                 paymentLink = body.paymentLink
                 paymentMethodId = body.paymentMethodId
                 redirectImmediately = body.redirectImmediately
+                requirePhoneNumber = body.requirePhoneNumber
                 returnUrl = body.returnUrl
                 shortLink = body.shortLink
                 showSavedPaymentMethods = body.showSavedPaymentMethods
@@ -1242,6 +1387,40 @@ private constructor(
                         checkKnown("productCart", it).add(productCart)
                     }
             }
+
+            /**
+             * Whether adaptive currency fees should be included in the price (true) or added on top
+             * (false). If not specified, defaults to the business-level setting.
+             */
+            fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) =
+                adaptiveCurrencyFeesInclusive(JsonField.ofNullable(adaptiveCurrencyFeesInclusive))
+
+            /**
+             * Alias for [Builder.adaptiveCurrencyFeesInclusive].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) =
+                adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
+
+            /**
+             * Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with
+             * `adaptiveCurrencyFeesInclusive.orElse(null)`.
+             */
+            fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) =
+                adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
+
+            /**
+             * Sets [Builder.adaptiveCurrencyFeesInclusive] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed
+             * [Boolean] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: JsonField<Boolean>) =
+                apply {
+                    this.adaptiveCurrencyFeesInclusive = adaptiveCurrencyFeesInclusive
+                }
 
             /**
              * List of payment methods allowed during checkout.
@@ -1429,6 +1608,25 @@ private constructor(
             }
 
             /**
+             * If true, the customer's phone number is required to create this payment. Typically
+             * set alongside `payment_link=true` so merchants can enforce phone collection on the
+             * hosted payment page. Defaults to false.
+             */
+            fun requirePhoneNumber(requirePhoneNumber: Boolean) =
+                requirePhoneNumber(JsonField.of(requirePhoneNumber))
+
+            /**
+             * Sets [Builder.requirePhoneNumber] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) = apply {
+                this.requirePhoneNumber = requirePhoneNumber
+            }
+
+            /**
              * Optional URL to redirect the customer after payment. Must be a valid URL if provided.
              */
             fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
@@ -1538,6 +1736,7 @@ private constructor(
                     checkRequired("billing", billing),
                     checkRequired("customer", customer),
                     checkRequired("productCart", productCart).map { it.toImmutable() },
+                    adaptiveCurrencyFeesInclusive,
                     (allowedPaymentMethodTypes ?: JsonMissing.of()).map { it.toImmutable() },
                     billingCurrency,
                     discountCode,
@@ -1546,6 +1745,7 @@ private constructor(
                     paymentLink,
                     paymentMethodId,
                     redirectImmediately,
+                    requirePhoneNumber,
                     returnUrl,
                     shortLink,
                     showSavedPaymentMethods,
@@ -1564,6 +1764,7 @@ private constructor(
             billing().validate()
             customer().validate()
             productCart().forEach { it.validate() }
+            adaptiveCurrencyFeesInclusive()
             allowedPaymentMethodTypes().ifPresent { it.forEach { it.validate() } }
             billingCurrency().ifPresent { it.validate() }
             discountCode()
@@ -1572,6 +1773,7 @@ private constructor(
             paymentLink()
             paymentMethodId()
             redirectImmediately()
+            requirePhoneNumber()
             returnUrl()
             shortLink()
             showSavedPaymentMethods()
@@ -1598,6 +1800,7 @@ private constructor(
             (billing.asKnown().getOrNull()?.validity() ?: 0) +
                 (customer.asKnown().getOrNull()?.validity() ?: 0) +
                 (productCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
                 (allowedPaymentMethodTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                     ?: 0) +
                 (billingCurrency.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1607,6 +1810,7 @@ private constructor(
                 (if (paymentLink.asKnown().isPresent) 1 else 0) +
                 (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
+                (if (requirePhoneNumber.asKnown().isPresent) 1 else 0) +
                 (if (returnUrl.asKnown().isPresent) 1 else 0) +
                 (if (shortLink.asKnown().isPresent) 1 else 0) +
                 (if (showSavedPaymentMethods.asKnown().isPresent) 1 else 0) +
@@ -1621,6 +1825,7 @@ private constructor(
                 billing == other.billing &&
                 customer == other.customer &&
                 productCart == other.productCart &&
+                adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
                 allowedPaymentMethodTypes == other.allowedPaymentMethodTypes &&
                 billingCurrency == other.billingCurrency &&
                 discountCode == other.discountCode &&
@@ -1629,6 +1834,7 @@ private constructor(
                 paymentLink == other.paymentLink &&
                 paymentMethodId == other.paymentMethodId &&
                 redirectImmediately == other.redirectImmediately &&
+                requirePhoneNumber == other.requirePhoneNumber &&
                 returnUrl == other.returnUrl &&
                 shortLink == other.shortLink &&
                 showSavedPaymentMethods == other.showSavedPaymentMethods &&
@@ -1641,6 +1847,7 @@ private constructor(
                 billing,
                 customer,
                 productCart,
+                adaptiveCurrencyFeesInclusive,
                 allowedPaymentMethodTypes,
                 billingCurrency,
                 discountCode,
@@ -1649,6 +1856,7 @@ private constructor(
                 paymentLink,
                 paymentMethodId,
                 redirectImmediately,
+                requirePhoneNumber,
                 returnUrl,
                 shortLink,
                 showSavedPaymentMethods,
@@ -1660,7 +1868,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, customer=$customer, productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, customer=$customer, productCart=$productCart, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     class ProductCart
