@@ -16,11 +16,11 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.GrantListPageAsync
 import com.dodopayments.api.models.entitlements.grants.GrantListPageResponse
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
-import com.dodopayments.api.models.entitlements.grants.GrantRevokeResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -47,7 +47,7 @@ class GrantServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun revoke(
         params: GrantRevokeParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<GrantRevokeResponse> =
+    ): CompletableFuture<EntitlementGrant> =
         // delete /entitlements/{id}/grants/{grant_id}
         withRawResponse().revoke(params, requestOptions).thenApply { it.parse() }
 
@@ -105,13 +105,13 @@ class GrantServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 }
         }
 
-        private val revokeHandler: Handler<GrantRevokeResponse> =
-            jsonHandler<GrantRevokeResponse>(clientOptions.jsonMapper)
+        private val revokeHandler: Handler<EntitlementGrant> =
+            jsonHandler<EntitlementGrant>(clientOptions.jsonMapper)
 
         override fun revoke(
             params: GrantRevokeParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<GrantRevokeResponse>> {
+        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("grantId", params.grantId().getOrNull())

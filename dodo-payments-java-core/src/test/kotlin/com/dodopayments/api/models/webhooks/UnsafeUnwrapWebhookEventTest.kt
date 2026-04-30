@@ -10,6 +10,8 @@ import com.dodopayments.api.models.creditentitlements.balances.CreditLedgerEntry
 import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
+import com.dodopayments.api.models.entitlements.grants.LicenseKeyGrant
 import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.dodopayments.api.models.misc.CountryCode
@@ -18,7 +20,6 @@ import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.dodopayments.api.models.payments.IntentStatus
-import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.Payment
 import com.dodopayments.api.models.payments.PaymentRefundStatus
 import com.dodopayments.api.models.payments.RefundListItem
@@ -27,9 +28,11 @@ import com.dodopayments.api.models.products.DigitalProductDeliveryFile
 import com.dodopayments.api.models.refunds.Refund
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.dodopayments.api.models.subscriptions.AddonCartResponseItem
+import com.dodopayments.api.models.subscriptions.CancellationFeedback
 import com.dodopayments.api.models.subscriptions.CreditEntitlementCartResponse
 import com.dodopayments.api.models.subscriptions.MeterCartResponseItem
 import com.dodopayments.api.models.subscriptions.MeterCreditEntitlementCartResponse
+import com.dodopayments.api.models.subscriptions.ScheduledPlanChange
 import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -2152,14 +2155,14 @@ internal class UnsafeUnwrapWebhookEventTest {
             EntitlementGrantCreatedWebhookEvent.builder()
                 .businessId("business_id")
                 .data(
-                    EntitlementGrantCreatedWebhookEvent.Data.builder()
+                    EntitlementGrant.builder()
                         .id("id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
                         .externalId("external_id")
-                        .status(EntitlementGrantCreatedWebhookEvent.Data.Status.PENDING)
+                        .status(EntitlementGrant.Status.PENDING)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .digitalProductDelivery(
@@ -2181,7 +2184,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .errorCode("error_code")
                         .errorMessage("error_message")
                         .licenseKey(
-                            EntitlementGrantCreatedWebhookEvent.Data.LicenseKey.builder()
+                            LicenseKeyGrant.builder()
                                 .activationsUsed(0)
                                 .key("key")
                                 .activationsLimit(0)
@@ -2254,14 +2257,14 @@ internal class UnsafeUnwrapWebhookEventTest {
                 EntitlementGrantCreatedWebhookEvent.builder()
                     .businessId("business_id")
                     .data(
-                        EntitlementGrantCreatedWebhookEvent.Data.builder()
+                        EntitlementGrant.builder()
                             .id("id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
                             .externalId("external_id")
-                            .status(EntitlementGrantCreatedWebhookEvent.Data.Status.PENDING)
+                            .status(EntitlementGrant.Status.PENDING)
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .digitalProductDelivery(
@@ -2283,7 +2286,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .errorCode("error_code")
                             .errorMessage("error_message")
                             .licenseKey(
-                                EntitlementGrantCreatedWebhookEvent.Data.LicenseKey.builder()
+                                LicenseKeyGrant.builder()
                                     .activationsUsed(0)
                                     .key("key")
                                     .activationsLimit(0)
@@ -2319,14 +2322,14 @@ internal class UnsafeUnwrapWebhookEventTest {
             EntitlementGrantDeliveredWebhookEvent.builder()
                 .businessId("business_id")
                 .data(
-                    EntitlementGrantDeliveredWebhookEvent.Data.builder()
+                    EntitlementGrant.builder()
                         .id("id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
                         .externalId("external_id")
-                        .status(EntitlementGrantDeliveredWebhookEvent.Data.Status.PENDING)
+                        .status(EntitlementGrant.Status.PENDING)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .digitalProductDelivery(
@@ -2348,7 +2351,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .errorCode("error_code")
                         .errorMessage("error_message")
                         .licenseKey(
-                            EntitlementGrantDeliveredWebhookEvent.Data.LicenseKey.builder()
+                            LicenseKeyGrant.builder()
                                 .activationsUsed(0)
                                 .key("key")
                                 .activationsLimit(0)
@@ -2421,14 +2424,14 @@ internal class UnsafeUnwrapWebhookEventTest {
                 EntitlementGrantDeliveredWebhookEvent.builder()
                     .businessId("business_id")
                     .data(
-                        EntitlementGrantDeliveredWebhookEvent.Data.builder()
+                        EntitlementGrant.builder()
                             .id("id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
                             .externalId("external_id")
-                            .status(EntitlementGrantDeliveredWebhookEvent.Data.Status.PENDING)
+                            .status(EntitlementGrant.Status.PENDING)
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .digitalProductDelivery(
@@ -2450,7 +2453,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .errorCode("error_code")
                             .errorMessage("error_message")
                             .licenseKey(
-                                EntitlementGrantDeliveredWebhookEvent.Data.LicenseKey.builder()
+                                LicenseKeyGrant.builder()
                                     .activationsUsed(0)
                                     .key("key")
                                     .activationsLimit(0)
@@ -2486,14 +2489,14 @@ internal class UnsafeUnwrapWebhookEventTest {
             EntitlementGrantFailedWebhookEvent.builder()
                 .businessId("business_id")
                 .data(
-                    EntitlementGrantFailedWebhookEvent.Data.builder()
+                    EntitlementGrant.builder()
                         .id("id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
                         .externalId("external_id")
-                        .status(EntitlementGrantFailedWebhookEvent.Data.Status.PENDING)
+                        .status(EntitlementGrant.Status.PENDING)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .digitalProductDelivery(
@@ -2515,7 +2518,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .errorCode("error_code")
                         .errorMessage("error_message")
                         .licenseKey(
-                            EntitlementGrantFailedWebhookEvent.Data.LicenseKey.builder()
+                            LicenseKeyGrant.builder()
                                 .activationsUsed(0)
                                 .key("key")
                                 .activationsLimit(0)
@@ -2588,14 +2591,14 @@ internal class UnsafeUnwrapWebhookEventTest {
                 EntitlementGrantFailedWebhookEvent.builder()
                     .businessId("business_id")
                     .data(
-                        EntitlementGrantFailedWebhookEvent.Data.builder()
+                        EntitlementGrant.builder()
                             .id("id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
                             .externalId("external_id")
-                            .status(EntitlementGrantFailedWebhookEvent.Data.Status.PENDING)
+                            .status(EntitlementGrant.Status.PENDING)
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .digitalProductDelivery(
@@ -2617,7 +2620,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .errorCode("error_code")
                             .errorMessage("error_message")
                             .licenseKey(
-                                EntitlementGrantFailedWebhookEvent.Data.LicenseKey.builder()
+                                LicenseKeyGrant.builder()
                                     .activationsUsed(0)
                                     .key("key")
                                     .activationsLimit(0)
@@ -2653,14 +2656,14 @@ internal class UnsafeUnwrapWebhookEventTest {
             EntitlementGrantRevokedWebhookEvent.builder()
                 .businessId("business_id")
                 .data(
-                    EntitlementGrantRevokedWebhookEvent.Data.builder()
+                    EntitlementGrant.builder()
                         .id("id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
                         .externalId("external_id")
-                        .status(EntitlementGrantRevokedWebhookEvent.Data.Status.PENDING)
+                        .status(EntitlementGrant.Status.PENDING)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .digitalProductDelivery(
@@ -2682,7 +2685,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .errorCode("error_code")
                         .errorMessage("error_message")
                         .licenseKey(
-                            EntitlementGrantRevokedWebhookEvent.Data.LicenseKey.builder()
+                            LicenseKeyGrant.builder()
                                 .activationsUsed(0)
                                 .key("key")
                                 .activationsLimit(0)
@@ -2755,14 +2758,14 @@ internal class UnsafeUnwrapWebhookEventTest {
                 EntitlementGrantRevokedWebhookEvent.builder()
                     .businessId("business_id")
                     .data(
-                        EntitlementGrantRevokedWebhookEvent.Data.builder()
+                        EntitlementGrant.builder()
                             .id("id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
                             .externalId("external_id")
-                            .status(EntitlementGrantRevokedWebhookEvent.Data.Status.PENDING)
+                            .status(EntitlementGrant.Status.PENDING)
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .digitalProductDelivery(
@@ -2784,7 +2787,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .errorCode("error_code")
                             .errorMessage("error_message")
                             .licenseKey(
-                                EntitlementGrantRevokedWebhookEvent.Data.LicenseKey.builder()
+                                LicenseKeyGrant.builder()
                                     .activationsUsed(0)
                                     .key("key")
                                     .activationsLimit(0)
@@ -3010,7 +3013,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            OneTimeProductCartItem.builder()
+                            Payment.ProductCart.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
@@ -3160,7 +3163,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                OneTimeProductCartItem.builder()
+                                Payment.ProductCart.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
@@ -3275,7 +3278,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            OneTimeProductCartItem.builder()
+                            Payment.ProductCart.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
@@ -3425,7 +3428,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                OneTimeProductCartItem.builder()
+                                Payment.ProductCart.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
@@ -3540,7 +3543,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            OneTimeProductCartItem.builder()
+                            Payment.ProductCart.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
@@ -3691,7 +3694,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                OneTimeProductCartItem.builder()
+                                Payment.ProductCart.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
@@ -3806,7 +3809,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .paymentMethod("payment_method")
                         .paymentMethodType("payment_method_type")
                         .addProductCart(
-                            OneTimeProductCartItem.builder()
+                            Payment.ProductCart.builder()
                                 .productId("product_id")
                                 .quantity(0)
                                 .build()
@@ -3956,7 +3959,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .paymentMethod("payment_method")
                             .paymentMethodType("payment_method_type")
                             .addProductCart(
-                                OneTimeProductCartItem.builder()
+                                Payment.ProductCart.builder()
                                     .productId("product_id")
                                     .quantity(0)
                                     .build()
@@ -4349,7 +4352,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4359,10 +4362,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -4528,7 +4531,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4538,10 +4541,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -4668,7 +4671,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4678,10 +4681,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -4847,7 +4850,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4857,10 +4860,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -4987,7 +4990,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4997,10 +5000,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -5166,7 +5169,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -5176,10 +5179,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -5306,7 +5309,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5316,10 +5319,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -5485,7 +5488,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -5495,10 +5498,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -5625,7 +5628,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5635,10 +5638,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -5804,7 +5807,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -5814,10 +5817,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -5944,7 +5947,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5954,10 +5957,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -6124,7 +6127,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -6134,10 +6137,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -6264,7 +6267,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -6274,10 +6277,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -6443,7 +6446,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -6453,10 +6456,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)
@@ -6583,7 +6586,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .taxInclusive(true)
                         .trialPeriodDays(0)
                         .cancellationComment("cancellation_comment")
-                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -6593,10 +6596,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
-                            Subscription.ScheduledChange.builder()
+                            ScheduledPlanChange.builder()
                                 .id("id")
                                 .addAddon(
-                                    Subscription.ScheduledChange.Addon.builder()
+                                    ScheduledPlanChange.Addon.builder()
                                         .addonId("addon_id")
                                         .name("name")
                                         .quantity(0)
@@ -6762,7 +6765,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .taxInclusive(true)
                             .trialPeriodDays(0)
                             .cancellationComment("cancellation_comment")
-                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -6772,10 +6775,10 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
-                                Subscription.ScheduledChange.builder()
+                                ScheduledPlanChange.builder()
                                     .id("id")
                                     .addAddon(
-                                        Subscription.ScheduledChange.Addon.builder()
+                                        ScheduledPlanChange.Addon.builder()
                                             .addonId("addon_id")
                                             .name("name")
                                             .quantity(0)

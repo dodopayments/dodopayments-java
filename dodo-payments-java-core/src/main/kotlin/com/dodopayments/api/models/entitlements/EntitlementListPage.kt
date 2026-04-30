@@ -16,14 +16,14 @@ private constructor(
     private val service: EntitlementService,
     private val params: EntitlementListParams,
     private val response: EntitlementListPageResponse,
-) : Page<EntitlementListResponse> {
+) : Page<Entitlement> {
 
     /**
      * Delegates to [EntitlementListPageResponse], but gracefully handles missing data.
      *
      * @see EntitlementListPageResponse.items
      */
-    override fun items(): List<EntitlementListResponse> =
+    override fun items(): List<Entitlement> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -35,7 +35,7 @@ private constructor(
 
     override fun nextPage(): EntitlementListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<EntitlementListResponse> = AutoPager.from(this)
+    fun autoPager(): AutoPager<Entitlement> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): EntitlementListParams = params

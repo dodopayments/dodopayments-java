@@ -6,15 +6,13 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.entitlements.Entitlement
 import com.dodopayments.api.models.entitlements.EntitlementCreateParams
-import com.dodopayments.api.models.entitlements.EntitlementCreateResponse
 import com.dodopayments.api.models.entitlements.EntitlementDeleteParams
 import com.dodopayments.api.models.entitlements.EntitlementListPage
 import com.dodopayments.api.models.entitlements.EntitlementListParams
 import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
-import com.dodopayments.api.models.entitlements.EntitlementRetrieveResponse
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
-import com.dodopayments.api.models.entitlements.EntitlementUpdateResponse
 import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.dodopayments.api.services.blocking.entitlements.GrantService
 import com.google.errorprone.annotations.MustBeClosed
@@ -39,74 +37,71 @@ interface EntitlementService {
     fun grants(): GrantService
 
     /** POST /entitlements */
-    fun create(params: EntitlementCreateParams): EntitlementCreateResponse =
-        create(params, RequestOptions.none())
+    fun create(params: EntitlementCreateParams): Entitlement = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: EntitlementCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementCreateResponse
+    ): Entitlement
 
     /** GET /entitlements/{id} */
-    fun retrieve(id: String): EntitlementRetrieveResponse =
-        retrieve(id, EntitlementRetrieveParams.none())
+    fun retrieve(id: String): Entitlement = retrieve(id, EntitlementRetrieveParams.none())
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementRetrieveResponse = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): Entitlement = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-    ): EntitlementRetrieveResponse = retrieve(id, params, RequestOptions.none())
+    ): Entitlement = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: EntitlementRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementRetrieveResponse
+    ): Entitlement
 
     /** @see retrieve */
-    fun retrieve(params: EntitlementRetrieveParams): EntitlementRetrieveResponse =
+    fun retrieve(params: EntitlementRetrieveParams): Entitlement =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(id: String, requestOptions: RequestOptions): EntitlementRetrieveResponse =
+    fun retrieve(id: String, requestOptions: RequestOptions): Entitlement =
         retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
 
     /** PATCH /entitlements/{id} */
-    fun update(id: String): EntitlementUpdateResponse = update(id, EntitlementUpdateParams.none())
+    fun update(id: String): Entitlement = update(id, EntitlementUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementUpdateResponse = update(params.toBuilder().id(id).build(), requestOptions)
+    ): Entitlement = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-    ): EntitlementUpdateResponse = update(id, params, RequestOptions.none())
+    ): Entitlement = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: EntitlementUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementUpdateResponse
+    ): Entitlement
 
     /** @see update */
-    fun update(params: EntitlementUpdateParams): EntitlementUpdateResponse =
-        update(params, RequestOptions.none())
+    fun update(params: EntitlementUpdateParams): Entitlement = update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(id: String, requestOptions: RequestOptions): EntitlementUpdateResponse =
+    fun update(id: String, requestOptions: RequestOptions): Entitlement =
         update(id, EntitlementUpdateParams.none(), requestOptions)
 
     /** GET /entitlements */
@@ -176,7 +171,7 @@ interface EntitlementService {
          * [EntitlementService.create].
          */
         @MustBeClosed
-        fun create(params: EntitlementCreateParams): HttpResponseFor<EntitlementCreateResponse> =
+        fun create(params: EntitlementCreateParams): HttpResponseFor<Entitlement> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -184,14 +179,14 @@ interface EntitlementService {
         fun create(
             params: EntitlementCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementCreateResponse>
+        ): HttpResponseFor<Entitlement>
 
         /**
          * Returns a raw HTTP response for `get /entitlements/{id}`, but is otherwise the same as
          * [EntitlementService.retrieve].
          */
         @MustBeClosed
-        fun retrieve(id: String): HttpResponseFor<EntitlementRetrieveResponse> =
+        fun retrieve(id: String): HttpResponseFor<Entitlement> =
             retrieve(id, EntitlementRetrieveParams.none())
 
         /** @see retrieve */
@@ -200,7 +195,7 @@ interface EntitlementService {
             id: String,
             params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementRetrieveResponse> =
+        ): HttpResponseFor<Entitlement> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
@@ -208,28 +203,23 @@ interface EntitlementService {
         fun retrieve(
             id: String,
             params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-        ): HttpResponseFor<EntitlementRetrieveResponse> =
-            retrieve(id, params, RequestOptions.none())
+        ): HttpResponseFor<Entitlement> = retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(
             params: EntitlementRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementRetrieveResponse>
+        ): HttpResponseFor<Entitlement>
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: EntitlementRetrieveParams
-        ): HttpResponseFor<EntitlementRetrieveResponse> = retrieve(params, RequestOptions.none())
+        fun retrieve(params: EntitlementRetrieveParams): HttpResponseFor<Entitlement> =
+            retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<EntitlementRetrieveResponse> =
+        fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Entitlement> =
             retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
 
         /**
@@ -237,7 +227,7 @@ interface EntitlementService {
          * [EntitlementService.update].
          */
         @MustBeClosed
-        fun update(id: String): HttpResponseFor<EntitlementUpdateResponse> =
+        fun update(id: String): HttpResponseFor<Entitlement> =
             update(id, EntitlementUpdateParams.none())
 
         /** @see update */
@@ -246,34 +236,30 @@ interface EntitlementService {
             id: String,
             params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementUpdateResponse> =
-            update(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<Entitlement> = update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-        ): HttpResponseFor<EntitlementUpdateResponse> = update(id, params, RequestOptions.none())
+        ): HttpResponseFor<Entitlement> = update(id, params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
             params: EntitlementUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementUpdateResponse>
+        ): HttpResponseFor<Entitlement>
 
         /** @see update */
         @MustBeClosed
-        fun update(params: EntitlementUpdateParams): HttpResponseFor<EntitlementUpdateResponse> =
+        fun update(params: EntitlementUpdateParams): HttpResponseFor<Entitlement> =
             update(params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<EntitlementUpdateResponse> =
+        fun update(id: String, requestOptions: RequestOptions): HttpResponseFor<Entitlement> =
             update(id, EntitlementUpdateParams.none(), requestOptions)
 
         /**

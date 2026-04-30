@@ -5,10 +5,10 @@ package com.dodopayments.api.services.async.entitlements
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.GrantListPageAsync
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
-import com.dodopayments.api.models.entitlements.grants.GrantRevokeResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -63,7 +63,7 @@ interface GrantServiceAsync {
      * returns 200 with current state. The revocation reason is always set to "manual" for
      * API-initiated revocations.
      */
-    fun revoke(grantId: String, params: GrantRevokeParams): CompletableFuture<GrantRevokeResponse> =
+    fun revoke(grantId: String, params: GrantRevokeParams): CompletableFuture<EntitlementGrant> =
         revoke(grantId, params, RequestOptions.none())
 
     /** @see revoke */
@@ -71,18 +71,18 @@ interface GrantServiceAsync {
         grantId: String,
         params: GrantRevokeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GrantRevokeResponse> =
+    ): CompletableFuture<EntitlementGrant> =
         revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
 
     /** @see revoke */
-    fun revoke(params: GrantRevokeParams): CompletableFuture<GrantRevokeResponse> =
+    fun revoke(params: GrantRevokeParams): CompletableFuture<EntitlementGrant> =
         revoke(params, RequestOptions.none())
 
     /** @see revoke */
     fun revoke(
         params: GrantRevokeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GrantRevokeResponse>
+    ): CompletableFuture<EntitlementGrant>
 
     /** A view of [GrantServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -142,7 +142,7 @@ interface GrantServiceAsync {
         fun revoke(
             grantId: String,
             params: GrantRevokeParams,
-        ): CompletableFuture<HttpResponseFor<GrantRevokeResponse>> =
+        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
             revoke(grantId, params, RequestOptions.none())
 
         /** @see revoke */
@@ -150,19 +150,19 @@ interface GrantServiceAsync {
             grantId: String,
             params: GrantRevokeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GrantRevokeResponse>> =
+        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
             revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
 
         /** @see revoke */
         fun revoke(
             params: GrantRevokeParams
-        ): CompletableFuture<HttpResponseFor<GrantRevokeResponse>> =
+        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
             revoke(params, RequestOptions.none())
 
         /** @see revoke */
         fun revoke(
             params: GrantRevokeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GrantRevokeResponse>>
+        ): CompletableFuture<HttpResponseFor<EntitlementGrant>>
     }
 }

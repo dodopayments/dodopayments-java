@@ -19,14 +19,14 @@ private constructor(
     private val streamHandlerExecutor: Executor,
     private val params: GrantListParams,
     private val response: GrantListPageResponse,
-) : PageAsync<GrantListResponse> {
+) : PageAsync<EntitlementGrant> {
 
     /**
      * Delegates to [GrantListPageResponse], but gracefully handles missing data.
      *
      * @see GrantListPageResponse.items
      */
-    override fun items(): List<GrantListResponse> =
+    override fun items(): List<EntitlementGrant> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -38,7 +38,7 @@ private constructor(
 
     override fun nextPage(): CompletableFuture<GrantListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<GrantListResponse> =
+    fun autoPager(): AutoPagerAsync<EntitlementGrant> =
         AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
