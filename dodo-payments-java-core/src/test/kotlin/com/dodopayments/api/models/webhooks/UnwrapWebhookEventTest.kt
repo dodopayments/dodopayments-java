@@ -22,6 +22,8 @@ import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.Payment
 import com.dodopayments.api.models.payments.PaymentRefundStatus
 import com.dodopayments.api.models.payments.RefundListItem
+import com.dodopayments.api.models.products.DigitalProductDelivery
+import com.dodopayments.api.models.products.DigitalProductDeliveryFile
 import com.dodopayments.api.models.refunds.Refund
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.dodopayments.api.models.subscriptions.AddonCartResponseItem
@@ -75,6 +77,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -86,6 +89,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -171,6 +178,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -182,6 +190,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -272,6 +284,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -283,6 +296,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -372,6 +389,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -383,6 +401,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -472,6 +494,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -483,6 +506,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -580,6 +607,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).contains(creditExpired)
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -591,6 +619,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -688,6 +720,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).contains(creditManualAdjustment)
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -699,6 +732,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -796,6 +833,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).contains(creditOverageCharged)
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -807,6 +845,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -866,6 +908,119 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
+    fun ofCreditOverageReset() {
+        val creditOverageReset =
+            CreditOverageResetWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    CreditLedgerEntry.builder()
+                        .id("id")
+                        .amount("amount")
+                        .balanceAfter("balance_after")
+                        .balanceBefore("balance_before")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .creditEntitlementId("credit_entitlement_id")
+                        .customerId("customer_id")
+                        .isCredit(true)
+                        .overageAfter("overage_after")
+                        .overageBefore("overage_before")
+                        .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                        .description("description")
+                        .grantId("grant_id")
+                        .referenceId("reference_id")
+                        .referenceType("reference_type")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(CreditOverageResetWebhookEvent.Type.CREDIT_OVERAGE_RESET)
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofCreditOverageReset(creditOverageReset)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).contains(creditOverageReset)
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofCreditOverageResetRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofCreditOverageReset(
+                CreditOverageResetWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        CreditLedgerEntry.builder()
+                            .id("id")
+                            .amount("amount")
+                            .balanceAfter("balance_after")
+                            .balanceBefore("balance_before")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .creditEntitlementId("credit_entitlement_id")
+                            .customerId("customer_id")
+                            .isCredit(true)
+                            .overageAfter("overage_after")
+                            .overageBefore("overage_before")
+                            .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
+                            .description("description")
+                            .grantId("grant_id")
+                            .referenceId("reference_id")
+                            .referenceType("reference_type")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(CreditOverageResetWebhookEvent.Type.CREDIT_OVERAGE_RESET)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
     fun ofCreditRolledOver() {
         val creditRolledOver =
             CreditRolledOverWebhookEvent.builder()
@@ -904,6 +1059,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).contains(creditRolledOver)
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -915,6 +1071,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1013,6 +1173,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).contains(creditRolloverForfeited)
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1024,6 +1185,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1115,6 +1280,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).contains(disputeAccepted)
@@ -1126,6 +1292,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1211,6 +1381,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1222,6 +1393,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1307,6 +1482,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1318,6 +1494,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1403,6 +1583,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1414,6 +1595,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1499,6 +1684,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1510,6 +1696,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1595,6 +1785,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1606,6 +1797,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1691,6 +1886,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1702,6 +1898,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).contains(disputeWon)
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1783,6 +1983,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1794,6 +1995,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).contains(dunningRecovered)
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1871,6 +2076,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1882,6 +2088,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).contains(dunningStarted)
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1931,6 +2141,670 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
+    fun ofEntitlementGrantCreated() {
+        val entitlementGrantCreated =
+            EntitlementGrantCreatedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    EntitlementGrantCreatedWebhookEvent.Data.builder()
+                        .id("id")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .entitlementId("entitlement_id")
+                        .externalId("external_id")
+                        .status(EntitlementGrantCreatedWebhookEvent.Data.Status.PENDING)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .digitalProductDelivery(
+                            DigitalProductDelivery.builder()
+                                .addFile(
+                                    DigitalProductDeliveryFile.builder()
+                                        .downloadUrl("download_url")
+                                        .expiresIn(0L)
+                                        .fileId("file_id")
+                                        .filename("filename")
+                                        .contentType("content_type")
+                                        .fileSize(0L)
+                                        .build()
+                                )
+                                .externalUrl("external_url")
+                                .instructions("instructions")
+                                .build()
+                        )
+                        .errorCode("error_code")
+                        .errorMessage("error_message")
+                        .licenseKey(
+                            EntitlementGrantCreatedWebhookEvent.Data.LicenseKey.builder()
+                                .activationsUsed(0)
+                                .key("key")
+                                .activationsLimit(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .oauthUrl("oauth_url")
+                        .paymentId("payment_id")
+                        .revocationReason("revocation_reason")
+                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .subscriptionId("subscription_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(EntitlementGrantCreatedWebhookEvent.Type.ENTITLEMENT_GRANT_CREATED)
+                .build()
+
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantCreated(entitlementGrantCreated)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).contains(entitlementGrantCreated)
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofEntitlementGrantCreatedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantCreated(
+                EntitlementGrantCreatedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        EntitlementGrantCreatedWebhookEvent.Data.builder()
+                            .id("id")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .entitlementId("entitlement_id")
+                            .externalId("external_id")
+                            .status(EntitlementGrantCreatedWebhookEvent.Data.Status.PENDING)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .digitalProductDelivery(
+                                DigitalProductDelivery.builder()
+                                    .addFile(
+                                        DigitalProductDeliveryFile.builder()
+                                            .downloadUrl("download_url")
+                                            .expiresIn(0L)
+                                            .fileId("file_id")
+                                            .filename("filename")
+                                            .contentType("content_type")
+                                            .fileSize(0L)
+                                            .build()
+                                    )
+                                    .externalUrl("external_url")
+                                    .instructions("instructions")
+                                    .build()
+                            )
+                            .errorCode("error_code")
+                            .errorMessage("error_message")
+                            .licenseKey(
+                                EntitlementGrantCreatedWebhookEvent.Data.LicenseKey.builder()
+                                    .activationsUsed(0)
+                                    .key("key")
+                                    .activationsLimit(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .oauthUrl("oauth_url")
+                            .paymentId("payment_id")
+                            .revocationReason("revocation_reason")
+                            .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .subscriptionId("subscription_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(EntitlementGrantCreatedWebhookEvent.Type.ENTITLEMENT_GRANT_CREATED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofEntitlementGrantDelivered() {
+        val entitlementGrantDelivered =
+            EntitlementGrantDeliveredWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    EntitlementGrantDeliveredWebhookEvent.Data.builder()
+                        .id("id")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .entitlementId("entitlement_id")
+                        .externalId("external_id")
+                        .status(EntitlementGrantDeliveredWebhookEvent.Data.Status.PENDING)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .digitalProductDelivery(
+                            DigitalProductDelivery.builder()
+                                .addFile(
+                                    DigitalProductDeliveryFile.builder()
+                                        .downloadUrl("download_url")
+                                        .expiresIn(0L)
+                                        .fileId("file_id")
+                                        .filename("filename")
+                                        .contentType("content_type")
+                                        .fileSize(0L)
+                                        .build()
+                                )
+                                .externalUrl("external_url")
+                                .instructions("instructions")
+                                .build()
+                        )
+                        .errorCode("error_code")
+                        .errorMessage("error_message")
+                        .licenseKey(
+                            EntitlementGrantDeliveredWebhookEvent.Data.LicenseKey.builder()
+                                .activationsUsed(0)
+                                .key("key")
+                                .activationsLimit(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .oauthUrl("oauth_url")
+                        .paymentId("payment_id")
+                        .revocationReason("revocation_reason")
+                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .subscriptionId("subscription_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(EntitlementGrantDeliveredWebhookEvent.Type.ENTITLEMENT_GRANT_DELIVERED)
+                .build()
+
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantDelivered(entitlementGrantDelivered)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered())
+            .contains(entitlementGrantDelivered)
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofEntitlementGrantDeliveredRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantDelivered(
+                EntitlementGrantDeliveredWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        EntitlementGrantDeliveredWebhookEvent.Data.builder()
+                            .id("id")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .entitlementId("entitlement_id")
+                            .externalId("external_id")
+                            .status(EntitlementGrantDeliveredWebhookEvent.Data.Status.PENDING)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .digitalProductDelivery(
+                                DigitalProductDelivery.builder()
+                                    .addFile(
+                                        DigitalProductDeliveryFile.builder()
+                                            .downloadUrl("download_url")
+                                            .expiresIn(0L)
+                                            .fileId("file_id")
+                                            .filename("filename")
+                                            .contentType("content_type")
+                                            .fileSize(0L)
+                                            .build()
+                                    )
+                                    .externalUrl("external_url")
+                                    .instructions("instructions")
+                                    .build()
+                            )
+                            .errorCode("error_code")
+                            .errorMessage("error_message")
+                            .licenseKey(
+                                EntitlementGrantDeliveredWebhookEvent.Data.LicenseKey.builder()
+                                    .activationsUsed(0)
+                                    .key("key")
+                                    .activationsLimit(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .oauthUrl("oauth_url")
+                            .paymentId("payment_id")
+                            .revocationReason("revocation_reason")
+                            .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .subscriptionId("subscription_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(EntitlementGrantDeliveredWebhookEvent.Type.ENTITLEMENT_GRANT_DELIVERED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofEntitlementGrantFailed() {
+        val entitlementGrantFailed =
+            EntitlementGrantFailedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    EntitlementGrantFailedWebhookEvent.Data.builder()
+                        .id("id")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .entitlementId("entitlement_id")
+                        .externalId("external_id")
+                        .status(EntitlementGrantFailedWebhookEvent.Data.Status.PENDING)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .digitalProductDelivery(
+                            DigitalProductDelivery.builder()
+                                .addFile(
+                                    DigitalProductDeliveryFile.builder()
+                                        .downloadUrl("download_url")
+                                        .expiresIn(0L)
+                                        .fileId("file_id")
+                                        .filename("filename")
+                                        .contentType("content_type")
+                                        .fileSize(0L)
+                                        .build()
+                                )
+                                .externalUrl("external_url")
+                                .instructions("instructions")
+                                .build()
+                        )
+                        .errorCode("error_code")
+                        .errorMessage("error_message")
+                        .licenseKey(
+                            EntitlementGrantFailedWebhookEvent.Data.LicenseKey.builder()
+                                .activationsUsed(0)
+                                .key("key")
+                                .activationsLimit(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .oauthUrl("oauth_url")
+                        .paymentId("payment_id")
+                        .revocationReason("revocation_reason")
+                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .subscriptionId("subscription_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(EntitlementGrantFailedWebhookEvent.Type.ENTITLEMENT_GRANT_FAILED)
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofEntitlementGrantFailed(entitlementGrantFailed)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).contains(entitlementGrantFailed)
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofEntitlementGrantFailedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantFailed(
+                EntitlementGrantFailedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        EntitlementGrantFailedWebhookEvent.Data.builder()
+                            .id("id")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .entitlementId("entitlement_id")
+                            .externalId("external_id")
+                            .status(EntitlementGrantFailedWebhookEvent.Data.Status.PENDING)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .digitalProductDelivery(
+                                DigitalProductDelivery.builder()
+                                    .addFile(
+                                        DigitalProductDeliveryFile.builder()
+                                            .downloadUrl("download_url")
+                                            .expiresIn(0L)
+                                            .fileId("file_id")
+                                            .filename("filename")
+                                            .contentType("content_type")
+                                            .fileSize(0L)
+                                            .build()
+                                    )
+                                    .externalUrl("external_url")
+                                    .instructions("instructions")
+                                    .build()
+                            )
+                            .errorCode("error_code")
+                            .errorMessage("error_message")
+                            .licenseKey(
+                                EntitlementGrantFailedWebhookEvent.Data.LicenseKey.builder()
+                                    .activationsUsed(0)
+                                    .key("key")
+                                    .activationsLimit(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .oauthUrl("oauth_url")
+                            .paymentId("payment_id")
+                            .revocationReason("revocation_reason")
+                            .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .subscriptionId("subscription_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(EntitlementGrantFailedWebhookEvent.Type.ENTITLEMENT_GRANT_FAILED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofEntitlementGrantRevoked() {
+        val entitlementGrantRevoked =
+            EntitlementGrantRevokedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    EntitlementGrantRevokedWebhookEvent.Data.builder()
+                        .id("id")
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customerId("customer_id")
+                        .entitlementId("entitlement_id")
+                        .externalId("external_id")
+                        .status(EntitlementGrantRevokedWebhookEvent.Data.Status.PENDING)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .digitalProductDelivery(
+                            DigitalProductDelivery.builder()
+                                .addFile(
+                                    DigitalProductDeliveryFile.builder()
+                                        .downloadUrl("download_url")
+                                        .expiresIn(0L)
+                                        .fileId("file_id")
+                                        .filename("filename")
+                                        .contentType("content_type")
+                                        .fileSize(0L)
+                                        .build()
+                                )
+                                .externalUrl("external_url")
+                                .instructions("instructions")
+                                .build()
+                        )
+                        .errorCode("error_code")
+                        .errorMessage("error_message")
+                        .licenseKey(
+                            EntitlementGrantRevokedWebhookEvent.Data.LicenseKey.builder()
+                                .activationsUsed(0)
+                                .key("key")
+                                .activationsLimit(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .build()
+                        )
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .oauthUrl("oauth_url")
+                        .paymentId("payment_id")
+                        .revocationReason("revocation_reason")
+                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .subscriptionId("subscription_id")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .type(EntitlementGrantRevokedWebhookEvent.Type.ENTITLEMENT_GRANT_REVOKED)
+                .build()
+
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantRevoked(entitlementGrantRevoked)
+
+        assertThat(unwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).contains(entitlementGrantRevoked)
+        assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofEntitlementGrantRevokedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofEntitlementGrantRevoked(
+                EntitlementGrantRevokedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        EntitlementGrantRevokedWebhookEvent.Data.builder()
+                            .id("id")
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customerId("customer_id")
+                            .entitlementId("entitlement_id")
+                            .externalId("external_id")
+                            .status(EntitlementGrantRevokedWebhookEvent.Data.Status.PENDING)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .digitalProductDelivery(
+                                DigitalProductDelivery.builder()
+                                    .addFile(
+                                        DigitalProductDeliveryFile.builder()
+                                            .downloadUrl("download_url")
+                                            .expiresIn(0L)
+                                            .fileId("file_id")
+                                            .filename("filename")
+                                            .contentType("content_type")
+                                            .fileSize(0L)
+                                            .build()
+                                    )
+                                    .externalUrl("external_url")
+                                    .instructions("instructions")
+                                    .build()
+                            )
+                            .errorCode("error_code")
+                            .errorMessage("error_message")
+                            .licenseKey(
+                                EntitlementGrantRevokedWebhookEvent.Data.LicenseKey.builder()
+                                    .activationsUsed(0)
+                                    .key("key")
+                                    .activationsLimit(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .build()
+                            )
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .oauthExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .oauthUrl("oauth_url")
+                            .paymentId("payment_id")
+                            .revocationReason("revocation_reason")
+                            .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .subscriptionId("subscription_id")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .type(EntitlementGrantRevokedWebhookEvent.Type.ENTITLEMENT_GRANT_REVOKED)
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
     fun ofLicenseKeyCreated() {
         val licenseKeyCreated =
             LicenseKeyCreatedWebhookEvent.builder()
@@ -1966,6 +2840,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -1977,6 +2852,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).contains(licenseKeyCreated)
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2147,6 +3026,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -2158,6 +3038,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).contains(paymentCancelled)
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2407,6 +3291,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -2418,6 +3303,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).contains(paymentFailed)
@@ -2667,6 +3556,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -2678,6 +3568,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2927,6 +3821,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -2938,6 +3833,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3122,6 +4021,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -3133,6 +4033,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3252,6 +4156,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -3263,6 +4168,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3427,6 +4336,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -3470,6 +4381,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -3481,6 +4393,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3598,6 +4514,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -3736,6 +4654,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -3779,6 +4699,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -3790,6 +4711,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3907,6 +4832,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4045,6 +4972,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4088,6 +5017,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -4099,6 +5029,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4216,6 +5150,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4354,6 +5290,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4397,6 +5335,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -4408,6 +5347,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4525,6 +5468,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4663,6 +5608,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -4706,6 +5653,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -4717,6 +5665,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4834,6 +5786,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -4972,6 +5926,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5016,6 +5972,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -5027,6 +5984,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5144,6 +6105,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -5282,6 +6245,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5325,6 +6290,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -5336,6 +6302,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5453,6 +6423,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
@@ -5591,6 +6563,8 @@ internal class UnwrapWebhookEventTest {
                         .subscriptionPeriodInterval(TimeInterval.DAY)
                         .taxInclusive(true)
                         .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                         .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
@@ -5634,6 +6608,7 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.creditExpired()).isEmpty
         assertThat(unwrapWebhookEvent.creditManualAdjustment()).isEmpty
         assertThat(unwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unwrapWebhookEvent.creditOverageReset()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolledOver()).isEmpty
         assertThat(unwrapWebhookEvent.creditRolloverForfeited()).isEmpty
         assertThat(unwrapWebhookEvent.disputeAccepted()).isEmpty
@@ -5645,6 +6620,10 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.disputeWon()).isEmpty
         assertThat(unwrapWebhookEvent.dunningRecovered()).isEmpty
         assertThat(unwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
         assertThat(unwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5762,6 +6741,8 @@ internal class UnwrapWebhookEventTest {
                             .subscriptionPeriodInterval(TimeInterval.DAY)
                             .taxInclusive(true)
                             .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(Subscription.CancellationFeedback.TOO_EXPENSIVE)
                             .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()

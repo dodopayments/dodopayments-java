@@ -11,6 +11,8 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
+import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPage
 import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.models.customers.CustomerRetrieveParams
@@ -185,6 +187,42 @@ interface CustomerService {
             CustomerListCreditEntitlementsParams.none(),
             requestOptions,
         )
+
+    /** List all entitlement grants delivered (or in flight) to a customer. */
+    fun listEntitlements(customerId: String): CustomerListEntitlementsResponse =
+        listEntitlements(customerId, CustomerListEntitlementsParams.none())
+
+    /** @see listEntitlements */
+    fun listEntitlements(
+        customerId: String,
+        params: CustomerListEntitlementsParams = CustomerListEntitlementsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CustomerListEntitlementsResponse =
+        listEntitlements(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see listEntitlements */
+    fun listEntitlements(
+        customerId: String,
+        params: CustomerListEntitlementsParams = CustomerListEntitlementsParams.none(),
+    ): CustomerListEntitlementsResponse =
+        listEntitlements(customerId, params, RequestOptions.none())
+
+    /** @see listEntitlements */
+    fun listEntitlements(
+        params: CustomerListEntitlementsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CustomerListEntitlementsResponse
+
+    /** @see listEntitlements */
+    fun listEntitlements(params: CustomerListEntitlementsParams): CustomerListEntitlementsResponse =
+        listEntitlements(params, RequestOptions.none())
+
+    /** @see listEntitlements */
+    fun listEntitlements(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CustomerListEntitlementsResponse =
+        listEntitlements(customerId, CustomerListEntitlementsParams.none(), requestOptions)
 
     fun retrievePaymentMethods(customerId: String): CustomerRetrievePaymentMethodsResponse =
         retrievePaymentMethods(customerId, CustomerRetrievePaymentMethodsParams.none())
@@ -458,6 +496,55 @@ interface CustomerService {
                 CustomerListCreditEntitlementsParams.none(),
                 requestOptions,
             )
+
+        /**
+         * Returns a raw HTTP response for `get /customers/{customer_id}/entitlements`, but is
+         * otherwise the same as [CustomerService.listEntitlements].
+         */
+        @MustBeClosed
+        fun listEntitlements(
+            customerId: String
+        ): HttpResponseFor<CustomerListEntitlementsResponse> =
+            listEntitlements(customerId, CustomerListEntitlementsParams.none())
+
+        /** @see listEntitlements */
+        @MustBeClosed
+        fun listEntitlements(
+            customerId: String,
+            params: CustomerListEntitlementsParams = CustomerListEntitlementsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CustomerListEntitlementsResponse> =
+            listEntitlements(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see listEntitlements */
+        @MustBeClosed
+        fun listEntitlements(
+            customerId: String,
+            params: CustomerListEntitlementsParams = CustomerListEntitlementsParams.none(),
+        ): HttpResponseFor<CustomerListEntitlementsResponse> =
+            listEntitlements(customerId, params, RequestOptions.none())
+
+        /** @see listEntitlements */
+        @MustBeClosed
+        fun listEntitlements(
+            params: CustomerListEntitlementsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CustomerListEntitlementsResponse>
+
+        /** @see listEntitlements */
+        @MustBeClosed
+        fun listEntitlements(
+            params: CustomerListEntitlementsParams
+        ): HttpResponseFor<CustomerListEntitlementsResponse> =
+            listEntitlements(params, RequestOptions.none())
+
+        /** @see listEntitlements */
+        @MustBeClosed
+        fun listEntitlements(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<CustomerListEntitlementsResponse> =
+            listEntitlements(customerId, CustomerListEntitlementsParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /customers/{customer_id}/payment-methods`, but is

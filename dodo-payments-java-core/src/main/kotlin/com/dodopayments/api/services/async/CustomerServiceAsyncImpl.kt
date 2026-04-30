@@ -22,6 +22,8 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
+import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
 import com.dodopayments.api.models.customers.CustomerListPageResponse
 import com.dodopayments.api.models.customers.CustomerListParams
@@ -100,6 +102,13 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
     ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
         // get /customers/{customer_id}/credit-entitlements
         withRawResponse().listCreditEntitlements(params, requestOptions).thenApply { it.parse() }
+
+    override fun listEntitlements(
+        params: CustomerListEntitlementsParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerListEntitlementsResponse> =
+        // get /customers/{customer_id}/entitlements
+        withRawResponse().listEntitlements(params, requestOptions).thenApply { it.parse() }
 
     override fun retrievePaymentMethods(
         params: CustomerRetrievePaymentMethodsParams,
@@ -325,6 +334,39 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
                     errorHandler.handle(response).parseable {
                         response
                             .use { listCreditEntitlementsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val listEntitlementsHandler: Handler<CustomerListEntitlementsResponse> =
+            jsonHandler<CustomerListEntitlementsResponse>(clientOptions.jsonMapper)
+
+        override fun listEntitlements(
+            params: CustomerListEntitlementsParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementsResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("customerId", params.customerId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("customers", params._pathParam(0), "entitlements")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listEntitlementsHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
