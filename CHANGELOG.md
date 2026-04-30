@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.97.0 (2026-04-30)
+
+Full Changelog: [v1.96.1...v1.97.0](https://github.com/dodopayments/dodopayments-java/compare/v1.96.1...v1.97.0)
+
+### Features
+
+* **api:** added more models to make the dx easy ([1f4bccd](https://github.com/dodopayments/dodopayments-java/commit/1f4bccd09b38f42a7b5f6040b968dc7dc88622b9))
+* **api:** updated openapi spec to v1.97.5 ([ceec945](https://github.com/dodopayments/dodopayments-java/commit/ceec945272ff4462588e926fa634c89f94dbe638))
+
 ## 1.96.1 (2026-04-29)
 
 Full Changelog: [v1.96.0...v1.96.1](https://github.com/dodopayments/dodopayments-java/compare/v1.96.0...v1.96.1)
