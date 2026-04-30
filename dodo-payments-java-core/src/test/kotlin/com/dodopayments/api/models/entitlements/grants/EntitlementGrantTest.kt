@@ -11,19 +11,19 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class GrantRevokeResponseTest {
+internal class EntitlementGrantTest {
 
     @Test
     fun create() {
-        val grantRevokeResponse =
-            GrantRevokeResponse.builder()
+        val entitlementGrant =
+            EntitlementGrant.builder()
                 .id("id")
                 .businessId("business_id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customerId("customer_id")
                 .entitlementId("entitlement_id")
                 .externalId("external_id")
-                .status(GrantRevokeResponse.Status.PENDING)
+                .status(EntitlementGrant.Status.PENDING)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .digitalProductDelivery(
@@ -45,7 +45,7 @@ internal class GrantRevokeResponseTest {
                 .errorCode("error_code")
                 .errorMessage("error_message")
                 .licenseKey(
-                    GrantRevokeResponse.LicenseKey.builder()
+                    LicenseKeyGrant.builder()
                         .activationsUsed(0)
                         .key("key")
                         .activationsLimit(0)
@@ -61,19 +61,19 @@ internal class GrantRevokeResponseTest {
                 .subscriptionId("subscription_id")
                 .build()
 
-        assertThat(grantRevokeResponse.id()).isEqualTo("id")
-        assertThat(grantRevokeResponse.businessId()).isEqualTo("business_id")
-        assertThat(grantRevokeResponse.createdAt())
+        assertThat(entitlementGrant.id()).isEqualTo("id")
+        assertThat(entitlementGrant.businessId()).isEqualTo("business_id")
+        assertThat(entitlementGrant.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(grantRevokeResponse.customerId()).isEqualTo("customer_id")
-        assertThat(grantRevokeResponse.entitlementId()).isEqualTo("entitlement_id")
-        assertThat(grantRevokeResponse.externalId()).isEqualTo("external_id")
-        assertThat(grantRevokeResponse.status()).isEqualTo(GrantRevokeResponse.Status.PENDING)
-        assertThat(grantRevokeResponse.updatedAt())
+        assertThat(entitlementGrant.customerId()).isEqualTo("customer_id")
+        assertThat(entitlementGrant.entitlementId()).isEqualTo("entitlement_id")
+        assertThat(entitlementGrant.externalId()).isEqualTo("external_id")
+        assertThat(entitlementGrant.status()).isEqualTo(EntitlementGrant.Status.PENDING)
+        assertThat(entitlementGrant.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(grantRevokeResponse.deliveredAt())
+        assertThat(entitlementGrant.deliveredAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(grantRevokeResponse.digitalProductDelivery())
+        assertThat(entitlementGrant.digitalProductDelivery())
             .contains(
                 DigitalProductDelivery.builder()
                     .addFile(
@@ -90,40 +90,40 @@ internal class GrantRevokeResponseTest {
                     .instructions("instructions")
                     .build()
             )
-        assertThat(grantRevokeResponse.errorCode()).contains("error_code")
-        assertThat(grantRevokeResponse.errorMessage()).contains("error_message")
-        assertThat(grantRevokeResponse.licenseKey())
+        assertThat(entitlementGrant.errorCode()).contains("error_code")
+        assertThat(entitlementGrant.errorMessage()).contains("error_message")
+        assertThat(entitlementGrant.licenseKey())
             .contains(
-                GrantRevokeResponse.LicenseKey.builder()
+                LicenseKeyGrant.builder()
                     .activationsUsed(0)
                     .key("key")
                     .activationsLimit(0)
                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(grantRevokeResponse._metadata()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
-        assertThat(grantRevokeResponse.oauthExpiresAt())
+        assertThat(entitlementGrant._metadata()).isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(entitlementGrant.oauthExpiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(grantRevokeResponse.oauthUrl()).contains("oauth_url")
-        assertThat(grantRevokeResponse.paymentId()).contains("payment_id")
-        assertThat(grantRevokeResponse.revocationReason()).contains("revocation_reason")
-        assertThat(grantRevokeResponse.revokedAt())
+        assertThat(entitlementGrant.oauthUrl()).contains("oauth_url")
+        assertThat(entitlementGrant.paymentId()).contains("payment_id")
+        assertThat(entitlementGrant.revocationReason()).contains("revocation_reason")
+        assertThat(entitlementGrant.revokedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(grantRevokeResponse.subscriptionId()).contains("subscription_id")
+        assertThat(entitlementGrant.subscriptionId()).contains("subscription_id")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val grantRevokeResponse =
-            GrantRevokeResponse.builder()
+        val entitlementGrant =
+            EntitlementGrant.builder()
                 .id("id")
                 .businessId("business_id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customerId("customer_id")
                 .entitlementId("entitlement_id")
                 .externalId("external_id")
-                .status(GrantRevokeResponse.Status.PENDING)
+                .status(EntitlementGrant.Status.PENDING)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .digitalProductDelivery(
@@ -145,7 +145,7 @@ internal class GrantRevokeResponseTest {
                 .errorCode("error_code")
                 .errorMessage("error_message")
                 .licenseKey(
-                    GrantRevokeResponse.LicenseKey.builder()
+                    LicenseKeyGrant.builder()
                         .activationsUsed(0)
                         .key("key")
                         .activationsLimit(0)
@@ -161,12 +161,12 @@ internal class GrantRevokeResponseTest {
                 .subscriptionId("subscription_id")
                 .build()
 
-        val roundtrippedGrantRevokeResponse =
+        val roundtrippedEntitlementGrant =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(grantRevokeResponse),
-                jacksonTypeRef<GrantRevokeResponse>(),
+                jsonMapper.writeValueAsString(entitlementGrant),
+                jacksonTypeRef<EntitlementGrant>(),
             )
 
-        assertThat(roundtrippedGrantRevokeResponse).isEqualTo(grantRevokeResponse)
+        assertThat(roundtrippedEntitlementGrant).isEqualTo(entitlementGrant)
     }
 }

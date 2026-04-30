@@ -8,6 +8,7 @@ import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomerRequest
+import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.PaymentMethodTypes
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -51,7 +52,7 @@ internal class SubscriptionCreateParamsTest {
                     .build()
             )
             .addOneTimeProductCart(
-                SubscriptionCreateParams.OneTimeProductCart.builder()
+                OneTimeProductCartItem.builder()
                     .productId("product_id")
                     .quantity(0)
                     .amount(0)
@@ -106,7 +107,7 @@ internal class SubscriptionCreateParamsTest {
                         .build()
                 )
                 .addOneTimeProductCart(
-                    SubscriptionCreateParams.OneTimeProductCart.builder()
+                    OneTimeProductCartItem.builder()
                         .productId("product_id")
                         .quantity(0)
                         .amount(0)
@@ -169,7 +170,7 @@ internal class SubscriptionCreateParamsTest {
             )
         assertThat(body.oneTimeProductCart().getOrNull())
             .containsExactly(
-                SubscriptionCreateParams.OneTimeProductCart.builder()
+                OneTimeProductCartItem.builder()
                     .productId("product_id")
                     .quantity(0)
                     .amount(0)

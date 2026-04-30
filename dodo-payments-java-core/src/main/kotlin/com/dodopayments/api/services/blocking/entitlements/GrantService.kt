@@ -5,10 +5,10 @@ package com.dodopayments.api.services.blocking.entitlements
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.GrantListPage
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
-import com.dodopayments.api.models.entitlements.grants.GrantRevokeResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -59,7 +59,7 @@ interface GrantService {
      * returns 200 with current state. The revocation reason is always set to "manual" for
      * API-initiated revocations.
      */
-    fun revoke(grantId: String, params: GrantRevokeParams): GrantRevokeResponse =
+    fun revoke(grantId: String, params: GrantRevokeParams): EntitlementGrant =
         revoke(grantId, params, RequestOptions.none())
 
     /** @see revoke */
@@ -67,17 +67,16 @@ interface GrantService {
         grantId: String,
         params: GrantRevokeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): GrantRevokeResponse = revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
+    ): EntitlementGrant = revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
 
     /** @see revoke */
-    fun revoke(params: GrantRevokeParams): GrantRevokeResponse =
-        revoke(params, RequestOptions.none())
+    fun revoke(params: GrantRevokeParams): EntitlementGrant = revoke(params, RequestOptions.none())
 
     /** @see revoke */
     fun revoke(
         params: GrantRevokeParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): GrantRevokeResponse
+    ): EntitlementGrant
 
     /** A view of [GrantService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -133,10 +132,8 @@ interface GrantService {
          * otherwise the same as [GrantService.revoke].
          */
         @MustBeClosed
-        fun revoke(
-            grantId: String,
-            params: GrantRevokeParams,
-        ): HttpResponseFor<GrantRevokeResponse> = revoke(grantId, params, RequestOptions.none())
+        fun revoke(grantId: String, params: GrantRevokeParams): HttpResponseFor<EntitlementGrant> =
+            revoke(grantId, params, RequestOptions.none())
 
         /** @see revoke */
         @MustBeClosed
@@ -144,12 +141,12 @@ interface GrantService {
             grantId: String,
             params: GrantRevokeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<GrantRevokeResponse> =
+        ): HttpResponseFor<EntitlementGrant> =
             revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
 
         /** @see revoke */
         @MustBeClosed
-        fun revoke(params: GrantRevokeParams): HttpResponseFor<GrantRevokeResponse> =
+        fun revoke(params: GrantRevokeParams): HttpResponseFor<EntitlementGrant> =
             revoke(params, RequestOptions.none())
 
         /** @see revoke */
@@ -157,6 +154,6 @@ interface GrantService {
         fun revoke(
             params: GrantRevokeParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<GrantRevokeResponse>
+        ): HttpResponseFor<EntitlementGrant>
     }
 }

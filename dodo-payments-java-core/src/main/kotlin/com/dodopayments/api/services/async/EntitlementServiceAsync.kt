@@ -6,15 +6,13 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.entitlements.Entitlement
 import com.dodopayments.api.models.entitlements.EntitlementCreateParams
-import com.dodopayments.api.models.entitlements.EntitlementCreateResponse
 import com.dodopayments.api.models.entitlements.EntitlementDeleteParams
 import com.dodopayments.api.models.entitlements.EntitlementListPageAsync
 import com.dodopayments.api.models.entitlements.EntitlementListParams
 import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
-import com.dodopayments.api.models.entitlements.EntitlementRetrieveResponse
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
-import com.dodopayments.api.models.entitlements.EntitlementUpdateResponse
 import com.dodopayments.api.services.async.entitlements.FileServiceAsync
 import com.dodopayments.api.services.async.entitlements.GrantServiceAsync
 import java.util.concurrent.CompletableFuture
@@ -39,17 +37,17 @@ interface EntitlementServiceAsync {
     fun grants(): GrantServiceAsync
 
     /** POST /entitlements */
-    fun create(params: EntitlementCreateParams): CompletableFuture<EntitlementCreateResponse> =
+    fun create(params: EntitlementCreateParams): CompletableFuture<Entitlement> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: EntitlementCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementCreateResponse>
+    ): CompletableFuture<Entitlement>
 
     /** GET /entitlements/{id} */
-    fun retrieve(id: String): CompletableFuture<EntitlementRetrieveResponse> =
+    fun retrieve(id: String): CompletableFuture<Entitlement> =
         retrieve(id, EntitlementRetrieveParams.none())
 
     /** @see retrieve */
@@ -57,35 +55,30 @@ interface EntitlementServiceAsync {
         id: String,
         params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementRetrieveResponse> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Entitlement> = retrieve(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see retrieve */
     fun retrieve(
         id: String,
         params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-    ): CompletableFuture<EntitlementRetrieveResponse> = retrieve(id, params, RequestOptions.none())
+    ): CompletableFuture<Entitlement> = retrieve(id, params, RequestOptions.none())
 
     /** @see retrieve */
     fun retrieve(
         params: EntitlementRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementRetrieveResponse>
+    ): CompletableFuture<Entitlement>
 
     /** @see retrieve */
-    fun retrieve(
-        params: EntitlementRetrieveParams
-    ): CompletableFuture<EntitlementRetrieveResponse> = retrieve(params, RequestOptions.none())
+    fun retrieve(params: EntitlementRetrieveParams): CompletableFuture<Entitlement> =
+        retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<EntitlementRetrieveResponse> =
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Entitlement> =
         retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
 
     /** PATCH /entitlements/{id} */
-    fun update(id: String): CompletableFuture<EntitlementUpdateResponse> =
+    fun update(id: String): CompletableFuture<Entitlement> =
         update(id, EntitlementUpdateParams.none())
 
     /** @see update */
@@ -93,30 +86,26 @@ interface EntitlementServiceAsync {
         id: String,
         params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Entitlement> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-    ): CompletableFuture<EntitlementUpdateResponse> = update(id, params, RequestOptions.none())
+    ): CompletableFuture<Entitlement> = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: EntitlementUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementUpdateResponse>
+    ): CompletableFuture<Entitlement>
 
     /** @see update */
-    fun update(params: EntitlementUpdateParams): CompletableFuture<EntitlementUpdateResponse> =
+    fun update(params: EntitlementUpdateParams): CompletableFuture<Entitlement> =
         update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<EntitlementUpdateResponse> =
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Entitlement> =
         update(id, EntitlementUpdateParams.none(), requestOptions)
 
     /** GET /entitlements */
@@ -192,20 +181,19 @@ interface EntitlementServiceAsync {
          */
         fun create(
             params: EntitlementCreateParams
-        ): CompletableFuture<HttpResponseFor<EntitlementCreateResponse>> =
-            create(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Entitlement>> = create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: EntitlementCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<Entitlement>>
 
         /**
          * Returns a raw HTTP response for `get /entitlements/{id}`, but is otherwise the same as
          * [EntitlementServiceAsync.retrieve].
          */
-        fun retrieve(id: String): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>> =
+        fun retrieve(id: String): CompletableFuture<HttpResponseFor<Entitlement>> =
             retrieve(id, EntitlementRetrieveParams.none())
 
         /** @see retrieve */
@@ -213,40 +201,39 @@ interface EntitlementServiceAsync {
             id: String,
             params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             retrieve(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             retrieve(id, params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             params: EntitlementRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<Entitlement>>
 
         /** @see retrieve */
         fun retrieve(
             params: EntitlementRetrieveParams
-        ): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Entitlement>> = retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
         fun retrieve(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<EntitlementRetrieveResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `patch /entitlements/{id}`, but is otherwise the same as
          * [EntitlementServiceAsync.update].
          */
-        fun update(id: String): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<Entitlement>> =
             update(id, EntitlementUpdateParams.none())
 
         /** @see update */
@@ -254,33 +241,32 @@ interface EntitlementServiceAsync {
             id: String,
             params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         fun update(
             id: String,
             params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             update(id, params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: EntitlementUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<Entitlement>>
 
         /** @see update */
         fun update(
             params: EntitlementUpdateParams
-        ): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>> =
-            update(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<Entitlement>> = update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<EntitlementUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<Entitlement>> =
             update(id, EntitlementUpdateParams.none(), requestOptions)
 
         /**

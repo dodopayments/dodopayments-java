@@ -28,7 +28,7 @@ internal class SubscriptionUpdateParamsTest {
             .cancelAtNextBillingDate(true)
             .cancelReason(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
             .cancellationComment("cancellation_comment")
-            .cancellationFeedback(SubscriptionUpdateParams.CancellationFeedback.TOO_EXPENSIVE)
+            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
             .addCreditEntitlementCart(
                 SubscriptionUpdateParams.CreditEntitlementCart.builder()
                     .creditEntitlementId("credit_entitlement_id")
@@ -87,7 +87,7 @@ internal class SubscriptionUpdateParamsTest {
                 .cancelAtNextBillingDate(true)
                 .cancelReason(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
                 .cancellationComment("cancellation_comment")
-                .cancellationFeedback(SubscriptionUpdateParams.CancellationFeedback.TOO_EXPENSIVE)
+                .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
                 .addCreditEntitlementCart(
                     SubscriptionUpdateParams.CreditEntitlementCart.builder()
                         .creditEntitlementId("credit_entitlement_id")
@@ -135,8 +135,7 @@ internal class SubscriptionUpdateParamsTest {
         assertThat(body.cancelReason())
             .contains(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
         assertThat(body.cancellationComment()).contains("cancellation_comment")
-        assertThat(body.cancellationFeedback())
-            .contains(SubscriptionUpdateParams.CancellationFeedback.TOO_EXPENSIVE)
+        assertThat(body.cancellationFeedback()).contains(CancellationFeedback.TOO_EXPENSIVE)
         assertThat(body.creditEntitlementCart().getOrNull())
             .containsExactly(
                 SubscriptionUpdateParams.CreditEntitlementCart.builder()

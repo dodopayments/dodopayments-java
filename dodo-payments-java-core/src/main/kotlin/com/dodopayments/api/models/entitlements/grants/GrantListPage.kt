@@ -16,14 +16,14 @@ private constructor(
     private val service: GrantService,
     private val params: GrantListParams,
     private val response: GrantListPageResponse,
-) : Page<GrantListResponse> {
+) : Page<EntitlementGrant> {
 
     /**
      * Delegates to [GrantListPageResponse], but gracefully handles missing data.
      *
      * @see GrantListPageResponse.items
      */
-    override fun items(): List<GrantListResponse> =
+    override fun items(): List<EntitlementGrant> =
         response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -35,7 +35,7 @@ private constructor(
 
     override fun nextPage(): GrantListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<GrantListResponse> = AutoPager.from(this)
+    fun autoPager(): AutoPager<EntitlementGrant> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): GrantListParams = params
