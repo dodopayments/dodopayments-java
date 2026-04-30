@@ -145,9 +145,11 @@ internal class CheckoutSessionServiceAsyncTest {
                             .allowTaxId(true)
                             .alwaysCreateNewCustomer(true)
                             .redirectImmediately(true)
+                            .requirePhoneNumber(true)
                             .build()
                     )
                     .force3ds(true)
+                    .mandateMinAmountInrPaise(0)
                     .metadata(
                         CheckoutSessionRequest.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -315,9 +317,11 @@ internal class CheckoutSessionServiceAsyncTest {
                             .allowTaxId(true)
                             .alwaysCreateNewCustomer(true)
                             .redirectImmediately(true)
+                            .requirePhoneNumber(true)
                             .build()
                     )
                     .force3ds(true)
+                    .mandateMinAmountInrPaise(0)
                     .metadata(
                         CheckoutSessionRequest.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))

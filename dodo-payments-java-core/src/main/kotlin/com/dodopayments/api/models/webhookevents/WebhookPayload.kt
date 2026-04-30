@@ -32,6 +32,7 @@ import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.Payment as GlobalPayment
 import com.dodopayments.api.models.payments.PaymentRefundStatus
 import com.dodopayments.api.models.payments.RefundListItem
+import com.dodopayments.api.models.products.DigitalProductDelivery
 import com.dodopayments.api.models.refunds.Refund as GlobalRefund
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.dodopayments.api.models.subscriptions.AddonCartResponseItem
@@ -2938,6 +2939,8 @@ private constructor(
             private val subscriptionPeriodInterval: JsonField<TimeInterval>,
             private val taxInclusive: JsonField<Boolean>,
             private val trialPeriodDays: JsonField<Int>,
+            private val cancellationComment: JsonField<String>,
+            private val cancellationFeedback: JsonField<Subscription.CancellationFeedback>,
             private val cancelledAt: JsonField<OffsetDateTime>,
             private val customFieldResponses: JsonField<List<CustomFieldResponse>>,
             private val discountCyclesRemaining: JsonField<Int>,
@@ -3026,6 +3029,13 @@ private constructor(
                 @JsonProperty("trial_period_days")
                 @ExcludeMissing
                 trialPeriodDays: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("cancellation_comment")
+                @ExcludeMissing
+                cancellationComment: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("cancellation_feedback")
+                @ExcludeMissing
+                cancellationFeedback: JsonField<Subscription.CancellationFeedback> =
+                    JsonMissing.of(),
                 @JsonProperty("cancelled_at")
                 @ExcludeMissing
                 cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -3076,6 +3086,8 @@ private constructor(
                 subscriptionPeriodInterval,
                 taxInclusive,
                 trialPeriodDays,
+                cancellationComment,
+                cancellationFeedback,
                 cancelledAt,
                 customFieldResponses,
                 discountCyclesRemaining,
@@ -3114,6 +3126,8 @@ private constructor(
                     .subscriptionPeriodInterval(subscriptionPeriodInterval)
                     .taxInclusive(taxInclusive)
                     .trialPeriodDays(trialPeriodDays)
+                    .cancellationComment(cancellationComment)
+                    .cancellationFeedback(cancellationFeedback)
                     .cancelledAt(cancelledAt)
                     .customFieldResponses(customFieldResponses)
                     .discountCyclesRemaining(discountCyclesRemaining)
@@ -3349,6 +3363,24 @@ private constructor(
              *   value).
              */
             fun trialPeriodDays(): Int = trialPeriodDays.getRequired("trial_period_days")
+
+            /**
+             * Free-text cancellation comment, if any
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun cancellationComment(): Optional<String> =
+                cancellationComment.getOptional("cancellation_comment")
+
+            /**
+             * Customer-supplied churn reason, if any
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun cancellationFeedback(): Optional<Subscription.CancellationFeedback> =
+                cancellationFeedback.getOptional("cancellation_feedback")
 
             /**
              * Cancelled timestamp if the subscription is cancelled
@@ -3662,6 +3694,27 @@ private constructor(
             fun _trialPeriodDays(): JsonField<Int> = trialPeriodDays
 
             /**
+             * Returns the raw JSON value of [cancellationComment].
+             *
+             * Unlike [cancellationComment], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("cancellation_comment")
+            @ExcludeMissing
+            fun _cancellationComment(): JsonField<String> = cancellationComment
+
+            /**
+             * Returns the raw JSON value of [cancellationFeedback].
+             *
+             * Unlike [cancellationFeedback], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("cancellation_feedback")
+            @ExcludeMissing
+            fun _cancellationFeedback(): JsonField<Subscription.CancellationFeedback> =
+                cancellationFeedback
+
+            /**
              * Returns the raw JSON value of [cancelledAt].
              *
              * Unlike [cancelledAt], this method doesn't throw if the JSON field has an unexpected
@@ -3828,6 +3881,9 @@ private constructor(
                 private var subscriptionPeriodInterval: JsonField<TimeInterval>? = null
                 private var taxInclusive: JsonField<Boolean>? = null
                 private var trialPeriodDays: JsonField<Int>? = null
+                private var cancellationComment: JsonField<String> = JsonMissing.of()
+                private var cancellationFeedback: JsonField<Subscription.CancellationFeedback> =
+                    JsonMissing.of()
                 private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var customFieldResponses: JsonField<MutableList<CustomFieldResponse>>? =
                     null
@@ -3869,6 +3925,8 @@ private constructor(
                     subscriptionPeriodInterval = subscription.subscriptionPeriodInterval
                     taxInclusive = subscription.taxInclusive
                     trialPeriodDays = subscription.trialPeriodDays
+                    cancellationComment = subscription.cancellationComment
+                    cancellationFeedback = subscription.cancellationFeedback
                     cancelledAt = subscription.cancelledAt
                     customFieldResponses =
                         subscription.customFieldResponses.map { it.toMutableList() }
@@ -4286,6 +4344,51 @@ private constructor(
                     this.trialPeriodDays = trialPeriodDays
                 }
 
+                /** Free-text cancellation comment, if any */
+                fun cancellationComment(cancellationComment: String?) =
+                    cancellationComment(JsonField.ofNullable(cancellationComment))
+
+                /**
+                 * Alias for calling [Builder.cancellationComment] with
+                 * `cancellationComment.orElse(null)`.
+                 */
+                fun cancellationComment(cancellationComment: Optional<String>) =
+                    cancellationComment(cancellationComment.getOrNull())
+
+                /**
+                 * Sets [Builder.cancellationComment] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.cancellationComment] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun cancellationComment(cancellationComment: JsonField<String>) = apply {
+                    this.cancellationComment = cancellationComment
+                }
+
+                /** Customer-supplied churn reason, if any */
+                fun cancellationFeedback(cancellationFeedback: Subscription.CancellationFeedback?) =
+                    cancellationFeedback(JsonField.ofNullable(cancellationFeedback))
+
+                /**
+                 * Alias for calling [Builder.cancellationFeedback] with
+                 * `cancellationFeedback.orElse(null)`.
+                 */
+                fun cancellationFeedback(
+                    cancellationFeedback: Optional<Subscription.CancellationFeedback>
+                ) = cancellationFeedback(cancellationFeedback.getOrNull())
+
+                /**
+                 * Sets [Builder.cancellationFeedback] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.cancellationFeedback] with a well-typed
+                 * [Subscription.CancellationFeedback] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
+                 */
+                fun cancellationFeedback(
+                    cancellationFeedback: JsonField<Subscription.CancellationFeedback>
+                ) = apply { this.cancellationFeedback = cancellationFeedback }
+
                 /** Cancelled timestamp if the subscription is cancelled */
                 fun cancelledAt(cancelledAt: OffsetDateTime?) =
                     cancelledAt(JsonField.ofNullable(cancelledAt))
@@ -4565,6 +4668,8 @@ private constructor(
                         checkRequired("subscriptionPeriodInterval", subscriptionPeriodInterval),
                         checkRequired("taxInclusive", taxInclusive),
                         checkRequired("trialPeriodDays", trialPeriodDays),
+                        cancellationComment,
+                        cancellationFeedback,
                         cancelledAt,
                         (customFieldResponses ?: JsonMissing.of()).map { it.toImmutable() },
                         discountCyclesRemaining,
@@ -4609,6 +4714,8 @@ private constructor(
                 subscriptionPeriodInterval().validate()
                 taxInclusive()
                 trialPeriodDays()
+                cancellationComment()
+                cancellationFeedback().ifPresent { it.validate() }
                 cancelledAt()
                 customFieldResponses().ifPresent { it.forEach { it.validate() } }
                 discountCyclesRemaining()
@@ -4664,6 +4771,8 @@ private constructor(
                     (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (taxInclusive.asKnown().isPresent) 1 else 0) +
                     (if (trialPeriodDays.asKnown().isPresent) 1 else 0) +
+                    (if (cancellationComment.asKnown().isPresent) 1 else 0) +
+                    (cancellationFeedback.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (cancelledAt.asKnown().isPresent) 1 else 0) +
                     (customFieldResponses.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                         ?: 0) +
@@ -4832,6 +4941,8 @@ private constructor(
                     subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
                     taxInclusive == other.taxInclusive &&
                     trialPeriodDays == other.trialPeriodDays &&
+                    cancellationComment == other.cancellationComment &&
+                    cancellationFeedback == other.cancellationFeedback &&
                     cancelledAt == other.cancelledAt &&
                     customFieldResponses == other.customFieldResponses &&
                     discountCyclesRemaining == other.discountCyclesRemaining &&
@@ -4870,6 +4981,8 @@ private constructor(
                     subscriptionPeriodInterval,
                     taxInclusive,
                     trialPeriodDays,
+                    cancellationComment,
+                    cancellationFeedback,
                     cancelledAt,
                     customFieldResponses,
                     discountCyclesRemaining,
@@ -4886,7 +4999,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Refund
@@ -10919,13 +11032,10 @@ private constructor(
             private val status: JsonField<Status>,
             private val updatedAt: JsonField<OffsetDateTime>,
             private val deliveredAt: JsonField<OffsetDateTime>,
+            private val digitalProductDelivery: JsonField<DigitalProductDelivery>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
-            private val licenseKey: JsonField<String>,
-            private val licenseKeyActivationsLimit: JsonField<Int>,
-            private val licenseKeyActivationsUsed: JsonField<Int>,
-            private val licenseKeyExpiresAt: JsonField<OffsetDateTime>,
-            private val licenseKeyStatus: JsonField<String>,
+            private val licenseKey: JsonField<LicenseKey>,
             private val metadata: JsonValue,
             private val oauthExpiresAt: JsonField<OffsetDateTime>,
             private val oauthUrl: JsonField<String>,
@@ -10966,6 +11076,9 @@ private constructor(
                 @JsonProperty("delivered_at")
                 @ExcludeMissing
                 deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+                @JsonProperty("digital_product_delivery")
+                @ExcludeMissing
+                digitalProductDelivery: JsonField<DigitalProductDelivery> = JsonMissing.of(),
                 @JsonProperty("error_code")
                 @ExcludeMissing
                 errorCode: JsonField<String> = JsonMissing.of(),
@@ -10974,19 +11087,7 @@ private constructor(
                 errorMessage: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("license_key")
                 @ExcludeMissing
-                licenseKey: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("license_key_activations_limit")
-                @ExcludeMissing
-                licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of(),
-                @JsonProperty("license_key_activations_used")
-                @ExcludeMissing
-                licenseKeyActivationsUsed: JsonField<Int> = JsonMissing.of(),
-                @JsonProperty("license_key_expires_at")
-                @ExcludeMissing
-                licenseKeyExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-                @JsonProperty("license_key_status")
-                @ExcludeMissing
-                licenseKeyStatus: JsonField<String> = JsonMissing.of(),
+                licenseKey: JsonField<LicenseKey> = JsonMissing.of(),
                 @JsonProperty("metadata") @ExcludeMissing metadata: JsonValue = JsonMissing.of(),
                 @JsonProperty("oauth_expires_at")
                 @ExcludeMissing
@@ -11017,13 +11118,10 @@ private constructor(
                 status,
                 updatedAt,
                 deliveredAt,
+                digitalProductDelivery,
                 errorCode,
                 errorMessage,
                 licenseKey,
-                licenseKeyActivationsLimit,
-                licenseKeyActivationsUsed,
-                licenseKeyExpiresAt,
-                licenseKeyStatus,
                 metadata,
                 oauthExpiresAt,
                 oauthUrl,
@@ -11104,6 +11202,16 @@ private constructor(
             fun deliveredAt(): Optional<OffsetDateTime> = deliveredAt.getOptional("delivered_at")
 
             /**
+             * Present only when the entitlement integration_type is `digital_files`. Populated
+             * eagerly on every list and single-record endpoint.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun digitalProductDelivery(): Optional<DigitalProductDelivery> =
+                digitalProductDelivery.getOptional("digital_product_delivery")
+
+            /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
@@ -11116,38 +11224,12 @@ private constructor(
             fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
 
             /**
+             * Present only when the entitlement integration_type is `license_key`.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun licenseKey(): Optional<String> = licenseKey.getOptional("license_key")
-
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun licenseKeyActivationsLimit(): Optional<Int> =
-                licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
-
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun licenseKeyActivationsUsed(): Optional<Int> =
-                licenseKeyActivationsUsed.getOptional("license_key_activations_used")
-
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun licenseKeyExpiresAt(): Optional<OffsetDateTime> =
-                licenseKeyExpiresAt.getOptional("license_key_expires_at")
-
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
-            fun licenseKeyStatus(): Optional<String> =
-                licenseKeyStatus.getOptional("license_key_status")
+            fun licenseKey(): Optional<LicenseKey> = licenseKey.getOptional("license_key")
 
             /**
              * This arbitrary value can be deserialized into a custom type using the `convert`
@@ -11291,6 +11373,17 @@ private constructor(
             fun _deliveredAt(): JsonField<OffsetDateTime> = deliveredAt
 
             /**
+             * Returns the raw JSON value of [digitalProductDelivery].
+             *
+             * Unlike [digitalProductDelivery], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("digital_product_delivery")
+            @ExcludeMissing
+            fun _digitalProductDelivery(): JsonField<DigitalProductDelivery> =
+                digitalProductDelivery
+
+            /**
              * Returns the raw JSON value of [errorCode].
              *
              * Unlike [errorCode], this method doesn't throw if the JSON field has an unexpected
@@ -11318,47 +11411,7 @@ private constructor(
              */
             @JsonProperty("license_key")
             @ExcludeMissing
-            fun _licenseKey(): JsonField<String> = licenseKey
-
-            /**
-             * Returns the raw JSON value of [licenseKeyActivationsLimit].
-             *
-             * Unlike [licenseKeyActivationsLimit], this method doesn't throw if the JSON field has
-             * an unexpected type.
-             */
-            @JsonProperty("license_key_activations_limit")
-            @ExcludeMissing
-            fun _licenseKeyActivationsLimit(): JsonField<Int> = licenseKeyActivationsLimit
-
-            /**
-             * Returns the raw JSON value of [licenseKeyActivationsUsed].
-             *
-             * Unlike [licenseKeyActivationsUsed], this method doesn't throw if the JSON field has
-             * an unexpected type.
-             */
-            @JsonProperty("license_key_activations_used")
-            @ExcludeMissing
-            fun _licenseKeyActivationsUsed(): JsonField<Int> = licenseKeyActivationsUsed
-
-            /**
-             * Returns the raw JSON value of [licenseKeyExpiresAt].
-             *
-             * Unlike [licenseKeyExpiresAt], this method doesn't throw if the JSON field has an
-             * unexpected type.
-             */
-            @JsonProperty("license_key_expires_at")
-            @ExcludeMissing
-            fun _licenseKeyExpiresAt(): JsonField<OffsetDateTime> = licenseKeyExpiresAt
-
-            /**
-             * Returns the raw JSON value of [licenseKeyStatus].
-             *
-             * Unlike [licenseKeyStatus], this method doesn't throw if the JSON field has an
-             * unexpected type.
-             */
-            @JsonProperty("license_key_status")
-            @ExcludeMissing
-            fun _licenseKeyStatus(): JsonField<String> = licenseKeyStatus
+            fun _licenseKey(): JsonField<LicenseKey> = licenseKey
 
             /**
              * Returns the raw JSON value of [oauthExpiresAt].
@@ -11464,13 +11517,11 @@ private constructor(
                 private var status: JsonField<Status>? = null
                 private var updatedAt: JsonField<OffsetDateTime>? = null
                 private var deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of()
+                private var digitalProductDelivery: JsonField<DigitalProductDelivery> =
+                    JsonMissing.of()
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
-                private var licenseKey: JsonField<String> = JsonMissing.of()
-                private var licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of()
-                private var licenseKeyActivationsUsed: JsonField<Int> = JsonMissing.of()
-                private var licenseKeyExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
-                private var licenseKeyStatus: JsonField<String> = JsonMissing.of()
+                private var licenseKey: JsonField<LicenseKey> = JsonMissing.of()
                 private var metadata: JsonValue = JsonMissing.of()
                 private var oauthExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var oauthUrl: JsonField<String> = JsonMissing.of()
@@ -11492,13 +11543,10 @@ private constructor(
                     status = entitlementGrant.status
                     updatedAt = entitlementGrant.updatedAt
                     deliveredAt = entitlementGrant.deliveredAt
+                    digitalProductDelivery = entitlementGrant.digitalProductDelivery
                     errorCode = entitlementGrant.errorCode
                     errorMessage = entitlementGrant.errorMessage
                     licenseKey = entitlementGrant.licenseKey
-                    licenseKeyActivationsLimit = entitlementGrant.licenseKeyActivationsLimit
-                    licenseKeyActivationsUsed = entitlementGrant.licenseKeyActivationsUsed
-                    licenseKeyExpiresAt = entitlementGrant.licenseKeyExpiresAt
-                    licenseKeyStatus = entitlementGrant.licenseKeyStatus
                     metadata = entitlementGrant.metadata
                     oauthExpiresAt = entitlementGrant.oauthExpiresAt
                     oauthUrl = entitlementGrant.oauthUrl
@@ -11641,6 +11689,32 @@ private constructor(
                     this.deliveredAt = deliveredAt
                 }
 
+                /**
+                 * Present only when the entitlement integration_type is `digital_files`. Populated
+                 * eagerly on every list and single-record endpoint.
+                 */
+                fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) =
+                    digitalProductDelivery(JsonField.ofNullable(digitalProductDelivery))
+
+                /**
+                 * Alias for calling [Builder.digitalProductDelivery] with
+                 * `digitalProductDelivery.orElse(null)`.
+                 */
+                fun digitalProductDelivery(
+                    digitalProductDelivery: Optional<DigitalProductDelivery>
+                ) = digitalProductDelivery(digitalProductDelivery.getOrNull())
+
+                /**
+                 * Sets [Builder.digitalProductDelivery] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.digitalProductDelivery] with a well-typed
+                 * [DigitalProductDelivery] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
+                 */
+                fun digitalProductDelivery(
+                    digitalProductDelivery: JsonField<DigitalProductDelivery>
+                ) = apply { this.digitalProductDelivery = digitalProductDelivery }
+
                 fun errorCode(errorCode: String?) = errorCode(JsonField.ofNullable(errorCode))
 
                 /** Alias for calling [Builder.errorCode] with `errorCode.orElse(null)`. */
@@ -11673,120 +11747,23 @@ private constructor(
                     this.errorMessage = errorMessage
                 }
 
-                fun licenseKey(licenseKey: String?) = licenseKey(JsonField.ofNullable(licenseKey))
+                /** Present only when the entitlement integration_type is `license_key`. */
+                fun licenseKey(licenseKey: LicenseKey?) =
+                    licenseKey(JsonField.ofNullable(licenseKey))
 
                 /** Alias for calling [Builder.licenseKey] with `licenseKey.orElse(null)`. */
-                fun licenseKey(licenseKey: Optional<String>) = licenseKey(licenseKey.getOrNull())
+                fun licenseKey(licenseKey: Optional<LicenseKey>) =
+                    licenseKey(licenseKey.getOrNull())
 
                 /**
                  * Sets [Builder.licenseKey] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.licenseKey] with a well-typed [String] value
+                 * You should usually call [Builder.licenseKey] with a well-typed [LicenseKey] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun licenseKey(licenseKey: JsonField<String>) = apply {
+                fun licenseKey(licenseKey: JsonField<LicenseKey>) = apply {
                     this.licenseKey = licenseKey
-                }
-
-                fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int?) =
-                    licenseKeyActivationsLimit(JsonField.ofNullable(licenseKeyActivationsLimit))
-
-                /**
-                 * Alias for [Builder.licenseKeyActivationsLimit].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int) =
-                    licenseKeyActivationsLimit(licenseKeyActivationsLimit as Int?)
-
-                /**
-                 * Alias for calling [Builder.licenseKeyActivationsLimit] with
-                 * `licenseKeyActivationsLimit.orElse(null)`.
-                 */
-                fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Optional<Int>) =
-                    licenseKeyActivationsLimit(licenseKeyActivationsLimit.getOrNull())
-
-                /**
-                 * Sets [Builder.licenseKeyActivationsLimit] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.licenseKeyActivationsLimit] with a well-typed
-                 * [Int] value instead. This method is primarily for setting the field to an
-                 * undocumented or not yet supported value.
-                 */
-                fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: JsonField<Int>) = apply {
-                    this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
-                }
-
-                fun licenseKeyActivationsUsed(licenseKeyActivationsUsed: Int?) =
-                    licenseKeyActivationsUsed(JsonField.ofNullable(licenseKeyActivationsUsed))
-
-                /**
-                 * Alias for [Builder.licenseKeyActivationsUsed].
-                 *
-                 * This unboxed primitive overload exists for backwards compatibility.
-                 */
-                fun licenseKeyActivationsUsed(licenseKeyActivationsUsed: Int) =
-                    licenseKeyActivationsUsed(licenseKeyActivationsUsed as Int?)
-
-                /**
-                 * Alias for calling [Builder.licenseKeyActivationsUsed] with
-                 * `licenseKeyActivationsUsed.orElse(null)`.
-                 */
-                fun licenseKeyActivationsUsed(licenseKeyActivationsUsed: Optional<Int>) =
-                    licenseKeyActivationsUsed(licenseKeyActivationsUsed.getOrNull())
-
-                /**
-                 * Sets [Builder.licenseKeyActivationsUsed] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.licenseKeyActivationsUsed] with a well-typed
-                 * [Int] value instead. This method is primarily for setting the field to an
-                 * undocumented or not yet supported value.
-                 */
-                fun licenseKeyActivationsUsed(licenseKeyActivationsUsed: JsonField<Int>) = apply {
-                    this.licenseKeyActivationsUsed = licenseKeyActivationsUsed
-                }
-
-                fun licenseKeyExpiresAt(licenseKeyExpiresAt: OffsetDateTime?) =
-                    licenseKeyExpiresAt(JsonField.ofNullable(licenseKeyExpiresAt))
-
-                /**
-                 * Alias for calling [Builder.licenseKeyExpiresAt] with
-                 * `licenseKeyExpiresAt.orElse(null)`.
-                 */
-                fun licenseKeyExpiresAt(licenseKeyExpiresAt: Optional<OffsetDateTime>) =
-                    licenseKeyExpiresAt(licenseKeyExpiresAt.getOrNull())
-
-                /**
-                 * Sets [Builder.licenseKeyExpiresAt] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.licenseKeyExpiresAt] with a well-typed
-                 * [OffsetDateTime] value instead. This method is primarily for setting the field to
-                 * an undocumented or not yet supported value.
-                 */
-                fun licenseKeyExpiresAt(licenseKeyExpiresAt: JsonField<OffsetDateTime>) = apply {
-                    this.licenseKeyExpiresAt = licenseKeyExpiresAt
-                }
-
-                fun licenseKeyStatus(licenseKeyStatus: String?) =
-                    licenseKeyStatus(JsonField.ofNullable(licenseKeyStatus))
-
-                /**
-                 * Alias for calling [Builder.licenseKeyStatus] with
-                 * `licenseKeyStatus.orElse(null)`.
-                 */
-                fun licenseKeyStatus(licenseKeyStatus: Optional<String>) =
-                    licenseKeyStatus(licenseKeyStatus.getOrNull())
-
-                /**
-                 * Sets [Builder.licenseKeyStatus] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.licenseKeyStatus] with a well-typed [String]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
-                 */
-                fun licenseKeyStatus(licenseKeyStatus: JsonField<String>) = apply {
-                    this.licenseKeyStatus = licenseKeyStatus
                 }
 
                 fun metadata(metadata: JsonValue) = apply { this.metadata = metadata }
@@ -11952,13 +11929,10 @@ private constructor(
                         checkRequired("status", status),
                         checkRequired("updatedAt", updatedAt),
                         deliveredAt,
+                        digitalProductDelivery,
                         errorCode,
                         errorMessage,
                         licenseKey,
-                        licenseKeyActivationsLimit,
-                        licenseKeyActivationsUsed,
-                        licenseKeyExpiresAt,
-                        licenseKeyStatus,
                         metadata,
                         oauthExpiresAt,
                         oauthUrl,
@@ -11987,13 +11961,10 @@ private constructor(
                 status().validate()
                 updatedAt()
                 deliveredAt()
+                digitalProductDelivery().ifPresent { it.validate() }
                 errorCode()
                 errorMessage()
-                licenseKey()
-                licenseKeyActivationsLimit()
-                licenseKeyActivationsUsed()
-                licenseKeyExpiresAt()
-                licenseKeyStatus()
+                licenseKey().ifPresent { it.validate() }
                 oauthExpiresAt()
                 oauthUrl()
                 paymentId()
@@ -12029,13 +12000,10 @@ private constructor(
                     (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (updatedAt.asKnown().isPresent) 1 else 0) +
                     (if (deliveredAt.asKnown().isPresent) 1 else 0) +
+                    (digitalProductDelivery.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (errorCode.asKnown().isPresent) 1 else 0) +
                     (if (errorMessage.asKnown().isPresent) 1 else 0) +
-                    (if (licenseKey.asKnown().isPresent) 1 else 0) +
-                    (if (licenseKeyActivationsLimit.asKnown().isPresent) 1 else 0) +
-                    (if (licenseKeyActivationsUsed.asKnown().isPresent) 1 else 0) +
-                    (if (licenseKeyExpiresAt.asKnown().isPresent) 1 else 0) +
-                    (if (licenseKeyStatus.asKnown().isPresent) 1 else 0) +
+                    (licenseKey.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (oauthExpiresAt.asKnown().isPresent) 1 else 0) +
                     (if (oauthUrl.asKnown().isPresent) 1 else 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
@@ -12313,6 +12281,320 @@ private constructor(
                 override fun toString() = value.toString()
             }
 
+            /** Present only when the entitlement integration_type is `license_key`. */
+            class LicenseKey
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val activationsUsed: JsonField<Int>,
+                private val key: JsonField<String>,
+                private val activationsLimit: JsonField<Int>,
+                private val expiresAt: JsonField<OffsetDateTime>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("activations_used")
+                    @ExcludeMissing
+                    activationsUsed: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("activations_limit")
+                    @ExcludeMissing
+                    activationsLimit: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("expires_at")
+                    @ExcludeMissing
+                    expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+                ) : this(activationsUsed, key, activationsLimit, expiresAt, mutableMapOf())
+
+                /**
+                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+                 *   or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun activationsUsed(): Int = activationsUsed.getRequired("activations_used")
+
+                /**
+                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+                 *   or is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun key(): String = key.getRequired("key")
+
+                /**
+                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+                 *   (e.g. if the server responded with an unexpected value).
+                 */
+                fun activationsLimit(): Optional<Int> =
+                    activationsLimit.getOptional("activations_limit")
+
+                /**
+                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+                 *   (e.g. if the server responded with an unexpected value).
+                 */
+                fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
+
+                /**
+                 * Returns the raw JSON value of [activationsUsed].
+                 *
+                 * Unlike [activationsUsed], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("activations_used")
+                @ExcludeMissing
+                fun _activationsUsed(): JsonField<Int> = activationsUsed
+
+                /**
+                 * Returns the raw JSON value of [key].
+                 *
+                 * Unlike [key], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("key") @ExcludeMissing fun _key(): JsonField<String> = key
+
+                /**
+                 * Returns the raw JSON value of [activationsLimit].
+                 *
+                 * Unlike [activationsLimit], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("activations_limit")
+                @ExcludeMissing
+                fun _activationsLimit(): JsonField<Int> = activationsLimit
+
+                /**
+                 * Returns the raw JSON value of [expiresAt].
+                 *
+                 * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("expires_at")
+                @ExcludeMissing
+                fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [LicenseKey].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .activationsUsed()
+                     * .key()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [LicenseKey]. */
+                class Builder internal constructor() {
+
+                    private var activationsUsed: JsonField<Int>? = null
+                    private var key: JsonField<String>? = null
+                    private var activationsLimit: JsonField<Int> = JsonMissing.of()
+                    private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(licenseKey: LicenseKey) = apply {
+                        activationsUsed = licenseKey.activationsUsed
+                        key = licenseKey.key
+                        activationsLimit = licenseKey.activationsLimit
+                        expiresAt = licenseKey.expiresAt
+                        additionalProperties = licenseKey.additionalProperties.toMutableMap()
+                    }
+
+                    fun activationsUsed(activationsUsed: Int) =
+                        activationsUsed(JsonField.of(activationsUsed))
+
+                    /**
+                     * Sets [Builder.activationsUsed] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.activationsUsed] with a well-typed [Int]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun activationsUsed(activationsUsed: JsonField<Int>) = apply {
+                        this.activationsUsed = activationsUsed
+                    }
+
+                    fun key(key: String) = key(JsonField.of(key))
+
+                    /**
+                     * Sets [Builder.key] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.key] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun key(key: JsonField<String>) = apply { this.key = key }
+
+                    fun activationsLimit(activationsLimit: Int?) =
+                        activationsLimit(JsonField.ofNullable(activationsLimit))
+
+                    /**
+                     * Alias for [Builder.activationsLimit].
+                     *
+                     * This unboxed primitive overload exists for backwards compatibility.
+                     */
+                    fun activationsLimit(activationsLimit: Int) =
+                        activationsLimit(activationsLimit as Int?)
+
+                    /**
+                     * Alias for calling [Builder.activationsLimit] with
+                     * `activationsLimit.orElse(null)`.
+                     */
+                    fun activationsLimit(activationsLimit: Optional<Int>) =
+                        activationsLimit(activationsLimit.getOrNull())
+
+                    /**
+                     * Sets [Builder.activationsLimit] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.activationsLimit] with a well-typed [Int]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
+                     */
+                    fun activationsLimit(activationsLimit: JsonField<Int>) = apply {
+                        this.activationsLimit = activationsLimit
+                    }
+
+                    fun expiresAt(expiresAt: OffsetDateTime?) =
+                        expiresAt(JsonField.ofNullable(expiresAt))
+
+                    /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */
+                    fun expiresAt(expiresAt: Optional<OffsetDateTime>) =
+                        expiresAt(expiresAt.getOrNull())
+
+                    /**
+                     * Sets [Builder.expiresAt] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.expiresAt] with a well-typed
+                     * [OffsetDateTime] value instead. This method is primarily for setting the
+                     * field to an undocumented or not yet supported value.
+                     */
+                    fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply {
+                        this.expiresAt = expiresAt
+                    }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [LicenseKey].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .activationsUsed()
+                     * .key()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): LicenseKey =
+                        LicenseKey(
+                            checkRequired("activationsUsed", activationsUsed),
+                            checkRequired("key", key),
+                            activationsLimit,
+                            expiresAt,
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): LicenseKey = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    activationsUsed()
+                    key()
+                    activationsLimit()
+                    expiresAt()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: DodoPaymentsInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (activationsUsed.asKnown().isPresent) 1 else 0) +
+                        (if (key.asKnown().isPresent) 1 else 0) +
+                        (if (activationsLimit.asKnown().isPresent) 1 else 0) +
+                        (if (expiresAt.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is LicenseKey &&
+                        activationsUsed == other.activationsUsed &&
+                        key == other.key &&
+                        activationsLimit == other.activationsLimit &&
+                        expiresAt == other.expiresAt &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(
+                        activationsUsed,
+                        key,
+                        activationsLimit,
+                        expiresAt,
+                        additionalProperties,
+                    )
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "LicenseKey{activationsUsed=$activationsUsed, key=$key, activationsLimit=$activationsLimit, expiresAt=$expiresAt, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -12329,13 +12611,10 @@ private constructor(
                     status == other.status &&
                     updatedAt == other.updatedAt &&
                     deliveredAt == other.deliveredAt &&
+                    digitalProductDelivery == other.digitalProductDelivery &&
                     errorCode == other.errorCode &&
                     errorMessage == other.errorMessage &&
                     licenseKey == other.licenseKey &&
-                    licenseKeyActivationsLimit == other.licenseKeyActivationsLimit &&
-                    licenseKeyActivationsUsed == other.licenseKeyActivationsUsed &&
-                    licenseKeyExpiresAt == other.licenseKeyExpiresAt &&
-                    licenseKeyStatus == other.licenseKeyStatus &&
                     metadata == other.metadata &&
                     oauthExpiresAt == other.oauthExpiresAt &&
                     oauthUrl == other.oauthUrl &&
@@ -12358,13 +12637,10 @@ private constructor(
                     status,
                     updatedAt,
                     deliveredAt,
+                    digitalProductDelivery,
                     errorCode,
                     errorMessage,
                     licenseKey,
-                    licenseKeyActivationsLimit,
-                    licenseKeyActivationsUsed,
-                    licenseKeyExpiresAt,
-                    licenseKeyStatus,
                     metadata,
                     oauthExpiresAt,
                     oauthUrl,
@@ -12379,7 +12655,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, externalId=$externalId, payloadType=$payloadType, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyActivationsUsed=$licenseKeyActivationsUsed, licenseKeyExpiresAt=$licenseKeyExpiresAt, licenseKeyStatus=$licenseKeyStatus, metadata=$metadata, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, externalId=$externalId, payloadType=$payloadType, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, metadata=$metadata, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
         }
     }
 
