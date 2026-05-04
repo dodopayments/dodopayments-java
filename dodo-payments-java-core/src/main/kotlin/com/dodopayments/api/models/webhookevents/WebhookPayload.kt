@@ -391,6 +391,10 @@ private constructor(
 
         fun dunningAttempt(): Optional<DunningAttempt> = Optional.ofNullable(dunningAttempt)
 
+        /**
+         * Detailed view of a single entitlement grant: who it's for, its lifecycle state, and any
+         * integration-specific delivery payload.
+         */
         fun entitlementGrant(): Optional<EntitlementGrant> = Optional.ofNullable(entitlementGrant)
 
         fun isPayment(): Boolean = payment != null
@@ -435,6 +439,10 @@ private constructor(
 
         fun asDunningAttempt(): DunningAttempt = dunningAttempt.getOrThrow("dunningAttempt")
 
+        /**
+         * Detailed view of a single entitlement grant: who it's for, its lifecycle state, and any
+         * integration-specific delivery payload.
+         */
         fun asEntitlementGrant(): EntitlementGrant = entitlementGrant.getOrThrow("entitlementGrant")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -634,6 +642,10 @@ private constructor(
             fun ofDunningAttempt(dunningAttempt: DunningAttempt) =
                 Data(dunningAttempt = dunningAttempt)
 
+            /**
+             * Detailed view of a single entitlement grant: who it's for, its lifecycle state, and
+             * any integration-specific delivery payload.
+             */
             @JvmStatic
             fun ofEntitlementGrant(entitlementGrant: EntitlementGrant) =
                 Data(entitlementGrant = entitlementGrant)
@@ -662,6 +674,10 @@ private constructor(
 
             fun visitDunningAttempt(dunningAttempt: DunningAttempt): T
 
+            /**
+             * Detailed view of a single entitlement grant: who it's for, its lifecycle state, and
+             * any integration-specific delivery payload.
+             */
             fun visitEntitlementGrant(entitlementGrant: EntitlementGrant): T
 
             /**
@@ -11013,6 +11029,10 @@ private constructor(
                 "DunningAttempt{createdAt=$createdAt, customerId=$customerId, payloadType=$payloadType, status=$status, subscriptionId=$subscriptionId, triggerState=$triggerState, paymentId=$paymentId, additionalProperties=$additionalProperties}"
         }
 
+        /**
+         * Detailed view of a single entitlement grant: who it's for, its lifecycle state, and any
+         * integration-specific delivery payload.
+         */
         class EntitlementGrant
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -11021,7 +11041,7 @@ private constructor(
             private val createdAt: JsonField<OffsetDateTime>,
             private val customerId: JsonField<String>,
             private val entitlementId: JsonField<String>,
-            private val externalId: JsonField<String>,
+            private val metadata: JsonField<EntitlementGrant.Metadata>,
             private val status: JsonField<EntitlementGrant.Status>,
             private val updatedAt: JsonField<OffsetDateTime>,
             private val deliveredAt: JsonField<OffsetDateTime>,
@@ -11029,7 +11049,6 @@ private constructor(
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
             private val licenseKey: JsonField<LicenseKeyGrant>,
-            private val metadata: JsonValue,
             private val oauthExpiresAt: JsonField<OffsetDateTime>,
             private val oauthUrl: JsonField<String>,
             private val paymentId: JsonField<String>,
@@ -11055,9 +11074,9 @@ private constructor(
                 @JsonProperty("entitlement_id")
                 @ExcludeMissing
                 entitlementId: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("external_id")
+                @JsonProperty("metadata")
                 @ExcludeMissing
-                externalId: JsonField<String> = JsonMissing.of(),
+                metadata: JsonField<EntitlementGrant.Metadata> = JsonMissing.of(),
                 @JsonProperty("status")
                 @ExcludeMissing
                 status: JsonField<EntitlementGrant.Status> = JsonMissing.of(),
@@ -11079,7 +11098,6 @@ private constructor(
                 @JsonProperty("license_key")
                 @ExcludeMissing
                 licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of(),
-                @JsonProperty("metadata") @ExcludeMissing metadata: JsonValue = JsonMissing.of(),
                 @JsonProperty("oauth_expires_at")
                 @ExcludeMissing
                 oauthExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -11107,7 +11125,7 @@ private constructor(
                 createdAt,
                 customerId,
                 entitlementId,
-                externalId,
+                metadata,
                 status,
                 updatedAt,
                 deliveredAt,
@@ -11115,7 +11133,6 @@ private constructor(
                 errorCode,
                 errorMessage,
                 licenseKey,
-                metadata,
                 oauthExpiresAt,
                 oauthUrl,
                 paymentId,
@@ -11133,7 +11150,7 @@ private constructor(
                     .createdAt(createdAt)
                     .customerId(customerId)
                     .entitlementId(entitlementId)
-                    .externalId(externalId)
+                    .metadata(metadata)
                     .status(status)
                     .updatedAt(updatedAt)
                     .deliveredAt(deliveredAt)
@@ -11141,7 +11158,6 @@ private constructor(
                     .errorCode(errorCode)
                     .errorMessage(errorMessage)
                     .licenseKey(licenseKey)
-                    .metadata(metadata)
                     .oauthExpiresAt(oauthExpiresAt)
                     .oauthUrl(oauthUrl)
                     .paymentId(paymentId)
@@ -11151,6 +11167,8 @@ private constructor(
                     .build()
 
             /**
+             * Unique identifier of the grant.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11158,6 +11176,8 @@ private constructor(
             fun id(): String = id.getRequired("id")
 
             /**
+             * Identifier of the business that owns the grant.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11165,6 +11185,8 @@ private constructor(
             fun businessId(): String = businessId.getRequired("business_id")
 
             /**
+             * Timestamp when the grant was created.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11172,6 +11194,8 @@ private constructor(
             fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
             /**
+             * Identifier of the customer the grant was issued to.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11179,6 +11203,8 @@ private constructor(
             fun customerId(): String = customerId.getRequired("customer_id")
 
             /**
+             * Identifier of the entitlement this grant was issued from.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11186,13 +11212,17 @@ private constructor(
             fun entitlementId(): String = entitlementId.getRequired("entitlement_id")
 
             /**
+             * Arbitrary key-value metadata recorded on the grant.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun externalId(): String = externalId.getRequired("external_id")
+            fun metadata(): EntitlementGrant.Metadata = metadata.getRequired("metadata")
 
             /**
+             * Lifecycle status of the grant.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11200,6 +11230,8 @@ private constructor(
             fun status(): EntitlementGrant.Status = status.getRequired("status")
 
             /**
+             * Timestamp when the grant was last modified.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -11207,14 +11239,16 @@ private constructor(
             fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
             /**
+             * Timestamp when the grant transitioned to `delivered`, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun deliveredAt(): Optional<OffsetDateTime> = deliveredAt.getOptional("delivered_at")
 
             /**
-             * Present only when the entitlement integration_type is `digital_files`. Populated
-             * eagerly on every list and single-record endpoint.
+             * Digital-product-delivery payload, present when the entitlement integration is
+             * `digital_files`.
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
@@ -11223,19 +11257,24 @@ private constructor(
                 digitalProductDelivery.getOptional("digital_product_delivery")
 
             /**
+             * Machine-readable code reported when delivery failed, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun errorCode(): Optional<String> = errorCode.getOptional("error_code")
 
             /**
+             * Human-readable message reported when delivery failed, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
 
             /**
-             * Present only when the entitlement integration_type is `license_key`.
+             * License-key delivery payload, present when the entitlement integration is
+             * `license_key`.
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
@@ -11243,15 +11282,8 @@ private constructor(
             fun licenseKey(): Optional<LicenseKeyGrant> = licenseKey.getOptional("license_key")
 
             /**
-             * This arbitrary value can be deserialized into a custom type using the `convert`
-             * method:
-             * ```java
-             * MyClass myObject = entitlementGrant.metadata().convert(MyClass.class);
-             * ```
-             */
-            @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonValue = metadata
-
-            /**
+             * Timestamp when `oauth_url` stops being valid, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
@@ -11259,18 +11291,26 @@ private constructor(
                 oauthExpiresAt.getOptional("oauth_expires_at")
 
             /**
+             * Customer-facing OAuth URL for OAuth-style integrations. Populated during the
+             * customer-portal accept flow; `null` until the customer completes that step, and on
+             * grants for non-OAuth integrations.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun oauthUrl(): Optional<String> = oauthUrl.getOptional("oauth_url")
 
             /**
+             * Identifier of the payment that triggered this grant, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
 
             /**
+             * Reason recorded when the grant was revoked, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
@@ -11278,12 +11318,16 @@ private constructor(
                 revocationReason.getOptional("revocation_reason")
 
             /**
+             * Timestamp when the grant transitioned to `revoked`, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
             fun revokedAt(): Optional<OffsetDateTime> = revokedAt.getOptional("revoked_at")
 
             /**
+             * Identifier of the subscription that triggered this grant, when applicable.
+             *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
@@ -11344,14 +11388,14 @@ private constructor(
             fun _entitlementId(): JsonField<String> = entitlementId
 
             /**
-             * Returns the raw JSON value of [externalId].
+             * Returns the raw JSON value of [metadata].
              *
-             * Unlike [externalId], this method doesn't throw if the JSON field has an unexpected
+             * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected
              * type.
              */
-            @JsonProperty("external_id")
+            @JsonProperty("metadata")
             @ExcludeMissing
-            fun _externalId(): JsonField<String> = externalId
+            fun _metadata(): JsonField<EntitlementGrant.Metadata> = metadata
 
             /**
              * Returns the raw JSON value of [status].
@@ -11515,7 +11559,7 @@ private constructor(
                  * .createdAt()
                  * .customerId()
                  * .entitlementId()
-                 * .externalId()
+                 * .metadata()
                  * .status()
                  * .updatedAt()
                  * .payloadType()
@@ -11532,7 +11576,7 @@ private constructor(
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customerId: JsonField<String>? = null
                 private var entitlementId: JsonField<String>? = null
-                private var externalId: JsonField<String>? = null
+                private var metadata: JsonField<EntitlementGrant.Metadata>? = null
                 private var status: JsonField<EntitlementGrant.Status>? = null
                 private var updatedAt: JsonField<OffsetDateTime>? = null
                 private var deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of()
@@ -11541,7 +11585,6 @@ private constructor(
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
                 private var licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of()
-                private var metadata: JsonValue = JsonMissing.of()
                 private var oauthExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var oauthUrl: JsonField<String> = JsonMissing.of()
                 private var paymentId: JsonField<String> = JsonMissing.of()
@@ -11558,7 +11601,7 @@ private constructor(
                     createdAt = entitlementGrant.createdAt
                     customerId = entitlementGrant.customerId
                     entitlementId = entitlementGrant.entitlementId
-                    externalId = entitlementGrant.externalId
+                    metadata = entitlementGrant.metadata
                     status = entitlementGrant.status
                     updatedAt = entitlementGrant.updatedAt
                     deliveredAt = entitlementGrant.deliveredAt
@@ -11566,7 +11609,6 @@ private constructor(
                     errorCode = entitlementGrant.errorCode
                     errorMessage = entitlementGrant.errorMessage
                     licenseKey = entitlementGrant.licenseKey
-                    metadata = entitlementGrant.metadata
                     oauthExpiresAt = entitlementGrant.oauthExpiresAt
                     oauthUrl = entitlementGrant.oauthUrl
                     paymentId = entitlementGrant.paymentId
@@ -11577,6 +11619,7 @@ private constructor(
                     additionalProperties = entitlementGrant.additionalProperties.toMutableMap()
                 }
 
+                /** Unique identifier of the grant. */
                 fun id(id: String) = id(JsonField.of(id))
 
                 /**
@@ -11588,6 +11631,7 @@ private constructor(
                  */
                 fun id(id: JsonField<String>) = apply { this.id = id }
 
+                /** Identifier of the business that owns the grant. */
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
 
                 /**
@@ -11601,6 +11645,7 @@ private constructor(
                     this.businessId = businessId
                 }
 
+                /** Timestamp when the grant was created. */
                 fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
                 /**
@@ -11614,6 +11659,7 @@ private constructor(
                     this.createdAt = createdAt
                 }
 
+                /** Identifier of the customer the grant was issued to. */
                 fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
                 /**
@@ -11627,6 +11673,7 @@ private constructor(
                     this.customerId = customerId
                 }
 
+                /** Identifier of the entitlement this grant was issued from. */
                 fun entitlementId(entitlementId: String) =
                     entitlementId(JsonField.of(entitlementId))
 
@@ -11641,19 +11688,21 @@ private constructor(
                     this.entitlementId = entitlementId
                 }
 
-                fun externalId(externalId: String) = externalId(JsonField.of(externalId))
+                /** Arbitrary key-value metadata recorded on the grant. */
+                fun metadata(metadata: EntitlementGrant.Metadata) = metadata(JsonField.of(metadata))
 
                 /**
-                 * Sets [Builder.externalId] to an arbitrary JSON value.
+                 * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.externalId] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.metadata] with a well-typed
+                 * [EntitlementGrant.Metadata] value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
                  */
-                fun externalId(externalId: JsonField<String>) = apply {
-                    this.externalId = externalId
+                fun metadata(metadata: JsonField<EntitlementGrant.Metadata>) = apply {
+                    this.metadata = metadata
                 }
 
+                /** Lifecycle status of the grant. */
                 fun status(status: EntitlementGrant.Status) = status(JsonField.of(status))
 
                 /**
@@ -11667,6 +11716,7 @@ private constructor(
                     this.status = status
                 }
 
+                /** Timestamp when the grant was last modified. */
                 fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
                 /**
@@ -11680,6 +11730,7 @@ private constructor(
                     this.updatedAt = updatedAt
                 }
 
+                /** Timestamp when the grant transitioned to `delivered`, when applicable. */
                 fun deliveredAt(deliveredAt: OffsetDateTime?) =
                     deliveredAt(JsonField.ofNullable(deliveredAt))
 
@@ -11699,8 +11750,8 @@ private constructor(
                 }
 
                 /**
-                 * Present only when the entitlement integration_type is `digital_files`. Populated
-                 * eagerly on every list and single-record endpoint.
+                 * Digital-product-delivery payload, present when the entitlement integration is
+                 * `digital_files`.
                  */
                 fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) =
                     digitalProductDelivery(JsonField.ofNullable(digitalProductDelivery))
@@ -11724,6 +11775,7 @@ private constructor(
                     digitalProductDelivery: JsonField<DigitalProductDelivery>
                 ) = apply { this.digitalProductDelivery = digitalProductDelivery }
 
+                /** Machine-readable code reported when delivery failed, when applicable. */
                 fun errorCode(errorCode: String?) = errorCode(JsonField.ofNullable(errorCode))
 
                 /** Alias for calling [Builder.errorCode] with `errorCode.orElse(null)`. */
@@ -11738,6 +11790,7 @@ private constructor(
                  */
                 fun errorCode(errorCode: JsonField<String>) = apply { this.errorCode = errorCode }
 
+                /** Human-readable message reported when delivery failed, when applicable. */
                 fun errorMessage(errorMessage: String?) =
                     errorMessage(JsonField.ofNullable(errorMessage))
 
@@ -11756,7 +11809,10 @@ private constructor(
                     this.errorMessage = errorMessage
                 }
 
-                /** Present only when the entitlement integration_type is `license_key`. */
+                /**
+                 * License-key delivery payload, present when the entitlement integration is
+                 * `license_key`.
+                 */
                 fun licenseKey(licenseKey: LicenseKeyGrant?) =
                     licenseKey(JsonField.ofNullable(licenseKey))
 
@@ -11775,8 +11831,7 @@ private constructor(
                     this.licenseKey = licenseKey
                 }
 
-                fun metadata(metadata: JsonValue) = apply { this.metadata = metadata }
-
+                /** Timestamp when `oauth_url` stops being valid, when applicable. */
                 fun oauthExpiresAt(oauthExpiresAt: OffsetDateTime?) =
                     oauthExpiresAt(JsonField.ofNullable(oauthExpiresAt))
 
@@ -11797,6 +11852,11 @@ private constructor(
                     this.oauthExpiresAt = oauthExpiresAt
                 }
 
+                /**
+                 * Customer-facing OAuth URL for OAuth-style integrations. Populated during the
+                 * customer-portal accept flow; `null` until the customer completes that step, and
+                 * on grants for non-OAuth integrations.
+                 */
                 fun oauthUrl(oauthUrl: String?) = oauthUrl(JsonField.ofNullable(oauthUrl))
 
                 /** Alias for calling [Builder.oauthUrl] with `oauthUrl.orElse(null)`. */
@@ -11811,6 +11871,7 @@ private constructor(
                  */
                 fun oauthUrl(oauthUrl: JsonField<String>) = apply { this.oauthUrl = oauthUrl }
 
+                /** Identifier of the payment that triggered this grant, when applicable. */
                 fun paymentId(paymentId: String?) = paymentId(JsonField.ofNullable(paymentId))
 
                 /** Alias for calling [Builder.paymentId] with `paymentId.orElse(null)`. */
@@ -11825,6 +11886,7 @@ private constructor(
                  */
                 fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
+                /** Reason recorded when the grant was revoked, when applicable. */
                 fun revocationReason(revocationReason: String?) =
                     revocationReason(JsonField.ofNullable(revocationReason))
 
@@ -11846,6 +11908,7 @@ private constructor(
                     this.revocationReason = revocationReason
                 }
 
+                /** Timestamp when the grant transitioned to `revoked`, when applicable. */
                 fun revokedAt(revokedAt: OffsetDateTime?) =
                     revokedAt(JsonField.ofNullable(revokedAt))
 
@@ -11864,6 +11927,7 @@ private constructor(
                     this.revokedAt = revokedAt
                 }
 
+                /** Identifier of the subscription that triggered this grant, when applicable. */
                 fun subscriptionId(subscriptionId: String?) =
                     subscriptionId(JsonField.ofNullable(subscriptionId))
 
@@ -11931,7 +11995,7 @@ private constructor(
                  * .createdAt()
                  * .customerId()
                  * .entitlementId()
-                 * .externalId()
+                 * .metadata()
                  * .status()
                  * .updatedAt()
                  * .payloadType()
@@ -11946,7 +12010,7 @@ private constructor(
                         checkRequired("createdAt", createdAt),
                         checkRequired("customerId", customerId),
                         checkRequired("entitlementId", entitlementId),
-                        checkRequired("externalId", externalId),
+                        checkRequired("metadata", metadata),
                         checkRequired("status", status),
                         checkRequired("updatedAt", updatedAt),
                         deliveredAt,
@@ -11954,7 +12018,6 @@ private constructor(
                         errorCode,
                         errorMessage,
                         licenseKey,
-                        metadata,
                         oauthExpiresAt,
                         oauthUrl,
                         paymentId,
@@ -11978,7 +12041,7 @@ private constructor(
                 createdAt()
                 customerId()
                 entitlementId()
-                externalId()
+                metadata().validate()
                 status().validate()
                 updatedAt()
                 deliveredAt()
@@ -12017,7 +12080,7 @@ private constructor(
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
                     (if (entitlementId.asKnown().isPresent) 1 else 0) +
-                    (if (externalId.asKnown().isPresent) 1 else 0) +
+                    (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                     (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (updatedAt.asKnown().isPresent) 1 else 0) +
                     (if (deliveredAt.asKnown().isPresent) 1 else 0) +
@@ -12171,7 +12234,7 @@ private constructor(
                     createdAt == other.createdAt &&
                     customerId == other.customerId &&
                     entitlementId == other.entitlementId &&
-                    externalId == other.externalId &&
+                    metadata == other.metadata &&
                     status == other.status &&
                     updatedAt == other.updatedAt &&
                     deliveredAt == other.deliveredAt &&
@@ -12179,7 +12242,6 @@ private constructor(
                     errorCode == other.errorCode &&
                     errorMessage == other.errorMessage &&
                     licenseKey == other.licenseKey &&
-                    metadata == other.metadata &&
                     oauthExpiresAt == other.oauthExpiresAt &&
                     oauthUrl == other.oauthUrl &&
                     paymentId == other.paymentId &&
@@ -12197,7 +12259,7 @@ private constructor(
                     createdAt,
                     customerId,
                     entitlementId,
-                    externalId,
+                    metadata,
                     status,
                     updatedAt,
                     deliveredAt,
@@ -12205,7 +12267,6 @@ private constructor(
                     errorCode,
                     errorMessage,
                     licenseKey,
-                    metadata,
                     oauthExpiresAt,
                     oauthUrl,
                     paymentId,
@@ -12220,7 +12281,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, externalId=$externalId, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, metadata=$metadata, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
     }
 
