@@ -19,10 +19,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Nested representation of license-key grant fields. Present only when the grant's entitlement has
- * `integration_type = 'license_key'` and a row exists in `license_keys`. The grant's top-level
- * `status` is the source of truth for the grant's lifecycle — no per-license-key status is exposed
- * here.
+ * License-key delivery payload, present on grants for `license_key` entitlements. The grant's
+ * top-level `status` is the source of truth for the grant's lifecycle.
  */
 class LicenseKeyGrant
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -49,24 +47,32 @@ private constructor(
     ) : this(activationsUsed, key, activationsLimit, expiresAt, mutableMapOf())
 
     /**
+     * Number of activations consumed so far.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun activationsUsed(): Int = activationsUsed.getRequired("activations_used")
 
     /**
+     * Issued license key.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun key(): String = key.getRequired("key")
 
     /**
+     * Maximum activations allowed by the entitlement, when set.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun activationsLimit(): Optional<Int> = activationsLimit.getOptional("activations_limit")
 
     /**
+     * When the license key expires, when applicable.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -151,6 +157,7 @@ private constructor(
             additionalProperties = licenseKeyGrant.additionalProperties.toMutableMap()
         }
 
+        /** Number of activations consumed so far. */
         fun activationsUsed(activationsUsed: Int) = activationsUsed(JsonField.of(activationsUsed))
 
         /**
@@ -164,6 +171,7 @@ private constructor(
             this.activationsUsed = activationsUsed
         }
 
+        /** Issued license key. */
         fun key(key: String) = key(JsonField.of(key))
 
         /**
@@ -174,6 +182,7 @@ private constructor(
          */
         fun key(key: JsonField<String>) = apply { this.key = key }
 
+        /** Maximum activations allowed by the entitlement, when set. */
         fun activationsLimit(activationsLimit: Int?) =
             activationsLimit(JsonField.ofNullable(activationsLimit))
 
@@ -199,6 +208,7 @@ private constructor(
             this.activationsLimit = activationsLimit
         }
 
+        /** When the license key expires, when applicable. */
         fun expiresAt(expiresAt: OffsetDateTime?) = expiresAt(JsonField.ofNullable(expiresAt))
 
         /** Alias for calling [Builder.expiresAt] with `expiresAt.orElse(null)`. */

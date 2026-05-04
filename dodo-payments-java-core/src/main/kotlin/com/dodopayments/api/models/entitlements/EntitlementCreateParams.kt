@@ -62,7 +62,7 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Optional user-facing metadata
+     * Additional metadata for the entitlement
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -261,11 +261,8 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
-        /** Optional user-facing metadata */
-        fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
-
-        /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
-        fun metadata(metadata: Optional<Metadata>) = metadata(metadata.getOrNull())
+        /** Additional metadata for the entitlement */
+        fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
@@ -484,7 +481,7 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Optional user-facing metadata
+         * Additional metadata for the entitlement
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -682,11 +679,8 @@ private constructor(
                 this.description = description
             }
 
-            /** Optional user-facing metadata */
-            fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
-
-            /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
-            fun metadata(metadata: Optional<Metadata>) = metadata(metadata.getOrNull())
+            /** Additional metadata for the entitlement */
+            fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
             /**
              * Sets [Builder.metadata] to an arbitrary JSON value.
@@ -809,7 +803,7 @@ private constructor(
             "Body{integrationConfig=$integrationConfig, integrationType=$integrationType, name=$name, description=$description, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
-    /** Optional user-facing metadata */
+    /** Additional metadata for the entitlement */
     class Metadata
     @JsonCreator
     private constructor(

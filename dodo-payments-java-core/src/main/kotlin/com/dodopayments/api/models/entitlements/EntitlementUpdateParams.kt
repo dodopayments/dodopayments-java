@@ -38,8 +38,8 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Platform-specific configuration for an entitlement. Each variant uses unique field names so
-     * `#[serde(untagged)]` can disambiguate correctly.
+     * Integration-specific configuration supplied when creating or updating an entitlement. The
+     * shape required matches the entitlement's `integration_type`.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -153,8 +153,8 @@ private constructor(
         fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /**
-         * Platform-specific configuration for an entitlement. Each variant uses unique field names
-         * so `#[serde(untagged)]` can disambiguate correctly.
+         * Integration-specific configuration supplied when creating or updating an entitlement. The
+         * shape required matches the entitlement's `integration_type`.
          */
         fun integrationConfig(integrationConfig: IntegrationConfig?) = apply {
             body.integrationConfig(integrationConfig)
@@ -421,8 +421,8 @@ private constructor(
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Platform-specific configuration for an entitlement. Each variant uses unique field names
-         * so `#[serde(untagged)]` can disambiguate correctly.
+         * Integration-specific configuration supplied when creating or updating an entitlement. The
+         * shape required matches the entitlement's `integration_type`.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -528,8 +528,8 @@ private constructor(
             }
 
             /**
-             * Platform-specific configuration for an entitlement. Each variant uses unique field
-             * names so `#[serde(untagged)]` can disambiguate correctly.
+             * Integration-specific configuration supplied when creating or updating an entitlement.
+             * The shape required matches the entitlement's `integration_type`.
              */
             fun integrationConfig(integrationConfig: IntegrationConfig?) =
                 integrationConfig(JsonField.ofNullable(integrationConfig))
