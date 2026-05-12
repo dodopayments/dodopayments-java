@@ -87,12 +87,21 @@ private constructor(
     fun billingCurrency(): Optional<Currency> = body.billingCurrency()
 
     /**
-     * Discount Code to apply to the transaction
+     * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    fun discountCode(): Optional<String> = body.discountCode()
+    @Deprecated("deprecated") fun discountCode(): Optional<String> = body.discountCode()
+
+    /**
+     * Stacked discount codes to apply, in order of application. Max 20. Cannot be used together
+     * with discount_code.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountCodes(): Optional<List<String>> = body.discountCodes()
 
     /**
      * Override merchant default 3DS behaviour for this payment
@@ -227,7 +236,14 @@ private constructor(
      *
      * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _discountCode(): JsonField<String> = body._discountCode()
+    @Deprecated("deprecated") fun _discountCode(): JsonField<String> = body._discountCode()
+
+    /**
+     * Returns the raw JSON value of [discountCodes].
+     *
+     * Unlike [discountCodes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _discountCodes(): JsonField<List<String>> = body._discountCodes()
 
     /**
      * Returns the raw JSON value of [force3ds].
@@ -513,10 +529,12 @@ private constructor(
             body.billingCurrency(billingCurrency)
         }
 
-        /** Discount Code to apply to the transaction */
+        /** DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: String?) = apply { body.discountCode(discountCode) }
 
         /** Alias for calling [Builder.discountCode] with `discountCode.orElse(null)`. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: Optional<String>) = discountCode(discountCode.getOrNull())
 
         /**
@@ -526,9 +544,40 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: JsonField<String>) = apply {
             body.discountCode(discountCode)
         }
+
+        /**
+         * Stacked discount codes to apply, in order of application. Max 20. Cannot be used together
+         * with discount_code.
+         */
+        fun discountCodes(discountCodes: List<String>?) = apply {
+            body.discountCodes(discountCodes)
+        }
+
+        /** Alias for calling [Builder.discountCodes] with `discountCodes.orElse(null)`. */
+        fun discountCodes(discountCodes: Optional<List<String>>) =
+            discountCodes(discountCodes.getOrNull())
+
+        /**
+         * Sets [Builder.discountCodes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountCodes] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discountCodes(discountCodes: JsonField<List<String>>) = apply {
+            body.discountCodes(discountCodes)
+        }
+
+        /**
+         * Adds a single [String] to [discountCodes].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addDiscountCode(discountCode: String) = apply { body.addDiscountCode(discountCode) }
 
         /** Override merchant default 3DS behaviour for this payment */
         fun force3ds(force3ds: Boolean?) = apply { body.force3ds(force3ds) }
@@ -871,6 +920,7 @@ private constructor(
         private val allowedPaymentMethodTypes: JsonField<List<PaymentMethodTypes>>,
         private val billingCurrency: JsonField<Currency>,
         private val discountCode: JsonField<String>,
+        private val discountCodes: JsonField<List<String>>,
         private val force3ds: JsonField<Boolean>,
         private val metadata: JsonField<Metadata>,
         private val paymentLink: JsonField<Boolean>,
@@ -907,6 +957,9 @@ private constructor(
             @JsonProperty("discount_code")
             @ExcludeMissing
             discountCode: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("discount_codes")
+            @ExcludeMissing
+            discountCodes: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("force_3ds")
             @ExcludeMissing
             force3ds: JsonField<Boolean> = JsonMissing.of(),
@@ -943,6 +996,7 @@ private constructor(
             allowedPaymentMethodTypes,
             billingCurrency,
             discountCode,
+            discountCodes,
             force3ds,
             metadata,
             paymentLink,
@@ -1013,12 +1067,22 @@ private constructor(
         fun billingCurrency(): Optional<Currency> = billingCurrency.getOptional("billing_currency")
 
         /**
-         * Discount Code to apply to the transaction
+         * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
+        @Deprecated("deprecated")
         fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
+
+        /**
+         * Stacked discount codes to apply, in order of application. Max 20. Cannot be used together
+         * with discount_code.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun discountCodes(): Optional<List<String>> = discountCodes.getOptional("discount_codes")
 
         /**
          * Override merchant default 3DS behaviour for this payment
@@ -1170,9 +1234,20 @@ private constructor(
          * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected
          * type.
          */
+        @Deprecated("deprecated")
         @JsonProperty("discount_code")
         @ExcludeMissing
         fun _discountCode(): JsonField<String> = discountCode
+
+        /**
+         * Returns the raw JSON value of [discountCodes].
+         *
+         * Unlike [discountCodes], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("discount_codes")
+        @ExcludeMissing
+        fun _discountCodes(): JsonField<List<String>> = discountCodes
 
         /**
          * Returns the raw JSON value of [force3ds].
@@ -1296,6 +1371,7 @@ private constructor(
                 null
             private var billingCurrency: JsonField<Currency> = JsonMissing.of()
             private var discountCode: JsonField<String> = JsonMissing.of()
+            private var discountCodes: JsonField<MutableList<String>>? = null
             private var force3ds: JsonField<Boolean> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var paymentLink: JsonField<Boolean> = JsonMissing.of()
@@ -1318,6 +1394,7 @@ private constructor(
                     body.allowedPaymentMethodTypes.map { it.toMutableList() }
                 billingCurrency = body.billingCurrency
                 discountCode = body.discountCode
+                discountCodes = body.discountCodes.map { it.toMutableList() }
                 force3ds = body.force3ds
                 metadata = body.metadata
                 paymentLink = body.paymentLink
@@ -1493,11 +1570,15 @@ private constructor(
                 this.billingCurrency = billingCurrency
             }
 
-            /** Discount Code to apply to the transaction */
+            /**
+             * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
+             */
+            @Deprecated("deprecated")
             fun discountCode(discountCode: String?) =
                 discountCode(JsonField.ofNullable(discountCode))
 
             /** Alias for calling [Builder.discountCode] with `discountCode.orElse(null)`. */
+            @Deprecated("deprecated")
             fun discountCode(discountCode: Optional<String>) =
                 discountCode(discountCode.getOrNull())
 
@@ -1508,8 +1589,43 @@ private constructor(
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
+            @Deprecated("deprecated")
             fun discountCode(discountCode: JsonField<String>) = apply {
                 this.discountCode = discountCode
+            }
+
+            /**
+             * Stacked discount codes to apply, in order of application. Max 20. Cannot be used
+             * together with discount_code.
+             */
+            fun discountCodes(discountCodes: List<String>?) =
+                discountCodes(JsonField.ofNullable(discountCodes))
+
+            /** Alias for calling [Builder.discountCodes] with `discountCodes.orElse(null)`. */
+            fun discountCodes(discountCodes: Optional<List<String>>) =
+                discountCodes(discountCodes.getOrNull())
+
+            /**
+             * Sets [Builder.discountCodes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.discountCodes] with a well-typed `List<String>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun discountCodes(discountCodes: JsonField<List<String>>) = apply {
+                this.discountCodes = discountCodes.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [discountCodes].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addDiscountCode(discountCode: String) = apply {
+                discountCodes =
+                    (discountCodes ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("discountCodes", it).add(discountCode)
+                    }
             }
 
             /** Override merchant default 3DS behaviour for this payment */
@@ -1745,6 +1861,7 @@ private constructor(
                     (allowedPaymentMethodTypes ?: JsonMissing.of()).map { it.toImmutable() },
                     billingCurrency,
                     discountCode,
+                    (discountCodes ?: JsonMissing.of()).map { it.toImmutable() },
                     force3ds,
                     metadata,
                     paymentLink,
@@ -1782,6 +1899,7 @@ private constructor(
             allowedPaymentMethodTypes().ifPresent { it.forEach { it.validate() } }
             billingCurrency().ifPresent { it.validate() }
             discountCode()
+            discountCodes()
             force3ds()
             metadata().ifPresent { it.validate() }
             paymentLink()
@@ -1819,6 +1937,7 @@ private constructor(
                     ?: 0) +
                 (billingCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discountCode.asKnown().isPresent) 1 else 0) +
+                (discountCodes.asKnown().getOrNull()?.size ?: 0) +
                 (if (force3ds.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (paymentLink.asKnown().isPresent) 1 else 0) +
@@ -1843,6 +1962,7 @@ private constructor(
                 allowedPaymentMethodTypes == other.allowedPaymentMethodTypes &&
                 billingCurrency == other.billingCurrency &&
                 discountCode == other.discountCode &&
+                discountCodes == other.discountCodes &&
                 force3ds == other.force3ds &&
                 metadata == other.metadata &&
                 paymentLink == other.paymentLink &&
@@ -1865,6 +1985,7 @@ private constructor(
                 allowedPaymentMethodTypes,
                 billingCurrency,
                 discountCode,
+                discountCodes,
                 force3ds,
                 metadata,
                 paymentLink,
@@ -1882,7 +2003,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, customer=$customer, productCart=$productCart, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, customer=$customer, productCart=$productCart, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingCurrency=$billingCurrency, discountCode=$discountCode, discountCodes=$discountCodes, force3ds=$force3ds, metadata=$metadata, paymentLink=$paymentLink, paymentMethodId=$paymentMethodId, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata associated with the payment. Defaults to empty if not provided. */
