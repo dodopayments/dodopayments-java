@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
@@ -31,6 +32,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<Currency>,
     private val customer: JsonField<CustomerLimitedDetails>,
+    private val discounts: JsonField<List<Discount>>,
     private val metadata: JsonField<Metadata>,
     private val nextBillingDate: JsonField<OffsetDateTime>,
     private val onDemand: JsonField<Boolean>,
@@ -71,6 +73,9 @@ private constructor(
         @JsonProperty("customer")
         @ExcludeMissing
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
+        @JsonProperty("discounts")
+        @ExcludeMissing
+        discounts: JsonField<List<Discount>> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("next_billing_date")
         @ExcludeMissing
@@ -133,6 +138,7 @@ private constructor(
         createdAt,
         currency,
         customer,
+        discounts,
         metadata,
         nextBillingDate,
         onDemand,
@@ -198,6 +204,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
+
+    /**
+     * All stacked discounts applied, in order of application
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun discounts(): List<Discount> = discounts.getRequired("discounts")
 
     /**
      * Additional custom data associated with the subscription
@@ -332,7 +346,7 @@ private constructor(
     fun cancelledAt(): Optional<OffsetDateTime> = cancelledAt.getOptional("cancelled_at")
 
     /**
-     * Number of remaining discount cycles if discount is applied
+     * DEPRECATED: Use discounts[].cycles_remaining instead.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -341,7 +355,7 @@ private constructor(
         discountCyclesRemaining.getOptional("discount_cycles_remaining")
 
     /**
-     * The discount id if discount is applied
+     * DEPRECATED: Use discounts instead.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -422,6 +436,15 @@ private constructor(
     @JsonProperty("customer")
     @ExcludeMissing
     fun _customer(): JsonField<CustomerLimitedDetails> = customer
+
+    /**
+     * Returns the raw JSON value of [discounts].
+     *
+     * Unlike [discounts], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("discounts")
+    @ExcludeMissing
+    fun _discounts(): JsonField<List<Discount>> = discounts
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -638,6 +661,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .discounts()
          * .metadata()
          * .nextBillingDate()
          * .onDemand()
@@ -666,6 +690,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<Currency>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
+        private var discounts: JsonField<MutableList<Discount>>? = null
         private var metadata: JsonField<Metadata>? = null
         private var nextBillingDate: JsonField<OffsetDateTime>? = null
         private var onDemand: JsonField<Boolean>? = null
@@ -697,6 +722,7 @@ private constructor(
             createdAt = subscriptionListResponse.createdAt
             currency = subscriptionListResponse.currency
             customer = subscriptionListResponse.customer
+            discounts = subscriptionListResponse.discounts.map { it.toMutableList() }
             metadata = subscriptionListResponse.metadata
             nextBillingDate = subscriptionListResponse.nextBillingDate
             onDemand = subscriptionListResponse.onDemand
@@ -785,6 +811,32 @@ private constructor(
          */
         fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
             this.customer = customer
+        }
+
+        /** All stacked discounts applied, in order of application */
+        fun discounts(discounts: List<Discount>) = discounts(JsonField.of(discounts))
+
+        /**
+         * Sets [Builder.discounts] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discounts] with a well-typed `List<Discount>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discounts(discounts: JsonField<List<Discount>>) = apply {
+            this.discounts = discounts.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [Discount] to [discounts].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addDiscount(discount: Discount) = apply {
+            discounts =
+                (discounts ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("discounts", it).add(discount)
+                }
         }
 
         /** Additional custom data associated with the subscription */
@@ -1016,7 +1068,7 @@ private constructor(
             this.cancelledAt = cancelledAt
         }
 
-        /** Number of remaining discount cycles if discount is applied */
+        /** DEPRECATED: Use discounts[].cycles_remaining instead. */
         fun discountCyclesRemaining(discountCyclesRemaining: Int?) =
             discountCyclesRemaining(JsonField.ofNullable(discountCyclesRemaining))
 
@@ -1046,7 +1098,7 @@ private constructor(
             this.discountCyclesRemaining = discountCyclesRemaining
         }
 
-        /** The discount id if discount is applied */
+        /** DEPRECATED: Use discounts instead. */
         fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
         /** Alias for calling [Builder.discountId] with `discountId.orElse(null)`. */
@@ -1159,6 +1211,7 @@ private constructor(
          * .createdAt()
          * .currency()
          * .customer()
+         * .discounts()
          * .metadata()
          * .nextBillingDate()
          * .onDemand()
@@ -1185,6 +1238,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
                 checkRequired("customer", customer),
+                checkRequired("discounts", discounts).map { it.toImmutable() },
                 checkRequired("metadata", metadata),
                 checkRequired("nextBillingDate", nextBillingDate),
                 checkRequired("onDemand", onDemand),
@@ -1231,6 +1285,7 @@ private constructor(
         createdAt()
         currency().validate()
         customer().validate()
+        discounts().forEach { it.validate() }
         metadata().validate()
         nextBillingDate()
         onDemand()
@@ -1276,6 +1331,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
+            (discounts.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
             (if (onDemand.asKnown().isPresent) 1 else 0) +
@@ -1298,6 +1354,245 @@ private constructor(
             (if (productName.asKnown().isPresent) 1 else 0) +
             (scheduledChange.asKnown().getOrNull()?.validity() ?: 0) +
             (if (taxId.asKnown().isPresent) 1 else 0)
+
+    /**
+     * Lightweight discount info for list endpoints. Array order represents position (no explicit
+     * position field).
+     */
+    class Discount
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val discountId: JsonField<String>,
+        private val discountCyclesRemaining: JsonField<Int>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("discount_id")
+            @ExcludeMissing
+            discountId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("discount_cycles_remaining")
+            @ExcludeMissing
+            discountCyclesRemaining: JsonField<Int> = JsonMissing.of(),
+        ) : this(discountId, discountCyclesRemaining, mutableMapOf())
+
+        /**
+         * The unique discount ID
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun discountId(): String = discountId.getRequired("discount_id")
+
+        /**
+         * Remaining billing cycles for this discount on this subscription
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun discountCyclesRemaining(): Optional<Int> =
+            discountCyclesRemaining.getOptional("discount_cycles_remaining")
+
+        /**
+         * Returns the raw JSON value of [discountId].
+         *
+         * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("discount_id")
+        @ExcludeMissing
+        fun _discountId(): JsonField<String> = discountId
+
+        /**
+         * Returns the raw JSON value of [discountCyclesRemaining].
+         *
+         * Unlike [discountCyclesRemaining], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("discount_cycles_remaining")
+        @ExcludeMissing
+        fun _discountCyclesRemaining(): JsonField<Int> = discountCyclesRemaining
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Discount].
+             *
+             * The following fields are required:
+             * ```java
+             * .discountId()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Discount]. */
+        class Builder internal constructor() {
+
+            private var discountId: JsonField<String>? = null
+            private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(discount: Discount) = apply {
+                discountId = discount.discountId
+                discountCyclesRemaining = discount.discountCyclesRemaining
+                additionalProperties = discount.additionalProperties.toMutableMap()
+            }
+
+            /** The unique discount ID */
+            fun discountId(discountId: String) = discountId(JsonField.of(discountId))
+
+            /**
+             * Sets [Builder.discountId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.discountId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
+
+            /** Remaining billing cycles for this discount on this subscription */
+            fun discountCyclesRemaining(discountCyclesRemaining: Int?) =
+                discountCyclesRemaining(JsonField.ofNullable(discountCyclesRemaining))
+
+            /**
+             * Alias for [Builder.discountCyclesRemaining].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun discountCyclesRemaining(discountCyclesRemaining: Int) =
+                discountCyclesRemaining(discountCyclesRemaining as Int?)
+
+            /**
+             * Alias for calling [Builder.discountCyclesRemaining] with
+             * `discountCyclesRemaining.orElse(null)`.
+             */
+            fun discountCyclesRemaining(discountCyclesRemaining: Optional<Int>) =
+                discountCyclesRemaining(discountCyclesRemaining.getOrNull())
+
+            /**
+             * Sets [Builder.discountCyclesRemaining] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.discountCyclesRemaining] with a well-typed [Int]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun discountCyclesRemaining(discountCyclesRemaining: JsonField<Int>) = apply {
+                this.discountCyclesRemaining = discountCyclesRemaining
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Discount].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .discountId()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Discount =
+                Discount(
+                    checkRequired("discountId", discountId),
+                    discountCyclesRemaining,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
+         *   its expected type.
+         */
+        fun validate(): Discount = apply {
+            if (validated) {
+                return@apply
+            }
+
+            discountId()
+            discountCyclesRemaining()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (discountId.asKnown().isPresent) 1 else 0) +
+                (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Discount &&
+                discountId == other.discountId &&
+                discountCyclesRemaining == other.discountCyclesRemaining &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(discountId, discountCyclesRemaining, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Discount{discountId=$discountId, discountCyclesRemaining=$discountCyclesRemaining, additionalProperties=$additionalProperties}"
+    }
 
     /** Additional custom data associated with the subscription */
     class Metadata
@@ -1419,6 +1714,7 @@ private constructor(
             createdAt == other.createdAt &&
             currency == other.currency &&
             customer == other.customer &&
+            discounts == other.discounts &&
             metadata == other.metadata &&
             nextBillingDate == other.nextBillingDate &&
             onDemand == other.onDemand &&
@@ -1451,6 +1747,7 @@ private constructor(
             createdAt,
             currency,
             customer,
+            discounts,
             metadata,
             nextBillingDate,
             onDemand,
@@ -1480,5 +1777,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, paymentMethodId=$paymentMethodId, productName=$productName, scheduledChange=$scheduledChange, taxId=$taxId, additionalProperties=$additionalProperties}"
+        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, discounts=$discounts, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, paymentMethodId=$paymentMethodId, productName=$productName, scheduledChange=$scheduledChange, taxId=$taxId, additionalProperties=$additionalProperties}"
 }

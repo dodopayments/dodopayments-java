@@ -28,6 +28,12 @@ internal class CheckoutSessionRequestTest {
                         .quantity(0)
                         .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                         .amount(0)
+                        .addCreditEntitlement(
+                            ProductItemReq.CreditEntitlement.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .creditsAmount("credits_amount")
+                                .build()
+                        )
                         .build()
                 )
                 .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
@@ -113,6 +119,7 @@ internal class CheckoutSessionRequestTest {
                         .build()
                 )
                 .discountCode("discount_code")
+                .addDiscountCode("string")
                 .featureFlags(
                     CheckoutSessionFlags.builder()
                         .allowCurrencySelection(true)
@@ -169,6 +176,12 @@ internal class CheckoutSessionRequestTest {
                     .quantity(0)
                     .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                     .amount(0)
+                    .addCreditEntitlement(
+                        ProductItemReq.CreditEntitlement.builder()
+                            .creditEntitlementId("credit_entitlement_id")
+                            .creditsAmount("credits_amount")
+                            .build()
+                    )
                     .build()
             )
         assertThat(checkoutSessionRequest.allowedPaymentMethodTypes().getOrNull())
@@ -263,6 +276,7 @@ internal class CheckoutSessionRequestTest {
                     .build()
             )
         assertThat(checkoutSessionRequest.discountCode()).contains("discount_code")
+        assertThat(checkoutSessionRequest.discountCodes().getOrNull()).containsExactly("string")
         assertThat(checkoutSessionRequest.featureFlags())
             .contains(
                 CheckoutSessionFlags.builder()
@@ -326,6 +340,12 @@ internal class CheckoutSessionRequestTest {
                         .quantity(0)
                         .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                         .amount(0)
+                        .addCreditEntitlement(
+                            ProductItemReq.CreditEntitlement.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .creditsAmount("credits_amount")
+                                .build()
+                        )
                         .build()
                 )
                 .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
@@ -411,6 +431,7 @@ internal class CheckoutSessionRequestTest {
                         .build()
                 )
                 .discountCode("discount_code")
+                .addDiscountCode("string")
                 .featureFlags(
                     CheckoutSessionFlags.builder()
                         .allowCurrencySelection(true)

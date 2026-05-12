@@ -58,6 +58,7 @@ internal class SubscriptionServiceAsyncTest {
                     .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
                     .billingCurrency(Currency.AED)
                     .discountCode("discount_code")
+                    .addDiscountCode("string")
                     .force3ds(true)
                     .mandateMinAmountInrPaise(0)
                     .metadata(
@@ -226,6 +227,7 @@ internal class SubscriptionServiceAsyncTest {
                             .adaptiveCurrencyFeesInclusive(true)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                             .discountCode("discount_code")
+                            .addDiscountCode("string")
                             .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
                             .metadata(
                                 UpdateSubscriptionPlanReq.Metadata.builder()
@@ -301,6 +303,7 @@ internal class SubscriptionServiceAsyncTest {
                             .adaptiveCurrencyFeesInclusive(true)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                             .discountCode("discount_code")
+                            .addDiscountCode("string")
                             .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
                             .metadata(
                                 UpdateSubscriptionPlanReq.Metadata.builder()

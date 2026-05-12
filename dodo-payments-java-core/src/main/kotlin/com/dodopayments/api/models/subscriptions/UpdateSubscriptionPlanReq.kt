@@ -29,6 +29,7 @@ private constructor(
     private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
     private val addons: JsonField<List<AttachAddon>>,
     private val discountCode: JsonField<String>,
+    private val discountCodes: JsonField<List<String>>,
     private val effectiveAt: JsonField<EffectiveAt>,
     private val metadata: JsonField<Metadata>,
     private val onPaymentFailure: JsonField<OnPaymentFailure>,
@@ -51,6 +52,9 @@ private constructor(
         @JsonProperty("discount_code")
         @ExcludeMissing
         discountCode: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("discount_codes")
+        @ExcludeMissing
+        discountCodes: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("effective_at")
         @ExcludeMissing
         effectiveAt: JsonField<EffectiveAt> = JsonMissing.of(),
@@ -65,6 +69,7 @@ private constructor(
         adaptiveCurrencyFeesInclusive,
         addons,
         discountCode,
+        discountCodes,
         effectiveAt,
         metadata,
         onPaymentFailure,
@@ -115,15 +120,24 @@ private constructor(
     fun addons(): Optional<List<AttachAddon>> = addons.getOptional("addons")
 
     /**
-     * Optional discount code to apply to the new plan. If provided, validates and applies the
-     * discount to the plan change. If not provided and the subscription has an existing discount
-     * with `preserve_on_plan_change=true`, the existing discount will be preserved (if applicable
-     * to the new product).
+     * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    @Deprecated("deprecated")
     fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
+
+    /**
+     * Stacked discount codes to apply to the new plan. Max 20. Cannot be used together with
+     * discount_code. If provided, replaces any existing discount codes. Empty array removes all
+     * discounts. If not provided (None), existing discounts with preserve_on_plan_change=true are
+     * preserved.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountCodes(): Optional<List<String>> = discountCodes.getOptional("discount_codes")
 
     /**
      * When to apply the plan change.
@@ -202,9 +216,19 @@ private constructor(
      *
      * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected type.
      */
+    @Deprecated("deprecated")
     @JsonProperty("discount_code")
     @ExcludeMissing
     fun _discountCode(): JsonField<String> = discountCode
+
+    /**
+     * Returns the raw JSON value of [discountCodes].
+     *
+     * Unlike [discountCodes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("discount_codes")
+    @ExcludeMissing
+    fun _discountCodes(): JsonField<List<String>> = discountCodes
 
     /**
      * Returns the raw JSON value of [effectiveAt].
@@ -268,6 +292,7 @@ private constructor(
         private var adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of()
         private var addons: JsonField<MutableList<AttachAddon>>? = null
         private var discountCode: JsonField<String> = JsonMissing.of()
+        private var discountCodes: JsonField<MutableList<String>>? = null
         private var effectiveAt: JsonField<EffectiveAt> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
@@ -281,6 +306,7 @@ private constructor(
             adaptiveCurrencyFeesInclusive = updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive
             addons = updateSubscriptionPlanReq.addons.map { it.toMutableList() }
             discountCode = updateSubscriptionPlanReq.discountCode
+            discountCodes = updateSubscriptionPlanReq.discountCodes.map { it.toMutableList() }
             effectiveAt = updateSubscriptionPlanReq.effectiveAt
             metadata = updateSubscriptionPlanReq.metadata
             onPaymentFailure = updateSubscriptionPlanReq.onPaymentFailure
@@ -388,15 +414,12 @@ private constructor(
                 }
         }
 
-        /**
-         * Optional discount code to apply to the new plan. If provided, validates and applies the
-         * discount to the plan change. If not provided and the subscription has an existing
-         * discount with `preserve_on_plan_change=true`, the existing discount will be preserved (if
-         * applicable to the new product).
-         */
+        /** DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: String?) = discountCode(JsonField.ofNullable(discountCode))
 
         /** Alias for calling [Builder.discountCode] with `discountCode.orElse(null)`. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: Optional<String>) = discountCode(discountCode.getOrNull())
 
         /**
@@ -406,8 +429,45 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: JsonField<String>) = apply {
             this.discountCode = discountCode
+        }
+
+        /**
+         * Stacked discount codes to apply to the new plan. Max 20. Cannot be used together with
+         * discount_code. If provided, replaces any existing discount codes. Empty array removes all
+         * discounts. If not provided (None), existing discounts with preserve_on_plan_change=true
+         * are preserved.
+         */
+        fun discountCodes(discountCodes: List<String>?) =
+            discountCodes(JsonField.ofNullable(discountCodes))
+
+        /** Alias for calling [Builder.discountCodes] with `discountCodes.orElse(null)`. */
+        fun discountCodes(discountCodes: Optional<List<String>>) =
+            discountCodes(discountCodes.getOrNull())
+
+        /**
+         * Sets [Builder.discountCodes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountCodes] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discountCodes(discountCodes: JsonField<List<String>>) = apply {
+            this.discountCodes = discountCodes.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [discountCodes].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addDiscountCode(discountCode: String) = apply {
+            discountCodes =
+                (discountCodes ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("discountCodes", it).add(discountCode)
+                }
         }
 
         /**
@@ -511,6 +571,7 @@ private constructor(
                 adaptiveCurrencyFeesInclusive,
                 (addons ?: JsonMissing.of()).map { it.toImmutable() },
                 discountCode,
+                (discountCodes ?: JsonMissing.of()).map { it.toImmutable() },
                 effectiveAt,
                 metadata,
                 onPaymentFailure,
@@ -539,6 +600,7 @@ private constructor(
         adaptiveCurrencyFeesInclusive()
         addons().ifPresent { it.forEach { it.validate() } }
         discountCode()
+        discountCodes()
         effectiveAt().ifPresent { it.validate() }
         metadata().ifPresent { it.validate() }
         onPaymentFailure().ifPresent { it.validate() }
@@ -566,6 +628,7 @@ private constructor(
             (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
             (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (discountCode.asKnown().isPresent) 1 else 0) +
+            (discountCodes.asKnown().getOrNull()?.size ?: 0) +
             (effectiveAt.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
@@ -1138,6 +1201,7 @@ private constructor(
             adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
             addons == other.addons &&
             discountCode == other.discountCode &&
+            discountCodes == other.discountCodes &&
             effectiveAt == other.effectiveAt &&
             metadata == other.metadata &&
             onPaymentFailure == other.onPaymentFailure &&
@@ -1152,6 +1216,7 @@ private constructor(
             adaptiveCurrencyFeesInclusive,
             addons,
             discountCode,
+            discountCodes,
             effectiveAt,
             metadata,
             onPaymentFailure,
@@ -1162,5 +1227,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, discountCode=$discountCode, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
+        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, discountCode=$discountCode, discountCodes=$discountCodes, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
 }

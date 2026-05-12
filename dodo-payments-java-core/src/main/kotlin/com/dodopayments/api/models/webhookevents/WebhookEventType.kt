@@ -56,6 +56,13 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
 
         @JvmField val SUBSCRIPTION_CANCELLED = of("subscription.cancelled")
 
+        @JvmField
+        val SUBSCRIPTION_CANCELLATION_SCHEDULED = of("subscription.cancellation_scheduled")
+
+        @JvmField val SUBSCRIPTION_TRIAL_ENDING = of("subscription.trial_ending")
+
+        @JvmField val SUBSCRIPTION_UPCOMING_RENEWAL = of("subscription.upcoming_renewal")
+
         @JvmField val SUBSCRIPTION_FAILED = of("subscription.failed")
 
         @JvmField val SUBSCRIPTION_EXPIRED = of("subscription.expired")
@@ -136,6 +143,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
         SUBSCRIPTION_RENEWED,
         SUBSCRIPTION_ON_HOLD,
         SUBSCRIPTION_CANCELLED,
+        SUBSCRIPTION_CANCELLATION_SCHEDULED,
+        SUBSCRIPTION_TRIAL_ENDING,
+        SUBSCRIPTION_UPCOMING_RENEWAL,
         SUBSCRIPTION_FAILED,
         SUBSCRIPTION_EXPIRED,
         SUBSCRIPTION_PLAN_CHANGED,
@@ -194,6 +204,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
         SUBSCRIPTION_RENEWED,
         SUBSCRIPTION_ON_HOLD,
         SUBSCRIPTION_CANCELLED,
+        SUBSCRIPTION_CANCELLATION_SCHEDULED,
+        SUBSCRIPTION_TRIAL_ENDING,
+        SUBSCRIPTION_UPCOMING_RENEWAL,
         SUBSCRIPTION_FAILED,
         SUBSCRIPTION_EXPIRED,
         SUBSCRIPTION_PLAN_CHANGED,
@@ -255,6 +268,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
             SUBSCRIPTION_RENEWED -> Value.SUBSCRIPTION_RENEWED
             SUBSCRIPTION_ON_HOLD -> Value.SUBSCRIPTION_ON_HOLD
             SUBSCRIPTION_CANCELLED -> Value.SUBSCRIPTION_CANCELLED
+            SUBSCRIPTION_CANCELLATION_SCHEDULED -> Value.SUBSCRIPTION_CANCELLATION_SCHEDULED
+            SUBSCRIPTION_TRIAL_ENDING -> Value.SUBSCRIPTION_TRIAL_ENDING
+            SUBSCRIPTION_UPCOMING_RENEWAL -> Value.SUBSCRIPTION_UPCOMING_RENEWAL
             SUBSCRIPTION_FAILED -> Value.SUBSCRIPTION_FAILED
             SUBSCRIPTION_EXPIRED -> Value.SUBSCRIPTION_EXPIRED
             SUBSCRIPTION_PLAN_CHANGED -> Value.SUBSCRIPTION_PLAN_CHANGED
@@ -315,6 +331,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
             SUBSCRIPTION_RENEWED -> Known.SUBSCRIPTION_RENEWED
             SUBSCRIPTION_ON_HOLD -> Known.SUBSCRIPTION_ON_HOLD
             SUBSCRIPTION_CANCELLED -> Known.SUBSCRIPTION_CANCELLED
+            SUBSCRIPTION_CANCELLATION_SCHEDULED -> Known.SUBSCRIPTION_CANCELLATION_SCHEDULED
+            SUBSCRIPTION_TRIAL_ENDING -> Known.SUBSCRIPTION_TRIAL_ENDING
+            SUBSCRIPTION_UPCOMING_RENEWAL -> Known.SUBSCRIPTION_UPCOMING_RENEWAL
             SUBSCRIPTION_FAILED -> Known.SUBSCRIPTION_FAILED
             SUBSCRIPTION_EXPIRED -> Known.SUBSCRIPTION_EXPIRED
             SUBSCRIPTION_PLAN_CHANGED -> Known.SUBSCRIPTION_PLAN_CHANGED

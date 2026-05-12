@@ -38,6 +38,7 @@ internal class PaymentCreateResponseTest {
                 .paymentId("payment_id")
                 .totalAmount(0)
                 .discountId("discount_id")
+                .addDiscountId("string")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentLink("payment_link")
                 .addProductCart(
@@ -73,6 +74,7 @@ internal class PaymentCreateResponseTest {
         assertThat(paymentCreateResponse.paymentId()).isEqualTo("payment_id")
         assertThat(paymentCreateResponse.totalAmount()).isEqualTo(0)
         assertThat(paymentCreateResponse.discountId()).contains("discount_id")
+        assertThat(paymentCreateResponse.discountIds().getOrNull()).containsExactly("string")
         assertThat(paymentCreateResponse.expiresOn())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(paymentCreateResponse.paymentLink()).contains("payment_link")
@@ -113,6 +115,7 @@ internal class PaymentCreateResponseTest {
                 .paymentId("payment_id")
                 .totalAmount(0)
                 .discountId("discount_id")
+                .addDiscountId("string")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentLink("payment_link")
                 .addProductCart(
