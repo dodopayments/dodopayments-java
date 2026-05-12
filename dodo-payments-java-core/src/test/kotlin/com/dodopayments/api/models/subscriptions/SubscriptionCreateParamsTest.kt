@@ -35,6 +35,7 @@ internal class SubscriptionCreateParamsTest {
             .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
             .billingCurrency(Currency.AED)
             .discountCode("discount_code")
+            .addDiscountCode("string")
             .force3ds(true)
             .mandateMinAmountInrPaise(0)
             .metadata(
@@ -90,6 +91,7 @@ internal class SubscriptionCreateParamsTest {
                 .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
                 .billingCurrency(Currency.AED)
                 .discountCode("discount_code")
+                .addDiscountCode("string")
                 .force3ds(true)
                 .mandateMinAmountInrPaise(0)
                 .metadata(
@@ -150,6 +152,7 @@ internal class SubscriptionCreateParamsTest {
             .containsExactly(PaymentMethodTypes.ACH)
         assertThat(body.billingCurrency()).contains(Currency.AED)
         assertThat(body.discountCode()).contains("discount_code")
+        assertThat(body.discountCodes().getOrNull()).containsExactly("string")
         assertThat(body.force3ds()).contains(true)
         assertThat(body.mandateMinAmountInrPaise()).contains(0)
         assertThat(body.metadata())

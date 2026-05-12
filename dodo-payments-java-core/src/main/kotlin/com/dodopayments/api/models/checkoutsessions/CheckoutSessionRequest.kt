@@ -37,6 +37,7 @@ private constructor(
     private val customer: JsonField<CustomerRequest>,
     private val customization: JsonField<CheckoutSessionCustomization>,
     private val discountCode: JsonField<String>,
+    private val discountCodes: JsonField<List<String>>,
     private val featureFlags: JsonField<CheckoutSessionFlags>,
     private val force3ds: JsonField<Boolean>,
     private val mandateMinAmountInrPaise: JsonField<Int>,
@@ -80,6 +81,9 @@ private constructor(
         @JsonProperty("discount_code")
         @ExcludeMissing
         discountCode: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("discount_codes")
+        @ExcludeMissing
+        discountCodes: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("feature_flags")
         @ExcludeMissing
         featureFlags: JsonField<CheckoutSessionFlags> = JsonMissing.of(),
@@ -119,6 +123,7 @@ private constructor(
         customer,
         customization,
         discountCode,
+        discountCodes,
         featureFlags,
         force3ds,
         mandateMinAmountInrPaise,
@@ -215,10 +220,22 @@ private constructor(
         customization.getOptional("customization")
 
     /**
+     * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    @Deprecated("deprecated")
     fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
+
+    /**
+     * Stacked discount codes to apply, in order. Max 20. Cannot be used together with
+     * discount_code.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountCodes(): Optional<List<String>> = discountCodes.getOptional("discount_codes")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -403,9 +420,19 @@ private constructor(
      *
      * Unlike [discountCode], this method doesn't throw if the JSON field has an unexpected type.
      */
+    @Deprecated("deprecated")
     @JsonProperty("discount_code")
     @ExcludeMissing
     fun _discountCode(): JsonField<String> = discountCode
+
+    /**
+     * Returns the raw JSON value of [discountCodes].
+     *
+     * Unlike [discountCodes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("discount_codes")
+    @ExcludeMissing
+    fun _discountCodes(): JsonField<List<String>> = discountCodes
 
     /**
      * Returns the raw JSON value of [featureFlags].
@@ -547,6 +574,7 @@ private constructor(
         private var customer: JsonField<CustomerRequest> = JsonMissing.of()
         private var customization: JsonField<CheckoutSessionCustomization> = JsonMissing.of()
         private var discountCode: JsonField<String> = JsonMissing.of()
+        private var discountCodes: JsonField<MutableList<String>>? = null
         private var featureFlags: JsonField<CheckoutSessionFlags> = JsonMissing.of()
         private var force3ds: JsonField<Boolean> = JsonMissing.of()
         private var mandateMinAmountInrPaise: JsonField<Int> = JsonMissing.of()
@@ -574,6 +602,7 @@ private constructor(
             customer = checkoutSessionRequest.customer
             customization = checkoutSessionRequest.customization
             discountCode = checkoutSessionRequest.discountCode
+            discountCodes = checkoutSessionRequest.discountCodes.map { it.toMutableList() }
             featureFlags = checkoutSessionRequest.featureFlags
             force3ds = checkoutSessionRequest.force3ds
             mandateMinAmountInrPaise = checkoutSessionRequest.mandateMinAmountInrPaise
@@ -800,9 +829,12 @@ private constructor(
             this.customization = customization
         }
 
+        /** DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: String?) = discountCode(JsonField.ofNullable(discountCode))
 
         /** Alias for calling [Builder.discountCode] with `discountCode.orElse(null)`. */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: Optional<String>) = discountCode(discountCode.getOrNull())
 
         /**
@@ -812,8 +844,43 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated("deprecated")
         fun discountCode(discountCode: JsonField<String>) = apply {
             this.discountCode = discountCode
+        }
+
+        /**
+         * Stacked discount codes to apply, in order. Max 20. Cannot be used together with
+         * discount_code.
+         */
+        fun discountCodes(discountCodes: List<String>?) =
+            discountCodes(JsonField.ofNullable(discountCodes))
+
+        /** Alias for calling [Builder.discountCodes] with `discountCodes.orElse(null)`. */
+        fun discountCodes(discountCodes: Optional<List<String>>) =
+            discountCodes(discountCodes.getOrNull())
+
+        /**
+         * Sets [Builder.discountCodes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountCodes] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discountCodes(discountCodes: JsonField<List<String>>) = apply {
+            this.discountCodes = discountCodes.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [discountCodes].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addDiscountCode(discountCode: String) = apply {
+            discountCodes =
+                (discountCodes ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("discountCodes", it).add(discountCode)
+                }
         }
 
         fun featureFlags(featureFlags: CheckoutSessionFlags) =
@@ -1080,6 +1147,7 @@ private constructor(
                 customer,
                 customization,
                 discountCode,
+                (discountCodes ?: JsonMissing.of()).map { it.toImmutable() },
                 featureFlags,
                 force3ds,
                 mandateMinAmountInrPaise,
@@ -1121,6 +1189,7 @@ private constructor(
         customer().ifPresent { it.validate() }
         customization().ifPresent { it.validate() }
         discountCode()
+        discountCodes()
         featureFlags().ifPresent { it.validate() }
         force3ds()
         mandateMinAmountInrPaise()
@@ -1162,6 +1231,7 @@ private constructor(
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (customization.asKnown().getOrNull()?.validity() ?: 0) +
             (if (discountCode.asKnown().isPresent) 1 else 0) +
+            (discountCodes.asKnown().getOrNull()?.size ?: 0) +
             (featureFlags.asKnown().getOrNull()?.validity() ?: 0) +
             (if (force3ds.asKnown().isPresent) 1 else 0) +
             (if (mandateMinAmountInrPaise.asKnown().isPresent) 1 else 0) +
@@ -1300,6 +1370,7 @@ private constructor(
             customer == other.customer &&
             customization == other.customization &&
             discountCode == other.discountCode &&
+            discountCodes == other.discountCodes &&
             featureFlags == other.featureFlags &&
             force3ds == other.force3ds &&
             mandateMinAmountInrPaise == other.mandateMinAmountInrPaise &&
@@ -1327,6 +1398,7 @@ private constructor(
             customer,
             customization,
             discountCode,
+            discountCodes,
             featureFlags,
             force3ds,
             mandateMinAmountInrPaise,
@@ -1346,5 +1418,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, cancelUrl=$cancelUrl, confirm=$confirm, customFields=$customFields, customer=$customer, customization=$customization, discountCode=$discountCode, featureFlags=$featureFlags, force3ds=$force3ds, mandateMinAmountInrPaise=$mandateMinAmountInrPaise, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, taxId=$taxId, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, cancelUrl=$cancelUrl, confirm=$confirm, customFields=$customFields, customer=$customer, customization=$customization, discountCode=$discountCode, discountCodes=$discountCodes, featureFlags=$featureFlags, force3ds=$force3ds, mandateMinAmountInrPaise=$mandateMinAmountInrPaise, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, taxId=$taxId, additionalProperties=$additionalProperties}"
 }

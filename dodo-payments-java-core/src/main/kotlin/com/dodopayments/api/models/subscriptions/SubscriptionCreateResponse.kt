@@ -32,6 +32,7 @@ private constructor(
     private val subscriptionId: JsonField<String>,
     private val clientSecret: JsonField<String>,
     private val discountId: JsonField<String>,
+    private val discountIds: JsonField<List<String>>,
     private val expiresOn: JsonField<OffsetDateTime>,
     private val oneTimeProductCart: JsonField<List<OneTimeProductCart>>,
     private val paymentLink: JsonField<String>,
@@ -60,6 +61,9 @@ private constructor(
         @JsonProperty("discount_id")
         @ExcludeMissing
         discountId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("discount_ids")
+        @ExcludeMissing
+        discountIds: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("expires_on")
         @ExcludeMissing
         expiresOn: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -78,6 +82,7 @@ private constructor(
         subscriptionId,
         clientSecret,
         discountId,
+        discountIds,
         expiresOn,
         oneTimeProductCart,
         paymentLink,
@@ -141,12 +146,21 @@ private constructor(
     fun clientSecret(): Optional<String> = clientSecret.getOptional("client_secret")
 
     /**
-     * The discount id if discount is applied
+     * DEPRECATED: Use discount_ids instead. Returns the first discount's ID if present.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    @Deprecated("deprecated")
     fun discountId(): Optional<String> = discountId.getOptional("discount_id")
+
+    /**
+     * All stacked discount IDs applied, in order of application
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun discountIds(): Optional<List<String>> = discountIds.getOptional("discount_ids")
 
     /**
      * Expiry timestamp of the payment link
@@ -238,7 +252,19 @@ private constructor(
      *
      * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("discount_id") @ExcludeMissing fun _discountId(): JsonField<String> = discountId
+    @Deprecated("deprecated")
+    @JsonProperty("discount_id")
+    @ExcludeMissing
+    fun _discountId(): JsonField<String> = discountId
+
+    /**
+     * Returns the raw JSON value of [discountIds].
+     *
+     * Unlike [discountIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("discount_ids")
+    @ExcludeMissing
+    fun _discountIds(): JsonField<List<String>> = discountIds
 
     /**
      * Returns the raw JSON value of [expiresOn].
@@ -309,6 +335,7 @@ private constructor(
         private var subscriptionId: JsonField<String>? = null
         private var clientSecret: JsonField<String> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
+        private var discountIds: JsonField<MutableList<String>>? = null
         private var expiresOn: JsonField<OffsetDateTime> = JsonMissing.of()
         private var oneTimeProductCart: JsonField<MutableList<OneTimeProductCart>>? = null
         private var paymentLink: JsonField<String> = JsonMissing.of()
@@ -324,6 +351,7 @@ private constructor(
             subscriptionId = subscriptionCreateResponse.subscriptionId
             clientSecret = subscriptionCreateResponse.clientSecret
             discountId = subscriptionCreateResponse.discountId
+            discountIds = subscriptionCreateResponse.discountIds.map { it.toMutableList() }
             expiresOn = subscriptionCreateResponse.expiresOn
             oneTimeProductCart =
                 subscriptionCreateResponse.oneTimeProductCart.map { it.toMutableList() }
@@ -443,10 +471,12 @@ private constructor(
             this.clientSecret = clientSecret
         }
 
-        /** The discount id if discount is applied */
+        /** DEPRECATED: Use discount_ids instead. Returns the first discount's ID if present. */
+        @Deprecated("deprecated")
         fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
         /** Alias for calling [Builder.discountId] with `discountId.orElse(null)`. */
+        @Deprecated("deprecated")
         fun discountId(discountId: Optional<String>) = discountId(discountId.getOrNull())
 
         /**
@@ -456,7 +486,37 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated("deprecated")
         fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
+
+        /** All stacked discount IDs applied, in order of application */
+        fun discountIds(discountIds: List<String>?) = discountIds(JsonField.ofNullable(discountIds))
+
+        /** Alias for calling [Builder.discountIds] with `discountIds.orElse(null)`. */
+        fun discountIds(discountIds: Optional<List<String>>) = discountIds(discountIds.getOrNull())
+
+        /**
+         * Sets [Builder.discountIds] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.discountIds] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun discountIds(discountIds: JsonField<List<String>>) = apply {
+            this.discountIds = discountIds.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [discountIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addDiscountId(discountId: String) = apply {
+            discountIds =
+                (discountIds ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("discountIds", it).add(discountId)
+                }
+        }
 
         /** Expiry timestamp of the payment link */
         fun expiresOn(expiresOn: OffsetDateTime?) = expiresOn(JsonField.ofNullable(expiresOn))
@@ -567,6 +627,7 @@ private constructor(
                 checkRequired("subscriptionId", subscriptionId),
                 clientSecret,
                 discountId,
+                (discountIds ?: JsonMissing.of()).map { it.toImmutable() },
                 expiresOn,
                 (oneTimeProductCart ?: JsonMissing.of()).map { it.toImmutable() },
                 paymentLink,
@@ -597,6 +658,7 @@ private constructor(
         subscriptionId()
         clientSecret()
         discountId()
+        discountIds()
         expiresOn()
         oneTimeProductCart().ifPresent { it.forEach { it.validate() } }
         paymentLink()
@@ -626,6 +688,7 @@ private constructor(
             (if (subscriptionId.asKnown().isPresent) 1 else 0) +
             (if (clientSecret.asKnown().isPresent) 1 else 0) +
             (if (discountId.asKnown().isPresent) 1 else 0) +
+            (discountIds.asKnown().getOrNull()?.size ?: 0) +
             (if (expiresOn.asKnown().isPresent) 1 else 0) +
             (oneTimeProductCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (paymentLink.asKnown().isPresent) 1 else 0)
@@ -958,6 +1021,7 @@ private constructor(
             subscriptionId == other.subscriptionId &&
             clientSecret == other.clientSecret &&
             discountId == other.discountId &&
+            discountIds == other.discountIds &&
             expiresOn == other.expiresOn &&
             oneTimeProductCart == other.oneTimeProductCart &&
             paymentLink == other.paymentLink &&
@@ -974,6 +1038,7 @@ private constructor(
             subscriptionId,
             clientSecret,
             discountId,
+            discountIds,
             expiresOn,
             oneTimeProductCart,
             paymentLink,
@@ -984,5 +1049,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
+        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, discountIds=$discountIds, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
 }

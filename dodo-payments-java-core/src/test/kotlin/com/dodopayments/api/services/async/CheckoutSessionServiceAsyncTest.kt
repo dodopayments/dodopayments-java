@@ -44,6 +44,12 @@ internal class CheckoutSessionServiceAsyncTest {
                             .quantity(0)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                             .amount(0)
+                            .addCreditEntitlement(
+                                ProductItemReq.CreditEntitlement.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .creditsAmount("credits_amount")
+                                    .build()
+                            )
                             .build()
                     )
                     .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
@@ -129,6 +135,7 @@ internal class CheckoutSessionServiceAsyncTest {
                             .build()
                     )
                     .discountCode("discount_code")
+                    .addDiscountCode("string")
                     .featureFlags(
                         CheckoutSessionFlags.builder()
                             .allowCurrencySelection(true)
@@ -216,6 +223,12 @@ internal class CheckoutSessionServiceAsyncTest {
                             .quantity(0)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
                             .amount(0)
+                            .addCreditEntitlement(
+                                ProductItemReq.CreditEntitlement.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .creditsAmount("credits_amount")
+                                    .build()
+                            )
                             .build()
                     )
                     .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
@@ -301,6 +314,7 @@ internal class CheckoutSessionServiceAsyncTest {
                             .build()
                     )
                     .discountCode("discount_code")
+                    .addDiscountCode("string")
                     .featureFlags(
                         CheckoutSessionFlags.builder()
                             .allowCurrencySelection(true)
