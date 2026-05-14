@@ -33,14 +33,14 @@ import kotlin.jvm.optionals.getOrNull
 class SubscriptionUpdatePaymentMethodParams
 private constructor(
     private val subscriptionId: String?,
-    private val body: Body,
+    private val paymentMethod: PaymentMethod,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
 
-    fun body(): Body = body
+    fun paymentMethod(): PaymentMethod = paymentMethod
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -58,7 +58,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
+         * .paymentMethod()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -68,7 +68,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var subscriptionId: String? = null
-        private var body: Body? = null
+        private var paymentMethod: PaymentMethod? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -77,7 +77,7 @@ private constructor(
             subscriptionUpdatePaymentMethodParams: SubscriptionUpdatePaymentMethodParams
         ) = apply {
             subscriptionId = subscriptionUpdatePaymentMethodParams.subscriptionId
-            body = subscriptionUpdatePaymentMethodParams.body
+            paymentMethod = subscriptionUpdatePaymentMethodParams.paymentMethod
             additionalHeaders = subscriptionUpdatePaymentMethodParams.additionalHeaders.toBuilder()
             additionalQueryParams =
                 subscriptionUpdatePaymentMethodParams.additionalQueryParams.toBuilder()
@@ -89,24 +89,27 @@ private constructor(
         fun subscriptionId(subscriptionId: Optional<String>) =
             subscriptionId(subscriptionId.getOrNull())
 
-        fun body(body: Body) = apply { this.body = body }
+        fun paymentMethod(paymentMethod: PaymentMethod) = apply {
+            this.paymentMethod = paymentMethod
+        }
 
-        /** Alias for calling [body] with `Body.ofNew(new_)`. */
-        fun body(new_: Body.New) = body(Body.ofNew(new_))
+        /** Alias for calling [paymentMethod] with `PaymentMethod.ofNew(new_)`. */
+        fun paymentMethod(new_: PaymentMethod.New) = paymentMethod(PaymentMethod.ofNew(new_))
 
-        /** Alias for calling [body] with `Body.ofExisting(existing)`. */
-        fun body(existing: Body.Existing) = body(Body.ofExisting(existing))
+        /** Alias for calling [paymentMethod] with `PaymentMethod.ofExisting(existing)`. */
+        fun paymentMethod(existing: PaymentMethod.Existing) =
+            paymentMethod(PaymentMethod.ofExisting(existing))
 
         /**
-         * Alias for calling [body] with the following:
+         * Alias for calling [paymentMethod] with the following:
          * ```java
-         * Body.Existing.builder()
+         * PaymentMethod.Existing.builder()
          *     .paymentMethodId(paymentMethodId)
          *     .build()
          * ```
          */
-        fun existingBody(paymentMethodId: String) =
-            body(Body.Existing.builder().paymentMethodId(paymentMethodId).build())
+        fun existingPaymentMethod(paymentMethodId: String) =
+            paymentMethod(PaymentMethod.Existing.builder().paymentMethodId(paymentMethodId).build())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -213,7 +216,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
+         * .paymentMethod()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -221,13 +224,13 @@ private constructor(
         fun build(): SubscriptionUpdatePaymentMethodParams =
             SubscriptionUpdatePaymentMethodParams(
                 subscriptionId,
-                checkRequired("body", body),
+                checkRequired("paymentMethod", paymentMethod),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): Body = body
+    fun _body(): PaymentMethod = paymentMethod
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -239,9 +242,9 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(using = Body.Deserializer::class)
-    @JsonSerialize(using = Body.Serializer::class)
-    class Body
+    @JsonDeserialize(using = PaymentMethod.Deserializer::class)
+    @JsonSerialize(using = PaymentMethod.Serializer::class)
+    class PaymentMethod
     private constructor(
         private val new_: New? = null,
         private val existing: Existing? = null,
@@ -272,7 +275,7 @@ private constructor(
          * import com.dodopayments.api.core.JsonValue;
          * import java.util.Optional;
          *
-         * Optional<String> result = body.accept(new Body.Visitor<Optional<String>>() {
+         * Optional<String> result = paymentMethod.accept(new PaymentMethod.Visitor<Optional<String>>() {
          *     @Override
          *     public Optional<String> visitNew(New new_) {
          *         return Optional.of(new_.toString());
@@ -309,7 +312,7 @@ private constructor(
          * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
          *   its expected type.
          */
-        fun validate(): Body = apply {
+        fun validate(): PaymentMethod = apply {
             if (validated) {
                 return@apply
             }
@@ -359,27 +362,30 @@ private constructor(
                 return true
             }
 
-            return other is Body && new_ == other.new_ && existing == other.existing
+            return other is PaymentMethod && new_ == other.new_ && existing == other.existing
         }
 
         override fun hashCode(): Int = Objects.hash(new_, existing)
 
         override fun toString(): String =
             when {
-                new_ != null -> "Body{new_=$new_}"
-                existing != null -> "Body{existing=$existing}"
-                _json != null -> "Body{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Body")
+                new_ != null -> "PaymentMethod{new_=$new_}"
+                existing != null -> "PaymentMethod{existing=$existing}"
+                _json != null -> "PaymentMethod{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid PaymentMethod")
             }
 
         companion object {
 
-            @JvmStatic fun ofNew(new_: New) = Body(new_ = new_)
+            @JvmStatic fun ofNew(new_: New) = PaymentMethod(new_ = new_)
 
-            @JvmStatic fun ofExisting(existing: Existing) = Body(existing = existing)
+            @JvmStatic fun ofExisting(existing: Existing) = PaymentMethod(existing = existing)
         }
 
-        /** An interface that defines how to map each variant of [Body] to a value of type [T]. */
+        /**
+         * An interface that defines how to map each variant of [PaymentMethod] to a value of type
+         * [T].
+         */
         interface Visitor<out T> {
 
             fun visitNew(new_: New): T
@@ -387,46 +393,47 @@ private constructor(
             fun visitExisting(existing: Existing): T
 
             /**
-             * Maps an unknown variant of [Body] to a value of type [T].
+             * Maps an unknown variant of [PaymentMethod] to a value of type [T].
              *
-             * An instance of [Body] can contain an unknown variant if it was deserialized from data
-             * that doesn't match any known variant. For example, if the SDK is on an older version
-             * than the API, then the API may respond with new variants that the SDK is unaware of.
+             * An instance of [PaymentMethod] can contain an unknown variant if it was deserialized
+             * from data that doesn't match any known variant. For example, if the SDK is on an
+             * older version than the API, then the API may respond with new variants that the SDK
+             * is unaware of.
              *
              * @throws DodoPaymentsInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw DodoPaymentsInvalidDataException("Unknown Body: $json")
+                throw DodoPaymentsInvalidDataException("Unknown PaymentMethod: $json")
             }
         }
 
-        internal class Deserializer : BaseDeserializer<Body>(Body::class) {
+        internal class Deserializer : BaseDeserializer<PaymentMethod>(PaymentMethod::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): Body {
+            override fun ObjectCodec.deserialize(node: JsonNode): PaymentMethod {
                 val json = JsonValue.fromJsonNode(node)
                 val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
                 when (type) {
                     "new" -> {
                         return tryDeserialize(node, jacksonTypeRef<New>())?.let {
-                            Body(new_ = it, _json = json)
-                        } ?: Body(_json = json)
+                            PaymentMethod(new_ = it, _json = json)
+                        } ?: PaymentMethod(_json = json)
                     }
                     "existing" -> {
                         return tryDeserialize(node, jacksonTypeRef<Existing>())?.let {
-                            Body(existing = it, _json = json)
-                        } ?: Body(_json = json)
+                            PaymentMethod(existing = it, _json = json)
+                        } ?: PaymentMethod(_json = json)
                     }
                 }
 
-                return Body(_json = json)
+                return PaymentMethod(_json = json)
             }
         }
 
-        internal class Serializer : BaseSerializer<Body>(Body::class) {
+        internal class Serializer : BaseSerializer<PaymentMethod>(PaymentMethod::class) {
 
             override fun serialize(
-                value: Body,
+                value: PaymentMethod,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
@@ -434,7 +441,7 @@ private constructor(
                     value.new_ != null -> generator.writeObject(value.new_)
                     value.existing != null -> generator.writeObject(value.existing)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Body")
+                    else -> throw IllegalStateException("Invalid PaymentMethod")
                 }
             }
         }
@@ -865,14 +872,14 @@ private constructor(
 
         return other is SubscriptionUpdatePaymentMethodParams &&
             subscriptionId == other.subscriptionId &&
-            body == other.body &&
+            paymentMethod == other.paymentMethod &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(subscriptionId, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(subscriptionId, paymentMethod, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SubscriptionUpdatePaymentMethodParams{subscriptionId=$subscriptionId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SubscriptionUpdatePaymentMethodParams{subscriptionId=$subscriptionId, paymentMethod=$paymentMethod, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
