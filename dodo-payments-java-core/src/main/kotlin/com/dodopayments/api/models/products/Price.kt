@@ -4,12 +4,10 @@ package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.BaseDeserializer
 import com.dodopayments.api.core.BaseSerializer
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.allMaxBy
 import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.getOrThrow
@@ -231,31 +229,27 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): Price {
             val json = JsonValue.fromJsonNode(node)
+            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<OneTimePrice>())?.let {
-                            Price(oneTime = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<RecurringPrice>())?.let {
-                            Price(recurring = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<UsageBasedPrice>())?.let {
-                            Price(usageBased = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> Price(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+            when (type) {
+                "one_time_price" -> {
+                    return tryDeserialize(node, jacksonTypeRef<OneTimePrice>())?.let {
+                        Price(oneTime = it, _json = json)
+                    } ?: Price(_json = json)
+                }
+                "recurring_price" -> {
+                    return tryDeserialize(node, jacksonTypeRef<RecurringPrice>())?.let {
+                        Price(recurring = it, _json = json)
+                    } ?: Price(_json = json)
+                }
+                "usage_based_price" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UsageBasedPrice>())?.let {
+                        Price(usageBased = it, _json = json)
+                    } ?: Price(_json = json)
+                }
             }
+
+            return Price(_json = json)
         }
     }
 
@@ -284,7 +278,7 @@ private constructor(
         private val discount: JsonField<Long>,
         private val price: JsonField<Int>,
         private val purchasingPowerParity: JsonField<Boolean>,
-        private val type: JsonField<Type>,
+        private val type: JsonValue,
         private val payWhatYouWant: JsonField<Boolean>,
         private val suggestedPrice: JsonField<Int>,
         private val taxInclusive: JsonField<Boolean>,
@@ -301,7 +295,7 @@ private constructor(
             @JsonProperty("purchasing_power_parity")
             @ExcludeMissing
             purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             @JsonProperty("pay_what_you_want")
             @ExcludeMissing
             payWhatYouWant: JsonField<Boolean> = JsonMissing.of(),
@@ -362,10 +356,15 @@ private constructor(
             purchasingPowerParity.getRequired("purchasing_power_parity")
 
         /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("one_time_price")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
          */
-        fun type(): Type = type.getRequired("type")
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
          * Indicates whether the customer can pay any amount they choose. If set to `true`, the
@@ -425,13 +424,6 @@ private constructor(
         fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
 
         /**
-         * Returns the raw JSON value of [type].
-         *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-        /**
          * Returns the raw JSON value of [payWhatYouWant].
          *
          * Unlike [payWhatYouWant], this method doesn't throw if the JSON field has an unexpected
@@ -484,7 +476,6 @@ private constructor(
              * .discount()
              * .price()
              * .purchasingPowerParity()
-             * .type()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -497,7 +488,7 @@ private constructor(
             private var discount: JsonField<Long>? = null
             private var price: JsonField<Int>? = null
             private var purchasingPowerParity: JsonField<Boolean>? = null
-            private var type: JsonField<Type>? = null
+            private var type: JsonValue = JsonValue.from("one_time_price")
             private var payWhatYouWant: JsonField<Boolean> = JsonMissing.of()
             private var suggestedPrice: JsonField<Int> = JsonMissing.of()
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
@@ -576,16 +567,19 @@ private constructor(
                 this.purchasingPowerParity = purchasingPowerParity
             }
 
-            fun type(type: Type) = type(JsonField.of(type))
-
             /**
-             * Sets [Builder.type] to an arbitrary JSON value.
+             * Sets the field to an arbitrary JSON value.
              *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("one_time_price")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
+            fun type(type: JsonValue) = apply { this.type = type }
 
             /**
              * Indicates whether the customer can pay any amount they choose. If set to `true`, the
@@ -690,7 +684,6 @@ private constructor(
              * .discount()
              * .price()
              * .purchasingPowerParity()
-             * .type()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -701,7 +694,7 @@ private constructor(
                     checkRequired("discount", discount),
                     checkRequired("price", price),
                     checkRequired("purchasingPowerParity", purchasingPowerParity),
-                    checkRequired("type", type),
+                    type,
                     payWhatYouWant,
                     suggestedPrice,
                     taxInclusive,
@@ -729,7 +722,11 @@ private constructor(
             discount()
             price()
             purchasingPowerParity()
-            type().validate()
+            _type().let {
+                if (it != JsonValue.from("one_time_price")) {
+                    throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                }
+            }
             payWhatYouWant()
             suggestedPrice()
             taxInclusive()
@@ -756,141 +753,10 @@ private constructor(
                 (if (discount.asKnown().isPresent) 1 else 0) +
                 (if (price.asKnown().isPresent) 1 else 0) +
                 (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
-                (type.asKnown().getOrNull()?.validity() ?: 0) +
+                type.let { if (it == JsonValue.from("one_time_price")) 1 else 0 } +
                 (if (payWhatYouWant.asKnown().isPresent) 1 else 0) +
                 (if (suggestedPrice.asKnown().isPresent) 1 else 0) +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0)
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val ONE_TIME_PRICE = of("one_time_price")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                ONE_TIME_PRICE
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                ONE_TIME_PRICE,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    ONE_TIME_PRICE -> Value.ONE_TIME_PRICE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    ONE_TIME_PRICE -> Known.ONE_TIME_PRICE
-                    else -> throw DodoPaymentsInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -941,7 +807,7 @@ private constructor(
         private val purchasingPowerParity: JsonField<Boolean>,
         private val subscriptionPeriodCount: JsonField<Int>,
         private val subscriptionPeriodInterval: JsonField<TimeInterval>,
-        private val type: JsonField<Type>,
+        private val type: JsonValue,
         private val taxInclusive: JsonField<Boolean>,
         private val trialPeriodDays: JsonField<Int>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -969,7 +835,7 @@ private constructor(
             @JsonProperty("subscription_period_interval")
             @ExcludeMissing
             subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             @JsonProperty("tax_inclusive")
             @ExcludeMissing
             taxInclusive: JsonField<Boolean> = JsonMissing.of(),
@@ -1065,10 +931,15 @@ private constructor(
             subscriptionPeriodInterval.getRequired("subscription_period_interval")
 
         /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("recurring_price")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
          */
-        fun type(): Type = type.getRequired("type")
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
          * Indicates if the price is tax inclusive
@@ -1158,13 +1029,6 @@ private constructor(
         fun _subscriptionPeriodInterval(): JsonField<TimeInterval> = subscriptionPeriodInterval
 
         /**
-         * Returns the raw JSON value of [type].
-         *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-        /**
          * Returns the raw JSON value of [taxInclusive].
          *
          * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected
@@ -1211,7 +1075,6 @@ private constructor(
              * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
-             * .type()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -1228,7 +1091,7 @@ private constructor(
             private var purchasingPowerParity: JsonField<Boolean>? = null
             private var subscriptionPeriodCount: JsonField<Int>? = null
             private var subscriptionPeriodInterval: JsonField<TimeInterval>? = null
-            private var type: JsonField<Type>? = null
+            private var type: JsonValue = JsonValue.from("recurring_price")
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
             private var trialPeriodDays: JsonField<Int> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1374,16 +1237,19 @@ private constructor(
                     this.subscriptionPeriodInterval = subscriptionPeriodInterval
                 }
 
-            fun type(type: Type) = type(JsonField.of(type))
-
             /**
-             * Sets [Builder.type] to an arbitrary JSON value.
+             * Sets the field to an arbitrary JSON value.
              *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("recurring_price")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
+            fun type(type: JsonValue) = apply { this.type = type }
 
             /** Indicates if the price is tax inclusive */
             fun taxInclusive(taxInclusive: Boolean?) =
@@ -1460,7 +1326,6 @@ private constructor(
              * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
-             * .type()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -1475,7 +1340,7 @@ private constructor(
                     checkRequired("purchasingPowerParity", purchasingPowerParity),
                     checkRequired("subscriptionPeriodCount", subscriptionPeriodCount),
                     checkRequired("subscriptionPeriodInterval", subscriptionPeriodInterval),
-                    checkRequired("type", type),
+                    type,
                     taxInclusive,
                     trialPeriodDays,
                     additionalProperties.toMutableMap(),
@@ -1506,7 +1371,11 @@ private constructor(
             purchasingPowerParity()
             subscriptionPeriodCount()
             subscriptionPeriodInterval().validate()
-            type().validate()
+            _type().let {
+                if (it != JsonValue.from("recurring_price")) {
+                    throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                }
+            }
             taxInclusive()
             trialPeriodDays()
             validated = true
@@ -1536,140 +1405,9 @@ private constructor(
                 (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
                 (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
-                (type.asKnown().getOrNull()?.validity() ?: 0) +
+                type.let { if (it == JsonValue.from("recurring_price")) 1 else 0 } +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0) +
                 (if (trialPeriodDays.asKnown().isPresent) 1 else 0)
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val RECURRING_PRICE = of("recurring_price")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                RECURRING_PRICE
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                RECURRING_PRICE,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    RECURRING_PRICE -> Value.RECURRING_PRICE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    RECURRING_PRICE -> Known.RECURRING_PRICE
-                    else -> throw DodoPaymentsInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1726,7 +1464,7 @@ private constructor(
         private val purchasingPowerParity: JsonField<Boolean>,
         private val subscriptionPeriodCount: JsonField<Int>,
         private val subscriptionPeriodInterval: JsonField<TimeInterval>,
-        private val type: JsonField<Type>,
+        private val type: JsonValue,
         private val meters: JsonField<List<AddMeterToPrice>>,
         private val taxInclusive: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1756,7 +1494,7 @@ private constructor(
             @JsonProperty("subscription_period_interval")
             @ExcludeMissing
             subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             @JsonProperty("meters")
             @ExcludeMissing
             meters: JsonField<List<AddMeterToPrice>> = JsonMissing.of(),
@@ -1852,10 +1590,15 @@ private constructor(
             subscriptionPeriodInterval.getRequired("subscription_period_interval")
 
         /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("usage_based_price")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
          */
-        fun type(): Type = type.getRequired("type")
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1943,13 +1686,6 @@ private constructor(
         fun _subscriptionPeriodInterval(): JsonField<TimeInterval> = subscriptionPeriodInterval
 
         /**
-         * Returns the raw JSON value of [type].
-         *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-        /**
          * Returns the raw JSON value of [meters].
          *
          * Unlike [meters], this method doesn't throw if the JSON field has an unexpected type.
@@ -1995,7 +1731,6 @@ private constructor(
              * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
-             * .type()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -2012,7 +1747,7 @@ private constructor(
             private var purchasingPowerParity: JsonField<Boolean>? = null
             private var subscriptionPeriodCount: JsonField<Int>? = null
             private var subscriptionPeriodInterval: JsonField<TimeInterval>? = null
-            private var type: JsonField<Type>? = null
+            private var type: JsonValue = JsonValue.from("usage_based_price")
             private var meters: JsonField<MutableList<AddMeterToPrice>>? = null
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -2158,16 +1893,19 @@ private constructor(
                     this.subscriptionPeriodInterval = subscriptionPeriodInterval
                 }
 
-            fun type(type: Type) = type(JsonField.of(type))
-
             /**
-             * Sets [Builder.type] to an arbitrary JSON value.
+             * Sets the field to an arbitrary JSON value.
              *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("usage_based_price")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
+            fun type(type: JsonValue) = apply { this.type = type }
 
             fun meters(meters: List<AddMeterToPrice>?) = meters(JsonField.ofNullable(meters))
 
@@ -2257,7 +1995,6 @@ private constructor(
              * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
-             * .type()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -2272,7 +2009,7 @@ private constructor(
                     checkRequired("purchasingPowerParity", purchasingPowerParity),
                     checkRequired("subscriptionPeriodCount", subscriptionPeriodCount),
                     checkRequired("subscriptionPeriodInterval", subscriptionPeriodInterval),
-                    checkRequired("type", type),
+                    type,
                     (meters ?: JsonMissing.of()).map { it.toImmutable() },
                     taxInclusive,
                     additionalProperties.toMutableMap(),
@@ -2303,7 +2040,11 @@ private constructor(
             purchasingPowerParity()
             subscriptionPeriodCount()
             subscriptionPeriodInterval().validate()
-            type().validate()
+            _type().let {
+                if (it != JsonValue.from("usage_based_price")) {
+                    throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                }
+            }
             meters().ifPresent { it.forEach { it.validate() } }
             taxInclusive()
             validated = true
@@ -2333,140 +2074,9 @@ private constructor(
                 (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
                 (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
-                (type.asKnown().getOrNull()?.validity() ?: 0) +
+                type.let { if (it == JsonValue.from("usage_based_price")) 1 else 0 } +
                 (meters.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0)
-
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val USAGE_BASED_PRICE = of("usage_based_price")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                USAGE_BASED_PRICE
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                USAGE_BASED_PRICE,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    USAGE_BASED_PRICE -> Value.USAGE_BASED_PRICE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    USAGE_BASED_PRICE -> Known.USAGE_BASED_PRICE
-                    else -> throw DodoPaymentsInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
