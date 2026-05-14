@@ -124,7 +124,7 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
-    @Deprecated("deprecated")
+    @Deprecated("Use `discounts` instead.")
     fun discountId(): Optional<String> = discountId.getOptional("discount_id")
 
     /**
@@ -204,7 +204,7 @@ private constructor(
      *
      * Unlike [discountId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @Deprecated("deprecated")
+    @Deprecated("Use `discounts` instead.")
     @JsonProperty("discount_id")
     @ExcludeMissing
     fun _discountId(): JsonField<String> = discountId
@@ -370,11 +370,11 @@ private constructor(
         fun totalAmount(totalAmount: JsonField<Int>) = apply { this.totalAmount = totalAmount }
 
         /** DEPRECATED: Use discount_ids instead. Returns the first discount's ID if present. */
-        @Deprecated("deprecated")
+        @Deprecated("Use `discounts` instead.")
         fun discountId(discountId: String?) = discountId(JsonField.ofNullable(discountId))
 
         /** Alias for calling [Builder.discountId] with `discountId.orElse(null)`. */
-        @Deprecated("deprecated")
+        @Deprecated("Use `discounts` instead.")
         fun discountId(discountId: Optional<String>) = discountId(discountId.getOrNull())
 
         /**
@@ -384,7 +384,7 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
-        @Deprecated("deprecated")
+        @Deprecated("Use `discounts` instead.")
         fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
 
         /** All stacked discount IDs applied, in order of application */
