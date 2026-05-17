@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.99.0 (2026-05-17)
+
+Full Changelog: [v1.98.0...v1.99.0](https://github.com/dodopayments/dodopayments-java/compare/v1.98.0...v1.99.0)
+
+### Features
+
+* **api:** stainless fixes ([e8e181c](https://github.com/dodopayments/dodopayments-java/commit/e8e181cf9b8d89e510bc823b5c8ee45f1166560f))
+
 ## 1.98.0 (2026-05-14)
 
 Full Changelog: [v1.97.1...v1.98.0](https://github.com/dodopayments/dodopayments-java/compare/v1.97.1...v1.98.0)
