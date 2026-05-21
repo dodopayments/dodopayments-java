@@ -35,6 +35,7 @@ private constructor(
     private val confirm: JsonField<Boolean>,
     private val customFields: JsonField<List<CustomField>>,
     private val customer: JsonField<CustomerRequest>,
+    private val customerBusinessName: JsonField<String>,
     private val customization: JsonField<CheckoutSessionCustomization>,
     private val discountCode: JsonField<String>,
     private val discountCodes: JsonField<List<String>>,
@@ -75,6 +76,9 @@ private constructor(
         @JsonProperty("customer")
         @ExcludeMissing
         customer: JsonField<CustomerRequest> = JsonMissing.of(),
+        @JsonProperty("customer_business_name")
+        @ExcludeMissing
+        customerBusinessName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("customization")
         @ExcludeMissing
         customization: JsonField<CheckoutSessionCustomization> = JsonMissing.of(),
@@ -121,6 +125,7 @@ private constructor(
         confirm,
         customFields,
         customer,
+        customerBusinessName,
         customization,
         discountCode,
         discountCodes,
@@ -209,6 +214,17 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun customer(): Optional<CustomerRequest> = customer.getOptional("customer")
+
+    /**
+     * Optional business / legal name associated with the tax id. When provided together with a
+     * valid tax id for a B2B purchase, this name is rendered on the invoice instead of the
+     * customer's personal name.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun customerBusinessName(): Optional<String> =
+        customerBusinessName.getOptional("customer_business_name")
 
     /**
      * Customization for the checkout session page
@@ -407,6 +423,16 @@ private constructor(
     @JsonProperty("customer") @ExcludeMissing fun _customer(): JsonField<CustomerRequest> = customer
 
     /**
+     * Returns the raw JSON value of [customerBusinessName].
+     *
+     * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("customer_business_name")
+    @ExcludeMissing
+    fun _customerBusinessName(): JsonField<String> = customerBusinessName
+
+    /**
      * Returns the raw JSON value of [customization].
      *
      * Unlike [customization], this method doesn't throw if the JSON field has an unexpected type.
@@ -572,6 +598,7 @@ private constructor(
         private var confirm: JsonField<Boolean> = JsonMissing.of()
         private var customFields: JsonField<MutableList<CustomField>>? = null
         private var customer: JsonField<CustomerRequest> = JsonMissing.of()
+        private var customerBusinessName: JsonField<String> = JsonMissing.of()
         private var customization: JsonField<CheckoutSessionCustomization> = JsonMissing.of()
         private var discountCode: JsonField<String> = JsonMissing.of()
         private var discountCodes: JsonField<MutableList<String>>? = null
@@ -600,6 +627,7 @@ private constructor(
             confirm = checkoutSessionRequest.confirm
             customFields = checkoutSessionRequest.customFields.map { it.toMutableList() }
             customer = checkoutSessionRequest.customer
+            customerBusinessName = checkoutSessionRequest.customerBusinessName
             customization = checkoutSessionRequest.customization
             discountCode = checkoutSessionRequest.discountCode
             discountCodes = checkoutSessionRequest.discountCodes.map { it.toMutableList() }
@@ -813,6 +841,32 @@ private constructor(
         /** Alias for calling [customer] with `CustomerRequest.ofNewCustomer(newCustomer)`. */
         fun customer(newCustomer: NewCustomer) =
             customer(CustomerRequest.ofNewCustomer(newCustomer))
+
+        /**
+         * Optional business / legal name associated with the tax id. When provided together with a
+         * valid tax id for a B2B purchase, this name is rendered on the invoice instead of the
+         * customer's personal name.
+         */
+        fun customerBusinessName(customerBusinessName: String?) =
+            customerBusinessName(JsonField.ofNullable(customerBusinessName))
+
+        /**
+         * Alias for calling [Builder.customerBusinessName] with
+         * `customerBusinessName.orElse(null)`.
+         */
+        fun customerBusinessName(customerBusinessName: Optional<String>) =
+            customerBusinessName(customerBusinessName.getOrNull())
+
+        /**
+         * Sets [Builder.customerBusinessName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customerBusinessName] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun customerBusinessName(customerBusinessName: JsonField<String>) = apply {
+            this.customerBusinessName = customerBusinessName
+        }
 
         /** Customization for the checkout session page */
         fun customization(customization: CheckoutSessionCustomization) =
@@ -1145,6 +1199,7 @@ private constructor(
                 confirm,
                 (customFields ?: JsonMissing.of()).map { it.toImmutable() },
                 customer,
+                customerBusinessName,
                 customization,
                 discountCode,
                 (discountCodes ?: JsonMissing.of()).map { it.toImmutable() },
@@ -1187,6 +1242,7 @@ private constructor(
         confirm()
         customFields().ifPresent { it.forEach { it.validate() } }
         customer().ifPresent { it.validate() }
+        customerBusinessName()
         customization().ifPresent { it.validate() }
         discountCode()
         discountCodes()
@@ -1229,6 +1285,7 @@ private constructor(
             (if (confirm.asKnown().isPresent) 1 else 0) +
             (customFields.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (customerBusinessName.asKnown().isPresent) 1 else 0) +
             (customization.asKnown().getOrNull()?.validity() ?: 0) +
             (if (discountCode.asKnown().isPresent) 1 else 0) +
             (discountCodes.asKnown().getOrNull()?.size ?: 0) +
@@ -1368,6 +1425,7 @@ private constructor(
             confirm == other.confirm &&
             customFields == other.customFields &&
             customer == other.customer &&
+            customerBusinessName == other.customerBusinessName &&
             customization == other.customization &&
             discountCode == other.discountCode &&
             discountCodes == other.discountCodes &&
@@ -1396,6 +1454,7 @@ private constructor(
             confirm,
             customFields,
             customer,
+            customerBusinessName,
             customization,
             discountCode,
             discountCodes,
@@ -1418,5 +1477,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, cancelUrl=$cancelUrl, confirm=$confirm, customFields=$customFields, customer=$customer, customization=$customization, discountCode=$discountCode, discountCodes=$discountCodes, featureFlags=$featureFlags, force3ds=$force3ds, mandateMinAmountInrPaise=$mandateMinAmountInrPaise, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, taxId=$taxId, additionalProperties=$additionalProperties}"
+        "CheckoutSessionRequest{productCart=$productCart, allowedPaymentMethodTypes=$allowedPaymentMethodTypes, billingAddress=$billingAddress, billingCurrency=$billingCurrency, cancelUrl=$cancelUrl, confirm=$confirm, customFields=$customFields, customer=$customer, customerBusinessName=$customerBusinessName, customization=$customization, discountCode=$discountCode, discountCodes=$discountCodes, featureFlags=$featureFlags, force3ds=$force3ds, mandateMinAmountInrPaise=$mandateMinAmountInrPaise, metadata=$metadata, minimalAddress=$minimalAddress, paymentMethodId=$paymentMethodId, productCollectionId=$productCollectionId, returnUrl=$returnUrl, shortLink=$shortLink, showSavedPaymentMethods=$showSavedPaymentMethods, subscriptionData=$subscriptionData, taxId=$taxId, additionalProperties=$additionalProperties}"
 }
