@@ -19,6 +19,7 @@ class CheckoutSessionFlags
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val allowCurrencySelection: JsonField<Boolean>,
+    private val allowCustomerEditingBusinessName: JsonField<Boolean>,
     private val allowCustomerEditingCity: JsonField<Boolean>,
     private val allowCustomerEditingCountry: JsonField<Boolean>,
     private val allowCustomerEditingEmail: JsonField<Boolean>,
@@ -41,6 +42,9 @@ private constructor(
         @JsonProperty("allow_currency_selection")
         @ExcludeMissing
         allowCurrencySelection: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_business_name")
+        @ExcludeMissing
+        allowCustomerEditingBusinessName: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("allow_customer_editing_city")
         @ExcludeMissing
         allowCustomerEditingCity: JsonField<Boolean> = JsonMissing.of(),
@@ -85,6 +89,7 @@ private constructor(
         requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         allowCurrencySelection,
+        allowCustomerEditingBusinessName,
         allowCustomerEditingCity,
         allowCustomerEditingCountry,
         allowCustomerEditingEmail,
@@ -112,6 +117,20 @@ private constructor(
      */
     fun allowCurrencySelection(): Optional<Boolean> =
         allowCurrencySelection.getOptional("allow_currency_selection")
+
+    /**
+     * If true, the customer can supply or edit the business name associated with the tax id during
+     * checkout. Works independently of `allow_customer_editing_tax_id` — either flag (or
+     * `allow_tax_id`) is sufficient to let the customer override the session's business name.
+     * Typically set together with `allow_customer_editing_tax_id`.
+     *
+     * Default is false
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun allowCustomerEditingBusinessName(): Optional<Boolean> =
+        allowCustomerEditingBusinessName.getOptional("allow_customer_editing_business_name")
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -245,6 +264,16 @@ private constructor(
     @JsonProperty("allow_currency_selection")
     @ExcludeMissing
     fun _allowCurrencySelection(): JsonField<Boolean> = allowCurrencySelection
+
+    /**
+     * Returns the raw JSON value of [allowCustomerEditingBusinessName].
+     *
+     * Unlike [allowCustomerEditingBusinessName], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("allow_customer_editing_business_name")
+    @ExcludeMissing
+    fun _allowCustomerEditingBusinessName(): JsonField<Boolean> = allowCustomerEditingBusinessName
 
     /**
      * Returns the raw JSON value of [allowCustomerEditingCity].
@@ -405,6 +434,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var allowCurrencySelection: JsonField<Boolean> = JsonMissing.of()
+        private var allowCustomerEditingBusinessName: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingCity: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingCountry: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingEmail: JsonField<Boolean> = JsonMissing.of()
@@ -424,6 +454,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(checkoutSessionFlags: CheckoutSessionFlags) = apply {
             allowCurrencySelection = checkoutSessionFlags.allowCurrencySelection
+            allowCustomerEditingBusinessName = checkoutSessionFlags.allowCustomerEditingBusinessName
             allowCustomerEditingCity = checkoutSessionFlags.allowCustomerEditingCity
             allowCustomerEditingCountry = checkoutSessionFlags.allowCustomerEditingCountry
             allowCustomerEditingEmail = checkoutSessionFlags.allowCustomerEditingEmail
@@ -459,6 +490,29 @@ private constructor(
         fun allowCurrencySelection(allowCurrencySelection: JsonField<Boolean>) = apply {
             this.allowCurrencySelection = allowCurrencySelection
         }
+
+        /**
+         * If true, the customer can supply or edit the business name associated with the tax id
+         * during checkout. Works independently of `allow_customer_editing_tax_id` — either flag (or
+         * `allow_tax_id`) is sufficient to let the customer override the session's business name.
+         * Typically set together with `allow_customer_editing_tax_id`.
+         *
+         * Default is false
+         */
+        fun allowCustomerEditingBusinessName(allowCustomerEditingBusinessName: Boolean) =
+            allowCustomerEditingBusinessName(JsonField.of(allowCustomerEditingBusinessName))
+
+        /**
+         * Sets [Builder.allowCustomerEditingBusinessName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowCustomerEditingBusinessName] with a well-typed
+         * [Boolean] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun allowCustomerEditingBusinessName(allowCustomerEditingBusinessName: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingBusinessName = allowCustomerEditingBusinessName
+            }
 
         fun allowCustomerEditingCity(allowCustomerEditingCity: Boolean) =
             allowCustomerEditingCity(JsonField.of(allowCustomerEditingCity))
@@ -712,6 +766,7 @@ private constructor(
         fun build(): CheckoutSessionFlags =
             CheckoutSessionFlags(
                 allowCurrencySelection,
+                allowCustomerEditingBusinessName,
                 allowCustomerEditingCity,
                 allowCustomerEditingCountry,
                 allowCustomerEditingEmail,
@@ -746,6 +801,7 @@ private constructor(
         }
 
         allowCurrencySelection()
+        allowCustomerEditingBusinessName()
         allowCustomerEditingCity()
         allowCustomerEditingCountry()
         allowCustomerEditingEmail()
@@ -779,6 +835,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (allowCurrencySelection.asKnown().isPresent) 1 else 0) +
+            (if (allowCustomerEditingBusinessName.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingCity.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingCountry.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingEmail.asKnown().isPresent) 1 else 0) +
@@ -801,6 +858,7 @@ private constructor(
 
         return other is CheckoutSessionFlags &&
             allowCurrencySelection == other.allowCurrencySelection &&
+            allowCustomerEditingBusinessName == other.allowCustomerEditingBusinessName &&
             allowCustomerEditingCity == other.allowCustomerEditingCity &&
             allowCustomerEditingCountry == other.allowCustomerEditingCountry &&
             allowCustomerEditingEmail == other.allowCustomerEditingEmail &&
@@ -821,6 +879,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             allowCurrencySelection,
+            allowCustomerEditingBusinessName,
             allowCustomerEditingCity,
             allowCustomerEditingCountry,
             allowCustomerEditingEmail,
@@ -842,5 +901,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
+        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
 }

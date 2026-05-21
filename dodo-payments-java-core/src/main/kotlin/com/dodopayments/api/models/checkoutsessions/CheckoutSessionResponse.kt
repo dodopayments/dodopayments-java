@@ -22,6 +22,9 @@ class CheckoutSessionResponse
 private constructor(
     private val sessionId: JsonField<String>,
     private val checkoutUrl: JsonField<String>,
+    private val clientSecret: JsonField<String>,
+    private val paymentId: JsonField<String>,
+    private val publishableKey: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -31,7 +34,14 @@ private constructor(
         @JsonProperty("checkout_url")
         @ExcludeMissing
         checkoutUrl: JsonField<String> = JsonMissing.of(),
-    ) : this(sessionId, checkoutUrl, mutableMapOf())
+        @JsonProperty("client_secret")
+        @ExcludeMissing
+        clientSecret: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("publishable_key")
+        @ExcludeMissing
+        publishableKey: JsonField<String> = JsonMissing.of(),
+    ) : this(sessionId, checkoutUrl, clientSecret, paymentId, publishableKey, mutableMapOf())
 
     /**
      * The ID of the created checkout session
@@ -50,6 +60,33 @@ private constructor(
     fun checkoutUrl(): Optional<String> = checkoutUrl.getOptional("checkout_url")
 
     /**
+     * Client secret used to load the Dodo Payments checkout SDK. Returned when `confirm: true` was
+     * passed and a PaymentIntent was created at session-creation time. `None` otherwise.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun clientSecret(): Optional<String> = clientSecret.getOptional("client_secret")
+
+    /**
+     * Underlying payment id when `confirm: true` was passed and a PaymentIntent was created at
+     * session-creation time. `None` otherwise.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
+
+    /**
+     * Publishable key for the Dodo Payments checkout SDK. Returned when `confirm: true` was passed
+     * and a PaymentIntent was created at session-creation time. `None` otherwise.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun publishableKey(): Optional<String> = publishableKey.getOptional("publishable_key")
+
+    /**
      * Returns the raw JSON value of [sessionId].
      *
      * Unlike [sessionId], this method doesn't throw if the JSON field has an unexpected type.
@@ -64,6 +101,31 @@ private constructor(
     @JsonProperty("checkout_url")
     @ExcludeMissing
     fun _checkoutUrl(): JsonField<String> = checkoutUrl
+
+    /**
+     * Returns the raw JSON value of [clientSecret].
+     *
+     * Unlike [clientSecret], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("client_secret")
+    @ExcludeMissing
+    fun _clientSecret(): JsonField<String> = clientSecret
+
+    /**
+     * Returns the raw JSON value of [paymentId].
+     *
+     * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+
+    /**
+     * Returns the raw JSON value of [publishableKey].
+     *
+     * Unlike [publishableKey], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("publishable_key")
+    @ExcludeMissing
+    fun _publishableKey(): JsonField<String> = publishableKey
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -95,12 +157,18 @@ private constructor(
 
         private var sessionId: JsonField<String>? = null
         private var checkoutUrl: JsonField<String> = JsonMissing.of()
+        private var clientSecret: JsonField<String> = JsonMissing.of()
+        private var paymentId: JsonField<String> = JsonMissing.of()
+        private var publishableKey: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(checkoutSessionResponse: CheckoutSessionResponse) = apply {
             sessionId = checkoutSessionResponse.sessionId
             checkoutUrl = checkoutSessionResponse.checkoutUrl
+            clientSecret = checkoutSessionResponse.clientSecret
+            paymentId = checkoutSessionResponse.paymentId
+            publishableKey = checkoutSessionResponse.publishableKey
             additionalProperties = checkoutSessionResponse.additionalProperties.toMutableMap()
         }
 
@@ -130,6 +198,66 @@ private constructor(
          * value.
          */
         fun checkoutUrl(checkoutUrl: JsonField<String>) = apply { this.checkoutUrl = checkoutUrl }
+
+        /**
+         * Client secret used to load the Dodo Payments checkout SDK. Returned when `confirm: true`
+         * was passed and a PaymentIntent was created at session-creation time. `None` otherwise.
+         */
+        fun clientSecret(clientSecret: String?) = clientSecret(JsonField.ofNullable(clientSecret))
+
+        /** Alias for calling [Builder.clientSecret] with `clientSecret.orElse(null)`. */
+        fun clientSecret(clientSecret: Optional<String>) = clientSecret(clientSecret.getOrNull())
+
+        /**
+         * Sets [Builder.clientSecret] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.clientSecret] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun clientSecret(clientSecret: JsonField<String>) = apply {
+            this.clientSecret = clientSecret
+        }
+
+        /**
+         * Underlying payment id when `confirm: true` was passed and a PaymentIntent was created at
+         * session-creation time. `None` otherwise.
+         */
+        fun paymentId(paymentId: String?) = paymentId(JsonField.ofNullable(paymentId))
+
+        /** Alias for calling [Builder.paymentId] with `paymentId.orElse(null)`. */
+        fun paymentId(paymentId: Optional<String>) = paymentId(paymentId.getOrNull())
+
+        /**
+         * Sets [Builder.paymentId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+
+        /**
+         * Publishable key for the Dodo Payments checkout SDK. Returned when `confirm: true` was
+         * passed and a PaymentIntent was created at session-creation time. `None` otherwise.
+         */
+        fun publishableKey(publishableKey: String?) =
+            publishableKey(JsonField.ofNullable(publishableKey))
+
+        /** Alias for calling [Builder.publishableKey] with `publishableKey.orElse(null)`. */
+        fun publishableKey(publishableKey: Optional<String>) =
+            publishableKey(publishableKey.getOrNull())
+
+        /**
+         * Sets [Builder.publishableKey] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.publishableKey] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun publishableKey(publishableKey: JsonField<String>) = apply {
+            this.publishableKey = publishableKey
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -166,6 +294,9 @@ private constructor(
             CheckoutSessionResponse(
                 checkRequired("sessionId", sessionId),
                 checkoutUrl,
+                clientSecret,
+                paymentId,
+                publishableKey,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -187,6 +318,9 @@ private constructor(
 
         sessionId()
         checkoutUrl()
+        clientSecret()
+        paymentId()
+        publishableKey()
         validated = true
     }
 
@@ -206,7 +340,10 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (sessionId.asKnown().isPresent) 1 else 0) +
-            (if (checkoutUrl.asKnown().isPresent) 1 else 0)
+            (if (checkoutUrl.asKnown().isPresent) 1 else 0) +
+            (if (clientSecret.asKnown().isPresent) 1 else 0) +
+            (if (paymentId.asKnown().isPresent) 1 else 0) +
+            (if (publishableKey.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -216,13 +353,25 @@ private constructor(
         return other is CheckoutSessionResponse &&
             sessionId == other.sessionId &&
             checkoutUrl == other.checkoutUrl &&
+            clientSecret == other.clientSecret &&
+            paymentId == other.paymentId &&
+            publishableKey == other.publishableKey &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(sessionId, checkoutUrl, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            sessionId,
+            checkoutUrl,
+            clientSecret,
+            paymentId,
+            publishableKey,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionResponse{sessionId=$sessionId, checkoutUrl=$checkoutUrl, additionalProperties=$additionalProperties}"
+        "CheckoutSessionResponse{sessionId=$sessionId, checkoutUrl=$checkoutUrl, clientSecret=$clientSecret, paymentId=$paymentId, publishableKey=$publishableKey, additionalProperties=$additionalProperties}"
 }

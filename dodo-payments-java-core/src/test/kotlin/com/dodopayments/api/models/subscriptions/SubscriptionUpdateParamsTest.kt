@@ -44,6 +44,7 @@ internal class SubscriptionUpdateParamsTest {
                     .rolloverTimeframeInterval(TimeInterval.DAY)
                     .build()
             )
+            .customerBusinessName("customer_business_name")
             .customerName("customer_name")
             .disableOnDemand(
                 SubscriptionUpdateParams.DisableOnDemand.builder()
@@ -103,6 +104,7 @@ internal class SubscriptionUpdateParamsTest {
                         .rolloverTimeframeInterval(TimeInterval.DAY)
                         .build()
                 )
+                .customerBusinessName("customer_business_name")
                 .customerName("customer_name")
                 .disableOnDemand(
                     SubscriptionUpdateParams.DisableOnDemand.builder()
@@ -152,6 +154,7 @@ internal class SubscriptionUpdateParamsTest {
                     .rolloverTimeframeInterval(TimeInterval.DAY)
                     .build()
             )
+        assertThat(body.customerBusinessName()).contains("customer_business_name")
         assertThat(body.customerName()).contains("customer_name")
         assertThat(body.disableOnDemand())
             .contains(

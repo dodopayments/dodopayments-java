@@ -30,6 +30,7 @@ import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
 import com.dodopayments.api.models.payments.IntentStatus
+import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.Payment as GlobalPayment
 import com.dodopayments.api.models.payments.PaymentRefundStatus
 import com.dodopayments.api.models.payments.RefundListItem
@@ -863,7 +864,7 @@ private constructor(
             private val paymentLink: JsonField<String>,
             private val paymentMethod: JsonField<String>,
             private val paymentMethodType: JsonField<String>,
-            private val productCart: JsonField<List<GlobalPayment.ProductCart>>,
+            private val productCart: JsonField<List<OneTimeProductCartItem>>,
             private val refundStatus: JsonField<PaymentRefundStatus>,
             private val settlementTax: JsonField<Int>,
             private val status: JsonField<IntentStatus>,
@@ -968,7 +969,7 @@ private constructor(
                 paymentMethodType: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("product_cart")
                 @ExcludeMissing
-                productCart: JsonField<List<GlobalPayment.ProductCart>> = JsonMissing.of(),
+                productCart: JsonField<List<OneTimeProductCartItem>> = JsonMissing.of(),
                 @JsonProperty("refund_status")
                 @ExcludeMissing
                 refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of(),
@@ -1343,7 +1344,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun productCart(): Optional<List<GlobalPayment.ProductCart>> =
+            fun productCart(): Optional<List<OneTimeProductCartItem>> =
                 productCart.getOptional("product_cart")
 
             /**
@@ -1712,7 +1713,7 @@ private constructor(
              */
             @JsonProperty("product_cart")
             @ExcludeMissing
-            fun _productCart(): JsonField<List<GlobalPayment.ProductCart>> = productCart
+            fun _productCart(): JsonField<List<OneTimeProductCartItem>> = productCart
 
             /**
              * Returns the raw JSON value of [refundStatus].
@@ -1840,7 +1841,7 @@ private constructor(
                 private var paymentLink: JsonField<String> = JsonMissing.of()
                 private var paymentMethod: JsonField<String> = JsonMissing.of()
                 private var paymentMethodType: JsonField<String> = JsonMissing.of()
-                private var productCart: JsonField<MutableList<GlobalPayment.ProductCart>>? = null
+                private var productCart: JsonField<MutableList<OneTimeProductCartItem>>? = null
                 private var refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of()
                 private var settlementTax: JsonField<Int> = JsonMissing.of()
                 private var status: JsonField<IntentStatus> = JsonMissing.of()
@@ -2457,30 +2458,30 @@ private constructor(
                 }
 
                 /** List of products purchased in a one-time payment */
-                fun productCart(productCart: List<GlobalPayment.ProductCart>?) =
+                fun productCart(productCart: List<OneTimeProductCartItem>?) =
                     productCart(JsonField.ofNullable(productCart))
 
                 /** Alias for calling [Builder.productCart] with `productCart.orElse(null)`. */
-                fun productCart(productCart: Optional<List<GlobalPayment.ProductCart>>) =
+                fun productCart(productCart: Optional<List<OneTimeProductCartItem>>) =
                     productCart(productCart.getOrNull())
 
                 /**
                  * Sets [Builder.productCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.productCart] with a well-typed
-                 * `List<GlobalPayment.ProductCart>` value instead. This method is primarily for
+                 * `List<OneTimeProductCartItem>` value instead. This method is primarily for
                  * setting the field to an undocumented or not yet supported value.
                  */
-                fun productCart(productCart: JsonField<List<GlobalPayment.ProductCart>>) = apply {
+                fun productCart(productCart: JsonField<List<OneTimeProductCartItem>>) = apply {
                     this.productCart = productCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [GlobalPayment.ProductCart] to [Builder.productCart].
+                 * Adds a single [OneTimeProductCartItem] to [Builder.productCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addProductCart(productCart: GlobalPayment.ProductCart) = apply {
+                fun addProductCart(productCart: OneTimeProductCartItem) = apply {
                     this.productCart =
                         (this.productCart ?: JsonField.of(mutableListOf())).also {
                             checkKnown("productCart", it).add(productCart)
@@ -2971,6 +2972,7 @@ private constructor(
             private val cancellationFeedback: JsonField<CancellationFeedback>,
             private val cancelledAt: JsonField<OffsetDateTime>,
             private val customFieldResponses: JsonField<List<CustomFieldResponse>>,
+            private val customerBusinessName: JsonField<String>,
             private val discountCyclesRemaining: JsonField<Int>,
             private val discountId: JsonField<String>,
             private val discounts: JsonField<List<DiscountDetail>>,
@@ -3070,6 +3072,9 @@ private constructor(
                 @JsonProperty("custom_field_responses")
                 @ExcludeMissing
                 customFieldResponses: JsonField<List<CustomFieldResponse>> = JsonMissing.of(),
+                @JsonProperty("customer_business_name")
+                @ExcludeMissing
+                customerBusinessName: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("discount_cycles_remaining")
                 @ExcludeMissing
                 discountCyclesRemaining: JsonField<Int> = JsonMissing.of(),
@@ -3121,6 +3126,7 @@ private constructor(
                 cancellationFeedback,
                 cancelledAt,
                 customFieldResponses,
+                customerBusinessName,
                 discountCyclesRemaining,
                 discountId,
                 discounts,
@@ -3162,6 +3168,7 @@ private constructor(
                     .cancellationFeedback(cancellationFeedback)
                     .cancelledAt(cancelledAt)
                     .customFieldResponses(customFieldResponses)
+                    .customerBusinessName(customerBusinessName)
                     .discountCyclesRemaining(discountCyclesRemaining)
                     .discountId(discountId)
                     .discounts(discounts)
@@ -3431,6 +3438,16 @@ private constructor(
              */
             fun customFieldResponses(): Optional<List<CustomFieldResponse>> =
                 customFieldResponses.getOptional("custom_field_responses")
+
+            /**
+             * Business / legal name associated with the tax id (B2B). When set this is used on the
+             * invoice in place of the customer's personal name.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun customerBusinessName(): Optional<String> =
+                customerBusinessName.getOptional("customer_business_name")
 
             /**
              * DEPRECATED: Use discounts[].cycles_remaining instead.
@@ -3781,6 +3798,16 @@ private constructor(
             fun _customFieldResponses(): JsonField<List<CustomFieldResponse>> = customFieldResponses
 
             /**
+             * Returns the raw JSON value of [customerBusinessName].
+             *
+             * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("customer_business_name")
+            @ExcludeMissing
+            fun _customerBusinessName(): JsonField<String> = customerBusinessName
+
+            /**
              * Returns the raw JSON value of [discountCyclesRemaining].
              *
              * Unlike [discountCyclesRemaining], this method doesn't throw if the JSON field has an
@@ -3931,6 +3958,7 @@ private constructor(
                 private var cancelledAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var customFieldResponses: JsonField<MutableList<CustomFieldResponse>>? =
                     null
+                private var customerBusinessName: JsonField<String> = JsonMissing.of()
                 private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
                 private var discountId: JsonField<String> = JsonMissing.of()
                 private var discounts: JsonField<MutableList<DiscountDetail>>? = null
@@ -3974,6 +4002,7 @@ private constructor(
                     cancelledAt = subscription.cancelledAt
                     customFieldResponses =
                         subscription.customFieldResponses.map { it.toMutableList() }
+                    customerBusinessName = subscription.customerBusinessName
                     discountCyclesRemaining = subscription.discountCyclesRemaining
                     discountId = subscription.discountId
                     discounts = subscription.discounts.map { it.toMutableList() }
@@ -4490,6 +4519,31 @@ private constructor(
                         }
                 }
 
+                /**
+                 * Business / legal name associated with the tax id (B2B). When set this is used on
+                 * the invoice in place of the customer's personal name.
+                 */
+                fun customerBusinessName(customerBusinessName: String?) =
+                    customerBusinessName(JsonField.ofNullable(customerBusinessName))
+
+                /**
+                 * Alias for calling [Builder.customerBusinessName] with
+                 * `customerBusinessName.orElse(null)`.
+                 */
+                fun customerBusinessName(customerBusinessName: Optional<String>) =
+                    customerBusinessName(customerBusinessName.getOrNull())
+
+                /**
+                 * Sets [Builder.customerBusinessName] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.customerBusinessName] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun customerBusinessName(customerBusinessName: JsonField<String>) = apply {
+                    this.customerBusinessName = customerBusinessName
+                }
+
                 /** DEPRECATED: Use discounts[].cycles_remaining instead. */
                 fun discountCyclesRemaining(discountCyclesRemaining: Int?) =
                     discountCyclesRemaining(JsonField.ofNullable(discountCyclesRemaining))
@@ -4750,6 +4804,7 @@ private constructor(
                         cancellationFeedback,
                         cancelledAt,
                         (customFieldResponses ?: JsonMissing.of()).map { it.toImmutable() },
+                        customerBusinessName,
                         discountCyclesRemaining,
                         discountId,
                         (discounts ?: JsonMissing.of()).map { it.toImmutable() },
@@ -4807,6 +4862,7 @@ private constructor(
                 cancellationFeedback().ifPresent { it.validate() }
                 cancelledAt()
                 customFieldResponses().ifPresent { it.forEach { it.validate() } }
+                customerBusinessName()
                 discountCyclesRemaining()
                 discountId()
                 discounts().ifPresent { it.forEach { it.validate() } }
@@ -4872,6 +4928,7 @@ private constructor(
                     (if (cancelledAt.asKnown().isPresent) 1 else 0) +
                     (customFieldResponses.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                         ?: 0) +
+                    (if (customerBusinessName.asKnown().isPresent) 1 else 0) +
                     (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
                     (if (discountId.asKnown().isPresent) 1 else 0) +
                     (discounts.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -4915,6 +4972,7 @@ private constructor(
                     cancellationFeedback == other.cancellationFeedback &&
                     cancelledAt == other.cancelledAt &&
                     customFieldResponses == other.customFieldResponses &&
+                    customerBusinessName == other.customerBusinessName &&
                     discountCyclesRemaining == other.discountCyclesRemaining &&
                     discountId == other.discountId &&
                     discounts == other.discounts &&
@@ -4956,6 +5014,7 @@ private constructor(
                     cancellationFeedback,
                     cancelledAt,
                     customFieldResponses,
+                    customerBusinessName,
                     discountCyclesRemaining,
                     discountId,
                     discounts,
@@ -4971,7 +5030,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Refund
