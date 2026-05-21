@@ -42,7 +42,7 @@ internal class PaymentCreateResponseTest {
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentLink("payment_link")
                 .addProductCart(
-                    PaymentCreateResponse.ProductCart.builder()
+                    OneTimeProductCartItem.builder()
                         .productId("product_id")
                         .quantity(0)
                         .amount(0)
@@ -80,7 +80,7 @@ internal class PaymentCreateResponseTest {
         assertThat(paymentCreateResponse.paymentLink()).contains("payment_link")
         assertThat(paymentCreateResponse.productCart().getOrNull())
             .containsExactly(
-                PaymentCreateResponse.ProductCart.builder()
+                OneTimeProductCartItem.builder()
                     .productId("product_id")
                     .quantity(0)
                     .amount(0)
@@ -119,7 +119,7 @@ internal class PaymentCreateResponseTest {
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentLink("payment_link")
                 .addProductCart(
-                    PaymentCreateResponse.ProductCart.builder()
+                    OneTimeProductCartItem.builder()
                         .productId("product_id")
                         .quantity(0)
                         .amount(0)
