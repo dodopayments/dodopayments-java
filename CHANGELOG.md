@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.99.1 (2026-05-21)
+
+Full Changelog: [v1.99.0...v1.99.1](https://github.com/dodopayments/dodopayments-java/compare/v1.99.0...v1.99.1)
+
+### Features
+
+* **api:** fixed a breaking modal change ([8155025](https://github.com/dodopayments/dodopayments-java/commit/8155025d6ca2c3ee4054c15f559ccd639c98376c))
+* **api:** updated openapi spec to v1.99.0 and added missing endpoints as well ([440d163](https://github.com/dodopayments/dodopayments-java/commit/440d1635cdad68d7d829bc04072e0318ef1aabb9))
+
 ## 1.99.0 (2026-05-17)
 
 Full Changelog: [v1.98.0...v1.99.0](https://github.com/dodopayments/dodopayments-java/compare/v1.98.0...v1.99.0)
