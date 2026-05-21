@@ -38,6 +38,8 @@ import com.dodopayments.api.services.async.PaymentServiceAsync
 import com.dodopayments.api.services.async.PaymentServiceAsyncImpl
 import com.dodopayments.api.services.async.PayoutServiceAsync
 import com.dodopayments.api.services.async.PayoutServiceAsyncImpl
+import com.dodopayments.api.services.async.ProductCollectionServiceAsync
+import com.dodopayments.api.services.async.ProductCollectionServiceAsyncImpl
 import com.dodopayments.api.services.async.ProductServiceAsync
 import com.dodopayments.api.services.async.ProductServiceAsyncImpl
 import com.dodopayments.api.services.async.RefundServiceAsync
@@ -160,6 +162,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         EntitlementServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val productCollections: ProductCollectionServiceAsync by lazy {
+        ProductCollectionServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): DodoPaymentsClient = sync
 
     override fun withRawResponse(): DodoPaymentsClientAsync.WithRawResponse = withRawResponse
@@ -212,6 +218,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
     override fun creditEntitlements(): CreditEntitlementServiceAsync = creditEntitlements
 
     override fun entitlements(): EntitlementServiceAsync = entitlements
+
+    override fun productCollections(): ProductCollectionServiceAsync = productCollections
 
     override fun close() = clientOptions.close()
 
@@ -310,6 +318,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             EntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val productCollections: ProductCollectionServiceAsync.WithRawResponse by lazy {
+            ProductCollectionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): DodoPaymentsClientAsync.WithRawResponse =
@@ -365,5 +377,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             creditEntitlements
 
         override fun entitlements(): EntitlementServiceAsync.WithRawResponse = entitlements
+
+        override fun productCollections(): ProductCollectionServiceAsync.WithRawResponse =
+            productCollections
     }
 }

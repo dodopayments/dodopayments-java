@@ -25,7 +25,7 @@ internal class PaymentCreateParamsTest {
             )
             .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
             .addProductCart(
-                OneTimeProductCartItem.builder()
+                PaymentCreateParams.ProductCart.builder()
                     .productId("product_id")
                     .quantity(0)
                     .amount(0)
@@ -34,6 +34,7 @@ internal class PaymentCreateParamsTest {
             .adaptiveCurrencyFeesInclusive(true)
             .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
             .billingCurrency(Currency.AED)
+            .customerBusinessName("customer_business_name")
             .discountCode("discount_code")
             .addDiscountCode("string")
             .force3ds(true)
@@ -68,7 +69,7 @@ internal class PaymentCreateParamsTest {
                 )
                 .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                 .addProductCart(
-                    OneTimeProductCartItem.builder()
+                    PaymentCreateParams.ProductCart.builder()
                         .productId("product_id")
                         .quantity(0)
                         .amount(0)
@@ -77,6 +78,7 @@ internal class PaymentCreateParamsTest {
                 .adaptiveCurrencyFeesInclusive(true)
                 .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
                 .billingCurrency(Currency.AED)
+                .customerBusinessName("customer_business_name")
                 .discountCode("discount_code")
                 .addDiscountCode("string")
                 .force3ds(true)
@@ -115,7 +117,7 @@ internal class PaymentCreateParamsTest {
             )
         assertThat(body.productCart())
             .containsExactly(
-                OneTimeProductCartItem.builder()
+                PaymentCreateParams.ProductCart.builder()
                     .productId("product_id")
                     .quantity(0)
                     .amount(0)
@@ -125,6 +127,7 @@ internal class PaymentCreateParamsTest {
         assertThat(body.allowedPaymentMethodTypes().getOrNull())
             .containsExactly(PaymentMethodTypes.ACH)
         assertThat(body.billingCurrency()).contains(Currency.AED)
+        assertThat(body.customerBusinessName()).contains("customer_business_name")
         assertThat(body.discountCode()).contains("discount_code")
         assertThat(body.discountCodes().getOrNull()).containsExactly("string")
         assertThat(body.force3ds()).contains(true)
@@ -151,7 +154,10 @@ internal class PaymentCreateParamsTest {
                 .billing(BillingAddress.builder().country(CountryCode.AF).build())
                 .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
                 .addProductCart(
-                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
+                    PaymentCreateParams.ProductCart.builder()
+                        .productId("product_id")
+                        .quantity(0)
+                        .build()
                 )
                 .build()
 
@@ -167,7 +173,10 @@ internal class PaymentCreateParamsTest {
             )
         assertThat(body.productCart())
             .containsExactly(
-                OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
+                PaymentCreateParams.ProductCart.builder()
+                    .productId("product_id")
+                    .quantity(0)
+                    .build()
             )
     }
 }
