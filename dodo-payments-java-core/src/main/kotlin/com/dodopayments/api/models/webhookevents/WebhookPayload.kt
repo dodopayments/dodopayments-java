@@ -2468,8 +2468,8 @@ private constructor(
                  * Sets [Builder.productCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.productCart] with a well-typed
-                 * `List<GlobalPayment.ProductCart>` value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
+                 * `List<GlobalPayment.ProductCart>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun productCart(productCart: JsonField<List<GlobalPayment.ProductCart>>) = apply {
                     this.productCart = productCart.map { it.toMutableList() }
