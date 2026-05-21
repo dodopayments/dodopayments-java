@@ -129,7 +129,7 @@ internal class PaymentTest {
                 .paymentMethod("payment_method")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
-                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
+                    Payment.ProductCart.builder().productId("product_id").quantity(0).build()
                 )
                 .refundStatus(PaymentRefundStatus.PARTIAL)
                 .settlementTax(0)
@@ -250,7 +250,7 @@ internal class PaymentTest {
         assertThat(payment.paymentMethodType()).contains("payment_method_type")
         assertThat(payment.productCart().getOrNull())
             .containsExactly(
-                OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
+                Payment.ProductCart.builder().productId("product_id").quantity(0).build()
             )
         assertThat(payment.refundStatus()).contains(PaymentRefundStatus.PARTIAL)
         assertThat(payment.settlementTax()).contains(0)
@@ -370,7 +370,7 @@ internal class PaymentTest {
                 .paymentMethod("payment_method")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
-                    OneTimeProductCartItem.builder().productId("product_id").quantity(0).build()
+                    Payment.ProductCart.builder().productId("product_id").quantity(0).build()
                 )
                 .refundStatus(PaymentRefundStatus.PARTIAL)
                 .settlementTax(0)
