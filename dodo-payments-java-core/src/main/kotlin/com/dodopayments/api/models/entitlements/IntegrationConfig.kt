@@ -1564,6 +1564,7 @@ private constructor(
 
         /**
          * Three-way patchable list of legacy file identifiers:
+         *
          * * omitted → preserve the current value
          * * `null` → clear
          * * `[...]` → replace
@@ -1729,6 +1730,7 @@ private constructor(
 
             /**
              * Three-way patchable list of legacy file identifiers:
+             *
              * * omitted → preserve the current value
              * * `null` → clear
              * * `[...]` → replace
