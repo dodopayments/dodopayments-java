@@ -4,6 +4,7 @@ package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
+import com.dodopayments.api.models.balances.BalanceRetrieveLedgerParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -12,15 +13,14 @@ internal class BalanceServiceTest {
 
     @Test
     fun retrieveLedger() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val balanceService = client.balances()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val balanceService = client.balances()
 
-        val page = balanceService.retrieveLedger()
+      val page = balanceService.retrieveLedger()
 
-        page.response().validate()
+      page.response().validate()
     }
 }

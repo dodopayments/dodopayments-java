@@ -25,29 +25,27 @@ import com.dodopayments.api.models.addons.AddonRetrieveParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesResponse
 import com.dodopayments.api.models.addons.AddonUpdateParams
+import com.dodopayments.api.services.blocking.AddonService
+import com.dodopayments.api.services.blocking.AddonServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class AddonServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    AddonService {
+class AddonServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: AddonService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : AddonService {
+
+    private val withRawResponse: AddonService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): AddonService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonService =
-        AddonServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonService = AddonServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: AddonCreateParams, requestOptions: RequestOptions): AddonResponse =
         // post /addons
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
-        params: AddonRetrieveParams,
-        requestOptions: RequestOptions,
-    ): AddonResponse =
+    override fun retrieve(params: AddonRetrieveParams, requestOptions: RequestOptions): AddonResponse =
         // get /addons/{id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -59,178 +57,173 @@ class AddonServiceImpl internal constructor(private val clientOptions: ClientOpt
         // get /addons
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun updateImages(
-        params: AddonUpdateImagesParams,
-        requestOptions: RequestOptions,
-    ): AddonUpdateImagesResponse =
+    override fun updateImages(params: AddonUpdateImagesParams, requestOptions: RequestOptions): AddonUpdateImagesResponse =
         // put /addons/{id}/images
         withRawResponse().updateImages(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        AddonService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : AddonService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): AddonService.WithRawResponse =
-            AddonServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonService.WithRawResponse = AddonServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<AddonResponse> = jsonHandler<AddonResponse>(clientOptions.jsonMapper)
+
+        override fun create(params: AddonCreateParams, requestOptions: RequestOptions): HttpResponseFor<AddonResponse> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("addons")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<AddonResponse> =
-            jsonHandler<AddonResponse>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: AddonCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AddonResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("addons")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val retrieveHandler: Handler<AddonResponse> =
-            jsonHandler<AddonResponse>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<AddonResponse> = jsonHandler<AddonResponse>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: AddonRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AddonResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("addons", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: AddonRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<AddonResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("addons", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val updateHandler: Handler<AddonResponse> =
-            jsonHandler<AddonResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<AddonResponse> = jsonHandler<AddonResponse>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: AddonUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AddonResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("addons", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun update(params: AddonUpdateParams, requestOptions: RequestOptions): HttpResponseFor<AddonResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("addons", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<AddonListPageResponse> =
-            jsonHandler<AddonListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<AddonListPageResponse> = jsonHandler<AddonListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: AddonListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AddonListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("addons")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        AddonListPage.builder()
-                            .service(AddonServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: AddonListParams, requestOptions: RequestOptions): HttpResponseFor<AddonListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("addons")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  AddonListPage.builder()
+                      .service(AddonServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
-        private val updateImagesHandler: Handler<AddonUpdateImagesResponse> =
-            jsonHandler<AddonUpdateImagesResponse>(clientOptions.jsonMapper)
+        private val updateImagesHandler: Handler<AddonUpdateImagesResponse> = jsonHandler<AddonUpdateImagesResponse>(clientOptions.jsonMapper)
 
-        override fun updateImages(
-            params: AddonUpdateImagesParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AddonUpdateImagesResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("addons", params._pathParam(0), "images")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateImagesHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun updateImages(params: AddonUpdateImagesParams, requestOptions: RequestOptions): HttpResponseFor<AddonUpdateImagesResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("addons", params._pathParam(0), "images")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateImagesHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

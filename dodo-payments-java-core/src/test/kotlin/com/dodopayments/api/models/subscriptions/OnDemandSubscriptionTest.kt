@@ -4,6 +4,7 @@ package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.subscriptions.OnDemandSubscription
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,40 +13,34 @@ internal class OnDemandSubscriptionTest {
 
     @Test
     fun create() {
-        val onDemandSubscription =
-            OnDemandSubscription.builder()
-                .mandateOnly(true)
-                .adaptiveCurrencyFeesInclusive(true)
-                .productCurrency(Currency.AED)
-                .productDescription("product_description")
-                .productPrice(0)
-                .build()
+      val onDemandSubscription = OnDemandSubscription.builder()
+          .mandateOnly(true)
+          .adaptiveCurrencyFeesInclusive(true)
+          .productCurrency(Currency.AED)
+          .productDescription("product_description")
+          .productPrice(0)
+          .build()
 
-        assertThat(onDemandSubscription.mandateOnly()).isEqualTo(true)
-        assertThat(onDemandSubscription.adaptiveCurrencyFeesInclusive()).contains(true)
-        assertThat(onDemandSubscription.productCurrency()).contains(Currency.AED)
-        assertThat(onDemandSubscription.productDescription()).contains("product_description")
-        assertThat(onDemandSubscription.productPrice()).contains(0)
+      assertThat(onDemandSubscription.mandateOnly()).isEqualTo(true)
+      assertThat(onDemandSubscription.adaptiveCurrencyFeesInclusive()).contains(true)
+      assertThat(onDemandSubscription.productCurrency()).contains(Currency.AED)
+      assertThat(onDemandSubscription.productDescription()).contains("product_description")
+      assertThat(onDemandSubscription.productPrice()).contains(0)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val onDemandSubscription =
-            OnDemandSubscription.builder()
-                .mandateOnly(true)
-                .adaptiveCurrencyFeesInclusive(true)
-                .productCurrency(Currency.AED)
-                .productDescription("product_description")
-                .productPrice(0)
-                .build()
+      val jsonMapper = jsonMapper()
+      val onDemandSubscription = OnDemandSubscription.builder()
+          .mandateOnly(true)
+          .adaptiveCurrencyFeesInclusive(true)
+          .productCurrency(Currency.AED)
+          .productDescription("product_description")
+          .productPrice(0)
+          .build()
 
-        val roundtrippedOnDemandSubscription =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(onDemandSubscription),
-                jacksonTypeRef<OnDemandSubscription>(),
-            )
+      val roundtrippedOnDemandSubscription = jsonMapper.readValue(jsonMapper.writeValueAsString(onDemandSubscription), jacksonTypeRef<OnDemandSubscription>())
 
-        assertThat(roundtrippedOnDemandSubscription).isEqualTo(onDemandSubscription)
+      assertThat(roundtrippedOnDemandSubscription).isEqualTo(onDemandSubscription)
     }
 }

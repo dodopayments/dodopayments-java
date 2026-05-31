@@ -3,13 +3,12 @@
 package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.ClientOptions
+import com.dodopayments.api.services.blocking.WebhookEventService
 import java.util.function.Consumer
 
 interface WebhookEventService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -19,9 +18,7 @@ interface WebhookEventService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService
 
-    /**
-     * A view of [WebhookEventService] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [WebhookEventService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -29,8 +26,6 @@ interface WebhookEventService {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): WebhookEventService.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService.WithRawResponse
     }
 }

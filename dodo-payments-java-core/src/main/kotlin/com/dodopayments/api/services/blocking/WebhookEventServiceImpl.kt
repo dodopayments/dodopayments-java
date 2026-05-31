@@ -3,28 +3,26 @@
 package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.core.ClientOptions
+import com.dodopayments.api.services.blocking.WebhookEventService
+import com.dodopayments.api.services.blocking.WebhookEventServiceImpl
 import java.util.function.Consumer
 
-class WebhookEventServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    WebhookEventService {
+class WebhookEventServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: WebhookEventService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : WebhookEventService {
+
+    private val withRawResponse: WebhookEventService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): WebhookEventService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService =
-        WebhookEventServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService = WebhookEventServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        WebhookEventService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): WebhookEventService.WithRawResponse =
-            WebhookEventServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+    ) : WebhookEventService.WithRawResponse {
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventService.WithRawResponse = WebhookEventServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
     }
 }

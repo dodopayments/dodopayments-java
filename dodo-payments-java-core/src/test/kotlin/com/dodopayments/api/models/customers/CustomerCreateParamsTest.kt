@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.customers
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.customers.CustomerCreateParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,52 +11,47 @@ internal class CustomerCreateParamsTest {
 
     @Test
     fun create() {
-        CustomerCreateParams.builder()
-            .email("email")
-            .name("name")
-            .metadata(
-                CustomerCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-            .phoneNumber("phone_number")
-            .build()
+      CustomerCreateParams.builder()
+          .email("email")
+          .name("name")
+          .metadata(CustomerCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .phoneNumber("phone_number")
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            CustomerCreateParams.builder()
-                .email("email")
-                .name("name")
-                .metadata(
-                    CustomerCreateParams.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .phoneNumber("phone_number")
-                .build()
+      val params = CustomerCreateParams.builder()
+          .email("email")
+          .name("name")
+          .metadata(CustomerCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .phoneNumber("phone_number")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.email()).isEqualTo("email")
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.metadata())
-            .contains(
-                CustomerCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(body.phoneNumber()).contains("phone_number")
+      assertThat(body.email()).isEqualTo("email")
+      assertThat(body.name()).isEqualTo("name")
+      assertThat(body.metadata()).contains(CustomerCreateParams.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(body.phoneNumber()).contains("phone_number")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = CustomerCreateParams.builder().email("email").name("name").build()
+      val params = CustomerCreateParams.builder()
+          .email("email")
+          .name("name")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.email()).isEqualTo("email")
-        assertThat(body.name()).isEqualTo("name")
+      assertThat(body.email()).isEqualTo("email")
+      assertThat(body.name()).isEqualTo("name")
     }
 }

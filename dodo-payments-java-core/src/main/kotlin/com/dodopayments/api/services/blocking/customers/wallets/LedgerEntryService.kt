@@ -9,14 +9,13 @@ import com.dodopayments.api.models.customers.wallets.CustomerWallet
 import com.dodopayments.api.models.customers.wallets.ledgerentries.LedgerEntryCreateParams
 import com.dodopayments.api.models.customers.wallets.ledgerentries.LedgerEntryListPage
 import com.dodopayments.api.models.customers.wallets.ledgerentries.LedgerEntryListParams
+import com.dodopayments.api.services.blocking.customers.wallets.LedgerEntryService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface LedgerEntryService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -27,58 +26,68 @@ interface LedgerEntryService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LedgerEntryService
 
     fun create(customerId: String, params: LedgerEntryCreateParams): CustomerWallet =
-        create(customerId, params, RequestOptions.none())
+        create(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see create */
-    fun create(
-        customerId: String,
-        params: LedgerEntryCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomerWallet = create(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun create(customerId: String, params: LedgerEntryCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CustomerWallet =
+        create(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see create */
     fun create(params: LedgerEntryCreateParams): CustomerWallet =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: LedgerEntryCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomerWallet
+    fun create(params: LedgerEntryCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CustomerWallet
 
     fun list(customerId: String): LedgerEntryListPage =
-        list(customerId, LedgerEntryListParams.none())
+        list(
+          customerId, LedgerEntryListParams.none()
+        )
 
     /** @see list */
-    fun list(
-        customerId: String,
-        params: LedgerEntryListParams = LedgerEntryListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): LedgerEntryListPage = list(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun list(customerId: String, params: LedgerEntryListParams = LedgerEntryListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): LedgerEntryListPage =
+        list(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see list */
-    fun list(
-        customerId: String,
-        params: LedgerEntryListParams = LedgerEntryListParams.none(),
-    ): LedgerEntryListPage = list(customerId, params, RequestOptions.none())
+    fun list(customerId: String, params: LedgerEntryListParams = LedgerEntryListParams.none()): LedgerEntryListPage =
+        list(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see list */
-    fun list(
-        params: LedgerEntryListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): LedgerEntryListPage
+    fun list(params: LedgerEntryListParams, requestOptions: RequestOptions = RequestOptions.none()): LedgerEntryListPage
 
     /** @see list */
     fun list(params: LedgerEntryListParams): LedgerEntryListPage =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(customerId: String, requestOptions: RequestOptions): LedgerEntryListPage =
-        list(customerId, LedgerEntryListParams.none(), requestOptions)
+        list(
+          customerId,
+          LedgerEntryListParams.none(),
+          requestOptions,
+        )
 
-    /**
-     * A view of [LedgerEntryService] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [LedgerEntryService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -86,83 +95,80 @@ interface LedgerEntryService {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LedgerEntryService.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): LedgerEntryService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /customers/{customer_id}/wallets/ledger-entries`,
-         * but is otherwise the same as [LedgerEntryService.create].
-         */
+        /** Returns a raw HTTP response for `post /customers/{customer_id}/wallets/ledger-entries`, but is otherwise the             same as [LedgerEntryService.create]. */
         @MustBeClosed
-        fun create(
-            customerId: String,
-            params: LedgerEntryCreateParams,
-        ): HttpResponseFor<CustomerWallet> = create(customerId, params, RequestOptions.none())
+        fun create(customerId: String, params: LedgerEntryCreateParams): HttpResponseFor<CustomerWallet> =
+            create(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            customerId: String,
-            params: LedgerEntryCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomerWallet> =
-            create(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun create(customerId: String, params: LedgerEntryCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<CustomerWallet> =
+            create(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see create */
         @MustBeClosed
         fun create(params: LedgerEntryCreateParams): HttpResponseFor<CustomerWallet> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: LedgerEntryCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomerWallet>
+        fun create(params: LedgerEntryCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<CustomerWallet>
 
-        /**
-         * Returns a raw HTTP response for `get /customers/{customer_id}/wallets/ledger-entries`,
-         * but is otherwise the same as [LedgerEntryService.list].
-         */
+        /** Returns a raw HTTP response for `get /customers/{customer_id}/wallets/ledger-entries`, but is otherwise the             same as [LedgerEntryService.list]. */
         @MustBeClosed
         fun list(customerId: String): HttpResponseFor<LedgerEntryListPage> =
-            list(customerId, LedgerEntryListParams.none())
+            list(
+              customerId, LedgerEntryListParams.none()
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            customerId: String,
-            params: LedgerEntryListParams = LedgerEntryListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<LedgerEntryListPage> =
-            list(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun list(customerId: String, params: LedgerEntryListParams = LedgerEntryListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<LedgerEntryListPage> =
+            list(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            customerId: String,
-            params: LedgerEntryListParams = LedgerEntryListParams.none(),
-        ): HttpResponseFor<LedgerEntryListPage> = list(customerId, params, RequestOptions.none())
+        fun list(customerId: String, params: LedgerEntryListParams = LedgerEntryListParams.none()): HttpResponseFor<LedgerEntryListPage> =
+            list(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: LedgerEntryListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<LedgerEntryListPage>
+        fun list(params: LedgerEntryListParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<LedgerEntryListPage>
 
         /** @see list */
         @MustBeClosed
         fun list(params: LedgerEntryListParams): HttpResponseFor<LedgerEntryListPage> =
-            list(params, RequestOptions.none())
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            customerId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<LedgerEntryListPage> =
-            list(customerId, LedgerEntryListParams.none(), requestOptions)
+        fun list(customerId: String, requestOptions: RequestOptions): HttpResponseFor<LedgerEntryListPage> =
+            list(
+              customerId,
+              LedgerEntryListParams.none(),
+              requestOptions,
+            )
     }
 }

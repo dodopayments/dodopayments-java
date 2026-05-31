@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.customers
 
+import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,23 +10,22 @@ internal class CustomerDeletePaymentMethodParamsTest {
 
     @Test
     fun create() {
-        CustomerDeletePaymentMethodParams.builder()
-            .customerId("customer_id")
-            .paymentMethodId("payment_method_id")
-            .build()
+      CustomerDeletePaymentMethodParams.builder()
+          .customerId("customer_id")
+          .paymentMethodId("payment_method_id")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params =
-            CustomerDeletePaymentMethodParams.builder()
-                .customerId("customer_id")
-                .paymentMethodId("payment_method_id")
-                .build()
+      val params = CustomerDeletePaymentMethodParams.builder()
+          .customerId("customer_id")
+          .paymentMethodId("payment_method_id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("customer_id")
-        assertThat(params._pathParam(1)).isEqualTo("payment_method_id")
-        // out-of-bound path param
-        assertThat(params._pathParam(2)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("customer_id")
+      assertThat(params._pathParam(1)).isEqualTo("payment_method_id")
+      // out-of-bound path param
+      assertThat(params._pathParam(2)).isEqualTo("")
     }
 }

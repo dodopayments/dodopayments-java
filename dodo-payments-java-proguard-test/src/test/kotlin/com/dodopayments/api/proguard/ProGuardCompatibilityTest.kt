@@ -25,8 +25,7 @@ internal class ProGuardCompatibilityTest {
             val jarPath = this::class.java.getProtectionDomain().codeSource.location
             println("JAR being used: $jarPath")
 
-            // We have to manually run the test methods instead of using the JUnit runner because it
-            // seems impossible to get working with R8.
+            // We have to manually run the test methods instead of using the JUnit runner because it seems impossible to get working with R8.
             val test = ProGuardCompatibilityTest()
             test::class
                 .memberFunctions
@@ -41,16 +40,16 @@ internal class ProGuardCompatibilityTest {
     @Test
     fun proguardRules() {
         val rulesFile =
-            javaClass.classLoader.getResourceAsStream(
-                "META-INF/proguard/dodo-payments-java-core.pro"
-            )
+            javaClass.classLoader.getResourceAsStream("META-INF/proguard/dodo-payments-java-core.pro")
 
         assertThat(rulesFile).isNotNull()
     }
 
     @Test
     fun client() {
-        val client = DodoPaymentsOkHttpClient.builder().bearerToken("My Bearer Token").build()
+        val client = DodoPaymentsOkHttpClient.builder()
+            .bearerToken("My Bearer Token")
+            .build()
 
         assertThat(client).isNotNull()
         assertThat(client.checkoutSessions()).isNotNull()
@@ -81,54 +80,39 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun checkoutSessionBillingAddressRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val checkoutSessionBillingAddress =
-            CheckoutSessionBillingAddress.builder()
-                .country(CountryCode.AF)
-                .city("city")
-                .state("state")
-                .street("street")
-                .zipcode("zipcode")
-                .build()
+      val jsonMapper = jsonMapper()
+      val checkoutSessionBillingAddress = CheckoutSessionBillingAddress.builder()
+          .country(CountryCode.AF)
+          .city("city")
+          .state("state")
+          .street("street")
+          .zipcode("zipcode")
+          .build()
 
-        val roundtrippedCheckoutSessionBillingAddress =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(checkoutSessionBillingAddress),
-                jacksonTypeRef<CheckoutSessionBillingAddress>(),
-            )
+      val roundtrippedCheckoutSessionBillingAddress = jsonMapper.readValue(jsonMapper.writeValueAsString(checkoutSessionBillingAddress), jacksonTypeRef<CheckoutSessionBillingAddress>())
 
-        assertThat(roundtrippedCheckoutSessionBillingAddress)
-            .isEqualTo(checkoutSessionBillingAddress)
+      assertThat(roundtrippedCheckoutSessionBillingAddress).isEqualTo(checkoutSessionBillingAddress)
     }
 
     @Test
     fun customerRequestRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val customerRequest =
-            CustomerRequest.ofAttachExistingCustomer(
-                AttachExistingCustomer.builder().customerId("customer_id").build()
-            )
+      val jsonMapper = jsonMapper()
+      val customerRequest = CustomerRequest.ofAttachExistingCustomer(AttachExistingCustomer.builder()
+          .customerId("customer_id")
+          .build())
 
-        val roundtrippedCustomerRequest =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(customerRequest),
-                jacksonTypeRef<CustomerRequest>(),
-            )
+      val roundtrippedCustomerRequest = jsonMapper.readValue(jsonMapper.writeValueAsString(customerRequest), jacksonTypeRef<CustomerRequest>())
 
-        assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
+      assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
     }
 
     @Test
     fun intentStatusRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val intentStatus = IntentStatus.SUCCEEDED
+      val jsonMapper = jsonMapper()
+      val intentStatus = IntentStatus.SUCCEEDED
 
-        val roundtrippedIntentStatus =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(intentStatus),
-                jacksonTypeRef<IntentStatus>(),
-            )
+      val roundtrippedIntentStatus = jsonMapper.readValue(jsonMapper.writeValueAsString(intentStatus), jacksonTypeRef<IntentStatus>())
 
-        assertThat(roundtrippedIntentStatus).isEqualTo(intentStatus)
+      assertThat(roundtrippedIntentStatus).isEqualTo(intentStatus)
     }
 }

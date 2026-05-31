@@ -6,6 +6,10 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementCreateParams
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementDeleteParams
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementListParams
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementRetrieveParams
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementUndeleteParams
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementUpdateParams
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -17,116 +21,105 @@ internal class CreditEntitlementServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        val creditEntitlement =
-            creditEntitlementService.create(
-                CreditEntitlementCreateParams.builder()
-                    .name("name")
-                    .overageEnabled(true)
-                    .precision(0)
-                    .rolloverEnabled(true)
-                    .unit("unit")
-                    .currency(Currency.AED)
-                    .description("description")
-                    .expiresAfterDays(0)
-                    .maxRolloverCount(0)
-                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
-                    .overageLimit(0L)
-                    .pricePerUnit("price_per_unit")
-                    .rolloverPercentage(0)
-                    .rolloverTimeframeCount(0)
-                    .rolloverTimeframeInterval(TimeInterval.DAY)
-                    .build()
-            )
+      val creditEntitlement = creditEntitlementService.create(CreditEntitlementCreateParams.builder()
+          .name("name")
+          .overageEnabled(true)
+          .precision(0)
+          .rolloverEnabled(true)
+          .unit("unit")
+          .currency(Currency.AED)
+          .description("description")
+          .expiresAfterDays(0)
+          .maxRolloverCount(0)
+          .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+          .overageLimit(0L)
+          .pricePerUnit("price_per_unit")
+          .rolloverPercentage(0)
+          .rolloverTimeframeCount(0)
+          .rolloverTimeframeInterval(TimeInterval.DAY)
+          .build())
 
-        creditEntitlement.validate()
+      creditEntitlement.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        val creditEntitlement = creditEntitlementService.retrieve("id")
+      val creditEntitlement = creditEntitlementService.retrieve("id")
 
-        creditEntitlement.validate()
+      creditEntitlement.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        creditEntitlementService.update(
-            CreditEntitlementUpdateParams.builder()
-                .id("id")
-                .currency(Currency.AED)
-                .description("description")
-                .expiresAfterDays(0)
-                .maxRolloverCount(0)
-                .name("name")
-                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
-                .overageEnabled(true)
-                .overageLimit(0L)
-                .pricePerUnit("price_per_unit")
-                .rolloverEnabled(true)
-                .rolloverPercentage(0)
-                .rolloverTimeframeCount(0)
-                .rolloverTimeframeInterval(TimeInterval.DAY)
-                .unit("unit")
-                .build()
-        )
+      creditEntitlementService.update(CreditEntitlementUpdateParams.builder()
+          .id("id")
+          .currency(Currency.AED)
+          .description("description")
+          .expiresAfterDays(0)
+          .maxRolloverCount(0)
+          .name("name")
+          .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+          .overageEnabled(true)
+          .overageLimit(0L)
+          .pricePerUnit("price_per_unit")
+          .rolloverEnabled(true)
+          .rolloverPercentage(0)
+          .rolloverTimeframeCount(0)
+          .rolloverTimeframeInterval(TimeInterval.DAY)
+          .unit("unit")
+          .build())
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        val page = creditEntitlementService.list()
+      val page = creditEntitlementService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        creditEntitlementService.delete("id")
+      creditEntitlementService.delete("id")
     }
 
     @Test
     fun undelete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val creditEntitlementService = client.creditEntitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val creditEntitlementService = client.creditEntitlements()
 
-        creditEntitlementService.undelete("id")
+      creditEntitlementService.undelete("id")
     }
 }

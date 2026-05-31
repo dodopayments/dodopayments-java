@@ -10,15 +10,14 @@ import com.dodopayments.api.models.productcollections.groups.GroupCreateParams
 import com.dodopayments.api.models.productcollections.groups.GroupDeleteParams
 import com.dodopayments.api.models.productcollections.groups.GroupUpdateParams
 import com.dodopayments.api.models.productcollections.groups.ProductCollectionGroupResponse
+import com.dodopayments.api.services.blocking.productcollections.GroupService
 import com.dodopayments.api.services.blocking.productcollections.groups.ItemService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface GroupService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -31,53 +30,73 @@ interface GroupService {
     fun items(): ItemService
 
     fun create(id: String, params: GroupCreateParams): ProductCollectionGroupResponse =
-        create(id, params, RequestOptions.none())
+        create(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see create */
-    fun create(
-        id: String,
-        params: GroupCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProductCollectionGroupResponse = create(params.toBuilder().id(id).build(), requestOptions)
+    fun create(id: String, params: GroupCreateParams, requestOptions: RequestOptions = RequestOptions.none()): ProductCollectionGroupResponse =
+        create(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see create */
     fun create(params: GroupCreateParams): ProductCollectionGroupResponse =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: GroupCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProductCollectionGroupResponse
+    fun create(params: GroupCreateParams, requestOptions: RequestOptions = RequestOptions.none()): ProductCollectionGroupResponse
 
     fun update(groupId: String, params: GroupUpdateParams) =
-        update(groupId, params, RequestOptions.none())
+        update(
+          groupId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        groupId: String,
-        params: GroupUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = update(params.toBuilder().groupId(groupId).build(), requestOptions)
+    fun update(groupId: String, params: GroupUpdateParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        update(
+          params.toBuilder()
+              .groupId(groupId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(params: GroupUpdateParams) = update(params, RequestOptions.none())
+    fun update(params: GroupUpdateParams) =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(params: GroupUpdateParams, requestOptions: RequestOptions = RequestOptions.none())
 
     fun delete(groupId: String, params: GroupDeleteParams) =
-        delete(groupId, params, RequestOptions.none())
+        delete(
+          groupId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        groupId: String,
-        params: GroupDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().groupId(groupId).build(), requestOptions)
+    fun delete(groupId: String, params: GroupDeleteParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        delete(
+          params.toBuilder()
+              .groupId(groupId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
-    fun delete(params: GroupDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: GroupDeleteParams) =
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(params: GroupDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
@@ -94,90 +113,91 @@ interface GroupService {
 
         fun items(): ItemService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /product-collections/{id}/groups`, but is otherwise
-         * the same as [GroupService.create].
-         */
+        /** Returns a raw HTTP response for `post /product-collections/{id}/groups`, but is otherwise the             same as [GroupService.create]. */
         @MustBeClosed
-        fun create(
-            id: String,
-            params: GroupCreateParams,
-        ): HttpResponseFor<ProductCollectionGroupResponse> =
-            create(id, params, RequestOptions.none())
+        fun create(id: String, params: GroupCreateParams): HttpResponseFor<ProductCollectionGroupResponse> =
+            create(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            id: String,
-            params: GroupCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProductCollectionGroupResponse> =
-            create(params.toBuilder().id(id).build(), requestOptions)
+        fun create(id: String, params: GroupCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProductCollectionGroupResponse> =
+            create(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see create */
         @MustBeClosed
         fun create(params: GroupCreateParams): HttpResponseFor<ProductCollectionGroupResponse> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: GroupCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProductCollectionGroupResponse>
+        fun create(params: GroupCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProductCollectionGroupResponse>
 
-        /**
-         * Returns a raw HTTP response for `patch /product-collections/{id}/groups/{group_id}`, but
-         * is otherwise the same as [GroupService.update].
-         */
+        /** Returns a raw HTTP response for `patch /product-collections/{id}/groups/{group_id}`, but is otherwise the             same as [GroupService.update]. */
         @MustBeClosed
         fun update(groupId: String, params: GroupUpdateParams): HttpResponse =
-            update(groupId, params, RequestOptions.none())
+            update(
+              groupId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            groupId: String,
-            params: GroupUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = update(params.toBuilder().groupId(groupId).build(), requestOptions)
+        fun update(groupId: String, params: GroupUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            update(
+              params.toBuilder()
+                  .groupId(groupId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(params: GroupUpdateParams): HttpResponse = update(params, RequestOptions.none())
+        fun update(params: GroupUpdateParams): HttpResponse =
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: GroupUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun update(params: GroupUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
-        /**
-         * Returns a raw HTTP response for `delete /product-collections/{id}/groups/{group_id}`, but
-         * is otherwise the same as [GroupService.delete].
-         */
+        /** Returns a raw HTTP response for `delete /product-collections/{id}/groups/{group_id}`, but is otherwise the             same as [GroupService.delete]. */
         @MustBeClosed
         fun delete(groupId: String, params: GroupDeleteParams): HttpResponse =
-            delete(groupId, params, RequestOptions.none())
+            delete(
+              groupId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            groupId: String,
-            params: GroupDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().groupId(groupId).build(), requestOptions)
+        fun delete(groupId: String, params: GroupDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            delete(
+              params.toBuilder()
+                  .groupId(groupId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: GroupDeleteParams): HttpResponse = delete(params, RequestOptions.none())
+        fun delete(params: GroupDeleteParams): HttpResponse =
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: GroupDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun delete(params: GroupDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
     }
 }

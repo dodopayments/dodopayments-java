@@ -21,111 +21,103 @@ import com.dodopayments.api.models.products.shortlinks.ShortLinkCreateResponse
 import com.dodopayments.api.models.products.shortlinks.ShortLinkListPage
 import com.dodopayments.api.models.products.shortlinks.ShortLinkListPageResponse
 import com.dodopayments.api.models.products.shortlinks.ShortLinkListParams
+import com.dodopayments.api.services.blocking.products.ShortLinkService
+import com.dodopayments.api.services.blocking.products.ShortLinkServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class ShortLinkServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    ShortLinkService {
+class ShortLinkServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: ShortLinkService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : ShortLinkService {
+
+    private val withRawResponse: ShortLinkService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): ShortLinkService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ShortLinkService =
-        ShortLinkServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ShortLinkService = ShortLinkServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: ShortLinkCreateParams,
-        requestOptions: RequestOptions,
-    ): ShortLinkCreateResponse =
+    override fun create(params: ShortLinkCreateParams, requestOptions: RequestOptions): ShortLinkCreateResponse =
         // post /products/{id}/short_links
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun list(
-        params: ShortLinkListParams,
-        requestOptions: RequestOptions,
-    ): ShortLinkListPage =
+    override fun list(params: ShortLinkListParams, requestOptions: RequestOptions): ShortLinkListPage =
         // get /products/short_links
         withRawResponse().list(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        ShortLinkService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : ShortLinkService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): ShortLinkService.WithRawResponse =
-            ShortLinkServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ShortLinkService.WithRawResponse = ShortLinkServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<ShortLinkCreateResponse> = jsonHandler<ShortLinkCreateResponse>(clientOptions.jsonMapper)
+
+        override fun create(params: ShortLinkCreateParams, requestOptions: RequestOptions): HttpResponseFor<ShortLinkCreateResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0), "short_links")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<ShortLinkCreateResponse> =
-            jsonHandler<ShortLinkCreateResponse>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: ShortLinkCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ShortLinkCreateResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0), "short_links")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<ShortLinkListPageResponse> =
-            jsonHandler<ShortLinkListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ShortLinkListPageResponse> = jsonHandler<ShortLinkListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: ShortLinkListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ShortLinkListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", "short_links")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        ShortLinkListPage.builder()
-                            .service(ShortLinkServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: ShortLinkListParams, requestOptions: RequestOptions): HttpResponseFor<ShortLinkListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", "short_links")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  ShortLinkListPage.builder()
+                      .service(ShortLinkServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
     }
 }

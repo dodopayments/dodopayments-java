@@ -18,47 +18,44 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class ProductCollectionUnarchiveResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProductCollectionUnarchiveResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val collectionId: JsonField<String>,
     private val excludedProductIds: JsonField<List<String>>,
     private val message: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("collection_id")
-        @ExcludeMissing
-        collectionId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("excluded_product_ids")
-        @ExcludeMissing
-        excludedProductIds: JsonField<List<String>> = JsonMissing.of(),
-        @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of(),
-    ) : this(collectionId, excludedProductIds, message, mutableMapOf())
+        @JsonProperty("collection_id") @ExcludeMissing collectionId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("excluded_product_ids") @ExcludeMissing excludedProductIds: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("message") @ExcludeMissing message: JsonField<String> = JsonMissing.of()
+    ) : this(
+      collectionId,
+      excludedProductIds,
+      message,
+      mutableMapOf(),
+    )
 
     /**
      * Collection ID that was unarchived
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun collectionId(): String = collectionId.getRequired("collection_id")
 
     /**
      * Product IDs that were excluded because they are archived
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun excludedProductIds(): List<String> = excludedProductIds.getRequired("excluded_product_ids")
 
     /**
      * Success message
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun message(): String = message.getRequired("message")
 
@@ -74,8 +71,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [excludedProductIds].
      *
-     * Unlike [excludedProductIds], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [excludedProductIds], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("excluded_product_ids")
     @ExcludeMissing
@@ -86,34 +82,36 @@ private constructor(
      *
      * Unlike [message], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("message") @ExcludeMissing fun _message(): JsonField<String> = message
+    @JsonProperty("message")
+    @ExcludeMissing
+    fun _message(): JsonField<String> = message
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [ProductCollectionUnarchiveResponse].
+         * Returns a mutable builder for constructing an instance of [ProductCollectionUnarchiveResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .collectionId()
          * .excludedProductIds()
          * .message()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionUnarchiveResponse]. */
@@ -128,11 +126,9 @@ private constructor(
         internal fun from(productCollectionUnarchiveResponse: ProductCollectionUnarchiveResponse) =
             apply {
                 collectionId = productCollectionUnarchiveResponse.collectionId
-                excludedProductIds =
-                    productCollectionUnarchiveResponse.excludedProductIds.map { it.toMutableList() }
+                excludedProductIds = productCollectionUnarchiveResponse.excludedProductIds.map { it.toMutableList() }
                 message = productCollectionUnarchiveResponse.message
-                additionalProperties =
-                    productCollectionUnarchiveResponse.additionalProperties.toMutableMap()
+                additionalProperties = productCollectionUnarchiveResponse.additionalProperties.toMutableMap()
             }
 
         /** Collection ID that was unarchived */
@@ -141,40 +137,39 @@ private constructor(
         /**
          * Sets [Builder.collectionId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.collectionId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.collectionId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun collectionId(collectionId: JsonField<String>) = apply {
-            this.collectionId = collectionId
-        }
+        fun collectionId(collectionId: JsonField<String>) =
+            apply {
+                this.collectionId = collectionId
+            }
 
         /** Product IDs that were excluded because they are archived */
-        fun excludedProductIds(excludedProductIds: List<String>) =
-            excludedProductIds(JsonField.of(excludedProductIds))
+        fun excludedProductIds(excludedProductIds: List<String>) = excludedProductIds(JsonField.of(excludedProductIds))
 
         /**
          * Sets [Builder.excludedProductIds] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.excludedProductIds] with a well-typed `List<String>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.excludedProductIds] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun excludedProductIds(excludedProductIds: JsonField<List<String>>) = apply {
-            this.excludedProductIds = excludedProductIds.map { it.toMutableList() }
-        }
+        fun excludedProductIds(excludedProductIds: JsonField<List<String>>) =
+            apply {
+                this.excludedProductIds = excludedProductIds.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [String] to [excludedProductIds].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addExcludedProductId(excludedProductId: String) = apply {
-            excludedProductIds =
-                (excludedProductIds ?: JsonField.of(mutableListOf())).also {
+        fun addExcludedProductId(excludedProductId: String) =
+            apply {
+                excludedProductIds = (excludedProductIds ?: JsonField.of(mutableListOf())).also {
                     checkKnown("excludedProductIds", it).add(excludedProductId)
                 }
-        }
+            }
 
         /** Success message */
         fun message(message: String) = message(JsonField.of(message))
@@ -182,29 +177,39 @@ private constructor(
         /**
          * Sets [Builder.message] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.message] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.message] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun message(message: JsonField<String>) = apply { this.message = message }
+        fun message(message: JsonField<String>) =
+            apply {
+                this.message = message
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionUnarchiveResponse].
@@ -212,6 +217,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .collectionId()
          * .excludedProductIds()
@@ -222,10 +228,16 @@ private constructor(
          */
         fun build(): ProductCollectionUnarchiveResponse =
             ProductCollectionUnarchiveResponse(
-                checkRequired("collectionId", collectionId),
-                checkRequired("excludedProductIds", excludedProductIds).map { it.toImmutable() },
-                checkRequired("message", message),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "collectionId", collectionId
+              ),
+              checkRequired(
+                "excludedProductIds", excludedProductIds
+              ).map { it.toImmutable() },
+              checkRequired(
+                "message", message
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -239,16 +251,17 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ProductCollectionUnarchiveResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProductCollectionUnarchiveResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        collectionId()
-        excludedProductIds()
-        message()
-        validated = true
-    }
+            collectionId()
+            excludedProductIds()
+            message()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -264,29 +277,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (collectionId.asKnown().isPresent) 1 else 0) +
-            (excludedProductIds.asKnown().getOrNull()?.size ?: 0) +
-            (if (message.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (collectionId.asKnown().isPresent) 1 else 0) + (excludedProductIds.asKnown().getOrNull()?.size ?: 0) + (if (message.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionUnarchiveResponse &&
-            collectionId == other.collectionId &&
-            excludedProductIds == other.excludedProductIds &&
-            message == other.message &&
-            additionalProperties == other.additionalProperties
+      return other is ProductCollectionUnarchiveResponse && collectionId == other.collectionId && excludedProductIds == other.excludedProductIds && message == other.message && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(collectionId, excludedProductIds, message, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(collectionId, excludedProductIds, message, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProductCollectionUnarchiveResponse{collectionId=$collectionId, excludedProductIds=$excludedProductIds, message=$message, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProductCollectionUnarchiveResponse{collectionId=$collectionId, excludedProductIds=$excludedProductIds, message=$message, additionalProperties=$additionalProperties}"
 }

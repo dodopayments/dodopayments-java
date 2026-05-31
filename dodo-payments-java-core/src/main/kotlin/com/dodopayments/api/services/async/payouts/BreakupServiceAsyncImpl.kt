@@ -17,85 +17,73 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.payouts.breakup.BreakupRetrieveParams
 import com.dodopayments.api.models.payouts.breakup.BreakupRetrieveResponse
+import com.dodopayments.api.services.async.payouts.BreakupServiceAsync
+import com.dodopayments.api.services.async.payouts.BreakupServiceAsyncImpl
 import com.dodopayments.api.services.async.payouts.breakup.DetailServiceAsync
 import com.dodopayments.api.services.async.payouts.breakup.DetailServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class BreakupServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    BreakupServiceAsync {
+class BreakupServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: BreakupServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : BreakupServiceAsync {
+
+    private val withRawResponse: BreakupServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val details: DetailServiceAsync by lazy { DetailServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): BreakupServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupServiceAsync =
-        BreakupServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupServiceAsync = BreakupServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun details(): DetailServiceAsync = details
 
-    override fun retrieve(
-        params: BreakupRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<List<BreakupRetrieveResponse>> =
+    override fun retrieve(params: BreakupRetrieveParams, requestOptions: RequestOptions): CompletableFuture<List<BreakupRetrieveResponse>> =
         // get /payouts/{payout_id}/breakup
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        BreakupServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : BreakupServiceAsync.WithRawResponse {
 
-        private val details: DetailServiceAsync.WithRawResponse by lazy {
-            DetailServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): BreakupServiceAsync.WithRawResponse =
-            BreakupServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val details: DetailServiceAsync.WithRawResponse by lazy { DetailServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupServiceAsync.WithRawResponse = BreakupServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun details(): DetailServiceAsync.WithRawResponse = details
 
-        private val retrieveHandler: Handler<List<BreakupRetrieveResponse>> =
-            jsonHandler<List<BreakupRetrieveResponse>>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<List<BreakupRetrieveResponse>> = jsonHandler<List<BreakupRetrieveResponse>>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: BreakupRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<BreakupRetrieveResponse>>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("payoutId", params.payoutId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("payouts", params._pathParam(0), "breakup")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
-                                }
-                            }
-                    }
-                }
+        override fun retrieve(params: BreakupRetrieveParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<List<BreakupRetrieveResponse>>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("payoutId", params.payoutId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("payouts", params._pathParam(0), "breakup")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          } }
         }
     }
 }

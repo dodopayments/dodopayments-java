@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.productcollections
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.productcollections.ProductCollectionUpdateImagesResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,33 +12,25 @@ internal class ProductCollectionUpdateImagesResponseTest {
 
     @Test
     fun create() {
-        val productCollectionUpdateImagesResponse =
-            ProductCollectionUpdateImagesResponse.builder()
-                .url("url")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
+      val productCollectionUpdateImagesResponse = ProductCollectionUpdateImagesResponse.builder()
+          .url("url")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
 
-        assertThat(productCollectionUpdateImagesResponse.url()).isEqualTo("url")
-        assertThat(productCollectionUpdateImagesResponse.imageId())
-            .contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      assertThat(productCollectionUpdateImagesResponse.url()).isEqualTo("url")
+      assertThat(productCollectionUpdateImagesResponse.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val productCollectionUpdateImagesResponse =
-            ProductCollectionUpdateImagesResponse.builder()
-                .url("url")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
+      val jsonMapper = jsonMapper()
+      val productCollectionUpdateImagesResponse = ProductCollectionUpdateImagesResponse.builder()
+          .url("url")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
 
-        val roundtrippedProductCollectionUpdateImagesResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(productCollectionUpdateImagesResponse),
-                jacksonTypeRef<ProductCollectionUpdateImagesResponse>(),
-            )
+      val roundtrippedProductCollectionUpdateImagesResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(productCollectionUpdateImagesResponse), jacksonTypeRef<ProductCollectionUpdateImagesResponse>())
 
-        assertThat(roundtrippedProductCollectionUpdateImagesResponse)
-            .isEqualTo(productCollectionUpdateImagesResponse)
+      assertThat(roundtrippedProductCollectionUpdateImagesResponse).isEqualTo(productCollectionUpdateImagesResponse)
     }
 }

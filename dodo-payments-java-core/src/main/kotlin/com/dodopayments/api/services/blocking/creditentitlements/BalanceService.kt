@@ -15,14 +15,13 @@ import com.dodopayments.api.models.creditentitlements.balances.BalanceListPage
 import com.dodopayments.api.models.creditentitlements.balances.BalanceListParams
 import com.dodopayments.api.models.creditentitlements.balances.BalanceRetrieveParams
 import com.dodopayments.api.models.creditentitlements.balances.CustomerCreditBalance
+import com.dodopayments.api.services.blocking.creditentitlements.BalanceService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface BalanceService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -48,25 +47,28 @@ interface BalanceService {
      * - `500 Internal Server Error` - Database or server error
      */
     fun retrieve(customerId: String, params: BalanceRetrieveParams): CustomerCreditBalance =
-        retrieve(customerId, params, RequestOptions.none())
+        retrieve(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        customerId: String,
-        params: BalanceRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomerCreditBalance =
-        retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun retrieve(customerId: String, params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CustomerCreditBalance =
+        retrieve(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
     fun retrieve(params: BalanceRetrieveParams): CustomerCreditBalance =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: BalanceRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomerCreditBalance
+    fun retrieve(params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CustomerCreditBalance
 
     /**
      * Returns a paginated list of customer credit balances for the given credit entitlement.
@@ -88,38 +90,46 @@ interface BalanceService {
      * - `500 Internal Server Error` - Database or server error
      */
     fun list(creditEntitlementId: String): BalanceListPage =
-        list(creditEntitlementId, BalanceListParams.none())
+        list(
+          creditEntitlementId, BalanceListParams.none()
+        )
 
     /** @see list */
-    fun list(
-        creditEntitlementId: String,
-        params: BalanceListParams = BalanceListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListPage =
-        list(params.toBuilder().creditEntitlementId(creditEntitlementId).build(), requestOptions)
+    fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): BalanceListPage =
+        list(
+          params.toBuilder()
+              .creditEntitlementId(creditEntitlementId)
+              .build(), requestOptions
+        )
 
     /** @see list */
-    fun list(
-        creditEntitlementId: String,
-        params: BalanceListParams = BalanceListParams.none(),
-    ): BalanceListPage = list(creditEntitlementId, params, RequestOptions.none())
+    fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none()): BalanceListPage =
+        list(
+          creditEntitlementId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see list */
-    fun list(
-        params: BalanceListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListPage
+    fun list(params: BalanceListParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceListPage
 
     /** @see list */
-    fun list(params: BalanceListParams): BalanceListPage = list(params, RequestOptions.none())
+    fun list(params: BalanceListParams): BalanceListPage =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(creditEntitlementId: String, requestOptions: RequestOptions): BalanceListPage =
-        list(creditEntitlementId, BalanceListParams.none(), requestOptions)
+        list(
+          creditEntitlementId,
+          BalanceListParams.none(),
+          requestOptions,
+        )
 
     /**
-     * For credit entries, a new grant is created. For debit entries, credits are deducted from
-     * existing grants using FIFO (oldest first).
+     * For credit entries, a new grant is created. For debit entries, credits are
+     * deducted from existing grants using FIFO (oldest first).
      *
      * # Authentication
      * Requires an API key with `Editor` role.
@@ -142,30 +152,29 @@ interface BalanceService {
      * - `409 Conflict` - Idempotency key already exists
      * - `500 Internal Server Error` - Database or server error
      */
-    fun createLedgerEntry(
-        customerId: String,
-        params: BalanceCreateLedgerEntryParams,
-    ): BalanceCreateLedgerEntryResponse =
-        createLedgerEntry(customerId, params, RequestOptions.none())
+    fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams): BalanceCreateLedgerEntryResponse =
+        createLedgerEntry(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        customerId: String,
-        params: BalanceCreateLedgerEntryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceCreateLedgerEntryResponse =
-        createLedgerEntry(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceCreateLedgerEntryResponse =
+        createLedgerEntry(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        params: BalanceCreateLedgerEntryParams
-    ): BalanceCreateLedgerEntryResponse = createLedgerEntry(params, RequestOptions.none())
+    fun createLedgerEntry(params: BalanceCreateLedgerEntryParams): BalanceCreateLedgerEntryResponse =
+        createLedgerEntry(
+          params, RequestOptions.none()
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        params: BalanceCreateLedgerEntryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceCreateLedgerEntryResponse
+    fun createLedgerEntry(params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceCreateLedgerEntryResponse
 
     /**
      * Returns a paginated list of credit grants with optional filtering by status.
@@ -188,25 +197,28 @@ interface BalanceService {
      * - `500 Internal Server Error` - Database or server error
      */
     fun listGrants(customerId: String, params: BalanceListGrantsParams): BalanceListGrantsPage =
-        listGrants(customerId, params, RequestOptions.none())
+        listGrants(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listGrants */
-    fun listGrants(
-        customerId: String,
-        params: BalanceListGrantsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListGrantsPage =
-        listGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun listGrants(customerId: String, params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceListGrantsPage =
+        listGrants(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see listGrants */
     fun listGrants(params: BalanceListGrantsParams): BalanceListGrantsPage =
-        listGrants(params, RequestOptions.none())
+        listGrants(
+          params, RequestOptions.none()
+        )
 
     /** @see listGrants */
-    fun listGrants(
-        params: BalanceListGrantsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListGrantsPage
+    fun listGrants(params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceListGrantsPage
 
     /**
      * Returns a paginated list of credit transaction history with optional filtering.
@@ -231,25 +243,28 @@ interface BalanceService {
      * - `500 Internal Server Error` - Database or server error
      */
     fun listLedger(customerId: String, params: BalanceListLedgerParams): BalanceListLedgerPage =
-        listLedger(customerId, params, RequestOptions.none())
+        listLedger(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listLedger */
-    fun listLedger(
-        customerId: String,
-        params: BalanceListLedgerParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListLedgerPage =
-        listLedger(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun listLedger(customerId: String, params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceListLedgerPage =
+        listLedger(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see listLedger */
     fun listLedger(params: BalanceListLedgerParams): BalanceListLedgerPage =
-        listLedger(params, RequestOptions.none())
+        listLedger(
+          params, RequestOptions.none()
+        )
 
     /** @see listLedger */
-    fun listLedger(
-        params: BalanceListLedgerParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceListLedgerPage
+    fun listLedger(params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): BalanceListLedgerPage
 
     /** A view of [BalanceService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -261,187 +276,165 @@ interface BalanceService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): BalanceService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}`, but is otherwise
-         * the same as [BalanceService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}`, but is otherwise the             same as [BalanceService.retrieve]. */
         @MustBeClosed
-        fun retrieve(
-            customerId: String,
-            params: BalanceRetrieveParams,
-        ): HttpResponseFor<CustomerCreditBalance> =
-            retrieve(customerId, params, RequestOptions.none())
+        fun retrieve(customerId: String, params: BalanceRetrieveParams): HttpResponseFor<CustomerCreditBalance> =
+            retrieve(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            customerId: String,
-            params: BalanceRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomerCreditBalance> =
-            retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun retrieve(customerId: String, params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<CustomerCreditBalance> =
+            retrieve(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: BalanceRetrieveParams): HttpResponseFor<CustomerCreditBalance> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: BalanceRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomerCreditBalance>
+        fun retrieve(params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<CustomerCreditBalance>
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances`, but is otherwise the same as
-         * [BalanceService.list].
-         */
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances`, but is otherwise the             same as [BalanceService.list]. */
         @MustBeClosed
         fun list(creditEntitlementId: String): HttpResponseFor<BalanceListPage> =
-            list(creditEntitlementId, BalanceListParams.none())
-
-        /** @see list */
-        @MustBeClosed
-        fun list(
-            creditEntitlementId: String,
-            params: BalanceListParams = BalanceListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListPage> =
             list(
-                params.toBuilder().creditEntitlementId(creditEntitlementId).build(),
-                requestOptions,
+              creditEntitlementId, BalanceListParams.none()
             )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            creditEntitlementId: String,
-            params: BalanceListParams = BalanceListParams.none(),
-        ): HttpResponseFor<BalanceListPage> =
-            list(creditEntitlementId, params, RequestOptions.none())
+        fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListPage> =
+            list(
+              params.toBuilder()
+                  .creditEntitlementId(creditEntitlementId)
+                  .build(), requestOptions
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: BalanceListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListPage>
+        fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none()): HttpResponseFor<BalanceListPage> =
+            list(
+              creditEntitlementId,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see list */
+        @MustBeClosed
+        fun list(params: BalanceListParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListPage>
 
         /** @see list */
         @MustBeClosed
         fun list(params: BalanceListParams): HttpResponseFor<BalanceListPage> =
-            list(params, RequestOptions.none())
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            creditEntitlementId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<BalanceListPage> =
-            list(creditEntitlementId, BalanceListParams.none(), requestOptions)
+        fun list(creditEntitlementId: String, requestOptions: RequestOptions): HttpResponseFor<BalanceListPage> =
+            list(
+              creditEntitlementId,
+              BalanceListParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger-entries`, but
-         * is otherwise the same as [BalanceService.createLedgerEntry].
-         */
+        /** Returns a raw HTTP response for `post /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger-entries`, but is otherwise the             same as [BalanceService.createLedgerEntry]. */
         @MustBeClosed
-        fun createLedgerEntry(
-            customerId: String,
-            params: BalanceCreateLedgerEntryParams,
-        ): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
-            createLedgerEntry(customerId, params, RequestOptions.none())
+        fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
+            createLedgerEntry(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see createLedgerEntry */
         @MustBeClosed
-        fun createLedgerEntry(
-            customerId: String,
-            params: BalanceCreateLedgerEntryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
-            createLedgerEntry(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
+            createLedgerEntry(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see createLedgerEntry */
         @MustBeClosed
-        fun createLedgerEntry(
-            params: BalanceCreateLedgerEntryParams
-        ): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
-            createLedgerEntry(params, RequestOptions.none())
+        fun createLedgerEntry(params: BalanceCreateLedgerEntryParams): HttpResponseFor<BalanceCreateLedgerEntryResponse> =
+            createLedgerEntry(
+              params, RequestOptions.none()
+            )
 
         /** @see createLedgerEntry */
         @MustBeClosed
-        fun createLedgerEntry(
-            params: BalanceCreateLedgerEntryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceCreateLedgerEntryResponse>
+        fun createLedgerEntry(params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceCreateLedgerEntryResponse>
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/grants`, but is
-         * otherwise the same as [BalanceService.listGrants].
-         */
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/grants`, but is otherwise the             same as [BalanceService.listGrants]. */
         @MustBeClosed
-        fun listGrants(
-            customerId: String,
-            params: BalanceListGrantsParams,
-        ): HttpResponseFor<BalanceListGrantsPage> =
-            listGrants(customerId, params, RequestOptions.none())
+        fun listGrants(customerId: String, params: BalanceListGrantsParams): HttpResponseFor<BalanceListGrantsPage> =
+            listGrants(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listGrants */
         @MustBeClosed
-        fun listGrants(
-            customerId: String,
-            params: BalanceListGrantsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListGrantsPage> =
-            listGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun listGrants(customerId: String, params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListGrantsPage> =
+            listGrants(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see listGrants */
         @MustBeClosed
         fun listGrants(params: BalanceListGrantsParams): HttpResponseFor<BalanceListGrantsPage> =
-            listGrants(params, RequestOptions.none())
+            listGrants(
+              params, RequestOptions.none()
+            )
 
         /** @see listGrants */
         @MustBeClosed
-        fun listGrants(
-            params: BalanceListGrantsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListGrantsPage>
+        fun listGrants(params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListGrantsPage>
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger`, but is
-         * otherwise the same as [BalanceService.listLedger].
-         */
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger`, but is otherwise the             same as [BalanceService.listLedger]. */
         @MustBeClosed
-        fun listLedger(
-            customerId: String,
-            params: BalanceListLedgerParams,
-        ): HttpResponseFor<BalanceListLedgerPage> =
-            listLedger(customerId, params, RequestOptions.none())
+        fun listLedger(customerId: String, params: BalanceListLedgerParams): HttpResponseFor<BalanceListLedgerPage> =
+            listLedger(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listLedger */
         @MustBeClosed
-        fun listLedger(
-            customerId: String,
-            params: BalanceListLedgerParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListLedgerPage> =
-            listLedger(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun listLedger(customerId: String, params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListLedgerPage> =
+            listLedger(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see listLedger */
         @MustBeClosed
         fun listLedger(params: BalanceListLedgerParams): HttpResponseFor<BalanceListLedgerPage> =
-            listLedger(params, RequestOptions.none())
+            listLedger(
+              params, RequestOptions.none()
+            )
 
         /** @see listLedger */
         @MustBeClosed
-        fun listLedger(
-            params: BalanceListLedgerParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceListLedgerPage>
+        fun listLedger(params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceListLedgerPage>
     }
 }

@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.products.DigitalProductDelivery
+import com.dodopayments.api.models.products.DigitalProductDeliveryFile
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,62 +13,49 @@ internal class DigitalProductDeliveryTest {
 
     @Test
     fun create() {
-        val digitalProductDelivery =
-            DigitalProductDelivery.builder()
-                .addFile(
-                    DigitalProductDeliveryFile.builder()
-                        .downloadUrl("download_url")
-                        .expiresIn(0L)
-                        .fileId("file_id")
-                        .filename("filename")
-                        .contentType("content_type")
-                        .fileSize(0L)
-                        .build()
-                )
-                .externalUrl("external_url")
-                .instructions("instructions")
-                .build()
+      val digitalProductDelivery = DigitalProductDelivery.builder()
+          .addFile(DigitalProductDeliveryFile.builder()
+              .downloadUrl("download_url")
+              .expiresIn(0L)
+              .fileId("file_id")
+              .filename("filename")
+              .contentType("content_type")
+              .fileSize(0L)
+              .build())
+          .externalUrl("external_url")
+          .instructions("instructions")
+          .build()
 
-        assertThat(digitalProductDelivery.files())
-            .containsExactly(
-                DigitalProductDeliveryFile.builder()
-                    .downloadUrl("download_url")
-                    .expiresIn(0L)
-                    .fileId("file_id")
-                    .filename("filename")
-                    .contentType("content_type")
-                    .fileSize(0L)
-                    .build()
-            )
-        assertThat(digitalProductDelivery.externalUrl()).contains("external_url")
-        assertThat(digitalProductDelivery.instructions()).contains("instructions")
+      assertThat(digitalProductDelivery.files()).containsExactly(DigitalProductDeliveryFile.builder()
+          .downloadUrl("download_url")
+          .expiresIn(0L)
+          .fileId("file_id")
+          .filename("filename")
+          .contentType("content_type")
+          .fileSize(0L)
+          .build())
+      assertThat(digitalProductDelivery.externalUrl()).contains("external_url")
+      assertThat(digitalProductDelivery.instructions()).contains("instructions")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val digitalProductDelivery =
-            DigitalProductDelivery.builder()
-                .addFile(
-                    DigitalProductDeliveryFile.builder()
-                        .downloadUrl("download_url")
-                        .expiresIn(0L)
-                        .fileId("file_id")
-                        .filename("filename")
-                        .contentType("content_type")
-                        .fileSize(0L)
-                        .build()
-                )
-                .externalUrl("external_url")
-                .instructions("instructions")
-                .build()
+      val jsonMapper = jsonMapper()
+      val digitalProductDelivery = DigitalProductDelivery.builder()
+          .addFile(DigitalProductDeliveryFile.builder()
+              .downloadUrl("download_url")
+              .expiresIn(0L)
+              .fileId("file_id")
+              .filename("filename")
+              .contentType("content_type")
+              .fileSize(0L)
+              .build())
+          .externalUrl("external_url")
+          .instructions("instructions")
+          .build()
 
-        val roundtrippedDigitalProductDelivery =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(digitalProductDelivery),
-                jacksonTypeRef<DigitalProductDelivery>(),
-            )
+      val roundtrippedDigitalProductDelivery = jsonMapper.readValue(jsonMapper.writeValueAsString(digitalProductDelivery), jacksonTypeRef<DigitalProductDelivery>())
 
-        assertThat(roundtrippedDigitalProductDelivery).isEqualTo(digitalProductDelivery)
+      assertThat(roundtrippedDigitalProductDelivery).isEqualTo(digitalProductDelivery)
     }
 }

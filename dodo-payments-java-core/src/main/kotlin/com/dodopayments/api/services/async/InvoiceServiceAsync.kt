@@ -3,14 +3,13 @@
 package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
+import com.dodopayments.api.services.async.InvoiceServiceAsync
 import com.dodopayments.api.services.async.invoices.PaymentServiceAsync
 import java.util.function.Consumer
 
 interface InvoiceServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -22,9 +21,7 @@ interface InvoiceServiceAsync {
 
     fun payments(): PaymentServiceAsync
 
-    /**
-     * A view of [InvoiceServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [InvoiceServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -32,9 +29,7 @@ interface InvoiceServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): InvoiceServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): InvoiceServiceAsync.WithRawResponse
 
         fun payments(): PaymentServiceAsync.WithRawResponse
     }

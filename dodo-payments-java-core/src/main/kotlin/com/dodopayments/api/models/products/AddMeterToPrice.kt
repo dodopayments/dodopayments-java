@@ -17,9 +17,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class AddMeterToPrice
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class AddMeterToPrice @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val meterId: JsonField<String>,
     private val creditEntitlementId: JsonField<String>,
     private val description: JsonField<String>,
@@ -29,102 +27,76 @@ private constructor(
     private val name: JsonField<String>,
     private val pricePerUnit: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("meter_id") @ExcludeMissing meterId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("credit_entitlement_id")
-        @ExcludeMissing
-        creditEntitlementId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("free_threshold")
-        @ExcludeMissing
-        freeThreshold: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("measurement_unit")
-        @ExcludeMissing
-        measurementUnit: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("meter_units_per_credit")
-        @ExcludeMissing
-        meterUnitsPerCredit: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("credit_entitlement_id") @ExcludeMissing creditEntitlementId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("free_threshold") @ExcludeMissing freeThreshold: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("measurement_unit") @ExcludeMissing measurementUnit: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("meter_units_per_credit") @ExcludeMissing meterUnitsPerCredit: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("price_per_unit")
-        @ExcludeMissing
-        pricePerUnit: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("price_per_unit") @ExcludeMissing pricePerUnit: JsonField<String> = JsonMissing.of()
     ) : this(
-        meterId,
-        creditEntitlementId,
-        description,
-        freeThreshold,
-        measurementUnit,
-        meterUnitsPerCredit,
-        name,
-        pricePerUnit,
-        mutableMapOf(),
+      meterId,
+      creditEntitlementId,
+      description,
+      freeThreshold,
+      measurementUnit,
+      meterUnitsPerCredit,
+      name,
+      pricePerUnit,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun meterId(): String = meterId.getRequired("meter_id")
 
     /**
      * Optional credit entitlement ID to link this meter to for credit-based billing
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun creditEntitlementId(): Optional<String> =
-        creditEntitlementId.getOptional("credit_entitlement_id")
+    fun creditEntitlementId(): Optional<String> = creditEntitlementId.getOptional("credit_entitlement_id")
 
     /**
      * Meter description. Will ignored on Request, but will be shown in response
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun freeThreshold(): Optional<Long> = freeThreshold.getOptional("free_threshold")
 
     /**
      * Meter measurement unit. Will ignored on Request, but will be shown in response
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun measurementUnit(): Optional<String> = measurementUnit.getOptional("measurement_unit")
 
     /**
      * Number of meter units that equal one credit. Required when credit_entitlement_id is set.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun meterUnitsPerCredit(): Optional<String> =
-        meterUnitsPerCredit.getOptional("meter_units_per_credit")
+    fun meterUnitsPerCredit(): Optional<String> = meterUnitsPerCredit.getOptional("meter_units_per_credit")
 
     /**
      * Meter name. Will ignored on Request, but will be shown in response
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
 
     /**
-     * The price per unit in lowest denomination. Must be greater than zero. Supports up to 5 digits
-     * before decimal point and 12 decimal places.
+     * The price per unit in lowest denomination. Must be greater than zero. Supports up to 5 digits before decimal point and 12 decimal places.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun pricePerUnit(): Optional<String> = pricePerUnit.getOptional("price_per_unit")
 
@@ -133,13 +105,14 @@ private constructor(
      *
      * Unlike [meterId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("meter_id") @ExcludeMissing fun _meterId(): JsonField<String> = meterId
+    @JsonProperty("meter_id")
+    @ExcludeMissing
+    fun _meterId(): JsonField<String> = meterId
 
     /**
      * Returns the raw JSON value of [creditEntitlementId].
      *
-     * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("credit_entitlement_id")
     @ExcludeMissing
@@ -150,7 +123,9 @@ private constructor(
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [freeThreshold].
@@ -173,8 +148,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [meterUnitsPerCredit].
      *
-     * Unlike [meterUnitsPerCredit], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [meterUnitsPerCredit], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("meter_units_per_credit")
     @ExcludeMissing
@@ -185,7 +159,9 @@ private constructor(
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [pricePerUnit].
@@ -198,13 +174,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -214,11 +189,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [AddMeterToPrice].
          *
          * The following fields are required:
+         *
          * ```java
          * .meterId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AddMeterToPrice]. */
@@ -235,48 +212,48 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(addMeterToPrice: AddMeterToPrice) = apply {
-            meterId = addMeterToPrice.meterId
-            creditEntitlementId = addMeterToPrice.creditEntitlementId
-            description = addMeterToPrice.description
-            freeThreshold = addMeterToPrice.freeThreshold
-            measurementUnit = addMeterToPrice.measurementUnit
-            meterUnitsPerCredit = addMeterToPrice.meterUnitsPerCredit
-            name = addMeterToPrice.name
-            pricePerUnit = addMeterToPrice.pricePerUnit
-            additionalProperties = addMeterToPrice.additionalProperties.toMutableMap()
-        }
+        internal fun from(addMeterToPrice: AddMeterToPrice) =
+            apply {
+                meterId = addMeterToPrice.meterId
+                creditEntitlementId = addMeterToPrice.creditEntitlementId
+                description = addMeterToPrice.description
+                freeThreshold = addMeterToPrice.freeThreshold
+                measurementUnit = addMeterToPrice.measurementUnit
+                meterUnitsPerCredit = addMeterToPrice.meterUnitsPerCredit
+                name = addMeterToPrice.name
+                pricePerUnit = addMeterToPrice.pricePerUnit
+                additionalProperties = addMeterToPrice.additionalProperties.toMutableMap()
+            }
 
         fun meterId(meterId: String) = meterId(JsonField.of(meterId))
 
         /**
          * Sets [Builder.meterId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.meterId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.meterId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun meterId(meterId: JsonField<String>) = apply { this.meterId = meterId }
+        fun meterId(meterId: JsonField<String>) =
+            apply {
+                this.meterId = meterId
+            }
 
         /** Optional credit entitlement ID to link this meter to for credit-based billing */
-        fun creditEntitlementId(creditEntitlementId: String?) =
-            creditEntitlementId(JsonField.ofNullable(creditEntitlementId))
+        fun creditEntitlementId(creditEntitlementId: String?) = creditEntitlementId(JsonField.ofNullable(creditEntitlementId))
 
-        /**
-         * Alias for calling [Builder.creditEntitlementId] with `creditEntitlementId.orElse(null)`.
-         */
-        fun creditEntitlementId(creditEntitlementId: Optional<String>) =
-            creditEntitlementId(creditEntitlementId.getOrNull())
+        /** Alias for calling [Builder.creditEntitlementId] with `creditEntitlementId.orElse(null)`. */
+        fun creditEntitlementId(creditEntitlementId: Optional<String>) = creditEntitlementId(creditEntitlementId.getOrNull())
 
         /**
          * Sets [Builder.creditEntitlementId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun creditEntitlementId(creditEntitlementId: JsonField<String>) = apply {
-            this.creditEntitlementId = creditEntitlementId
-        }
+        fun creditEntitlementId(creditEntitlementId: JsonField<String>) =
+            apply {
+                this.creditEntitlementId = creditEntitlementId
+            }
 
         /** Meter description. Will ignored on Request, but will be shown in response */
         fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -287,11 +264,13 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
         fun freeThreshold(freeThreshold: Long?) = freeThreshold(JsonField.ofNullable(freeThreshold))
 
@@ -308,55 +287,47 @@ private constructor(
         /**
          * Sets [Builder.freeThreshold] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.freeThreshold] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.freeThreshold] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun freeThreshold(freeThreshold: JsonField<Long>) = apply {
-            this.freeThreshold = freeThreshold
-        }
+        fun freeThreshold(freeThreshold: JsonField<Long>) =
+            apply {
+                this.freeThreshold = freeThreshold
+            }
 
         /** Meter measurement unit. Will ignored on Request, but will be shown in response */
-        fun measurementUnit(measurementUnit: String?) =
-            measurementUnit(JsonField.ofNullable(measurementUnit))
+        fun measurementUnit(measurementUnit: String?) = measurementUnit(JsonField.ofNullable(measurementUnit))
 
         /** Alias for calling [Builder.measurementUnit] with `measurementUnit.orElse(null)`. */
-        fun measurementUnit(measurementUnit: Optional<String>) =
-            measurementUnit(measurementUnit.getOrNull())
+        fun measurementUnit(measurementUnit: Optional<String>) = measurementUnit(measurementUnit.getOrNull())
 
         /**
          * Sets [Builder.measurementUnit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.measurementUnit] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.measurementUnit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun measurementUnit(measurementUnit: JsonField<String>) = apply {
-            this.measurementUnit = measurementUnit
-        }
+        fun measurementUnit(measurementUnit: JsonField<String>) =
+            apply {
+                this.measurementUnit = measurementUnit
+            }
 
-        /**
-         * Number of meter units that equal one credit. Required when credit_entitlement_id is set.
-         */
-        fun meterUnitsPerCredit(meterUnitsPerCredit: String?) =
-            meterUnitsPerCredit(JsonField.ofNullable(meterUnitsPerCredit))
+        /** Number of meter units that equal one credit. Required when credit_entitlement_id is set. */
+        fun meterUnitsPerCredit(meterUnitsPerCredit: String?) = meterUnitsPerCredit(JsonField.ofNullable(meterUnitsPerCredit))
 
-        /**
-         * Alias for calling [Builder.meterUnitsPerCredit] with `meterUnitsPerCredit.orElse(null)`.
-         */
-        fun meterUnitsPerCredit(meterUnitsPerCredit: Optional<String>) =
-            meterUnitsPerCredit(meterUnitsPerCredit.getOrNull())
+        /** Alias for calling [Builder.meterUnitsPerCredit] with `meterUnitsPerCredit.orElse(null)`. */
+        fun meterUnitsPerCredit(meterUnitsPerCredit: Optional<String>) = meterUnitsPerCredit(meterUnitsPerCredit.getOrNull())
 
         /**
          * Sets [Builder.meterUnitsPerCredit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.meterUnitsPerCredit] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.meterUnitsPerCredit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun meterUnitsPerCredit(meterUnitsPerCredit: JsonField<String>) = apply {
-            this.meterUnitsPerCredit = meterUnitsPerCredit
-        }
+        fun meterUnitsPerCredit(meterUnitsPerCredit: JsonField<String>) =
+            apply {
+                this.meterUnitsPerCredit = meterUnitsPerCredit
+            }
 
         /** Meter name. Will ignored on Request, but will be shown in response */
         fun name(name: String?) = name(JsonField.ofNullable(name))
@@ -367,15 +338,15 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
-        /**
-         * The price per unit in lowest denomination. Must be greater than zero. Supports up to 5
-         * digits before decimal point and 12 decimal places.
-         */
+        /** The price per unit in lowest denomination. Must be greater than zero. Supports up to 5 digits before decimal point and 12 decimal places. */
         fun pricePerUnit(pricePerUnit: String?) = pricePerUnit(JsonField.ofNullable(pricePerUnit))
 
         /** Alias for calling [Builder.pricePerUnit] with `pricePerUnit.orElse(null)`. */
@@ -384,32 +355,39 @@ private constructor(
         /**
          * Sets [Builder.pricePerUnit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.pricePerUnit] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.pricePerUnit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun pricePerUnit(pricePerUnit: JsonField<String>) = apply {
-            this.pricePerUnit = pricePerUnit
-        }
+        fun pricePerUnit(pricePerUnit: JsonField<String>) =
+            apply {
+                this.pricePerUnit = pricePerUnit
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [AddMeterToPrice].
@@ -417,6 +395,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .meterId()
          * ```
@@ -425,15 +404,17 @@ private constructor(
          */
         fun build(): AddMeterToPrice =
             AddMeterToPrice(
-                checkRequired("meterId", meterId),
-                creditEntitlementId,
-                description,
-                freeThreshold,
-                measurementUnit,
-                meterUnitsPerCredit,
-                name,
-                pricePerUnit,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "meterId", meterId
+              ),
+              creditEntitlementId,
+              description,
+              freeThreshold,
+              measurementUnit,
+              meterUnitsPerCredit,
+              name,
+              pricePerUnit,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -447,21 +428,22 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): AddMeterToPrice = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): AddMeterToPrice =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        meterId()
-        creditEntitlementId()
-        description()
-        freeThreshold()
-        measurementUnit()
-        meterUnitsPerCredit()
-        name()
-        pricePerUnit()
-        validated = true
-    }
+            meterId()
+            creditEntitlementId()
+            description()
+            freeThreshold()
+            measurementUnit()
+            meterUnitsPerCredit()
+            name()
+            pricePerUnit()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -477,49 +459,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (meterId.asKnown().isPresent) 1 else 0) +
-            (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (if (freeThreshold.asKnown().isPresent) 1 else 0) +
-            (if (measurementUnit.asKnown().isPresent) 1 else 0) +
-            (if (meterUnitsPerCredit.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (pricePerUnit.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (meterId.asKnown().isPresent) 1 else 0) + (if (creditEntitlementId.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (freeThreshold.asKnown().isPresent) 1 else 0) + (if (measurementUnit.asKnown().isPresent) 1 else 0) + (if (meterUnitsPerCredit.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (pricePerUnit.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AddMeterToPrice &&
-            meterId == other.meterId &&
-            creditEntitlementId == other.creditEntitlementId &&
-            description == other.description &&
-            freeThreshold == other.freeThreshold &&
-            measurementUnit == other.measurementUnit &&
-            meterUnitsPerCredit == other.meterUnitsPerCredit &&
-            name == other.name &&
-            pricePerUnit == other.pricePerUnit &&
-            additionalProperties == other.additionalProperties
+      return other is AddMeterToPrice && meterId == other.meterId && creditEntitlementId == other.creditEntitlementId && description == other.description && freeThreshold == other.freeThreshold && measurementUnit == other.measurementUnit && meterUnitsPerCredit == other.meterUnitsPerCredit && name == other.name && pricePerUnit == other.pricePerUnit && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            meterId,
-            creditEntitlementId,
-            description,
-            freeThreshold,
-            measurementUnit,
-            meterUnitsPerCredit,
-            name,
-            pricePerUnit,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(meterId, creditEntitlementId, description, freeThreshold, measurementUnit, meterUnitsPerCredit, name, pricePerUnit, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "AddMeterToPrice{meterId=$meterId, creditEntitlementId=$creditEntitlementId, description=$description, freeThreshold=$freeThreshold, measurementUnit=$measurementUnit, meterUnitsPerCredit=$meterUnitsPerCredit, name=$name, pricePerUnit=$pricePerUnit, additionalProperties=$additionalProperties}"
+    override fun toString() = "AddMeterToPrice{meterId=$meterId, creditEntitlementId=$creditEntitlementId, description=$description, freeThreshold=$freeThreshold, measurementUnit=$measurementUnit, meterUnitsPerCredit=$meterUnitsPerCredit, name=$name, pricePerUnit=$pricePerUnit, additionalProperties=$additionalProperties}"
 }

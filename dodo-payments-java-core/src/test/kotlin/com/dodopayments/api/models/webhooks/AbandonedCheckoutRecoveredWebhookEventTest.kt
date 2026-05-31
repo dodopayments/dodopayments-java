@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.webhooks
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.webhooks.AbandonedCheckoutRecoveredWebhookEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,72 +13,49 @@ internal class AbandonedCheckoutRecoveredWebhookEventTest {
 
     @Test
     fun create() {
-        val abandonedCheckoutRecoveredWebhookEvent =
-            AbandonedCheckoutRecoveredWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
-                        .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .abandonmentReason(
-                            AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
-                                .PAYMENT_FAILED
-                        )
-                        .customerId("customer_id")
-                        .paymentId("payment_id")
-                        .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
-                        .recoveredPaymentId("recovered_payment_id")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val abandonedCheckoutRecoveredWebhookEvent = AbandonedCheckoutRecoveredWebhookEvent.builder()
+          .businessId("business_id")
+          .data(AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
+              .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .abandonmentReason(AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason.PAYMENT_FAILED)
+              .customerId("customer_id")
+              .paymentId("payment_id")
+              .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
+              .recoveredPaymentId("recovered_payment_id")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        assertThat(abandonedCheckoutRecoveredWebhookEvent.businessId()).isEqualTo("business_id")
-        assertThat(abandonedCheckoutRecoveredWebhookEvent.data())
-            .isEqualTo(
-                AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
-                    .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .abandonmentReason(
-                        AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason.PAYMENT_FAILED
-                    )
-                    .customerId("customer_id")
-                    .paymentId("payment_id")
-                    .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
-                    .recoveredPaymentId("recovered_payment_id")
-                    .build()
-            )
-        assertThat(abandonedCheckoutRecoveredWebhookEvent.timestamp())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(abandonedCheckoutRecoveredWebhookEvent.businessId()).isEqualTo("business_id")
+      assertThat(abandonedCheckoutRecoveredWebhookEvent.data()).isEqualTo(AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
+          .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .abandonmentReason(AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason.PAYMENT_FAILED)
+          .customerId("customer_id")
+          .paymentId("payment_id")
+          .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
+          .recoveredPaymentId("recovered_payment_id")
+          .build())
+      assertThat(abandonedCheckoutRecoveredWebhookEvent.timestamp()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val abandonedCheckoutRecoveredWebhookEvent =
-            AbandonedCheckoutRecoveredWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
-                        .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .abandonmentReason(
-                            AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
-                                .PAYMENT_FAILED
-                        )
-                        .customerId("customer_id")
-                        .paymentId("payment_id")
-                        .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
-                        .recoveredPaymentId("recovered_payment_id")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val jsonMapper = jsonMapper()
+      val abandonedCheckoutRecoveredWebhookEvent = AbandonedCheckoutRecoveredWebhookEvent.builder()
+          .businessId("business_id")
+          .data(AbandonedCheckoutRecoveredWebhookEvent.Data.builder()
+              .abandonedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .abandonmentReason(AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason.PAYMENT_FAILED)
+              .customerId("customer_id")
+              .paymentId("payment_id")
+              .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
+              .recoveredPaymentId("recovered_payment_id")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val roundtrippedAbandonedCheckoutRecoveredWebhookEvent =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(abandonedCheckoutRecoveredWebhookEvent),
-                jacksonTypeRef<AbandonedCheckoutRecoveredWebhookEvent>(),
-            )
+      val roundtrippedAbandonedCheckoutRecoveredWebhookEvent = jsonMapper.readValue(jsonMapper.writeValueAsString(abandonedCheckoutRecoveredWebhookEvent), jacksonTypeRef<AbandonedCheckoutRecoveredWebhookEvent>())
 
-        assertThat(roundtrippedAbandonedCheckoutRecoveredWebhookEvent)
-            .isEqualTo(abandonedCheckoutRecoveredWebhookEvent)
+      assertThat(roundtrippedAbandonedCheckoutRecoveredWebhookEvent).isEqualTo(abandonedCheckoutRecoveredWebhookEvent)
     }
 }

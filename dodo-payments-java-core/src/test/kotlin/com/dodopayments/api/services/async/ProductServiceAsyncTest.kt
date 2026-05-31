@@ -13,7 +13,11 @@ import com.dodopayments.api.models.products.AttachProductEntitlement
 import com.dodopayments.api.models.products.CbbProrationBehavior
 import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.products.Price
+import com.dodopayments.api.models.products.ProductArchiveParams
 import com.dodopayments.api.models.products.ProductCreateParams
+import com.dodopayments.api.models.products.ProductListParams
+import com.dodopayments.api.models.products.ProductRetrieveParams
+import com.dodopayments.api.models.products.ProductUnarchiveParams
 import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -25,231 +29,204 @@ internal class ProductServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val productFuture =
-            productServiceAsync.create(
-                ProductCreateParams.builder()
-                    .name("name")
-                    .price(
-                        Price.OneTimePrice.builder()
-                            .currency(Currency.AED)
-                            .discount(0L)
-                            .price(0)
-                            .purchasingPowerParity(true)
-                            .payWhatYouWant(true)
-                            .suggestedPrice(0)
-                            .taxInclusive(true)
-                            .build()
-                    )
-                    .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                    .addAddon("string")
-                    .brandId("brand_id")
-                    .addCreditEntitlement(
-                        AttachCreditEntitlement.builder()
-                            .creditEntitlementId("credit_entitlement_id")
-                            .creditsAmount("credits_amount")
-                            .currency(Currency.AED)
-                            .expiresAfterDays(0)
-                            .lowBalanceThresholdPercent(0)
-                            .maxRolloverCount(0)
-                            .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
-                            .overageEnabled(true)
-                            .overageLimit("overage_limit")
-                            .pricePerUnit("price_per_unit")
-                            .prorationBehavior(CbbProrationBehavior.PRORATE)
-                            .rolloverEnabled(true)
-                            .rolloverPercentage(0)
-                            .rolloverTimeframeCount(0)
-                            .rolloverTimeframeInterval(TimeInterval.DAY)
-                            .trialCredits("trial_credits")
-                            .trialCreditsExpireAfterTrial(true)
-                            .build()
-                    )
-                    .description("description")
-                    .digitalProductDelivery(
-                        ProductCreateParams.DigitalProductDelivery.builder()
-                            .externalUrl("external_url")
-                            .instructions("instructions")
-                            .build()
-                    )
-                    .addEntitlement(
-                        AttachProductEntitlement.builder().entitlementId("entitlement_id").build()
-                    )
-                    .licenseKeyActivationMessage("license_key_activation_message")
-                    .licenseKeyActivationsLimit(0)
-                    .licenseKeyDuration(
-                        LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
-                    )
-                    .licenseKeyEnabled(true)
-                    .metadata(
-                        ProductCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .build()
-            )
+      val productFuture = productServiceAsync.create(ProductCreateParams.builder()
+          .name("name")
+          .price(Price.OneTimePrice.builder()
+              .currency(Currency.AED)
+              .discount(0L)
+              .price(0)
+              .purchasingPowerParity(true)
+              .payWhatYouWant(true)
+              .suggestedPrice(0)
+              .taxInclusive(true)
+              .build())
+          .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+          .addAddon("string")
+          .brandId("brand_id")
+          .addCreditEntitlement(AttachCreditEntitlement.builder()
+              .creditEntitlementId("credit_entitlement_id")
+              .creditsAmount("credits_amount")
+              .currency(Currency.AED)
+              .expiresAfterDays(0)
+              .lowBalanceThresholdPercent(0)
+              .maxRolloverCount(0)
+              .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+              .overageEnabled(true)
+              .overageLimit("overage_limit")
+              .pricePerUnit("price_per_unit")
+              .prorationBehavior(CbbProrationBehavior.PRORATE)
+              .rolloverEnabled(true)
+              .rolloverPercentage(0)
+              .rolloverTimeframeCount(0)
+              .rolloverTimeframeInterval(TimeInterval.DAY)
+              .trialCredits("trial_credits")
+              .trialCreditsExpireAfterTrial(true)
+              .build())
+          .description("description")
+          .digitalProductDelivery(ProductCreateParams.DigitalProductDelivery.builder()
+              .externalUrl("external_url")
+              .instructions("instructions")
+              .build())
+          .addEntitlement(AttachProductEntitlement.builder()
+              .entitlementId("entitlement_id")
+              .build())
+          .licenseKeyActivationMessage("license_key_activation_message")
+          .licenseKeyActivationsLimit(0)
+          .licenseKeyDuration(LicenseKeyDuration.builder()
+              .count(0)
+              .interval(TimeInterval.DAY)
+              .build())
+          .licenseKeyEnabled(true)
+          .metadata(ProductCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build())
 
-        val product = productFuture.get()
-        product.validate()
+      val product = productFuture.get()
+      product.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val productFuture = productServiceAsync.retrieve("id")
+      val productFuture = productServiceAsync.retrieve("id")
 
-        val product = productFuture.get()
-        product.validate()
+      val product = productFuture.get()
+      product.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val future =
-            productServiceAsync.update(
-                ProductUpdateParams.builder()
-                    .id("id")
-                    .addAddon("string")
-                    .brandId("brand_id")
-                    .addCreditEntitlement(
-                        AttachCreditEntitlement.builder()
-                            .creditEntitlementId("credit_entitlement_id")
-                            .creditsAmount("credits_amount")
-                            .currency(Currency.AED)
-                            .expiresAfterDays(0)
-                            .lowBalanceThresholdPercent(0)
-                            .maxRolloverCount(0)
-                            .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
-                            .overageEnabled(true)
-                            .overageLimit("overage_limit")
-                            .pricePerUnit("price_per_unit")
-                            .prorationBehavior(CbbProrationBehavior.PRORATE)
-                            .rolloverEnabled(true)
-                            .rolloverPercentage(0)
-                            .rolloverTimeframeCount(0)
-                            .rolloverTimeframeInterval(TimeInterval.DAY)
-                            .trialCredits("trial_credits")
-                            .trialCreditsExpireAfterTrial(true)
-                            .build()
-                    )
-                    .description("description")
-                    .digitalProductDelivery(
-                        ProductUpdateParams.DigitalProductDelivery.builder()
-                            .externalUrl("external_url")
-                            .addFile("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                            .instructions("instructions")
-                            .build()
-                    )
-                    .addEntitlement(
-                        AttachProductEntitlement.builder().entitlementId("entitlement_id").build()
-                    )
-                    .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .licenseKeyActivationMessage("license_key_activation_message")
-                    .licenseKeyActivationsLimit(0)
-                    .licenseKeyDuration(
-                        LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
-                    )
-                    .licenseKeyEnabled(true)
-                    .metadata(
-                        ProductUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .price(
-                        Price.OneTimePrice.builder()
-                            .currency(Currency.AED)
-                            .discount(0L)
-                            .price(0)
-                            .purchasingPowerParity(true)
-                            .payWhatYouWant(true)
-                            .suggestedPrice(0)
-                            .taxInclusive(true)
-                            .build()
-                    )
-                    .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                    .build()
-            )
+      val future = productServiceAsync.update(ProductUpdateParams.builder()
+          .id("id")
+          .addAddon("string")
+          .brandId("brand_id")
+          .addCreditEntitlement(AttachCreditEntitlement.builder()
+              .creditEntitlementId("credit_entitlement_id")
+              .creditsAmount("credits_amount")
+              .currency(Currency.AED)
+              .expiresAfterDays(0)
+              .lowBalanceThresholdPercent(0)
+              .maxRolloverCount(0)
+              .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+              .overageEnabled(true)
+              .overageLimit("overage_limit")
+              .pricePerUnit("price_per_unit")
+              .prorationBehavior(CbbProrationBehavior.PRORATE)
+              .rolloverEnabled(true)
+              .rolloverPercentage(0)
+              .rolloverTimeframeCount(0)
+              .rolloverTimeframeInterval(TimeInterval.DAY)
+              .trialCredits("trial_credits")
+              .trialCreditsExpireAfterTrial(true)
+              .build())
+          .description("description")
+          .digitalProductDelivery(ProductUpdateParams.DigitalProductDelivery.builder()
+              .externalUrl("external_url")
+              .addFile("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+              .instructions("instructions")
+              .build())
+          .addEntitlement(AttachProductEntitlement.builder()
+              .entitlementId("entitlement_id")
+              .build())
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .licenseKeyActivationMessage("license_key_activation_message")
+          .licenseKeyActivationsLimit(0)
+          .licenseKeyDuration(LicenseKeyDuration.builder()
+              .count(0)
+              .interval(TimeInterval.DAY)
+              .build())
+          .licenseKeyEnabled(true)
+          .metadata(ProductUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .price(Price.OneTimePrice.builder()
+              .currency(Currency.AED)
+              .discount(0L)
+              .price(0)
+              .purchasingPowerParity(true)
+              .payWhatYouWant(true)
+              .suggestedPrice(0)
+              .taxInclusive(true)
+              .build())
+          .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val pageFuture = productServiceAsync.list()
+      val pageFuture = productServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun archive() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val future = productServiceAsync.archive("id")
+      val future = productServiceAsync.archive("id")
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun unarchive() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val future = productServiceAsync.unarchive("id")
+      val future = productServiceAsync.unarchive("id")
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun updateFiles() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val productServiceAsync = client.products()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val productServiceAsync = client.products()
 
-        val responseFuture =
-            productServiceAsync.updateFiles(
-                ProductUpdateFilesParams.builder().id("id").fileName("file_name").build()
-            )
+      val responseFuture = productServiceAsync.updateFiles(ProductUpdateFilesParams.builder()
+          .id("id")
+          .fileName("file_name")
+          .build())
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 }

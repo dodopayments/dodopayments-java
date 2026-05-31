@@ -20,101 +20,100 @@ import com.dodopayments.api.models.payouts.breakup.details.DetailDownloadCsvPara
 import com.dodopayments.api.models.payouts.breakup.details.DetailListPage
 import com.dodopayments.api.models.payouts.breakup.details.DetailListPageResponse
 import com.dodopayments.api.models.payouts.breakup.details.DetailListParams
+import com.dodopayments.api.services.blocking.payouts.breakup.DetailService
+import com.dodopayments.api.services.blocking.payouts.breakup.DetailServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class DetailServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    DetailService {
+class DetailServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: DetailService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : DetailService {
+
+    private val withRawResponse: DetailService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): DetailService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DetailService =
-        DetailServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DetailService = DetailServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: DetailListParams, requestOptions: RequestOptions): DetailListPage =
         // get /payouts/{payout_id}/breakup/details
         withRawResponse().list(params, requestOptions).parse()
 
     override fun downloadCsv(params: DetailDownloadCsvParams, requestOptions: RequestOptions) {
-        // get /payouts/{payout_id}/breakup/details/csv
-        withRawResponse().downloadCsv(params, requestOptions)
+      // get /payouts/{payout_id}/breakup/details/csv
+      withRawResponse().downloadCsv(params, requestOptions)
     }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        DetailService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : DetailService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): DetailService.WithRawResponse =
-            DetailServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DetailService.WithRawResponse = DetailServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val listHandler: Handler<DetailListPageResponse> = jsonHandler<DetailListPageResponse>(clientOptions.jsonMapper)
+
+        override fun list(params: DetailListParams, requestOptions: RequestOptions): HttpResponseFor<DetailListPage> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("payoutId", params.payoutId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("payouts", params._pathParam(0), "breakup", "details")
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val listHandler: Handler<DetailListPageResponse> =
-            jsonHandler<DetailListPageResponse>(clientOptions.jsonMapper)
-
-        override fun list(
-            params: DetailListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<DetailListPage> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("payoutId", params.payoutId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("payouts", params._pathParam(0), "breakup", "details")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        DetailListPage.builder()
-                            .service(DetailServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  DetailListPage.builder()
+                      .service(DetailServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
         private val downloadCsvHandler: Handler<Void?> = emptyHandler()
 
-        override fun downloadCsv(
-            params: DetailDownloadCsvParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("payoutId", params.payoutId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("payouts", params._pathParam(0), "breakup", "details", "csv")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { downloadCsvHandler.handle(it) }
-            }
+        override fun downloadCsv(params: DetailDownloadCsvParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("payoutId", params.payoutId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("payouts", params._pathParam(0), "breakup", "details", "csv")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  downloadCsvHandler.handle(it)
+              }
+          }
         }
     }
 }

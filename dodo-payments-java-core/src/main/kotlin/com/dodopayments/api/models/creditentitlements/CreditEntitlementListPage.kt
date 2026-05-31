@@ -5,17 +5,21 @@ package com.dodopayments.api.models.creditentitlements
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.creditentitlements.CreditEntitlement
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementListPageResponse
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementListParams
 import com.dodopayments.api.services.blocking.CreditEntitlementService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see CreditEntitlementService.list */
-class CreditEntitlementListPage
-private constructor(
+class CreditEntitlementListPage private constructor(
     private val service: CreditEntitlementService,
     private val params: CreditEntitlementListParams,
     private val response: CreditEntitlementListPageResponse,
+
 ) : Page<CreditEntitlement> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see CreditEntitlementListPageResponse.items
      */
-    override fun items(): List<CreditEntitlement> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<CreditEntitlement> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): CreditEntitlementListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): CreditEntitlementListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CreditEntitlementListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CreditEntitlementListPage]. */
@@ -68,21 +75,29 @@ private constructor(
         private var response: CreditEntitlementListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(creditEntitlementListPage: CreditEntitlementListPage) = apply {
-            service = creditEntitlementListPage.service
-            params = creditEntitlementListPage.params
-            response = creditEntitlementListPage.response
-        }
+        internal fun from(creditEntitlementListPage: CreditEntitlementListPage) =
+            apply {
+                service = creditEntitlementListPage.service
+                params = creditEntitlementListPage.params
+                response = creditEntitlementListPage.response
+            }
 
-        fun service(service: CreditEntitlementService) = apply { this.service = service }
+        fun service(service: CreditEntitlementService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: CreditEntitlementListParams) = apply { this.params = params }
+        fun params(params: CreditEntitlementListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: CreditEntitlementListPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: CreditEntitlementListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [CreditEntitlementListPage].
@@ -90,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -100,25 +116,27 @@ private constructor(
          */
         fun build(): CreditEntitlementListPage =
             CreditEntitlementListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CreditEntitlementListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is CreditEntitlementListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "CreditEntitlementListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "CreditEntitlementListPage{service=$service, params=$params, response=$response}"
 }

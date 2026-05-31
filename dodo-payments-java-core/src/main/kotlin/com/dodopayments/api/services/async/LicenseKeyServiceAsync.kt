@@ -11,14 +11,13 @@ import com.dodopayments.api.models.licensekeys.LicenseKeyListPageAsync
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
+import com.dodopayments.api.services.async.LicenseKeyServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface LicenseKeyServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -29,111 +28,123 @@ interface LicenseKeyServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync
 
     fun create(params: LicenseKeyCreateParams): CompletableFuture<LicenseKey> =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: LicenseKeyCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKey>
+    fun create(params: LicenseKeyCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKey>
 
     @Deprecated("deprecated")
     fun retrieve(id: String): CompletableFuture<LicenseKey> =
-        retrieve(id, LicenseKeyRetrieveParams.none())
+        retrieve(
+          id, LicenseKeyRetrieveParams.none()
+        )
 
     /** @see retrieve */
     @Deprecated("deprecated")
-    fun retrieve(
-        id: String,
-        params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKey> = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    fun retrieve(id: String, params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKey> =
+        retrieve(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
     @Deprecated("deprecated")
-    fun retrieve(
-        id: String,
-        params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
-    ): CompletableFuture<LicenseKey> = retrieve(id, params, RequestOptions.none())
+    fun retrieve(id: String, params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none()): CompletableFuture<LicenseKey> =
+        retrieve(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
     @Deprecated("deprecated")
-    fun retrieve(
-        params: LicenseKeyRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKey>
+    fun retrieve(params: LicenseKeyRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKey>
 
     /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(params: LicenseKeyRetrieveParams): CompletableFuture<LicenseKey> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     @Deprecated("deprecated")
     fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<LicenseKey> =
-        retrieve(id, LicenseKeyRetrieveParams.none(), requestOptions)
+        retrieve(
+          id,
+          LicenseKeyRetrieveParams.none(),
+          requestOptions,
+        )
 
     @Deprecated("deprecated")
     fun update(id: String): CompletableFuture<LicenseKey> =
-        update(id, LicenseKeyUpdateParams.none())
+        update(
+          id, LicenseKeyUpdateParams.none()
+        )
 
     /** @see update */
     @Deprecated("deprecated")
-    fun update(
-        id: String,
-        params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKey> = update(params.toBuilder().id(id).build(), requestOptions)
+    fun update(id: String, params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKey> =
+        update(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see update */
     @Deprecated("deprecated")
-    fun update(
-        id: String,
-        params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
-    ): CompletableFuture<LicenseKey> = update(id, params, RequestOptions.none())
+    fun update(id: String, params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none()): CompletableFuture<LicenseKey> =
+        update(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
     @Deprecated("deprecated")
-    fun update(
-        params: LicenseKeyUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKey>
+    fun update(params: LicenseKeyUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKey>
 
     /** @see update */
     @Deprecated("deprecated")
     fun update(params: LicenseKeyUpdateParams): CompletableFuture<LicenseKey> =
-        update(params, RequestOptions.none())
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     @Deprecated("deprecated")
     fun update(id: String, requestOptions: RequestOptions): CompletableFuture<LicenseKey> =
-        update(id, LicenseKeyUpdateParams.none(), requestOptions)
+        update(
+          id,
+          LicenseKeyUpdateParams.none(),
+          requestOptions,
+        )
 
     @Deprecated("deprecated")
     fun list(): CompletableFuture<LicenseKeyListPageAsync> = list(LicenseKeyListParams.none())
 
     /** @see list */
     @Deprecated("deprecated")
-    fun list(
-        params: LicenseKeyListParams = LicenseKeyListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyListPageAsync>
+    fun list(params: LicenseKeyListParams = LicenseKeyListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyListPageAsync>
 
     /** @see list */
     @Deprecated("deprecated")
-    fun list(
-        params: LicenseKeyListParams = LicenseKeyListParams.none()
-    ): CompletableFuture<LicenseKeyListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: LicenseKeyListParams = LicenseKeyListParams.none()): CompletableFuture<LicenseKeyListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     @Deprecated("deprecated")
     fun list(requestOptions: RequestOptions): CompletableFuture<LicenseKeyListPageAsync> =
-        list(LicenseKeyListParams.none(), requestOptions)
+        list(
+          LicenseKeyListParams.none(), requestOptions
+        )
 
-    /**
-     * A view of [LicenseKeyServiceAsync] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** A view of [LicenseKeyServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -141,141 +152,127 @@ interface LicenseKeyServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LicenseKeyServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /license_keys`, but is otherwise the same as
-         * [LicenseKeyServiceAsync.create].
-         */
+        /** Returns a raw HTTP response for `post /license_keys`, but is otherwise the             same as [LicenseKeyServiceAsync.create]. */
         fun create(params: LicenseKeyCreateParams): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
-        fun create(
-            params: LicenseKeyCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>>
+        fun create(params: LicenseKeyCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKey>>
 
-        /**
-         * Returns a raw HTTP response for `get /license_keys/{id}`, but is otherwise the same as
-         * [LicenseKeyServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /license_keys/{id}`, but is otherwise the             same as [LicenseKeyServiceAsync.retrieve]. */
         @Deprecated("deprecated")
         fun retrieve(id: String): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            retrieve(id, LicenseKeyRetrieveParams.none())
+            retrieve(
+              id, LicenseKeyRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @Deprecated("deprecated")
-        fun retrieve(
-            id: String,
-            params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            retrieve(params.toBuilder().id(id).build(), requestOptions)
+        fun retrieve(id: String, params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            retrieve(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @Deprecated("deprecated")
-        fun retrieve(
-            id: String,
-            params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            retrieve(id, params, RequestOptions.none())
+        fun retrieve(id: String, params: LicenseKeyRetrieveParams = LicenseKeyRetrieveParams.none()): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            retrieve(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @Deprecated("deprecated")
-        fun retrieve(
-            params: LicenseKeyRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>>
+        fun retrieve(params: LicenseKeyRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKey>>
 
         /** @see retrieve */
         @Deprecated("deprecated")
-        fun retrieve(
-            params: LicenseKeyRetrieveParams
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> = retrieve(params, RequestOptions.none())
+        fun retrieve(params: LicenseKeyRetrieveParams): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @Deprecated("deprecated")
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            retrieve(id, LicenseKeyRetrieveParams.none(), requestOptions)
+        fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            retrieve(
+              id,
+              LicenseKeyRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /license_keys/{id}`, but is otherwise the same as
-         * [LicenseKeyServiceAsync.update].
-         */
+        /** Returns a raw HTTP response for `patch /license_keys/{id}`, but is otherwise the             same as [LicenseKeyServiceAsync.update]. */
         @Deprecated("deprecated")
         fun update(id: String): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            update(id, LicenseKeyUpdateParams.none())
+            update(
+              id, LicenseKeyUpdateParams.none()
+            )
 
         /** @see update */
         @Deprecated("deprecated")
-        fun update(
-            id: String,
-            params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            update(params.toBuilder().id(id).build(), requestOptions)
+        fun update(id: String, params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            update(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @Deprecated("deprecated")
-        fun update(
-            id: String,
-            params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            update(id, params, RequestOptions.none())
+        fun update(id: String, params: LicenseKeyUpdateParams = LicenseKeyUpdateParams.none()): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            update(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @Deprecated("deprecated")
-        fun update(
-            params: LicenseKeyUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKey>>
+        fun update(params: LicenseKeyUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKey>>
 
         /** @see update */
         @Deprecated("deprecated")
         fun update(params: LicenseKeyUpdateParams): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @Deprecated("deprecated")
-        fun update(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> =
-            update(id, LicenseKeyUpdateParams.none(), requestOptions)
+        fun update(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKey>> =
+            update(
+              id,
+              LicenseKeyUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /license_keys`, but is otherwise the same as
-         * [LicenseKeyServiceAsync.list].
-         */
+        /** Returns a raw HTTP response for `get /license_keys`, but is otherwise the             same as [LicenseKeyServiceAsync.list]. */
         @Deprecated("deprecated")
-        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
-            list(LicenseKeyListParams.none())
+        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> = list(LicenseKeyListParams.none())
 
         /** @see list */
         @Deprecated("deprecated")
-        fun list(
-            params: LicenseKeyListParams = LicenseKeyListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>>
+        fun list(params: LicenseKeyListParams = LicenseKeyListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>>
 
         /** @see list */
         @Deprecated("deprecated")
-        fun list(
-            params: LicenseKeyListParams = LicenseKeyListParams.none()
-        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: LicenseKeyListParams = LicenseKeyListParams.none()): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @Deprecated("deprecated")
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
-            list(LicenseKeyListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> =
+            list(
+              LicenseKeyListParams.none(), requestOptions
+            )
     }
 }

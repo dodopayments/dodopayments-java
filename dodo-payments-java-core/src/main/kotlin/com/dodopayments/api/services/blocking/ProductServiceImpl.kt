@@ -28,6 +28,8 @@ import com.dodopayments.api.models.products.ProductUnarchiveParams
 import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
+import com.dodopayments.api.services.blocking.ProductService
+import com.dodopayments.api.services.blocking.ProductServiceImpl
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.ImageServiceImpl
 import com.dodopayments.api.services.blocking.products.ShortLinkService
@@ -35,12 +37,12 @@ import com.dodopayments.api.services.blocking.products.ShortLinkServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class ProductServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    ProductService {
+class ProductServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: ProductService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : ProductService {
+
+    private val withRawResponse: ProductService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val images: ImageService by lazy { ImageServiceImpl(clientOptions) }
 
@@ -48,8 +50,7 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withRawResponse(): ProductService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService =
-        ProductServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService = ProductServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun images(): ImageService = images
 
@@ -64,8 +65,8 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(params: ProductUpdateParams, requestOptions: RequestOptions) {
-        // patch /products/{id}
-        withRawResponse().update(params, requestOptions)
+      // patch /products/{id}
+      withRawResponse().update(params, requestOptions)
     }
 
     override fun list(params: ProductListParams, requestOptions: RequestOptions): ProductListPage =
@@ -73,42 +74,31 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(params: ProductArchiveParams, requestOptions: RequestOptions) {
-        // delete /products/{id}
-        withRawResponse().archive(params, requestOptions)
+      // delete /products/{id}
+      withRawResponse().archive(params, requestOptions)
     }
 
     override fun unarchive(params: ProductUnarchiveParams, requestOptions: RequestOptions) {
-        // post /products/{id}/unarchive
-        withRawResponse().unarchive(params, requestOptions)
+      // post /products/{id}/unarchive
+      withRawResponse().unarchive(params, requestOptions)
     }
 
-    override fun updateFiles(
-        params: ProductUpdateFilesParams,
-        requestOptions: RequestOptions,
-    ): ProductUpdateFilesResponse =
+    override fun updateFiles(params: ProductUpdateFilesParams, requestOptions: RequestOptions): ProductUpdateFilesResponse =
         // put /products/{id}/files
         withRawResponse().updateFiles(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        ProductService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : ProductService.WithRawResponse {
 
-        private val images: ImageService.WithRawResponse by lazy {
-            ImageServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val shortLinks: ShortLinkService.WithRawResponse by lazy {
-            ShortLinkServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val images: ImageService.WithRawResponse by lazy { ImageServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): ProductService.WithRawResponse =
-            ProductServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val shortLinks: ShortLinkService.WithRawResponse by lazy { ShortLinkServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService.WithRawResponse = ProductServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun images(): ImageService.WithRawResponse = images
 
@@ -116,196 +106,205 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val createHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
-        override fun create(
-            params: ProductCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Product> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun create(params: ProductCreateParams, requestOptions: RequestOptions): HttpResponseFor<Product> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val retrieveHandler: Handler<Product> =
-            jsonHandler<Product>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: ProductRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Product> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: ProductRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<Product> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
         private val updateHandler: Handler<Void?> = emptyHandler()
 
-        override fun update(
-            params: ProductUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { updateHandler.handle(it) }
-            }
+        override fun update(params: ProductUpdateParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+          }
         }
 
-        private val listHandler: Handler<ProductListPageResponse> =
-            jsonHandler<ProductListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<ProductListPageResponse> = jsonHandler<ProductListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: ProductListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ProductListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        ProductListPage.builder()
-                            .service(ProductServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: ProductListParams, requestOptions: RequestOptions): HttpResponseFor<ProductListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  ProductListPage.builder()
+                      .service(ProductServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
         private val archiveHandler: Handler<Void?> = emptyHandler()
 
-        override fun archive(
-            params: ProductArchiveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0))
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { archiveHandler.handle(it) }
-            }
+        override fun archive(params: ProductArchiveParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  archiveHandler.handle(it)
+              }
+          }
         }
 
         private val unarchiveHandler: Handler<Void?> = emptyHandler()
 
-        override fun unarchive(
-            params: ProductUnarchiveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0), "unarchive")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { unarchiveHandler.handle(it) }
-            }
+        override fun unarchive(params: ProductUnarchiveParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0), "unarchive")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  unarchiveHandler.handle(it)
+              }
+          }
         }
 
-        private val updateFilesHandler: Handler<ProductUpdateFilesResponse> =
-            jsonHandler<ProductUpdateFilesResponse>(clientOptions.jsonMapper)
+        private val updateFilesHandler: Handler<ProductUpdateFilesResponse> = jsonHandler<ProductUpdateFilesResponse>(clientOptions.jsonMapper)
 
-        override fun updateFiles(
-            params: ProductUpdateFilesParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<ProductUpdateFilesResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("products", params._pathParam(0), "files")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateFilesHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun updateFiles(params: ProductUpdateFilesParams, requestOptions: RequestOptions): HttpResponseFor<ProductUpdateFilesResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("products", params._pathParam(0), "files")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateFilesHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

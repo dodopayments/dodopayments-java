@@ -10,14 +10,13 @@ import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPag
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
+import com.dodopayments.api.services.async.LicenseKeyInstanceServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface LicenseKeyInstanceServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -28,84 +27,85 @@ interface LicenseKeyInstanceServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceServiceAsync
 
     fun retrieve(id: String): CompletableFuture<LicenseKeyInstance> =
-        retrieve(id, LicenseKeyInstanceRetrieveParams.none())
+        retrieve(
+          id, LicenseKeyInstanceRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstance> =
-        retrieve(params.toBuilder().id(id).build(), requestOptions)
+    fun retrieve(id: String, params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyInstance> =
+        retrieve(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
-    ): CompletableFuture<LicenseKeyInstance> = retrieve(id, params, RequestOptions.none())
+    fun retrieve(id: String, params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none()): CompletableFuture<LicenseKeyInstance> =
+        retrieve(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: LicenseKeyInstanceRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstance>
+    fun retrieve(params: LicenseKeyInstanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyInstance>
 
     /** @see retrieve */
     fun retrieve(params: LicenseKeyInstanceRetrieveParams): CompletableFuture<LicenseKeyInstance> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseKeyInstance> =
-        retrieve(id, LicenseKeyInstanceRetrieveParams.none(), requestOptions)
+    fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<LicenseKeyInstance> =
+        retrieve(
+          id,
+          LicenseKeyInstanceRetrieveParams.none(),
+          requestOptions,
+        )
 
-    fun update(
-        id: String,
-        params: LicenseKeyInstanceUpdateParams,
-    ): CompletableFuture<LicenseKeyInstance> = update(id, params, RequestOptions.none())
+    fun update(id: String, params: LicenseKeyInstanceUpdateParams): CompletableFuture<LicenseKeyInstance> =
+        update(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        id: String,
-        params: LicenseKeyInstanceUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstance> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    fun update(id: String, params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyInstance> =
+        update(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see update */
     fun update(params: LicenseKeyInstanceUpdateParams): CompletableFuture<LicenseKeyInstance> =
-        update(params, RequestOptions.none())
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
-    fun update(
-        params: LicenseKeyInstanceUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstance>
+    fun update(params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyInstance>
 
-    fun list(): CompletableFuture<LicenseKeyInstanceListPageAsync> =
-        list(LicenseKeyInstanceListParams.none())
+    fun list(): CompletableFuture<LicenseKeyInstanceListPageAsync> = list(LicenseKeyInstanceListParams.none())
 
     /** @see list */
-    fun list(
-        params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<LicenseKeyInstanceListPageAsync>
+    fun list(params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<LicenseKeyInstanceListPageAsync>
 
     /** @see list */
-    fun list(
-        params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-    ): CompletableFuture<LicenseKeyInstanceListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()): CompletableFuture<LicenseKeyInstanceListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<LicenseKeyInstanceListPageAsync> =
-        list(LicenseKeyInstanceListParams.none(), requestOptions)
+        list(
+          LicenseKeyInstanceListParams.none(), requestOptions
+        )
 
-    /**
-     * A view of [LicenseKeyInstanceServiceAsync] that provides access to raw HTTP responses for
-     * each method.
-     */
+    /** A view of [LicenseKeyInstanceServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -113,104 +113,88 @@ interface LicenseKeyInstanceServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LicenseKeyInstanceServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /license_key_instances/{id}`, but is otherwise the
-         * same as [LicenseKeyInstanceServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /license_key_instances/{id}`, but is otherwise the             same as [LicenseKeyInstanceServiceAsync.retrieve]. */
         fun retrieve(id: String): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            retrieve(id, LicenseKeyInstanceRetrieveParams.none())
+            retrieve(
+              id, LicenseKeyInstanceRetrieveParams.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            id: String,
-            params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            retrieve(params.toBuilder().id(id).build(), requestOptions)
+        fun retrieve(id: String, params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            retrieve(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            id: String,
-            params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            retrieve(id, params, RequestOptions.none())
+        fun retrieve(id: String, params: LicenseKeyInstanceRetrieveParams = LicenseKeyInstanceRetrieveParams.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            retrieve(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: LicenseKeyInstanceRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>>
+        fun retrieve(params: LicenseKeyInstanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstance>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: LicenseKeyInstanceRetrieveParams
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(params: LicenseKeyInstanceRetrieveParams): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            retrieve(id, LicenseKeyInstanceRetrieveParams.none(), requestOptions)
+        fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            retrieve(
+              id,
+              LicenseKeyInstanceRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /license_key_instances/{id}`, but is otherwise the
-         * same as [LicenseKeyInstanceServiceAsync.update].
-         */
-        fun update(
-            id: String,
-            params: LicenseKeyInstanceUpdateParams,
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            update(id, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `patch /license_key_instances/{id}`, but is otherwise the             same as [LicenseKeyInstanceServiceAsync.update]. */
+        fun update(id: String, params: LicenseKeyInstanceUpdateParams): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            update(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
-        fun update(
-            id: String,
-            params: LicenseKeyInstanceUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            update(params.toBuilder().id(id).build(), requestOptions)
+        fun update(id: String, params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            update(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see update */
-        fun update(
-            params: LicenseKeyInstanceUpdateParams
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
-            update(params, RequestOptions.none())
+        fun update(params: LicenseKeyInstanceUpdateParams): CompletableFuture<HttpResponseFor<LicenseKeyInstance>> =
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
-        fun update(
-            params: LicenseKeyInstanceUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstance>>
+        fun update(params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstance>>
 
-        /**
-         * Returns a raw HTTP response for `get /license_key_instances`, but is otherwise the same
-         * as [LicenseKeyInstanceServiceAsync.list].
-         */
-        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
-            list(LicenseKeyInstanceListParams.none())
+        /** Returns a raw HTTP response for `get /license_key_instances`, but is otherwise the             same as [LicenseKeyInstanceServiceAsync.list]. */
+        fun list(): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> = list(LicenseKeyInstanceListParams.none())
 
         /** @see list */
-        fun list(
-            params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>>
+        fun list(params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>>
 
         /** @see list */
-        fun list(
-            params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: LicenseKeyInstanceListParams = LicenseKeyInstanceListParams.none()): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
-            list(LicenseKeyInstanceListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKeyInstanceListPageAsync>> =
+            list(
+              LicenseKeyInstanceListParams.none(), requestOptions
+            )
     }
 }

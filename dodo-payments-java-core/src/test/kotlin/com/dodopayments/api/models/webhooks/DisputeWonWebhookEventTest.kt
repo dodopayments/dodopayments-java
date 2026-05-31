@@ -6,6 +6,7 @@ import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
+import com.dodopayments.api.models.webhooks.DisputeWonWebhookEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -15,75 +16,61 @@ internal class DisputeWonWebhookEventTest {
 
     @Test
     fun create() {
-        val disputeWonWebhookEvent =
-            DisputeWonWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    Dispute.builder()
-                        .amount("amount")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .currency("currency")
-                        .disputeId("dispute_id")
-                        .disputeStage(DisputeStage.PRE_DISPUTE)
-                        .disputeStatus(DisputeStatus.DISPUTE_OPENED)
-                        .paymentId("payment_id")
-                        .isResolvedByRdr(true)
-                        .remarks("remarks")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val disputeWonWebhookEvent = DisputeWonWebhookEvent.builder()
+          .businessId("business_id")
+          .data(Dispute.builder()
+              .amount("amount")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .currency("currency")
+              .disputeId("dispute_id")
+              .disputeStage(DisputeStage.PRE_DISPUTE)
+              .disputeStatus(DisputeStatus.DISPUTE_OPENED)
+              .paymentId("payment_id")
+              .isResolvedByRdr(true)
+              .remarks("remarks")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        assertThat(disputeWonWebhookEvent.businessId()).isEqualTo("business_id")
-        assertThat(disputeWonWebhookEvent.data())
-            .isEqualTo(
-                Dispute.builder()
-                    .amount("amount")
-                    .businessId("business_id")
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .currency("currency")
-                    .disputeId("dispute_id")
-                    .disputeStage(DisputeStage.PRE_DISPUTE)
-                    .disputeStatus(DisputeStatus.DISPUTE_OPENED)
-                    .paymentId("payment_id")
-                    .isResolvedByRdr(true)
-                    .remarks("remarks")
-                    .build()
-            )
-        assertThat(disputeWonWebhookEvent.timestamp())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(disputeWonWebhookEvent.businessId()).isEqualTo("business_id")
+      assertThat(disputeWonWebhookEvent.data()).isEqualTo(Dispute.builder()
+          .amount("amount")
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .currency("currency")
+          .disputeId("dispute_id")
+          .disputeStage(DisputeStage.PRE_DISPUTE)
+          .disputeStatus(DisputeStatus.DISPUTE_OPENED)
+          .paymentId("payment_id")
+          .isResolvedByRdr(true)
+          .remarks("remarks")
+          .build())
+      assertThat(disputeWonWebhookEvent.timestamp()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val disputeWonWebhookEvent =
-            DisputeWonWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    Dispute.builder()
-                        .amount("amount")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .currency("currency")
-                        .disputeId("dispute_id")
-                        .disputeStage(DisputeStage.PRE_DISPUTE)
-                        .disputeStatus(DisputeStatus.DISPUTE_OPENED)
-                        .paymentId("payment_id")
-                        .isResolvedByRdr(true)
-                        .remarks("remarks")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val jsonMapper = jsonMapper()
+      val disputeWonWebhookEvent = DisputeWonWebhookEvent.builder()
+          .businessId("business_id")
+          .data(Dispute.builder()
+              .amount("amount")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .currency("currency")
+              .disputeId("dispute_id")
+              .disputeStage(DisputeStage.PRE_DISPUTE)
+              .disputeStatus(DisputeStatus.DISPUTE_OPENED)
+              .paymentId("payment_id")
+              .isResolvedByRdr(true)
+              .remarks("remarks")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val roundtrippedDisputeWonWebhookEvent =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(disputeWonWebhookEvent),
-                jacksonTypeRef<DisputeWonWebhookEvent>(),
-            )
+      val roundtrippedDisputeWonWebhookEvent = jsonMapper.readValue(jsonMapper.writeValueAsString(disputeWonWebhookEvent), jacksonTypeRef<DisputeWonWebhookEvent>())
 
-        assertThat(roundtrippedDisputeWonWebhookEvent).isEqualTo(disputeWonWebhookEvent)
+      assertThat(roundtrippedDisputeWonWebhookEvent).isEqualTo(disputeWonWebhookEvent)
     }
 }

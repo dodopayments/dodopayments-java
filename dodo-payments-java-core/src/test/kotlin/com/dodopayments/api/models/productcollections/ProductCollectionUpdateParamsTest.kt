@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.productcollections
 
+import com.dodopayments.api.models.productcollections.ProductCollectionUpdateParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -10,51 +11,53 @@ internal class ProductCollectionUpdateParamsTest {
 
     @Test
     fun create() {
-        ProductCollectionUpdateParams.builder()
-            .id("id")
-            .brandId("brand_id")
-            .description("description")
-            .addGroupOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-            .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-            .name("name")
-            .build()
+      ProductCollectionUpdateParams.builder()
+          .id("id")
+          .brandId("brand_id")
+          .description("description")
+          .addGroupOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .name("name")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = ProductCollectionUpdateParams.builder().id("id").build()
+      val params = ProductCollectionUpdateParams.builder()
+          .id("id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
     fun body() {
-        val params =
-            ProductCollectionUpdateParams.builder()
-                .id("id")
-                .brandId("brand_id")
-                .description("description")
-                .addGroupOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .name("name")
-                .build()
+      val params = ProductCollectionUpdateParams.builder()
+          .id("id")
+          .brandId("brand_id")
+          .description("description")
+          .addGroupOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .name("name")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.brandId()).contains("brand_id")
-        assertThat(body.description()).contains("description")
-        assertThat(body.groupOrder().getOrNull())
-            .containsExactly("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-        assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-        assertThat(body.name()).contains("name")
+      assertThat(body.brandId()).contains("brand_id")
+      assertThat(body.description()).contains("description")
+      assertThat(body.groupOrder().getOrNull()).containsExactly("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      assertThat(body.name()).contains("name")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = ProductCollectionUpdateParams.builder().id("id").build()
+      val params = ProductCollectionUpdateParams.builder()
+          .id("id")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
     }
 }

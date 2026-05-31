@@ -15,6 +15,10 @@ import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.payments.BillingAddress
+import com.dodopayments.api.models.subscriptions.CancellationFeedback
+import com.dodopayments.api.models.subscriptions.SubscriptionStatus
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
+import com.dodopayments.api.models.subscriptions.TimeInterval
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -25,105 +29,76 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class SubscriptionUpdateParams
-private constructor(
+class SubscriptionUpdateParams private constructor(
     private val subscriptionId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun billing(): Optional<BillingAddress> = body.billing()
 
     /**
      * When set, the subscription will remain active until the end of billing period
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun cancelAtNextBillingDate(): Optional<Boolean> = body.cancelAtNextBillingDate()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun cancelReason(): Optional<CancelReason> = body.cancelReason()
 
     /**
      * Free-text cancellation comment (only valid when cancelling or scheduling cancellation).
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun cancellationComment(): Optional<String> = body.cancellationComment()
 
     /**
      * Customer-supplied churn reason (only valid when cancelling or scheduling cancellation).
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun cancellationFeedback(): Optional<CancellationFeedback> = body.cancellationFeedback()
 
     /**
      * Update credit entitlement cart settings
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun creditEntitlementCart(): Optional<List<CreditEntitlementCart>> =
-        body.creditEntitlementCart()
+    fun creditEntitlementCart(): Optional<List<CreditEntitlementCart>> = body.creditEntitlementCart()
 
     /**
-     * Optional business / legal name associated with the tax id. When provided together with a
-     * valid tax id for a B2B subscription, this name is rendered on the invoice instead of the
-     * customer's personal name. Send `null` to explicitly clear the business name.
+     * Optional business / legal name associated with the tax id. When provided
+     * together with a valid tax id for a B2B subscription, this name is rendered
+     * on the invoice instead of the customer's personal name. Send `null` to
+     * explicitly clear the business name.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun customerBusinessName(): Optional<String> = body.customerBusinessName()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun customerName(): Optional<String> = body.customerName()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun disableOnDemand(): Optional<DisableOnDemand> = body.disableOnDemand()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun metadata(): Optional<Metadata> = body.metadata()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun nextBillingDate(): Optional<OffsetDateTime> = body.nextBillingDate()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun status(): Optional<SubscriptionStatus> = body.status()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun taxId(): Optional<String> = body.taxId()
 
     /**
@@ -136,8 +111,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [cancelAtNextBillingDate].
      *
-     * Unlike [cancelAtNextBillingDate], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [cancelAtNextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _cancelAtNextBillingDate(): JsonField<Boolean> = body._cancelAtNextBillingDate()
 
@@ -151,33 +125,28 @@ private constructor(
     /**
      * Returns the raw JSON value of [cancellationComment].
      *
-     * Unlike [cancellationComment], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [cancellationComment], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _cancellationComment(): JsonField<String> = body._cancellationComment()
 
     /**
      * Returns the raw JSON value of [cancellationFeedback].
      *
-     * Unlike [cancellationFeedback], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [cancellationFeedback], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _cancellationFeedback(): JsonField<CancellationFeedback> = body._cancellationFeedback()
 
     /**
      * Returns the raw JSON value of [creditEntitlementCart].
      *
-     * Unlike [creditEntitlementCart], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [creditEntitlementCart], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _creditEntitlementCart(): JsonField<List<CreditEntitlementCart>> =
-        body._creditEntitlementCart()
+    fun _creditEntitlementCart(): JsonField<List<CreditEntitlementCart>> = body._creditEntitlementCart()
 
     /**
      * Returns the raw JSON value of [customerBusinessName].
      *
-     * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _customerBusinessName(): JsonField<String> = body._customerBusinessName()
 
@@ -235,10 +204,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SubscriptionUpdateParams = builder().build()
+        @JvmStatic
+        fun none(): SubscriptionUpdateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [SubscriptionUpdateParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionUpdateParams]. */
@@ -250,24 +221,27 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(subscriptionUpdateParams: SubscriptionUpdateParams) = apply {
-            subscriptionId = subscriptionUpdateParams.subscriptionId
-            body = subscriptionUpdateParams.body.toBuilder()
-            additionalHeaders = subscriptionUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = subscriptionUpdateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(subscriptionUpdateParams: SubscriptionUpdateParams) =
+            apply {
+                subscriptionId = subscriptionUpdateParams.subscriptionId
+                body = subscriptionUpdateParams.body.toBuilder()
+                additionalHeaders = subscriptionUpdateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = subscriptionUpdateParams.additionalQueryParams.toBuilder()
+            }
 
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
+        fun subscriptionId(subscriptionId: String?) =
+            apply {
+                this.subscriptionId = subscriptionId
+            }
 
         /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: Optional<String>) = subscriptionId(subscriptionId.getOrNull())
 
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [billing]
          * - [cancelAtNextBillingDate]
          * - [cancelReason]
@@ -275,9 +249,15 @@ private constructor(
          * - [cancellationFeedback]
          * - etc.
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
-        fun billing(billing: BillingAddress?) = apply { body.billing(billing) }
+        fun billing(billing: BillingAddress?) =
+            apply {
+                body.billing(billing)
+            }
 
         /** Alias for calling [Builder.billing] with `billing.orElse(null)`. */
         fun billing(billing: Optional<BillingAddress>) = billing(billing.getOrNull())
@@ -285,127 +265,114 @@ private constructor(
         /**
          * Sets [Builder.billing] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.billing] with a well-typed [BillingAddress] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.billing] with a well-typed [BillingAddress] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun billing(billing: JsonField<BillingAddress>) = apply { body.billing(billing) }
+        fun billing(billing: JsonField<BillingAddress>) =
+            apply {
+                body.billing(billing)
+            }
 
         /** When set, the subscription will remain active until the end of billing period */
-        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) = apply {
-            body.cancelAtNextBillingDate(cancelAtNextBillingDate)
-        }
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) =
+            apply {
+                body.cancelAtNextBillingDate(cancelAtNextBillingDate)
+            }
 
         /**
          * Alias for [Builder.cancelAtNextBillingDate].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) =
-            cancelAtNextBillingDate(cancelAtNextBillingDate as Boolean?)
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) = cancelAtNextBillingDate(cancelAtNextBillingDate as Boolean?)
 
-        /**
-         * Alias for calling [Builder.cancelAtNextBillingDate] with
-         * `cancelAtNextBillingDate.orElse(null)`.
-         */
-        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Optional<Boolean>) =
-            cancelAtNextBillingDate(cancelAtNextBillingDate.getOrNull())
+        /** Alias for calling [Builder.cancelAtNextBillingDate] with `cancelAtNextBillingDate.orElse(null)`. */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Optional<Boolean>) = cancelAtNextBillingDate(cancelAtNextBillingDate.getOrNull())
 
         /**
          * Sets [Builder.cancelAtNextBillingDate] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cancelAtNextBillingDate] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.cancelAtNextBillingDate] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) = apply {
-            body.cancelAtNextBillingDate(cancelAtNextBillingDate)
-        }
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) =
+            apply {
+                body.cancelAtNextBillingDate(cancelAtNextBillingDate)
+            }
 
-        fun cancelReason(cancelReason: CancelReason?) = apply { body.cancelReason(cancelReason) }
+        fun cancelReason(cancelReason: CancelReason?) =
+            apply {
+                body.cancelReason(cancelReason)
+            }
 
         /** Alias for calling [Builder.cancelReason] with `cancelReason.orElse(null)`. */
-        fun cancelReason(cancelReason: Optional<CancelReason>) =
-            cancelReason(cancelReason.getOrNull())
+        fun cancelReason(cancelReason: Optional<CancelReason>) = cancelReason(cancelReason.getOrNull())
 
         /**
          * Sets [Builder.cancelReason] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cancelReason] with a well-typed [CancelReason] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.cancelReason] with a well-typed [CancelReason] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun cancelReason(cancelReason: JsonField<CancelReason>) = apply {
-            body.cancelReason(cancelReason)
-        }
+        fun cancelReason(cancelReason: JsonField<CancelReason>) =
+            apply {
+                body.cancelReason(cancelReason)
+            }
 
-        /**
-         * Free-text cancellation comment (only valid when cancelling or scheduling cancellation).
-         */
-        fun cancellationComment(cancellationComment: String?) = apply {
-            body.cancellationComment(cancellationComment)
-        }
+        /** Free-text cancellation comment (only valid when cancelling or scheduling cancellation). */
+        fun cancellationComment(cancellationComment: String?) =
+            apply {
+                body.cancellationComment(cancellationComment)
+            }
 
-        /**
-         * Alias for calling [Builder.cancellationComment] with `cancellationComment.orElse(null)`.
-         */
-        fun cancellationComment(cancellationComment: Optional<String>) =
-            cancellationComment(cancellationComment.getOrNull())
+        /** Alias for calling [Builder.cancellationComment] with `cancellationComment.orElse(null)`. */
+        fun cancellationComment(cancellationComment: Optional<String>) = cancellationComment(cancellationComment.getOrNull())
 
         /**
          * Sets [Builder.cancellationComment] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cancellationComment] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.cancellationComment] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun cancellationComment(cancellationComment: JsonField<String>) = apply {
-            body.cancellationComment(cancellationComment)
-        }
+        fun cancellationComment(cancellationComment: JsonField<String>) =
+            apply {
+                body.cancellationComment(cancellationComment)
+            }
 
-        /**
-         * Customer-supplied churn reason (only valid when cancelling or scheduling cancellation).
-         */
-        fun cancellationFeedback(cancellationFeedback: CancellationFeedback?) = apply {
-            body.cancellationFeedback(cancellationFeedback)
-        }
+        /** Customer-supplied churn reason (only valid when cancelling or scheduling cancellation). */
+        fun cancellationFeedback(cancellationFeedback: CancellationFeedback?) =
+            apply {
+                body.cancellationFeedback(cancellationFeedback)
+            }
 
-        /**
-         * Alias for calling [Builder.cancellationFeedback] with
-         * `cancellationFeedback.orElse(null)`.
-         */
-        fun cancellationFeedback(cancellationFeedback: Optional<CancellationFeedback>) =
-            cancellationFeedback(cancellationFeedback.getOrNull())
+        /** Alias for calling [Builder.cancellationFeedback] with `cancellationFeedback.orElse(null)`. */
+        fun cancellationFeedback(cancellationFeedback: Optional<CancellationFeedback>) = cancellationFeedback(cancellationFeedback.getOrNull())
 
         /**
          * Sets [Builder.cancellationFeedback] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.cancellationFeedback] with a well-typed
-         * [CancellationFeedback] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
+         * You should usually call [Builder.cancellationFeedback] with a well-typed [CancellationFeedback] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun cancellationFeedback(cancellationFeedback: JsonField<CancellationFeedback>) = apply {
-            body.cancellationFeedback(cancellationFeedback)
-        }
+        fun cancellationFeedback(cancellationFeedback: JsonField<CancellationFeedback>) =
+            apply {
+                body.cancellationFeedback(cancellationFeedback)
+            }
 
         /** Update credit entitlement cart settings */
-        fun creditEntitlementCart(creditEntitlementCart: List<CreditEntitlementCart>?) = apply {
-            body.creditEntitlementCart(creditEntitlementCart)
-        }
+        fun creditEntitlementCart(creditEntitlementCart: List<CreditEntitlementCart>?) =
+            apply {
+                body.creditEntitlementCart(creditEntitlementCart)
+            }
 
-        /**
-         * Alias for calling [Builder.creditEntitlementCart] with
-         * `creditEntitlementCart.orElse(null)`.
-         */
-        fun creditEntitlementCart(creditEntitlementCart: Optional<List<CreditEntitlementCart>>) =
-            creditEntitlementCart(creditEntitlementCart.getOrNull())
+        /** Alias for calling [Builder.creditEntitlementCart] with `creditEntitlementCart.orElse(null)`. */
+        fun creditEntitlementCart(creditEntitlementCart: Optional<List<CreditEntitlementCart>>) = creditEntitlementCart(creditEntitlementCart.getOrNull())
 
         /**
          * Sets [Builder.creditEntitlementCart] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditEntitlementCart] with a well-typed
-         * `List<CreditEntitlementCart>` value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * You should usually call [Builder.creditEntitlementCart] with a well-typed `List<CreditEntitlementCart>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun creditEntitlementCart(creditEntitlementCart: JsonField<List<CreditEntitlementCart>>) =
             apply {
@@ -417,38 +384,40 @@ private constructor(
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addCreditEntitlementCart(creditEntitlementCart: CreditEntitlementCart) = apply {
-            body.addCreditEntitlementCart(creditEntitlementCart)
-        }
+        fun addCreditEntitlementCart(creditEntitlementCart: CreditEntitlementCart) =
+            apply {
+                body.addCreditEntitlementCart(creditEntitlementCart)
+            }
 
         /**
-         * Optional business / legal name associated with the tax id. When provided together with a
-         * valid tax id for a B2B subscription, this name is rendered on the invoice instead of the
-         * customer's personal name. Send `null` to explicitly clear the business name.
+         * Optional business / legal name associated with the tax id. When provided
+         * together with a valid tax id for a B2B subscription, this name is rendered
+         * on the invoice instead of the customer's personal name. Send `null` to
+         * explicitly clear the business name.
          */
-        fun customerBusinessName(customerBusinessName: String?) = apply {
-            body.customerBusinessName(customerBusinessName)
-        }
+        fun customerBusinessName(customerBusinessName: String?) =
+            apply {
+                body.customerBusinessName(customerBusinessName)
+            }
 
-        /**
-         * Alias for calling [Builder.customerBusinessName] with
-         * `customerBusinessName.orElse(null)`.
-         */
-        fun customerBusinessName(customerBusinessName: Optional<String>) =
-            customerBusinessName(customerBusinessName.getOrNull())
+        /** Alias for calling [Builder.customerBusinessName] with `customerBusinessName.orElse(null)`. */
+        fun customerBusinessName(customerBusinessName: Optional<String>) = customerBusinessName(customerBusinessName.getOrNull())
 
         /**
          * Sets [Builder.customerBusinessName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerBusinessName] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.customerBusinessName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun customerBusinessName(customerBusinessName: JsonField<String>) = apply {
-            body.customerBusinessName(customerBusinessName)
-        }
+        fun customerBusinessName(customerBusinessName: JsonField<String>) =
+            apply {
+                body.customerBusinessName(customerBusinessName)
+            }
 
-        fun customerName(customerName: String?) = apply { body.customerName(customerName) }
+        fun customerName(customerName: String?) =
+            apply {
+                body.customerName(customerName)
+            }
 
         /** Alias for calling [Builder.customerName] with `customerName.orElse(null)`. */
         fun customerName(customerName: Optional<String>) = customerName(customerName.getOrNull())
@@ -456,34 +425,37 @@ private constructor(
         /**
          * Sets [Builder.customerName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.customerName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customerName(customerName: JsonField<String>) = apply {
-            body.customerName(customerName)
-        }
+        fun customerName(customerName: JsonField<String>) =
+            apply {
+                body.customerName(customerName)
+            }
 
-        fun disableOnDemand(disableOnDemand: DisableOnDemand?) = apply {
-            body.disableOnDemand(disableOnDemand)
-        }
+        fun disableOnDemand(disableOnDemand: DisableOnDemand?) =
+            apply {
+                body.disableOnDemand(disableOnDemand)
+            }
 
         /** Alias for calling [Builder.disableOnDemand] with `disableOnDemand.orElse(null)`. */
-        fun disableOnDemand(disableOnDemand: Optional<DisableOnDemand>) =
-            disableOnDemand(disableOnDemand.getOrNull())
+        fun disableOnDemand(disableOnDemand: Optional<DisableOnDemand>) = disableOnDemand(disableOnDemand.getOrNull())
 
         /**
          * Sets [Builder.disableOnDemand] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disableOnDemand] with a well-typed [DisableOnDemand]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.disableOnDemand] with a well-typed [DisableOnDemand] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun disableOnDemand(disableOnDemand: JsonField<DisableOnDemand>) = apply {
-            body.disableOnDemand(disableOnDemand)
-        }
+        fun disableOnDemand(disableOnDemand: JsonField<DisableOnDemand>) =
+            apply {
+                body.disableOnDemand(disableOnDemand)
+            }
 
-        fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
+        fun metadata(metadata: Metadata?) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
         fun metadata(metadata: Optional<Metadata>) = metadata(metadata.getOrNull())
@@ -491,32 +463,37 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                body.metadata(metadata)
+            }
 
-        fun nextBillingDate(nextBillingDate: OffsetDateTime?) = apply {
-            body.nextBillingDate(nextBillingDate)
-        }
+        fun nextBillingDate(nextBillingDate: OffsetDateTime?) =
+            apply {
+                body.nextBillingDate(nextBillingDate)
+            }
 
         /** Alias for calling [Builder.nextBillingDate] with `nextBillingDate.orElse(null)`. */
-        fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) =
-            nextBillingDate(nextBillingDate.getOrNull())
+        fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) = nextBillingDate(nextBillingDate.getOrNull())
 
         /**
          * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
-            body.nextBillingDate(nextBillingDate)
-        }
+        fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) =
+            apply {
+                body.nextBillingDate(nextBillingDate)
+            }
 
-        fun status(status: SubscriptionStatus?) = apply { body.status(status) }
+        fun status(status: SubscriptionStatus?) =
+            apply {
+                body.status(status)
+            }
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<SubscriptionStatus>) = status(status.getOrNull())
@@ -524,13 +501,18 @@ private constructor(
         /**
          * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [SubscriptionStatus] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.status] with a well-typed [SubscriptionStatus] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun status(status: JsonField<SubscriptionStatus>) = apply { body.status(status) }
+        fun status(status: JsonField<SubscriptionStatus>) =
+            apply {
+                body.status(status)
+            }
 
-        fun taxId(taxId: String?) = apply { body.taxId(taxId) }
+        fun taxId(taxId: String?) =
+            apply {
+                body.taxId(taxId)
+            }
 
         /** Alias for calling [Builder.taxId] with `taxId.orElse(null)`. */
         fun taxId(taxId: Optional<String>) = taxId(taxId.getOrNull())
@@ -538,127 +520,164 @@ private constructor(
         /**
          * Sets [Builder.taxId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.taxId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.taxId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun taxId(taxId: JsonField<String>) = apply { body.taxId(taxId) }
+        fun taxId(taxId: JsonField<String>) =
+            apply {
+                body.taxId(taxId)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionUpdateParams].
@@ -667,10 +686,10 @@ private constructor(
          */
         fun build(): SubscriptionUpdateParams =
             SubscriptionUpdateParams(
-                subscriptionId,
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              subscriptionId,
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -686,9 +705,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val billing: JsonField<BillingAddress>,
         private val cancelAtNextBillingDate: JsonField<Boolean>,
         private val cancelReason: JsonField<CancelReason>,
@@ -703,159 +720,101 @@ private constructor(
         private val status: JsonField<SubscriptionStatus>,
         private val taxId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("billing")
-            @ExcludeMissing
-            billing: JsonField<BillingAddress> = JsonMissing.of(),
-            @JsonProperty("cancel_at_next_billing_date")
-            @ExcludeMissing
-            cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("cancel_reason")
-            @ExcludeMissing
-            cancelReason: JsonField<CancelReason> = JsonMissing.of(),
-            @JsonProperty("cancellation_comment")
-            @ExcludeMissing
-            cancellationComment: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("cancellation_feedback")
-            @ExcludeMissing
-            cancellationFeedback: JsonField<CancellationFeedback> = JsonMissing.of(),
-            @JsonProperty("credit_entitlement_cart")
-            @ExcludeMissing
-            creditEntitlementCart: JsonField<List<CreditEntitlementCart>> = JsonMissing.of(),
-            @JsonProperty("customer_business_name")
-            @ExcludeMissing
-            customerBusinessName: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("customer_name")
-            @ExcludeMissing
-            customerName: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("disable_on_demand")
-            @ExcludeMissing
-            disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of(),
-            @JsonProperty("metadata")
-            @ExcludeMissing
-            metadata: JsonField<Metadata> = JsonMissing.of(),
-            @JsonProperty("next_billing_date")
-            @ExcludeMissing
-            nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("status")
-            @ExcludeMissing
-            status: JsonField<SubscriptionStatus> = JsonMissing.of(),
-            @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("billing") @ExcludeMissing billing: JsonField<BillingAddress> = JsonMissing.of(),
+            @JsonProperty("cancel_at_next_billing_date") @ExcludeMissing cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("cancel_reason") @ExcludeMissing cancelReason: JsonField<CancelReason> = JsonMissing.of(),
+            @JsonProperty("cancellation_comment") @ExcludeMissing cancellationComment: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("cancellation_feedback") @ExcludeMissing cancellationFeedback: JsonField<CancellationFeedback> = JsonMissing.of(),
+            @JsonProperty("credit_entitlement_cart") @ExcludeMissing creditEntitlementCart: JsonField<List<CreditEntitlementCart>> = JsonMissing.of(),
+            @JsonProperty("customer_business_name") @ExcludeMissing customerBusinessName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("customer_name") @ExcludeMissing customerName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("disable_on_demand") @ExcludeMissing disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of(),
+            @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("next_billing_date") @ExcludeMissing nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonField<SubscriptionStatus> = JsonMissing.of(),
+            @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of()
         ) : this(
-            billing,
-            cancelAtNextBillingDate,
-            cancelReason,
-            cancellationComment,
-            cancellationFeedback,
-            creditEntitlementCart,
-            customerBusinessName,
-            customerName,
-            disableOnDemand,
-            metadata,
-            nextBillingDate,
-            status,
-            taxId,
-            mutableMapOf(),
+          billing,
+          cancelAtNextBillingDate,
+          cancelReason,
+          cancellationComment,
+          cancellationFeedback,
+          creditEntitlementCart,
+          customerBusinessName,
+          customerName,
+          disableOnDemand,
+          metadata,
+          nextBillingDate,
+          status,
+          taxId,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun billing(): Optional<BillingAddress> = billing.getOptional("billing")
 
         /**
          * When set, the subscription will remain active until the end of billing period
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun cancelAtNextBillingDate(): Optional<Boolean> =
-            cancelAtNextBillingDate.getOptional("cancel_at_next_billing_date")
+        fun cancelAtNextBillingDate(): Optional<Boolean> = cancelAtNextBillingDate.getOptional("cancel_at_next_billing_date")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun cancelReason(): Optional<CancelReason> = cancelReason.getOptional("cancel_reason")
 
         /**
          * Free-text cancellation comment (only valid when cancelling or scheduling cancellation).
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun cancellationComment(): Optional<String> =
-            cancellationComment.getOptional("cancellation_comment")
+        fun cancellationComment(): Optional<String> = cancellationComment.getOptional("cancellation_comment")
 
         /**
          * Customer-supplied churn reason (only valid when cancelling or scheduling cancellation).
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun cancellationFeedback(): Optional<CancellationFeedback> =
-            cancellationFeedback.getOptional("cancellation_feedback")
+        fun cancellationFeedback(): Optional<CancellationFeedback> = cancellationFeedback.getOptional("cancellation_feedback")
 
         /**
          * Update credit entitlement cart settings
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun creditEntitlementCart(): Optional<List<CreditEntitlementCart>> =
-            creditEntitlementCart.getOptional("credit_entitlement_cart")
+        fun creditEntitlementCart(): Optional<List<CreditEntitlementCart>> = creditEntitlementCart.getOptional("credit_entitlement_cart")
 
         /**
-         * Optional business / legal name associated with the tax id. When provided together with a
-         * valid tax id for a B2B subscription, this name is rendered on the invoice instead of the
-         * customer's personal name. Send `null` to explicitly clear the business name.
+         * Optional business / legal name associated with the tax id. When provided
+         * together with a valid tax id for a B2B subscription, this name is rendered
+         * on the invoice instead of the customer's personal name. Send `null` to
+         * explicitly clear the business name.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun customerBusinessName(): Optional<String> =
-            customerBusinessName.getOptional("customer_business_name")
+        fun customerBusinessName(): Optional<String> = customerBusinessName.getOptional("customer_business_name")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun customerName(): Optional<String> = customerName.getOptional("customer_name")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun disableOnDemand(): Optional<DisableOnDemand> =
-            disableOnDemand.getOptional("disable_on_demand")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun disableOnDemand(): Optional<DisableOnDemand> = disableOnDemand.getOptional("disable_on_demand")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun nextBillingDate(): Optional<OffsetDateTime> =
-            nextBillingDate.getOptional("next_billing_date")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun nextBillingDate(): Optional<OffsetDateTime> = nextBillingDate.getOptional("next_billing_date")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun status(): Optional<SubscriptionStatus> = status.getOptional("status")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun taxId(): Optional<String> = taxId.getOptional("tax_id")
 
         /**
@@ -863,13 +822,14 @@ private constructor(
          *
          * Unlike [billing], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("billing") @ExcludeMissing fun _billing(): JsonField<BillingAddress> = billing
+        @JsonProperty("billing")
+        @ExcludeMissing
+        fun _billing(): JsonField<BillingAddress> = billing
 
         /**
          * Returns the raw JSON value of [cancelAtNextBillingDate].
          *
-         * Unlike [cancelAtNextBillingDate], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [cancelAtNextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("cancel_at_next_billing_date")
         @ExcludeMissing
@@ -878,8 +838,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [cancelReason].
          *
-         * Unlike [cancelReason], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [cancelReason], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("cancel_reason")
         @ExcludeMissing
@@ -888,8 +847,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [cancellationComment].
          *
-         * Unlike [cancellationComment], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [cancellationComment], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("cancellation_comment")
         @ExcludeMissing
@@ -898,8 +856,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [cancellationFeedback].
          *
-         * Unlike [cancellationFeedback], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [cancellationFeedback], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("cancellation_feedback")
         @ExcludeMissing
@@ -908,8 +865,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [creditEntitlementCart].
          *
-         * Unlike [creditEntitlementCart], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [creditEntitlementCart], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("credit_entitlement_cart")
         @ExcludeMissing
@@ -918,8 +874,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [customerBusinessName].
          *
-         * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [customerBusinessName], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("customer_business_name")
         @ExcludeMissing
@@ -928,8 +883,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [customerName].
          *
-         * Unlike [customerName], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [customerName], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("customer_name")
         @ExcludeMissing
@@ -938,8 +892,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [disableOnDemand].
          *
-         * Unlike [disableOnDemand], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [disableOnDemand], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("disable_on_demand")
         @ExcludeMissing
@@ -950,13 +903,14 @@ private constructor(
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+        @JsonProperty("metadata")
+        @ExcludeMissing
+        fun _metadata(): JsonField<Metadata> = metadata
 
         /**
          * Returns the raw JSON value of [nextBillingDate].
          *
-         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("next_billing_date")
         @ExcludeMissing
@@ -976,24 +930,26 @@ private constructor(
          *
          * Unlike [taxId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("tax_id") @ExcludeMissing fun _taxId(): JsonField<String> = taxId
+        @JsonProperty("tax_id")
+        @ExcludeMissing
+        fun _taxId(): JsonField<String> = taxId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -1015,22 +971,23 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                billing = body.billing
-                cancelAtNextBillingDate = body.cancelAtNextBillingDate
-                cancelReason = body.cancelReason
-                cancellationComment = body.cancellationComment
-                cancellationFeedback = body.cancellationFeedback
-                creditEntitlementCart = body.creditEntitlementCart.map { it.toMutableList() }
-                customerBusinessName = body.customerBusinessName
-                customerName = body.customerName
-                disableOnDemand = body.disableOnDemand
-                metadata = body.metadata
-                nextBillingDate = body.nextBillingDate
-                status = body.status
-                taxId = body.taxId
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    billing = body.billing
+                    cancelAtNextBillingDate = body.cancelAtNextBillingDate
+                    cancelReason = body.cancelReason
+                    cancellationComment = body.cancellationComment
+                    cancellationFeedback = body.cancellationFeedback
+                    creditEntitlementCart = body.creditEntitlementCart.map { it.toMutableList() }
+                    customerBusinessName = body.customerBusinessName
+                    customerName = body.customerName
+                    disableOnDemand = body.disableOnDemand
+                    metadata = body.metadata
+                    nextBillingDate = body.nextBillingDate
+                    status = body.status
+                    taxId = body.taxId
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             fun billing(billing: BillingAddress?) = billing(JsonField.ofNullable(billing))
 
@@ -1040,105 +997,82 @@ private constructor(
             /**
              * Sets [Builder.billing] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.billing] with a well-typed [BillingAddress] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.billing] with a well-typed [BillingAddress] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun billing(billing: JsonField<BillingAddress>) = apply { this.billing = billing }
+            fun billing(billing: JsonField<BillingAddress>) =
+                apply {
+                    this.billing = billing
+                }
 
             /** When set, the subscription will remain active until the end of billing period */
-            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) =
-                cancelAtNextBillingDate(JsonField.ofNullable(cancelAtNextBillingDate))
+            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) = cancelAtNextBillingDate(JsonField.ofNullable(cancelAtNextBillingDate))
 
             /**
              * Alias for [Builder.cancelAtNextBillingDate].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) =
-                cancelAtNextBillingDate(cancelAtNextBillingDate as Boolean?)
+            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) = cancelAtNextBillingDate(cancelAtNextBillingDate as Boolean?)
 
-            /**
-             * Alias for calling [Builder.cancelAtNextBillingDate] with
-             * `cancelAtNextBillingDate.orElse(null)`.
-             */
-            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Optional<Boolean>) =
-                cancelAtNextBillingDate(cancelAtNextBillingDate.getOrNull())
+            /** Alias for calling [Builder.cancelAtNextBillingDate] with `cancelAtNextBillingDate.orElse(null)`. */
+            fun cancelAtNextBillingDate(cancelAtNextBillingDate: Optional<Boolean>) = cancelAtNextBillingDate(cancelAtNextBillingDate.getOrNull())
 
             /**
              * Sets [Builder.cancelAtNextBillingDate] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.cancelAtNextBillingDate] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.cancelAtNextBillingDate] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) = apply {
-                this.cancelAtNextBillingDate = cancelAtNextBillingDate
-            }
+            fun cancelAtNextBillingDate(cancelAtNextBillingDate: JsonField<Boolean>) =
+                apply {
+                    this.cancelAtNextBillingDate = cancelAtNextBillingDate
+                }
 
-            fun cancelReason(cancelReason: CancelReason?) =
-                cancelReason(JsonField.ofNullable(cancelReason))
+            fun cancelReason(cancelReason: CancelReason?) = cancelReason(JsonField.ofNullable(cancelReason))
 
             /** Alias for calling [Builder.cancelReason] with `cancelReason.orElse(null)`. */
-            fun cancelReason(cancelReason: Optional<CancelReason>) =
-                cancelReason(cancelReason.getOrNull())
+            fun cancelReason(cancelReason: Optional<CancelReason>) = cancelReason(cancelReason.getOrNull())
 
             /**
              * Sets [Builder.cancelReason] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.cancelReason] with a well-typed [CancelReason] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.cancelReason] with a well-typed [CancelReason] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun cancelReason(cancelReason: JsonField<CancelReason>) = apply {
-                this.cancelReason = cancelReason
-            }
+            fun cancelReason(cancelReason: JsonField<CancelReason>) =
+                apply {
+                    this.cancelReason = cancelReason
+                }
 
-            /**
-             * Free-text cancellation comment (only valid when cancelling or scheduling
-             * cancellation).
-             */
-            fun cancellationComment(cancellationComment: String?) =
-                cancellationComment(JsonField.ofNullable(cancellationComment))
+            /** Free-text cancellation comment (only valid when cancelling or scheduling cancellation). */
+            fun cancellationComment(cancellationComment: String?) = cancellationComment(JsonField.ofNullable(cancellationComment))
 
-            /**
-             * Alias for calling [Builder.cancellationComment] with
-             * `cancellationComment.orElse(null)`.
-             */
-            fun cancellationComment(cancellationComment: Optional<String>) =
-                cancellationComment(cancellationComment.getOrNull())
+            /** Alias for calling [Builder.cancellationComment] with `cancellationComment.orElse(null)`. */
+            fun cancellationComment(cancellationComment: Optional<String>) = cancellationComment(cancellationComment.getOrNull())
 
             /**
              * Sets [Builder.cancellationComment] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.cancellationComment] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.cancellationComment] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun cancellationComment(cancellationComment: JsonField<String>) = apply {
-                this.cancellationComment = cancellationComment
-            }
+            fun cancellationComment(cancellationComment: JsonField<String>) =
+                apply {
+                    this.cancellationComment = cancellationComment
+                }
 
-            /**
-             * Customer-supplied churn reason (only valid when cancelling or scheduling
-             * cancellation).
-             */
-            fun cancellationFeedback(cancellationFeedback: CancellationFeedback?) =
-                cancellationFeedback(JsonField.ofNullable(cancellationFeedback))
+            /** Customer-supplied churn reason (only valid when cancelling or scheduling cancellation). */
+            fun cancellationFeedback(cancellationFeedback: CancellationFeedback?) = cancellationFeedback(JsonField.ofNullable(cancellationFeedback))
 
-            /**
-             * Alias for calling [Builder.cancellationFeedback] with
-             * `cancellationFeedback.orElse(null)`.
-             */
-            fun cancellationFeedback(cancellationFeedback: Optional<CancellationFeedback>) =
-                cancellationFeedback(cancellationFeedback.getOrNull())
+            /** Alias for calling [Builder.cancellationFeedback] with `cancellationFeedback.orElse(null)`. */
+            fun cancellationFeedback(cancellationFeedback: Optional<CancellationFeedback>) = cancellationFeedback(cancellationFeedback.getOrNull())
 
             /**
              * Sets [Builder.cancellationFeedback] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.cancellationFeedback] with a well-typed
-             * [CancellationFeedback] value instead. This method is primarily for setting the field
-             * to an undocumented or not yet supported value.
+             * You should usually call [Builder.cancellationFeedback] with a well-typed [CancellationFeedback] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun cancellationFeedback(cancellationFeedback: JsonField<CancellationFeedback>) =
                 apply {
@@ -1146,104 +1080,87 @@ private constructor(
                 }
 
             /** Update credit entitlement cart settings */
-            fun creditEntitlementCart(creditEntitlementCart: List<CreditEntitlementCart>?) =
-                creditEntitlementCart(JsonField.ofNullable(creditEntitlementCart))
+            fun creditEntitlementCart(creditEntitlementCart: List<CreditEntitlementCart>?) = creditEntitlementCart(JsonField.ofNullable(creditEntitlementCart))
 
-            /**
-             * Alias for calling [Builder.creditEntitlementCart] with
-             * `creditEntitlementCart.orElse(null)`.
-             */
-            fun creditEntitlementCart(
-                creditEntitlementCart: Optional<List<CreditEntitlementCart>>
-            ) = creditEntitlementCart(creditEntitlementCart.getOrNull())
+            /** Alias for calling [Builder.creditEntitlementCart] with `creditEntitlementCart.orElse(null)`. */
+            fun creditEntitlementCart(creditEntitlementCart: Optional<List<CreditEntitlementCart>>) = creditEntitlementCart(creditEntitlementCart.getOrNull())
 
             /**
              * Sets [Builder.creditEntitlementCart] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.creditEntitlementCart] with a well-typed
-             * `List<CreditEntitlementCart>` value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
+             * You should usually call [Builder.creditEntitlementCart] with a well-typed `List<CreditEntitlementCart>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun creditEntitlementCart(
-                creditEntitlementCart: JsonField<List<CreditEntitlementCart>>
-            ) = apply {
-                this.creditEntitlementCart = creditEntitlementCart.map { it.toMutableList() }
-            }
+            fun creditEntitlementCart(creditEntitlementCart: JsonField<List<CreditEntitlementCart>>) =
+                apply {
+                    this.creditEntitlementCart = creditEntitlementCart.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [CreditEntitlementCart] to [Builder.creditEntitlementCart].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addCreditEntitlementCart(creditEntitlementCart: CreditEntitlementCart) = apply {
-                this.creditEntitlementCart =
-                    (this.creditEntitlementCart ?: JsonField.of(mutableListOf())).also {
+            fun addCreditEntitlementCart(creditEntitlementCart: CreditEntitlementCart) =
+                apply {
+                    this.creditEntitlementCart = (this.creditEntitlementCart ?: JsonField.of(mutableListOf())).also {
                         checkKnown("creditEntitlementCart", it).add(creditEntitlementCart)
                     }
-            }
+                }
 
             /**
-             * Optional business / legal name associated with the tax id. When provided together
-             * with a valid tax id for a B2B subscription, this name is rendered on the invoice
-             * instead of the customer's personal name. Send `null` to explicitly clear the business
-             * name.
+             * Optional business / legal name associated with the tax id. When provided
+             * together with a valid tax id for a B2B subscription, this name is rendered
+             * on the invoice instead of the customer's personal name. Send `null` to
+             * explicitly clear the business name.
              */
-            fun customerBusinessName(customerBusinessName: String?) =
-                customerBusinessName(JsonField.ofNullable(customerBusinessName))
+            fun customerBusinessName(customerBusinessName: String?) = customerBusinessName(JsonField.ofNullable(customerBusinessName))
 
-            /**
-             * Alias for calling [Builder.customerBusinessName] with
-             * `customerBusinessName.orElse(null)`.
-             */
-            fun customerBusinessName(customerBusinessName: Optional<String>) =
-                customerBusinessName(customerBusinessName.getOrNull())
+            /** Alias for calling [Builder.customerBusinessName] with `customerBusinessName.orElse(null)`. */
+            fun customerBusinessName(customerBusinessName: Optional<String>) = customerBusinessName(customerBusinessName.getOrNull())
 
             /**
              * Sets [Builder.customerBusinessName] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.customerBusinessName] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.customerBusinessName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun customerBusinessName(customerBusinessName: JsonField<String>) = apply {
-                this.customerBusinessName = customerBusinessName
-            }
+            fun customerBusinessName(customerBusinessName: JsonField<String>) =
+                apply {
+                    this.customerBusinessName = customerBusinessName
+                }
 
-            fun customerName(customerName: String?) =
-                customerName(JsonField.ofNullable(customerName))
+            fun customerName(customerName: String?) = customerName(JsonField.ofNullable(customerName))
 
             /** Alias for calling [Builder.customerName] with `customerName.orElse(null)`. */
-            fun customerName(customerName: Optional<String>) =
-                customerName(customerName.getOrNull())
+            fun customerName(customerName: Optional<String>) = customerName(customerName.getOrNull())
 
             /**
              * Sets [Builder.customerName] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.customerName] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.customerName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun customerName(customerName: JsonField<String>) = apply {
-                this.customerName = customerName
-            }
+            fun customerName(customerName: JsonField<String>) =
+                apply {
+                    this.customerName = customerName
+                }
 
-            fun disableOnDemand(disableOnDemand: DisableOnDemand?) =
-                disableOnDemand(JsonField.ofNullable(disableOnDemand))
+            fun disableOnDemand(disableOnDemand: DisableOnDemand?) = disableOnDemand(JsonField.ofNullable(disableOnDemand))
 
             /** Alias for calling [Builder.disableOnDemand] with `disableOnDemand.orElse(null)`. */
-            fun disableOnDemand(disableOnDemand: Optional<DisableOnDemand>) =
-                disableOnDemand(disableOnDemand.getOrNull())
+            fun disableOnDemand(disableOnDemand: Optional<DisableOnDemand>) = disableOnDemand(disableOnDemand.getOrNull())
 
             /**
              * Sets [Builder.disableOnDemand] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.disableOnDemand] with a well-typed [DisableOnDemand]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.disableOnDemand] with a well-typed [DisableOnDemand] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun disableOnDemand(disableOnDemand: JsonField<DisableOnDemand>) = apply {
-                this.disableOnDemand = disableOnDemand
-            }
+            fun disableOnDemand(disableOnDemand: JsonField<DisableOnDemand>) =
+                apply {
+                    this.disableOnDemand = disableOnDemand
+                }
 
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
@@ -1253,29 +1170,29 @@ private constructor(
             /**
              * Sets [Builder.metadata] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.metadata] with a well-typed [Metadata] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+            fun metadata(metadata: JsonField<Metadata>) =
+                apply {
+                    this.metadata = metadata
+                }
 
-            fun nextBillingDate(nextBillingDate: OffsetDateTime?) =
-                nextBillingDate(JsonField.ofNullable(nextBillingDate))
+            fun nextBillingDate(nextBillingDate: OffsetDateTime?) = nextBillingDate(JsonField.ofNullable(nextBillingDate))
 
             /** Alias for calling [Builder.nextBillingDate] with `nextBillingDate.orElse(null)`. */
-            fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) =
-                nextBillingDate(nextBillingDate.getOrNull())
+            fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) = nextBillingDate(nextBillingDate.getOrNull())
 
             /**
              * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
-                this.nextBillingDate = nextBillingDate
-            }
+            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) =
+                apply {
+                    this.nextBillingDate = nextBillingDate
+                }
 
             fun status(status: SubscriptionStatus?) = status(JsonField.ofNullable(status))
 
@@ -1285,11 +1202,13 @@ private constructor(
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [SubscriptionStatus] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [SubscriptionStatus] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<SubscriptionStatus>) = apply { this.status = status }
+            fun status(status: JsonField<SubscriptionStatus>) =
+                apply {
+                    this.status = status
+                }
 
             fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
 
@@ -1299,30 +1218,39 @@ private constructor(
             /**
              * Sets [Builder.taxId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.taxId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.taxId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun taxId(taxId: JsonField<String>) = apply { this.taxId = taxId }
+            fun taxId(taxId: JsonField<String>) =
+                apply {
+                    this.taxId = taxId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -1331,54 +1259,54 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    billing,
-                    cancelAtNextBillingDate,
-                    cancelReason,
-                    cancellationComment,
-                    cancellationFeedback,
-                    (creditEntitlementCart ?: JsonMissing.of()).map { it.toImmutable() },
-                    customerBusinessName,
-                    customerName,
-                    disableOnDemand,
-                    metadata,
-                    nextBillingDate,
-                    status,
-                    taxId,
-                    additionalProperties.toMutableMap(),
+                  billing,
+                  cancelAtNextBillingDate,
+                  cancelReason,
+                  cancellationComment,
+                  cancellationFeedback,
+                  (creditEntitlementCart?: JsonMissing.of()).map { it.toImmutable() },
+                  customerBusinessName,
+                  customerName,
+                  disableOnDemand,
+                  metadata,
+                  nextBillingDate,
+                  status,
+                  taxId,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            billing().ifPresent { it.validate() }
-            cancelAtNextBillingDate()
-            cancelReason().ifPresent { it.validate() }
-            cancellationComment()
-            cancellationFeedback().ifPresent { it.validate() }
-            creditEntitlementCart().ifPresent { it.forEach { it.validate() } }
-            customerBusinessName()
-            customerName()
-            disableOnDemand().ifPresent { it.validate() }
-            metadata().ifPresent { it.validate() }
-            nextBillingDate()
-            status().ifPresent { it.validate() }
-            taxId()
-            validated = true
-        }
+                billing().ifPresent { it.validate() }
+                cancelAtNextBillingDate()
+                cancelReason().ifPresent { it.validate() }
+                cancellationComment()
+                cancellationFeedback().ifPresent { it.validate() }
+                creditEntitlementCart().ifPresent { it.forEach { it.validate() } }
+                customerBusinessName()
+                customerName()
+                disableOnDemand().ifPresent { it.validate() }
+                metadata().ifPresent { it.validate() }
+                nextBillingDate()
+                status().ifPresent { it.validate() }
+                taxId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1389,87 +1317,42 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (billing.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) +
-                (cancelReason.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (cancellationComment.asKnown().isPresent) 1 else 0) +
-                (cancellationFeedback.asKnown().getOrNull()?.validity() ?: 0) +
-                (creditEntitlementCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
-                    ?: 0) +
-                (if (customerBusinessName.asKnown().isPresent) 1 else 0) +
-                (if (customerName.asKnown().isPresent) 1 else 0) +
-                (disableOnDemand.asKnown().getOrNull()?.validity() ?: 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (taxId.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (billing.asKnown().getOrNull()?.validity() ?: 0) + (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) + (cancelReason.asKnown().getOrNull()?.validity() ?: 0) + (if (cancellationComment.asKnown().isPresent) 1 else 0) + (cancellationFeedback.asKnown().getOrNull()?.validity() ?: 0) + (creditEntitlementCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (customerBusinessName.asKnown().isPresent) 1 else 0) + (if (customerName.asKnown().isPresent) 1 else 0) + (disableOnDemand.asKnown().getOrNull()?.validity() ?: 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (if (nextBillingDate.asKnown().isPresent) 1 else 0) + (status.asKnown().getOrNull()?.validity() ?: 0) + (if (taxId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                billing == other.billing &&
-                cancelAtNextBillingDate == other.cancelAtNextBillingDate &&
-                cancelReason == other.cancelReason &&
-                cancellationComment == other.cancellationComment &&
-                cancellationFeedback == other.cancellationFeedback &&
-                creditEntitlementCart == other.creditEntitlementCart &&
-                customerBusinessName == other.customerBusinessName &&
-                customerName == other.customerName &&
-                disableOnDemand == other.disableOnDemand &&
-                metadata == other.metadata &&
-                nextBillingDate == other.nextBillingDate &&
-                status == other.status &&
-                taxId == other.taxId &&
-                additionalProperties == other.additionalProperties
+          return other is Body && billing == other.billing && cancelAtNextBillingDate == other.cancelAtNextBillingDate && cancelReason == other.cancelReason && cancellationComment == other.cancellationComment && cancellationFeedback == other.cancellationFeedback && creditEntitlementCart == other.creditEntitlementCart && customerBusinessName == other.customerBusinessName && customerName == other.customerName && disableOnDemand == other.disableOnDemand && metadata == other.metadata && nextBillingDate == other.nextBillingDate && status == other.status && taxId == other.taxId && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                billing,
-                cancelAtNextBillingDate,
-                cancelReason,
-                cancellationComment,
-                cancellationFeedback,
-                creditEntitlementCart,
-                customerBusinessName,
-                customerName,
-                disableOnDemand,
-                metadata,
-                nextBillingDate,
-                status,
-                taxId,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(billing, cancelAtNextBillingDate, cancelReason, cancellationComment, cancellationFeedback, creditEntitlementCart, customerBusinessName, customerName, disableOnDemand, metadata, nextBillingDate, status, taxId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
-    class CancelReason @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class CancelReason @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -1477,8 +1360,7 @@ private constructor(
 
             @JvmField val CANCELLED_BY_MERCHANT = of("cancelled_by_merchant")
 
-            @JvmField
-            val CANCELLED_BY_MERCHANT_SEND_DUNNING = of("cancelled_by_merchant_send_dunning")
+            @JvmField val CANCELLED_BY_MERCHANT_SEND_DUNNING = of("cancelled_by_merchant_send_dunning")
 
             @JvmField val DODO_TEAM = of("dodo_team")
 
@@ -1497,9 +1379,11 @@ private constructor(
          * An enum containing [CancelReason]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [CancelReason] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1507,18 +1391,16 @@ private constructor(
             CANCELLED_BY_MERCHANT,
             CANCELLED_BY_MERCHANT_SEND_DUNNING,
             DODO_TEAM,
-            /**
-             * An enum member indicating that [CancelReason] was instantiated with an unknown value.
-             */
+            /** An enum member indicating that [CancelReason] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1532,11 +1414,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -1550,36 +1431,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): CancelReason = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): CancelReason =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1590,19 +1468,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is CancelReason && value == other.value
+          return other is CancelReason && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -1610,9 +1488,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    class CreditEntitlementCart
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class CreditEntitlementCart @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val creditEntitlementId: JsonField<String>,
         private val creditsAmount: JsonField<String>,
         private val expiresAfterDays: JsonField<Int>,
@@ -1625,133 +1501,74 @@ private constructor(
         private val rolloverTimeframeCount: JsonField<Int>,
         private val rolloverTimeframeInterval: JsonField<TimeInterval>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("credit_entitlement_id")
-            @ExcludeMissing
-            creditEntitlementId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("credits_amount")
-            @ExcludeMissing
-            creditsAmount: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("expires_after_days")
-            @ExcludeMissing
-            expiresAfterDays: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("low_balance_threshold_percent")
-            @ExcludeMissing
-            lowBalanceThresholdPercent: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("max_rollover_count")
-            @ExcludeMissing
-            maxRolloverCount: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("overage_enabled")
-            @ExcludeMissing
-            overageEnabled: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("overage_limit")
-            @ExcludeMissing
-            overageLimit: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("rollover_enabled")
-            @ExcludeMissing
-            rolloverEnabled: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("rollover_percentage")
-            @ExcludeMissing
-            rolloverPercentage: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("rollover_timeframe_count")
-            @ExcludeMissing
-            rolloverTimeframeCount: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("rollover_timeframe_interval")
-            @ExcludeMissing
-            rolloverTimeframeInterval: JsonField<TimeInterval> = JsonMissing.of(),
+            @JsonProperty("credit_entitlement_id") @ExcludeMissing creditEntitlementId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("credits_amount") @ExcludeMissing creditsAmount: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("expires_after_days") @ExcludeMissing expiresAfterDays: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("low_balance_threshold_percent") @ExcludeMissing lowBalanceThresholdPercent: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("max_rollover_count") @ExcludeMissing maxRolloverCount: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("overage_enabled") @ExcludeMissing overageEnabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("overage_limit") @ExcludeMissing overageLimit: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("rollover_enabled") @ExcludeMissing rolloverEnabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("rollover_percentage") @ExcludeMissing rolloverPercentage: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("rollover_timeframe_count") @ExcludeMissing rolloverTimeframeCount: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("rollover_timeframe_interval") @ExcludeMissing rolloverTimeframeInterval: JsonField<TimeInterval> = JsonMissing.of()
         ) : this(
-            creditEntitlementId,
-            creditsAmount,
-            expiresAfterDays,
-            lowBalanceThresholdPercent,
-            maxRolloverCount,
-            overageEnabled,
-            overageLimit,
-            rolloverEnabled,
-            rolloverPercentage,
-            rolloverTimeframeCount,
-            rolloverTimeframeInterval,
-            mutableMapOf(),
+          creditEntitlementId,
+          creditsAmount,
+          expiresAfterDays,
+          lowBalanceThresholdPercent,
+          maxRolloverCount,
+          overageEnabled,
+          overageLimit,
+          rolloverEnabled,
+          rolloverPercentage,
+          rolloverTimeframeCount,
+          rolloverTimeframeInterval,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun creditEntitlementId(): String = creditEntitlementId.getRequired("credit_entitlement_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun creditsAmount(): Optional<String> = creditsAmount.getOptional("credits_amount")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun expiresAfterDays(): Optional<Int> = expiresAfterDays.getOptional("expires_after_days")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun lowBalanceThresholdPercent(): Optional<Int> =
-            lowBalanceThresholdPercent.getOptional("low_balance_threshold_percent")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun lowBalanceThresholdPercent(): Optional<Int> = lowBalanceThresholdPercent.getOptional("low_balance_threshold_percent")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun maxRolloverCount(): Optional<Int> = maxRolloverCount.getOptional("max_rollover_count")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun overageEnabled(): Optional<Boolean> = overageEnabled.getOptional("overage_enabled")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun overageLimit(): Optional<String> = overageLimit.getOptional("overage_limit")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun rolloverEnabled(): Optional<Boolean> = rolloverEnabled.getOptional("rollover_enabled")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun rolloverPercentage(): Optional<Int> =
-            rolloverPercentage.getOptional("rollover_percentage")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun rolloverPercentage(): Optional<Int> = rolloverPercentage.getOptional("rollover_percentage")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun rolloverTimeframeCount(): Optional<Int> =
-            rolloverTimeframeCount.getOptional("rollover_timeframe_count")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun rolloverTimeframeCount(): Optional<Int> = rolloverTimeframeCount.getOptional("rollover_timeframe_count")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun rolloverTimeframeInterval(): Optional<TimeInterval> =
-            rolloverTimeframeInterval.getOptional("rollover_timeframe_interval")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun rolloverTimeframeInterval(): Optional<TimeInterval> = rolloverTimeframeInterval.getOptional("rollover_timeframe_interval")
 
         /**
          * Returns the raw JSON value of [creditEntitlementId].
          *
-         * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("credit_entitlement_id")
         @ExcludeMissing
@@ -1760,8 +1577,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [creditsAmount].
          *
-         * Unlike [creditsAmount], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [creditsAmount], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("credits_amount")
         @ExcludeMissing
@@ -1770,8 +1586,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [expiresAfterDays].
          *
-         * Unlike [expiresAfterDays], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [expiresAfterDays], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("expires_after_days")
         @ExcludeMissing
@@ -1780,8 +1595,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [lowBalanceThresholdPercent].
          *
-         * Unlike [lowBalanceThresholdPercent], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [lowBalanceThresholdPercent], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("low_balance_threshold_percent")
         @ExcludeMissing
@@ -1790,8 +1604,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [maxRolloverCount].
          *
-         * Unlike [maxRolloverCount], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [maxRolloverCount], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("max_rollover_count")
         @ExcludeMissing
@@ -1800,8 +1613,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [overageEnabled].
          *
-         * Unlike [overageEnabled], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [overageEnabled], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("overage_enabled")
         @ExcludeMissing
@@ -1810,8 +1622,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [overageLimit].
          *
-         * Unlike [overageLimit], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [overageLimit], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("overage_limit")
         @ExcludeMissing
@@ -1820,8 +1631,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [rolloverEnabled].
          *
-         * Unlike [rolloverEnabled], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [rolloverEnabled], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("rollover_enabled")
         @ExcludeMissing
@@ -1830,8 +1640,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [rolloverPercentage].
          *
-         * Unlike [rolloverPercentage], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [rolloverPercentage], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("rollover_percentage")
         @ExcludeMissing
@@ -1840,8 +1649,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [rolloverTimeframeCount].
          *
-         * Unlike [rolloverTimeframeCount], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [rolloverTimeframeCount], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("rollover_timeframe_count")
         @ExcludeMissing
@@ -1850,8 +1658,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [rolloverTimeframeInterval].
          *
-         * Unlike [rolloverTimeframeInterval], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [rolloverTimeframeInterval], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("rollover_timeframe_interval")
         @ExcludeMissing
@@ -1859,13 +1666,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -1875,11 +1681,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [CreditEntitlementCart].
              *
              * The following fields are required:
+             *
              * ```java
              * .creditEntitlementId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [CreditEntitlementCart]. */
@@ -1899,55 +1707,52 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(creditEntitlementCart: CreditEntitlementCart) = apply {
-                creditEntitlementId = creditEntitlementCart.creditEntitlementId
-                creditsAmount = creditEntitlementCart.creditsAmount
-                expiresAfterDays = creditEntitlementCart.expiresAfterDays
-                lowBalanceThresholdPercent = creditEntitlementCart.lowBalanceThresholdPercent
-                maxRolloverCount = creditEntitlementCart.maxRolloverCount
-                overageEnabled = creditEntitlementCart.overageEnabled
-                overageLimit = creditEntitlementCart.overageLimit
-                rolloverEnabled = creditEntitlementCart.rolloverEnabled
-                rolloverPercentage = creditEntitlementCart.rolloverPercentage
-                rolloverTimeframeCount = creditEntitlementCart.rolloverTimeframeCount
-                rolloverTimeframeInterval = creditEntitlementCart.rolloverTimeframeInterval
-                additionalProperties = creditEntitlementCart.additionalProperties.toMutableMap()
-            }
+            internal fun from(creditEntitlementCart: CreditEntitlementCart) =
+                apply {
+                    creditEntitlementId = creditEntitlementCart.creditEntitlementId
+                    creditsAmount = creditEntitlementCart.creditsAmount
+                    expiresAfterDays = creditEntitlementCart.expiresAfterDays
+                    lowBalanceThresholdPercent = creditEntitlementCart.lowBalanceThresholdPercent
+                    maxRolloverCount = creditEntitlementCart.maxRolloverCount
+                    overageEnabled = creditEntitlementCart.overageEnabled
+                    overageLimit = creditEntitlementCart.overageLimit
+                    rolloverEnabled = creditEntitlementCart.rolloverEnabled
+                    rolloverPercentage = creditEntitlementCart.rolloverPercentage
+                    rolloverTimeframeCount = creditEntitlementCart.rolloverTimeframeCount
+                    rolloverTimeframeInterval = creditEntitlementCart.rolloverTimeframeInterval
+                    additionalProperties = creditEntitlementCart.additionalProperties.toMutableMap()
+                }
 
-            fun creditEntitlementId(creditEntitlementId: String) =
-                creditEntitlementId(JsonField.of(creditEntitlementId))
+            fun creditEntitlementId(creditEntitlementId: String) = creditEntitlementId(JsonField.of(creditEntitlementId))
 
             /**
              * Sets [Builder.creditEntitlementId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.creditEntitlementId] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun creditEntitlementId(creditEntitlementId: JsonField<String>) = apply {
-                this.creditEntitlementId = creditEntitlementId
-            }
+            fun creditEntitlementId(creditEntitlementId: JsonField<String>) =
+                apply {
+                    this.creditEntitlementId = creditEntitlementId
+                }
 
-            fun creditsAmount(creditsAmount: String?) =
-                creditsAmount(JsonField.ofNullable(creditsAmount))
+            fun creditsAmount(creditsAmount: String?) = creditsAmount(JsonField.ofNullable(creditsAmount))
 
             /** Alias for calling [Builder.creditsAmount] with `creditsAmount.orElse(null)`. */
-            fun creditsAmount(creditsAmount: Optional<String>) =
-                creditsAmount(creditsAmount.getOrNull())
+            fun creditsAmount(creditsAmount: Optional<String>) = creditsAmount(creditsAmount.getOrNull())
 
             /**
              * Sets [Builder.creditsAmount] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.creditsAmount] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.creditsAmount] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun creditsAmount(creditsAmount: JsonField<String>) = apply {
-                this.creditsAmount = creditsAmount
-            }
+            fun creditsAmount(creditsAmount: JsonField<String>) =
+                apply {
+                    this.creditsAmount = creditsAmount
+                }
 
-            fun expiresAfterDays(expiresAfterDays: Int?) =
-                expiresAfterDays(JsonField.ofNullable(expiresAfterDays))
+            fun expiresAfterDays(expiresAfterDays: Int?) = expiresAfterDays(JsonField.ofNullable(expiresAfterDays))
 
             /**
              * Alias for [Builder.expiresAfterDays].
@@ -1956,54 +1761,44 @@ private constructor(
              */
             fun expiresAfterDays(expiresAfterDays: Int) = expiresAfterDays(expiresAfterDays as Int?)
 
-            /**
-             * Alias for calling [Builder.expiresAfterDays] with `expiresAfterDays.orElse(null)`.
-             */
-            fun expiresAfterDays(expiresAfterDays: Optional<Int>) =
-                expiresAfterDays(expiresAfterDays.getOrNull())
+            /** Alias for calling [Builder.expiresAfterDays] with `expiresAfterDays.orElse(null)`. */
+            fun expiresAfterDays(expiresAfterDays: Optional<Int>) = expiresAfterDays(expiresAfterDays.getOrNull())
 
             /**
              * Sets [Builder.expiresAfterDays] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.expiresAfterDays] with a well-typed [Int] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.expiresAfterDays] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun expiresAfterDays(expiresAfterDays: JsonField<Int>) = apply {
-                this.expiresAfterDays = expiresAfterDays
-            }
+            fun expiresAfterDays(expiresAfterDays: JsonField<Int>) =
+                apply {
+                    this.expiresAfterDays = expiresAfterDays
+                }
 
-            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int?) =
-                lowBalanceThresholdPercent(JsonField.ofNullable(lowBalanceThresholdPercent))
+            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int?) = lowBalanceThresholdPercent(JsonField.ofNullable(lowBalanceThresholdPercent))
 
             /**
              * Alias for [Builder.lowBalanceThresholdPercent].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int) =
-                lowBalanceThresholdPercent(lowBalanceThresholdPercent as Int?)
+            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int) = lowBalanceThresholdPercent(lowBalanceThresholdPercent as Int?)
 
-            /**
-             * Alias for calling [Builder.lowBalanceThresholdPercent] with
-             * `lowBalanceThresholdPercent.orElse(null)`.
-             */
-            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Optional<Int>) =
-                lowBalanceThresholdPercent(lowBalanceThresholdPercent.getOrNull())
+            /** Alias for calling [Builder.lowBalanceThresholdPercent] with `lowBalanceThresholdPercent.orElse(null)`. */
+            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Optional<Int>) = lowBalanceThresholdPercent(lowBalanceThresholdPercent.getOrNull())
 
             /**
              * Sets [Builder.lowBalanceThresholdPercent] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.lowBalanceThresholdPercent] with a well-typed [Int]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.lowBalanceThresholdPercent] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: JsonField<Int>) = apply {
-                this.lowBalanceThresholdPercent = lowBalanceThresholdPercent
-            }
+            fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: JsonField<Int>) =
+                apply {
+                    this.lowBalanceThresholdPercent = lowBalanceThresholdPercent
+                }
 
-            fun maxRolloverCount(maxRolloverCount: Int?) =
-                maxRolloverCount(JsonField.ofNullable(maxRolloverCount))
+            fun maxRolloverCount(maxRolloverCount: Int?) = maxRolloverCount(JsonField.ofNullable(maxRolloverCount))
 
             /**
              * Alias for [Builder.maxRolloverCount].
@@ -2012,25 +1807,21 @@ private constructor(
              */
             fun maxRolloverCount(maxRolloverCount: Int) = maxRolloverCount(maxRolloverCount as Int?)
 
-            /**
-             * Alias for calling [Builder.maxRolloverCount] with `maxRolloverCount.orElse(null)`.
-             */
-            fun maxRolloverCount(maxRolloverCount: Optional<Int>) =
-                maxRolloverCount(maxRolloverCount.getOrNull())
+            /** Alias for calling [Builder.maxRolloverCount] with `maxRolloverCount.orElse(null)`. */
+            fun maxRolloverCount(maxRolloverCount: Optional<Int>) = maxRolloverCount(maxRolloverCount.getOrNull())
 
             /**
              * Sets [Builder.maxRolloverCount] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.maxRolloverCount] with a well-typed [Int] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.maxRolloverCount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun maxRolloverCount(maxRolloverCount: JsonField<Int>) = apply {
-                this.maxRolloverCount = maxRolloverCount
-            }
+            fun maxRolloverCount(maxRolloverCount: JsonField<Int>) =
+                apply {
+                    this.maxRolloverCount = maxRolloverCount
+                }
 
-            fun overageEnabled(overageEnabled: Boolean?) =
-                overageEnabled(JsonField.ofNullable(overageEnabled))
+            fun overageEnabled(overageEnabled: Boolean?) = overageEnabled(JsonField.ofNullable(overageEnabled))
 
             /**
              * Alias for [Builder.overageEnabled].
@@ -2040,162 +1831,145 @@ private constructor(
             fun overageEnabled(overageEnabled: Boolean) = overageEnabled(overageEnabled as Boolean?)
 
             /** Alias for calling [Builder.overageEnabled] with `overageEnabled.orElse(null)`. */
-            fun overageEnabled(overageEnabled: Optional<Boolean>) =
-                overageEnabled(overageEnabled.getOrNull())
+            fun overageEnabled(overageEnabled: Optional<Boolean>) = overageEnabled(overageEnabled.getOrNull())
 
             /**
              * Sets [Builder.overageEnabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.overageEnabled] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.overageEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun overageEnabled(overageEnabled: JsonField<Boolean>) = apply {
-                this.overageEnabled = overageEnabled
-            }
+            fun overageEnabled(overageEnabled: JsonField<Boolean>) =
+                apply {
+                    this.overageEnabled = overageEnabled
+                }
 
-            fun overageLimit(overageLimit: String?) =
-                overageLimit(JsonField.ofNullable(overageLimit))
+            fun overageLimit(overageLimit: String?) = overageLimit(JsonField.ofNullable(overageLimit))
 
             /** Alias for calling [Builder.overageLimit] with `overageLimit.orElse(null)`. */
-            fun overageLimit(overageLimit: Optional<String>) =
-                overageLimit(overageLimit.getOrNull())
+            fun overageLimit(overageLimit: Optional<String>) = overageLimit(overageLimit.getOrNull())
 
             /**
              * Sets [Builder.overageLimit] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.overageLimit] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.overageLimit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun overageLimit(overageLimit: JsonField<String>) = apply {
-                this.overageLimit = overageLimit
-            }
+            fun overageLimit(overageLimit: JsonField<String>) =
+                apply {
+                    this.overageLimit = overageLimit
+                }
 
-            fun rolloverEnabled(rolloverEnabled: Boolean?) =
-                rolloverEnabled(JsonField.ofNullable(rolloverEnabled))
+            fun rolloverEnabled(rolloverEnabled: Boolean?) = rolloverEnabled(JsonField.ofNullable(rolloverEnabled))
 
             /**
              * Alias for [Builder.rolloverEnabled].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun rolloverEnabled(rolloverEnabled: Boolean) =
-                rolloverEnabled(rolloverEnabled as Boolean?)
+            fun rolloverEnabled(rolloverEnabled: Boolean) = rolloverEnabled(rolloverEnabled as Boolean?)
 
             /** Alias for calling [Builder.rolloverEnabled] with `rolloverEnabled.orElse(null)`. */
-            fun rolloverEnabled(rolloverEnabled: Optional<Boolean>) =
-                rolloverEnabled(rolloverEnabled.getOrNull())
+            fun rolloverEnabled(rolloverEnabled: Optional<Boolean>) = rolloverEnabled(rolloverEnabled.getOrNull())
 
             /**
              * Sets [Builder.rolloverEnabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.rolloverEnabled] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.rolloverEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun rolloverEnabled(rolloverEnabled: JsonField<Boolean>) = apply {
-                this.rolloverEnabled = rolloverEnabled
-            }
+            fun rolloverEnabled(rolloverEnabled: JsonField<Boolean>) =
+                apply {
+                    this.rolloverEnabled = rolloverEnabled
+                }
 
-            fun rolloverPercentage(rolloverPercentage: Int?) =
-                rolloverPercentage(JsonField.ofNullable(rolloverPercentage))
+            fun rolloverPercentage(rolloverPercentage: Int?) = rolloverPercentage(JsonField.ofNullable(rolloverPercentage))
 
             /**
              * Alias for [Builder.rolloverPercentage].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun rolloverPercentage(rolloverPercentage: Int) =
-                rolloverPercentage(rolloverPercentage as Int?)
+            fun rolloverPercentage(rolloverPercentage: Int) = rolloverPercentage(rolloverPercentage as Int?)
 
-            /**
-             * Alias for calling [Builder.rolloverPercentage] with
-             * `rolloverPercentage.orElse(null)`.
-             */
-            fun rolloverPercentage(rolloverPercentage: Optional<Int>) =
-                rolloverPercentage(rolloverPercentage.getOrNull())
+            /** Alias for calling [Builder.rolloverPercentage] with `rolloverPercentage.orElse(null)`. */
+            fun rolloverPercentage(rolloverPercentage: Optional<Int>) = rolloverPercentage(rolloverPercentage.getOrNull())
 
             /**
              * Sets [Builder.rolloverPercentage] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.rolloverPercentage] with a well-typed [Int] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.rolloverPercentage] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun rolloverPercentage(rolloverPercentage: JsonField<Int>) = apply {
-                this.rolloverPercentage = rolloverPercentage
-            }
+            fun rolloverPercentage(rolloverPercentage: JsonField<Int>) =
+                apply {
+                    this.rolloverPercentage = rolloverPercentage
+                }
 
-            fun rolloverTimeframeCount(rolloverTimeframeCount: Int?) =
-                rolloverTimeframeCount(JsonField.ofNullable(rolloverTimeframeCount))
+            fun rolloverTimeframeCount(rolloverTimeframeCount: Int?) = rolloverTimeframeCount(JsonField.ofNullable(rolloverTimeframeCount))
 
             /**
              * Alias for [Builder.rolloverTimeframeCount].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun rolloverTimeframeCount(rolloverTimeframeCount: Int) =
-                rolloverTimeframeCount(rolloverTimeframeCount as Int?)
+            fun rolloverTimeframeCount(rolloverTimeframeCount: Int) = rolloverTimeframeCount(rolloverTimeframeCount as Int?)
 
-            /**
-             * Alias for calling [Builder.rolloverTimeframeCount] with
-             * `rolloverTimeframeCount.orElse(null)`.
-             */
-            fun rolloverTimeframeCount(rolloverTimeframeCount: Optional<Int>) =
-                rolloverTimeframeCount(rolloverTimeframeCount.getOrNull())
+            /** Alias for calling [Builder.rolloverTimeframeCount] with `rolloverTimeframeCount.orElse(null)`. */
+            fun rolloverTimeframeCount(rolloverTimeframeCount: Optional<Int>) = rolloverTimeframeCount(rolloverTimeframeCount.getOrNull())
 
             /**
              * Sets [Builder.rolloverTimeframeCount] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.rolloverTimeframeCount] with a well-typed [Int]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.rolloverTimeframeCount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun rolloverTimeframeCount(rolloverTimeframeCount: JsonField<Int>) = apply {
-                this.rolloverTimeframeCount = rolloverTimeframeCount
-            }
+            fun rolloverTimeframeCount(rolloverTimeframeCount: JsonField<Int>) =
+                apply {
+                    this.rolloverTimeframeCount = rolloverTimeframeCount
+                }
 
-            fun rolloverTimeframeInterval(rolloverTimeframeInterval: TimeInterval?) =
-                rolloverTimeframeInterval(JsonField.ofNullable(rolloverTimeframeInterval))
+            fun rolloverTimeframeInterval(rolloverTimeframeInterval: TimeInterval?) = rolloverTimeframeInterval(JsonField.ofNullable(rolloverTimeframeInterval))
 
-            /**
-             * Alias for calling [Builder.rolloverTimeframeInterval] with
-             * `rolloverTimeframeInterval.orElse(null)`.
-             */
-            fun rolloverTimeframeInterval(rolloverTimeframeInterval: Optional<TimeInterval>) =
-                rolloverTimeframeInterval(rolloverTimeframeInterval.getOrNull())
+            /** Alias for calling [Builder.rolloverTimeframeInterval] with `rolloverTimeframeInterval.orElse(null)`. */
+            fun rolloverTimeframeInterval(rolloverTimeframeInterval: Optional<TimeInterval>) = rolloverTimeframeInterval(rolloverTimeframeInterval.getOrNull())
 
             /**
              * Sets [Builder.rolloverTimeframeInterval] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.rolloverTimeframeInterval] with a well-typed
-             * [TimeInterval] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
+             * You should usually call [Builder.rolloverTimeframeInterval] with a well-typed [TimeInterval] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
             fun rolloverTimeframeInterval(rolloverTimeframeInterval: JsonField<TimeInterval>) =
                 apply {
                     this.rolloverTimeframeInterval = rolloverTimeframeInterval
                 }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [CreditEntitlementCart].
@@ -2203,6 +1977,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .creditEntitlementId()
              * ```
@@ -2211,50 +1986,52 @@ private constructor(
              */
             fun build(): CreditEntitlementCart =
                 CreditEntitlementCart(
-                    checkRequired("creditEntitlementId", creditEntitlementId),
-                    creditsAmount,
-                    expiresAfterDays,
-                    lowBalanceThresholdPercent,
-                    maxRolloverCount,
-                    overageEnabled,
-                    overageLimit,
-                    rolloverEnabled,
-                    rolloverPercentage,
-                    rolloverTimeframeCount,
-                    rolloverTimeframeInterval,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "creditEntitlementId", creditEntitlementId
+                  ),
+                  creditsAmount,
+                  expiresAfterDays,
+                  lowBalanceThresholdPercent,
+                  maxRolloverCount,
+                  overageEnabled,
+                  overageLimit,
+                  rolloverEnabled,
+                  rolloverPercentage,
+                  rolloverTimeframeCount,
+                  rolloverTimeframeInterval,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): CreditEntitlementCart = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): CreditEntitlementCart =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            creditEntitlementId()
-            creditsAmount()
-            expiresAfterDays()
-            lowBalanceThresholdPercent()
-            maxRolloverCount()
-            overageEnabled()
-            overageLimit()
-            rolloverEnabled()
-            rolloverPercentage()
-            rolloverTimeframeCount()
-            rolloverTimeframeInterval().ifPresent { it.validate() }
-            validated = true
-        }
+                creditEntitlementId()
+                creditsAmount()
+                expiresAfterDays()
+                lowBalanceThresholdPercent()
+                maxRolloverCount()
+                overageEnabled()
+                overageLimit()
+                rolloverEnabled()
+                rolloverPercentage()
+                rolloverTimeframeCount()
+                rolloverTimeframeInterval().ifPresent { it.validate() }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -2265,93 +2042,48 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
-                (if (creditsAmount.asKnown().isPresent) 1 else 0) +
-                (if (expiresAfterDays.asKnown().isPresent) 1 else 0) +
-                (if (lowBalanceThresholdPercent.asKnown().isPresent) 1 else 0) +
-                (if (maxRolloverCount.asKnown().isPresent) 1 else 0) +
-                (if (overageEnabled.asKnown().isPresent) 1 else 0) +
-                (if (overageLimit.asKnown().isPresent) 1 else 0) +
-                (if (rolloverEnabled.asKnown().isPresent) 1 else 0) +
-                (if (rolloverPercentage.asKnown().isPresent) 1 else 0) +
-                (if (rolloverTimeframeCount.asKnown().isPresent) 1 else 0) +
-                (rolloverTimeframeInterval.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (if (creditEntitlementId.asKnown().isPresent) 1 else 0) + (if (creditsAmount.asKnown().isPresent) 1 else 0) + (if (expiresAfterDays.asKnown().isPresent) 1 else 0) + (if (lowBalanceThresholdPercent.asKnown().isPresent) 1 else 0) + (if (maxRolloverCount.asKnown().isPresent) 1 else 0) + (if (overageEnabled.asKnown().isPresent) 1 else 0) + (if (overageLimit.asKnown().isPresent) 1 else 0) + (if (rolloverEnabled.asKnown().isPresent) 1 else 0) + (if (rolloverPercentage.asKnown().isPresent) 1 else 0) + (if (rolloverTimeframeCount.asKnown().isPresent) 1 else 0) + (rolloverTimeframeInterval.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is CreditEntitlementCart &&
-                creditEntitlementId == other.creditEntitlementId &&
-                creditsAmount == other.creditsAmount &&
-                expiresAfterDays == other.expiresAfterDays &&
-                lowBalanceThresholdPercent == other.lowBalanceThresholdPercent &&
-                maxRolloverCount == other.maxRolloverCount &&
-                overageEnabled == other.overageEnabled &&
-                overageLimit == other.overageLimit &&
-                rolloverEnabled == other.rolloverEnabled &&
-                rolloverPercentage == other.rolloverPercentage &&
-                rolloverTimeframeCount == other.rolloverTimeframeCount &&
-                rolloverTimeframeInterval == other.rolloverTimeframeInterval &&
-                additionalProperties == other.additionalProperties
+          return other is CreditEntitlementCart && creditEntitlementId == other.creditEntitlementId && creditsAmount == other.creditsAmount && expiresAfterDays == other.expiresAfterDays && lowBalanceThresholdPercent == other.lowBalanceThresholdPercent && maxRolloverCount == other.maxRolloverCount && overageEnabled == other.overageEnabled && overageLimit == other.overageLimit && rolloverEnabled == other.rolloverEnabled && rolloverPercentage == other.rolloverPercentage && rolloverTimeframeCount == other.rolloverTimeframeCount && rolloverTimeframeInterval == other.rolloverTimeframeInterval && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                creditEntitlementId,
-                creditsAmount,
-                expiresAfterDays,
-                lowBalanceThresholdPercent,
-                maxRolloverCount,
-                overageEnabled,
-                overageLimit,
-                rolloverEnabled,
-                rolloverPercentage,
-                rolloverTimeframeCount,
-                rolloverTimeframeInterval,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(creditEntitlementId, creditsAmount, expiresAfterDays, lowBalanceThresholdPercent, maxRolloverCount, overageEnabled, overageLimit, rolloverEnabled, rolloverPercentage, rolloverTimeframeCount, rolloverTimeframeInterval, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "CreditEntitlementCart{creditEntitlementId=$creditEntitlementId, creditsAmount=$creditsAmount, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageEnabled=$overageEnabled, overageLimit=$overageLimit, rolloverEnabled=$rolloverEnabled, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
+        override fun toString() = "CreditEntitlementCart{creditEntitlementId=$creditEntitlementId, creditsAmount=$creditsAmount, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageEnabled=$overageEnabled, overageLimit=$overageLimit, rolloverEnabled=$rolloverEnabled, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
     }
 
-    class DisableOnDemand
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class DisableOnDemand @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val nextBillingDate: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("next_billing_date")
-            @ExcludeMissing
-            nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
-        ) : this(nextBillingDate, mutableMapOf())
+            @JsonProperty("next_billing_date") @ExcludeMissing nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
+        ) : this(
+          nextBillingDate, mutableMapOf()
+        )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun nextBillingDate(): OffsetDateTime = nextBillingDate.getRequired("next_billing_date")
 
         /**
          * Returns the raw JSON value of [nextBillingDate].
          *
-         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("next_billing_date")
         @ExcludeMissing
@@ -2359,13 +2091,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -2375,11 +2106,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [DisableOnDemand].
              *
              * The following fields are required:
+             *
              * ```java
              * .nextBillingDate()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [DisableOnDemand]. */
@@ -2389,43 +2122,50 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(disableOnDemand: DisableOnDemand) = apply {
-                nextBillingDate = disableOnDemand.nextBillingDate
-                additionalProperties = disableOnDemand.additionalProperties.toMutableMap()
-            }
+            internal fun from(disableOnDemand: DisableOnDemand) =
+                apply {
+                    nextBillingDate = disableOnDemand.nextBillingDate
+                    additionalProperties = disableOnDemand.additionalProperties.toMutableMap()
+                }
 
-            fun nextBillingDate(nextBillingDate: OffsetDateTime) =
-                nextBillingDate(JsonField.of(nextBillingDate))
+            fun nextBillingDate(nextBillingDate: OffsetDateTime) = nextBillingDate(JsonField.of(nextBillingDate))
 
             /**
              * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
-                this.nextBillingDate = nextBillingDate
-            }
+            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) =
+                apply {
+                    this.nextBillingDate = nextBillingDate
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [DisableOnDemand].
@@ -2433,6 +2173,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .nextBillingDate()
              * ```
@@ -2441,30 +2182,31 @@ private constructor(
              */
             fun build(): DisableOnDemand =
                 DisableOnDemand(
-                    checkRequired("nextBillingDate", nextBillingDate),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "nextBillingDate", nextBillingDate
+                  ), additionalProperties.toMutableMap()
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): DisableOnDemand = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): DisableOnDemand =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            nextBillingDate()
-            validated = true
-        }
+                nextBillingDate()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -2475,8 +2217,7 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
@@ -2484,28 +2225,23 @@ private constructor(
         internal fun validity(): Int = (if (nextBillingDate.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is DisableOnDemand &&
-                nextBillingDate == other.nextBillingDate &&
-                additionalProperties == other.additionalProperties
+          return other is DisableOnDemand && nextBillingDate == other.nextBillingDate && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(nextBillingDate, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "DisableOnDemand{nextBillingDate=$nextBillingDate, additionalProperties=$additionalProperties}"
+        override fun toString() = "DisableOnDemand{nextBillingDate=$nextBillingDate, additionalProperties=$additionalProperties}"
     }
 
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -2517,7 +2253,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -2526,28 +2263,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -2560,21 +2305,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -2585,21 +2330,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -2610,20 +2353,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionUpdateParams &&
-            subscriptionId == other.subscriptionId &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is SubscriptionUpdateParams && subscriptionId == other.subscriptionId && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(subscriptionId, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(subscriptionId, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "SubscriptionUpdateParams{subscriptionId=$subscriptionId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "SubscriptionUpdateParams{subscriptionId=$subscriptionId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

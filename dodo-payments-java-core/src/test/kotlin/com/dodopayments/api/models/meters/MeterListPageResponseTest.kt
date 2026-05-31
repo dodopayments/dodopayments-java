@@ -3,6 +3,13 @@
 package com.dodopayments.api.models.meters
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.meters.Conjunction
+import com.dodopayments.api.models.meters.FilterOperator
+import com.dodopayments.api.models.meters.FilterType
+import com.dodopayments.api.models.meters.Meter
+import com.dodopayments.api.models.meters.MeterAggregation
+import com.dodopayments.api.models.meters.MeterFilter
+import com.dodopayments.api.models.meters.MeterListPageResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,137 +19,103 @@ internal class MeterListPageResponseTest {
 
     @Test
     fun create() {
-        val meterListPageResponse =
-            MeterListPageResponse.builder()
-                .addItem(
-                    Meter.builder()
-                        .id("id")
-                        .aggregation(
-                            MeterAggregation.builder()
-                                .type(MeterAggregation.Type.COUNT)
-                                .key("key")
-                                .build()
-                        )
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .eventName("event_name")
-                        .measurementUnit("measurement_unit")
-                        .name("name")
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .description("description")
-                        .filter(
-                            MeterFilter.builder()
-                                .clausesOfMeterFilterConditionList(
-                                    listOf(
-                                        FilterType.MeterFilterCondition.builder()
-                                            .key("user_id")
-                                            .operator(FilterOperator.EQUALS)
-                                            .value("user123")
-                                            .build(),
-                                        FilterType.MeterFilterCondition.builder()
-                                            .key("amount")
-                                            .operator(FilterOperator.GREATER_THAN)
-                                            .value(100.0)
-                                            .build(),
-                                    )
-                                )
-                                .conjunction(Conjunction.AND)
-                                .build()
-                        )
+      val meterListPageResponse = MeterListPageResponse.builder()
+          .addItem(Meter.builder()
+              .id("id")
+              .aggregation(MeterAggregation.builder()
+                  .type(MeterAggregation.Type.COUNT)
+                  .key("key")
+                  .build())
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .eventName("event_name")
+              .measurementUnit("measurement_unit")
+              .name("name")
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .description("description")
+              .filter(MeterFilter.builder()
+                  .clausesOfMeterFilterConditionList(listOf(
+                    FilterType.MeterFilterCondition.builder()
+                        .key("user_id")
+                        .operator(FilterOperator.EQUALS)
+                        .value("user123")
+                        .build(), FilterType.MeterFilterCondition.builder()
+                        .key("amount")
+                        .operator(FilterOperator.GREATER_THAN)
+                        .value(100.0)
                         .build()
-                )
-                .build()
+                  ))
+                  .conjunction(Conjunction.AND)
+                  .build())
+              .build())
+          .build()
 
-        assertThat(meterListPageResponse.items())
-            .containsExactly(
-                Meter.builder()
-                    .id("id")
-                    .aggregation(
-                        MeterAggregation.builder()
-                            .type(MeterAggregation.Type.COUNT)
-                            .key("key")
-                            .build()
-                    )
-                    .businessId("business_id")
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .eventName("event_name")
-                    .measurementUnit("measurement_unit")
-                    .name("name")
-                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .description("description")
-                    .filter(
-                        MeterFilter.builder()
-                            .clausesOfMeterFilterConditionList(
-                                listOf(
-                                    FilterType.MeterFilterCondition.builder()
-                                        .key("user_id")
-                                        .operator(FilterOperator.EQUALS)
-                                        .value("user123")
-                                        .build(),
-                                    FilterType.MeterFilterCondition.builder()
-                                        .key("amount")
-                                        .operator(FilterOperator.GREATER_THAN)
-                                        .value(100.0)
-                                        .build(),
-                                )
-                            )
-                            .conjunction(Conjunction.AND)
-                            .build()
-                    )
+      assertThat(meterListPageResponse.items()).containsExactly(Meter.builder()
+          .id("id")
+          .aggregation(MeterAggregation.builder()
+              .type(MeterAggregation.Type.COUNT)
+              .key("key")
+              .build())
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .eventName("event_name")
+          .measurementUnit("measurement_unit")
+          .name("name")
+          .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .description("description")
+          .filter(MeterFilter.builder()
+              .clausesOfMeterFilterConditionList(listOf(
+                FilterType.MeterFilterCondition.builder()
+                    .key("user_id")
+                    .operator(FilterOperator.EQUALS)
+                    .value("user123")
+                    .build(), FilterType.MeterFilterCondition.builder()
+                    .key("amount")
+                    .operator(FilterOperator.GREATER_THAN)
+                    .value(100.0)
                     .build()
-            )
+              ))
+              .conjunction(Conjunction.AND)
+              .build())
+          .build())
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val meterListPageResponse =
-            MeterListPageResponse.builder()
-                .addItem(
-                    Meter.builder()
-                        .id("id")
-                        .aggregation(
-                            MeterAggregation.builder()
-                                .type(MeterAggregation.Type.COUNT)
-                                .key("key")
-                                .build()
-                        )
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .eventName("event_name")
-                        .measurementUnit("measurement_unit")
-                        .name("name")
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .description("description")
-                        .filter(
-                            MeterFilter.builder()
-                                .clausesOfMeterFilterConditionList(
-                                    listOf(
-                                        FilterType.MeterFilterCondition.builder()
-                                            .key("user_id")
-                                            .operator(FilterOperator.EQUALS)
-                                            .value("user123")
-                                            .build(),
-                                        FilterType.MeterFilterCondition.builder()
-                                            .key("amount")
-                                            .operator(FilterOperator.GREATER_THAN)
-                                            .value(100.0)
-                                            .build(),
-                                    )
-                                )
-                                .conjunction(Conjunction.AND)
-                                .build()
-                        )
+      val jsonMapper = jsonMapper()
+      val meterListPageResponse = MeterListPageResponse.builder()
+          .addItem(Meter.builder()
+              .id("id")
+              .aggregation(MeterAggregation.builder()
+                  .type(MeterAggregation.Type.COUNT)
+                  .key("key")
+                  .build())
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .eventName("event_name")
+              .measurementUnit("measurement_unit")
+              .name("name")
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .description("description")
+              .filter(MeterFilter.builder()
+                  .clausesOfMeterFilterConditionList(listOf(
+                    FilterType.MeterFilterCondition.builder()
+                        .key("user_id")
+                        .operator(FilterOperator.EQUALS)
+                        .value("user123")
+                        .build(), FilterType.MeterFilterCondition.builder()
+                        .key("amount")
+                        .operator(FilterOperator.GREATER_THAN)
+                        .value(100.0)
                         .build()
-                )
-                .build()
+                  ))
+                  .conjunction(Conjunction.AND)
+                  .build())
+              .build())
+          .build()
 
-        val roundtrippedMeterListPageResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(meterListPageResponse),
-                jacksonTypeRef<MeterListPageResponse>(),
-            )
+      val roundtrippedMeterListPageResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(meterListPageResponse), jacksonTypeRef<MeterListPageResponse>())
 
-        assertThat(roundtrippedMeterListPageResponse).isEqualTo(meterListPageResponse)
+      assertThat(roundtrippedMeterListPageResponse).isEqualTo(meterListPageResponse)
     }
 }

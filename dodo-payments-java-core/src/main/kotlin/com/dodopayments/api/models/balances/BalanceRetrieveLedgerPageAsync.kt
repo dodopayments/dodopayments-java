@@ -5,20 +5,24 @@ package com.dodopayments.api.models.balances
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.balances.BalanceLedgerEntry
+import com.dodopayments.api.models.balances.BalanceRetrieveLedgerPageResponse
+import com.dodopayments.api.models.balances.BalanceRetrieveLedgerParams
 import com.dodopayments.api.services.async.BalanceServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see BalanceServiceAsync.retrieveLedger */
-class BalanceRetrieveLedgerPageAsync
-private constructor(
+class BalanceRetrieveLedgerPageAsync private constructor(
     private val service: BalanceServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: BalanceRetrieveLedgerParams,
     private val response: BalanceRetrieveLedgerPageResponse,
+
 ) : PageAsync<BalanceLedgerEntry> {
 
     /**
@@ -26,21 +30,23 @@ private constructor(
      *
      * @see BalanceRetrieveLedgerPageResponse.items
      */
-    override fun items(): List<BalanceLedgerEntry> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<BalanceLedgerEntry> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): BalanceRetrieveLedgerParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
-    override fun nextPage(): CompletableFuture<BalanceRetrieveLedgerPageAsync> =
-        service.retrieveLedger(nextPageParams())
+    override fun nextPage(): CompletableFuture<BalanceRetrieveLedgerPageAsync> = service.retrieveLedger(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<BalanceLedgerEntry> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): BalanceRetrieveLedgerParams = params
@@ -53,10 +59,10 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [BalanceRetrieveLedgerPageAsync].
+         * Returns a mutable builder for constructing an instance of [BalanceRetrieveLedgerPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -64,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [BalanceRetrieveLedgerPageAsync]. */
@@ -76,26 +83,35 @@ private constructor(
         private var response: BalanceRetrieveLedgerPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(balanceRetrieveLedgerPageAsync: BalanceRetrieveLedgerPageAsync) = apply {
-            service = balanceRetrieveLedgerPageAsync.service
-            streamHandlerExecutor = balanceRetrieveLedgerPageAsync.streamHandlerExecutor
-            params = balanceRetrieveLedgerPageAsync.params
-            response = balanceRetrieveLedgerPageAsync.response
-        }
+        internal fun from(balanceRetrieveLedgerPageAsync: BalanceRetrieveLedgerPageAsync) =
+            apply {
+                service = balanceRetrieveLedgerPageAsync.service
+                streamHandlerExecutor = balanceRetrieveLedgerPageAsync.streamHandlerExecutor
+                params = balanceRetrieveLedgerPageAsync.params
+                response = balanceRetrieveLedgerPageAsync.response
+            }
 
-        fun service(service: BalanceServiceAsync) = apply { this.service = service }
+        fun service(service: BalanceServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: BalanceRetrieveLedgerParams) = apply { this.params = params }
+        fun params(params: BalanceRetrieveLedgerParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: BalanceRetrieveLedgerPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: BalanceRetrieveLedgerPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [BalanceRetrieveLedgerPageAsync].
@@ -103,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -114,27 +131,30 @@ private constructor(
          */
         fun build(): BalanceRetrieveLedgerPageAsync =
             BalanceRetrieveLedgerPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is BalanceRetrieveLedgerPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is BalanceRetrieveLedgerPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "BalanceRetrieveLedgerPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "BalanceRetrieveLedgerPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

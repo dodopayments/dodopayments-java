@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.customers.wallets
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.customers.wallets.CustomerWallet
+import com.dodopayments.api.models.customers.wallets.WalletListResponse
 import com.dodopayments.api.models.misc.Currency
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -13,56 +15,43 @@ internal class WalletListResponseTest {
 
     @Test
     fun create() {
-        val walletListResponse =
-            WalletListResponse.builder()
-                .addItem(
-                    CustomerWallet.builder()
-                        .balance(0L)
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .currency(Currency.AED)
-                        .customerId("customer_id")
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .build()
-                )
-                .totalBalanceUsd(0L)
-                .build()
+      val walletListResponse = WalletListResponse.builder()
+          .addItem(CustomerWallet.builder()
+              .balance(0L)
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .currency(Currency.AED)
+              .customerId("customer_id")
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .build())
+          .totalBalanceUsd(0L)
+          .build()
 
-        assertThat(walletListResponse.items())
-            .containsExactly(
-                CustomerWallet.builder()
-                    .balance(0L)
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .currency(Currency.AED)
-                    .customerId("customer_id")
-                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .build()
-            )
-        assertThat(walletListResponse.totalBalanceUsd()).isEqualTo(0L)
+      assertThat(walletListResponse.items()).containsExactly(CustomerWallet.builder()
+          .balance(0L)
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .currency(Currency.AED)
+          .customerId("customer_id")
+          .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build())
+      assertThat(walletListResponse.totalBalanceUsd()).isEqualTo(0L)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val walletListResponse =
-            WalletListResponse.builder()
-                .addItem(
-                    CustomerWallet.builder()
-                        .balance(0L)
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .currency(Currency.AED)
-                        .customerId("customer_id")
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .build()
-                )
-                .totalBalanceUsd(0L)
-                .build()
+      val jsonMapper = jsonMapper()
+      val walletListResponse = WalletListResponse.builder()
+          .addItem(CustomerWallet.builder()
+              .balance(0L)
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .currency(Currency.AED)
+              .customerId("customer_id")
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .build())
+          .totalBalanceUsd(0L)
+          .build()
 
-        val roundtrippedWalletListResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(walletListResponse),
-                jacksonTypeRef<WalletListResponse>(),
-            )
+      val roundtrippedWalletListResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(walletListResponse), jacksonTypeRef<WalletListResponse>())
 
-        assertThat(roundtrippedWalletListResponse).isEqualTo(walletListResponse)
+      assertThat(roundtrippedWalletListResponse).isEqualTo(walletListResponse)
     }
 }

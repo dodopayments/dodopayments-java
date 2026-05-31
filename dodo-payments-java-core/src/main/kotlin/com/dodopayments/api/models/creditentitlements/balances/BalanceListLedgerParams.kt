@@ -34,8 +34,7 @@ import kotlin.jvm.optionals.getOrNull
  * - `404 Not Found` - Credit entitlement not found
  * - `500 Internal Server Error` - Database or server error
  */
-class BalanceListLedgerParams
-private constructor(
+class BalanceListLedgerParams private constructor(
     private val creditEntitlementId: String,
     private val customerId: String?,
     private val endDate: OffsetDateTime?,
@@ -45,6 +44,7 @@ private constructor(
     private val transactionType: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun creditEntitlementId(): String = creditEntitlementId
@@ -63,9 +63,7 @@ private constructor(
     /** Filter by start date */
     fun startDate(): Optional<OffsetDateTime> = Optional.ofNullable(startDate)
 
-    /**
-     * Filter by transaction type (snake_case: credit_added, credit_deducted, credit_expired, etc.)
-     */
+    /** Filter by transaction type (snake_case: credit_added, credit_deducted, credit_expired, etc.) */
     fun transactionType(): Optional<String> = Optional.ofNullable(transactionType)
 
     /** Additional headers to send with the request. */
@@ -82,11 +80,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [BalanceListLedgerParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .creditEntitlementId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [BalanceListLedgerParams]. */
@@ -103,35 +103,46 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(balanceListLedgerParams: BalanceListLedgerParams) = apply {
-            creditEntitlementId = balanceListLedgerParams.creditEntitlementId
-            customerId = balanceListLedgerParams.customerId
-            endDate = balanceListLedgerParams.endDate
-            pageNumber = balanceListLedgerParams.pageNumber
-            pageSize = balanceListLedgerParams.pageSize
-            startDate = balanceListLedgerParams.startDate
-            transactionType = balanceListLedgerParams.transactionType
-            additionalHeaders = balanceListLedgerParams.additionalHeaders.toBuilder()
-            additionalQueryParams = balanceListLedgerParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(balanceListLedgerParams: BalanceListLedgerParams) =
+            apply {
+                creditEntitlementId = balanceListLedgerParams.creditEntitlementId
+                customerId = balanceListLedgerParams.customerId
+                endDate = balanceListLedgerParams.endDate
+                pageNumber = balanceListLedgerParams.pageNumber
+                pageSize = balanceListLedgerParams.pageSize
+                startDate = balanceListLedgerParams.startDate
+                transactionType = balanceListLedgerParams.transactionType
+                additionalHeaders = balanceListLedgerParams.additionalHeaders.toBuilder()
+                additionalQueryParams = balanceListLedgerParams.additionalQueryParams.toBuilder()
+            }
 
-        fun creditEntitlementId(creditEntitlementId: String) = apply {
-            this.creditEntitlementId = creditEntitlementId
-        }
+        fun creditEntitlementId(creditEntitlementId: String) =
+            apply {
+                this.creditEntitlementId = creditEntitlementId
+            }
 
-        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+        fun customerId(customerId: String?) =
+            apply {
+                this.customerId = customerId
+            }
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Filter by end date */
-        fun endDate(endDate: OffsetDateTime?) = apply { this.endDate = endDate }
+        fun endDate(endDate: OffsetDateTime?) =
+            apply {
+                this.endDate = endDate
+            }
 
         /** Alias for calling [Builder.endDate] with `endDate.orElse(null)`. */
         fun endDate(endDate: Optional<OffsetDateTime>) = endDate(endDate.getOrNull())
 
         /** Page number default is 0 */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -144,7 +155,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -157,120 +171,146 @@ private constructor(
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
         /** Filter by start date */
-        fun startDate(startDate: OffsetDateTime?) = apply { this.startDate = startDate }
+        fun startDate(startDate: OffsetDateTime?) =
+            apply {
+                this.startDate = startDate
+            }
 
         /** Alias for calling [Builder.startDate] with `startDate.orElse(null)`. */
         fun startDate(startDate: Optional<OffsetDateTime>) = startDate(startDate.getOrNull())
 
-        /**
-         * Filter by transaction type (snake_case: credit_added, credit_deducted, credit_expired,
-         * etc.)
-         */
-        fun transactionType(transactionType: String?) = apply {
-            this.transactionType = transactionType
-        }
+        /** Filter by transaction type (snake_case: credit_added, credit_deducted, credit_expired, etc.) */
+        fun transactionType(transactionType: String?) =
+            apply {
+                this.transactionType = transactionType
+            }
 
         /** Alias for calling [Builder.transactionType] with `transactionType.orElse(null)`. */
-        fun transactionType(transactionType: Optional<String>) =
-            transactionType(transactionType.getOrNull())
+        fun transactionType(transactionType: Optional<String>) = transactionType(transactionType.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [BalanceListLedgerParams].
@@ -278,6 +318,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .creditEntitlementId()
          * ```
@@ -286,15 +327,17 @@ private constructor(
          */
         fun build(): BalanceListLedgerParams =
             BalanceListLedgerParams(
-                checkRequired("creditEntitlementId", creditEntitlementId),
-                customerId,
-                endDate,
-                pageNumber,
-                pageSize,
-                startDate,
-                transactionType,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              checkRequired(
+                "creditEntitlementId", creditEntitlementId
+              ),
+              customerId,
+              endDate,
+              pageNumber,
+              pageSize,
+              startDate,
+              transactionType,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -313,44 +356,21 @@ private constructor(
                 endDate?.let { put("end_date", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
-                startDate?.let {
-                    put("start_date", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                startDate?.let { put("start_date", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 transactionType?.let { put("transaction_type", it) }
                 putAll(additionalQueryParams)
             }
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is BalanceListLedgerParams &&
-            creditEntitlementId == other.creditEntitlementId &&
-            customerId == other.customerId &&
-            endDate == other.endDate &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            startDate == other.startDate &&
-            transactionType == other.transactionType &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is BalanceListLedgerParams && creditEntitlementId == other.creditEntitlementId && customerId == other.customerId && endDate == other.endDate && pageNumber == other.pageNumber && pageSize == other.pageSize && startDate == other.startDate && transactionType == other.transactionType && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            creditEntitlementId,
-            customerId,
-            endDate,
-            pageNumber,
-            pageSize,
-            startDate,
-            transactionType,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(creditEntitlementId, customerId, endDate, pageNumber, pageSize, startDate, transactionType, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "BalanceListLedgerParams{creditEntitlementId=$creditEntitlementId, customerId=$customerId, endDate=$endDate, pageNumber=$pageNumber, pageSize=$pageSize, startDate=$startDate, transactionType=$transactionType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "BalanceListLedgerParams{creditEntitlementId=$creditEntitlementId, customerId=$customerId, endDate=$endDate, pageNumber=$pageNumber, pageSize=$pageSize, startDate=$startDate, transactionType=$transactionType, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

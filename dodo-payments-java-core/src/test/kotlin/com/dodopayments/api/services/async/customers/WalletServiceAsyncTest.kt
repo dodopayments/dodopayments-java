@@ -4,6 +4,7 @@ package com.dodopayments.api.services.async.customers
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.customers.wallets.WalletListParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -12,16 +13,15 @@ internal class WalletServiceAsyncTest {
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val walletServiceAsync = client.customers().wallets()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val walletServiceAsync = client.customers().wallets()
 
-        val walletsFuture = walletServiceAsync.list("customer_id")
+      val walletsFuture = walletServiceAsync.list("customer_id")
 
-        val wallets = walletsFuture.get()
-        wallets.validate()
+      val wallets = walletsFuture.get()
+      wallets.validate()
     }
 }

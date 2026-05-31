@@ -3,39 +3,35 @@
 package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
+import com.dodopayments.api.services.async.InvoiceServiceAsync
+import com.dodopayments.api.services.async.InvoiceServiceAsyncImpl
 import com.dodopayments.api.services.async.invoices.PaymentServiceAsync
 import com.dodopayments.api.services.async.invoices.PaymentServiceAsyncImpl
 import java.util.function.Consumer
 
-class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    InvoiceServiceAsync {
+class InvoiceServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: InvoiceServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : InvoiceServiceAsync {
+
+    private val withRawResponse: InvoiceServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val payments: PaymentServiceAsync by lazy { PaymentServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): InvoiceServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): InvoiceServiceAsync =
-        InvoiceServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): InvoiceServiceAsync = InvoiceServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun payments(): PaymentServiceAsync = payments
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        InvoiceServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val payments: PaymentServiceAsync.WithRawResponse by lazy {
-            PaymentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+    ) : InvoiceServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): InvoiceServiceAsync.WithRawResponse =
-            InvoiceServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val payments: PaymentServiceAsync.WithRawResponse by lazy { PaymentServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): InvoiceServiceAsync.WithRawResponse = InvoiceServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun payments(): PaymentServiceAsync.WithRawResponse = payments
     }

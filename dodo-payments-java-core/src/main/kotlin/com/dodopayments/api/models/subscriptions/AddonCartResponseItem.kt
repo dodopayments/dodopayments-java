@@ -16,30 +16,27 @@ import java.util.Collections
 import java.util.Objects
 
 /** Response struct representing subscription details */
-class AddonCartResponseItem
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class AddonCartResponseItem @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val addonId: JsonField<String>,
     private val quantity: JsonField<Int>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("addon_id") @ExcludeMissing addonId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
-    ) : this(addonId, quantity, mutableMapOf())
+        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of()
+    ) : this(
+      addonId,
+      quantity,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun addonId(): String = addonId.getRequired("addon_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun quantity(): Int = quantity.getRequired("quantity")
 
     /**
@@ -47,24 +44,27 @@ private constructor(
      *
      * Unlike [addonId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("addon_id") @ExcludeMissing fun _addonId(): JsonField<String> = addonId
+    @JsonProperty("addon_id")
+    @ExcludeMissing
+    fun _addonId(): JsonField<String> = addonId
 
     /**
      * Returns the raw JSON value of [quantity].
      *
      * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
+    @JsonProperty("quantity")
+    @ExcludeMissing
+    fun _quantity(): JsonField<Int> = quantity
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -74,12 +74,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [AddonCartResponseItem].
          *
          * The following fields are required:
+         *
          * ```java
          * .addonId()
          * .quantity()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AddonCartResponseItem]. */
@@ -90,50 +92,64 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(addonCartResponseItem: AddonCartResponseItem) = apply {
-            addonId = addonCartResponseItem.addonId
-            quantity = addonCartResponseItem.quantity
-            additionalProperties = addonCartResponseItem.additionalProperties.toMutableMap()
-        }
+        internal fun from(addonCartResponseItem: AddonCartResponseItem) =
+            apply {
+                addonId = addonCartResponseItem.addonId
+                quantity = addonCartResponseItem.quantity
+                additionalProperties = addonCartResponseItem.additionalProperties.toMutableMap()
+            }
 
         fun addonId(addonId: String) = addonId(JsonField.of(addonId))
 
         /**
          * Sets [Builder.addonId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.addonId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.addonId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun addonId(addonId: JsonField<String>) = apply { this.addonId = addonId }
+        fun addonId(addonId: JsonField<String>) =
+            apply {
+                this.addonId = addonId
+            }
 
         fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
         /**
          * Sets [Builder.quantity] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+        fun quantity(quantity: JsonField<Int>) =
+            apply {
+                this.quantity = quantity
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [AddonCartResponseItem].
@@ -141,6 +157,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .addonId()
          * .quantity()
@@ -150,9 +167,13 @@ private constructor(
          */
         fun build(): AddonCartResponseItem =
             AddonCartResponseItem(
-                checkRequired("addonId", addonId),
-                checkRequired("quantity", quantity),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "addonId", addonId
+              ),
+              checkRequired(
+                "quantity", quantity
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -166,15 +187,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): AddonCartResponseItem = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): AddonCartResponseItem =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        addonId()
-        quantity()
-        validated = true
-    }
+            addonId()
+            quantity()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -190,24 +212,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (addonId.asKnown().isPresent) 1 else 0) + (if (quantity.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (addonId.asKnown().isPresent) 1 else 0) + (if (quantity.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AddonCartResponseItem &&
-            addonId == other.addonId &&
-            quantity == other.quantity &&
-            additionalProperties == other.additionalProperties
+      return other is AddonCartResponseItem && addonId == other.addonId && quantity == other.quantity && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(addonId, quantity, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "AddonCartResponseItem{addonId=$addonId, quantity=$quantity, additionalProperties=$additionalProperties}"
+    override fun toString() = "AddonCartResponseItem{addonId=$addonId, quantity=$quantity, additionalProperties=$additionalProperties}"
 }

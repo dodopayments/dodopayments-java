@@ -18,75 +18,64 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.customers.CustomerPortalSession
 import com.dodopayments.api.models.customers.customerportal.CustomerPortalCreateParams
+import com.dodopayments.api.services.blocking.customers.CustomerPortalService
+import com.dodopayments.api.services.blocking.customers.CustomerPortalServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerPortalServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    CustomerPortalService {
+class CustomerPortalServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: CustomerPortalService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : CustomerPortalService {
+
+    private val withRawResponse: CustomerPortalService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): CustomerPortalService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalService =
-        CustomerPortalServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalService = CustomerPortalServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: CustomerPortalCreateParams,
-        requestOptions: RequestOptions,
-    ): CustomerPortalSession =
+    override fun create(params: CustomerPortalCreateParams, requestOptions: RequestOptions): CustomerPortalSession =
         // post /customers/{customer_id}/customer-portal/session
         withRawResponse().create(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        CustomerPortalService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : CustomerPortalService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): CustomerPortalService.WithRawResponse =
-            CustomerPortalServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalService.WithRawResponse = CustomerPortalServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<CustomerPortalSession> = jsonHandler<CustomerPortalSession>(clientOptions.jsonMapper)
+
+        override fun create(params: CustomerPortalCreateParams, requestOptions: RequestOptions): HttpResponseFor<CustomerPortalSession> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "customer-portal", "session")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<CustomerPortalSession> =
-            jsonHandler<CustomerPortalSession>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: CustomerPortalCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomerPortalSession> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "customers",
-                        params._pathParam(0),
-                        "customer-portal",
-                        "session",
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

@@ -2,6 +2,10 @@
 
 package com.dodopayments.api.client
 
+import com.dodopayments.api.client.DodoPaymentsClient
+import com.dodopayments.api.client.DodoPaymentsClientAsync
+import com.dodopayments.api.client.DodoPaymentsClientAsyncImpl
+import com.dodopayments.api.client.DodoPaymentsClientImpl
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.getPackageVersion
 import com.dodopayments.api.services.async.AddonServiceAsync
@@ -54,124 +58,75 @@ import com.dodopayments.api.services.async.WebhookServiceAsync
 import com.dodopayments.api.services.async.WebhookServiceAsyncImpl
 import java.util.function.Consumer
 
-class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
-    DodoPaymentsClientAsync {
+class DodoPaymentsClientAsyncImpl(
+    private val clientOptions: ClientOptions,
+
+) : DodoPaymentsClientAsync {
 
     private val clientOptionsWithUserAgent =
-        if (clientOptions.headers.names().contains("User-Agent")) clientOptions
-        else
-            clientOptions
-                .toBuilder()
-                .putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}")
-                .build()
+
+      if (clientOptions.headers.names().contains("User-Agent")) clientOptions
+
+      else clientOptions.toBuilder().putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}").build()
 
     // Pass the original clientOptions so that this client sets its own User-Agent.
     private val sync: DodoPaymentsClient by lazy { DodoPaymentsClientImpl(clientOptions) }
 
-    private val withRawResponse: DodoPaymentsClientAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+    private val withRawResponse: DodoPaymentsClientAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
-    private val checkoutSessions: CheckoutSessionServiceAsync by lazy {
-        CheckoutSessionServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val checkoutSessions: CheckoutSessionServiceAsync by lazy { CheckoutSessionServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val payments: PaymentServiceAsync by lazy {
-        PaymentServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val payments: PaymentServiceAsync by lazy { PaymentServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val subscriptions: SubscriptionServiceAsync by lazy {
-        SubscriptionServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val subscriptions: SubscriptionServiceAsync by lazy { SubscriptionServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val invoices: InvoiceServiceAsync by lazy {
-        InvoiceServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val invoices: InvoiceServiceAsync by lazy { InvoiceServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val licenses: LicenseServiceAsync by lazy {
-        LicenseServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val licenses: LicenseServiceAsync by lazy { LicenseServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val licenseKeys: LicenseKeyServiceAsync by lazy {
-        LicenseKeyServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val licenseKeys: LicenseKeyServiceAsync by lazy { LicenseKeyServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val licenseKeyInstances: LicenseKeyInstanceServiceAsync by lazy {
-        LicenseKeyInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val licenseKeyInstances: LicenseKeyInstanceServiceAsync by lazy { LicenseKeyInstanceServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val customers: CustomerServiceAsync by lazy {
-        CustomerServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val customers: CustomerServiceAsync by lazy { CustomerServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val refunds: RefundServiceAsync by lazy {
-        RefundServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val refunds: RefundServiceAsync by lazy { RefundServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val disputes: DisputeServiceAsync by lazy {
-        DisputeServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val disputes: DisputeServiceAsync by lazy { DisputeServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val payouts: PayoutServiceAsync by lazy {
-        PayoutServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val payouts: PayoutServiceAsync by lazy { PayoutServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val products: ProductServiceAsync by lazy {
-        ProductServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val products: ProductServiceAsync by lazy { ProductServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     private val misc: MiscServiceAsync by lazy { MiscServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val discounts: DiscountServiceAsync by lazy {
-        DiscountServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val discounts: DiscountServiceAsync by lazy { DiscountServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val addons: AddonServiceAsync by lazy {
-        AddonServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val addons: AddonServiceAsync by lazy { AddonServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val brands: BrandServiceAsync by lazy {
-        BrandServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val brands: BrandServiceAsync by lazy { BrandServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val webhooks: WebhookServiceAsync by lazy {
-        WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val webhooks: WebhookServiceAsync by lazy { WebhookServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val webhookEvents: WebhookEventServiceAsync by lazy {
-        WebhookEventServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val webhookEvents: WebhookEventServiceAsync by lazy { WebhookEventServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val usageEvents: UsageEventServiceAsync by lazy {
-        UsageEventServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val usageEvents: UsageEventServiceAsync by lazy { UsageEventServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val meters: MeterServiceAsync by lazy {
-        MeterServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val meters: MeterServiceAsync by lazy { MeterServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val balances: BalanceServiceAsync by lazy {
-        BalanceServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val balances: BalanceServiceAsync by lazy { BalanceServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val creditEntitlements: CreditEntitlementServiceAsync by lazy {
-        CreditEntitlementServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val creditEntitlements: CreditEntitlementServiceAsync by lazy { CreditEntitlementServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val entitlements: EntitlementServiceAsync by lazy {
-        EntitlementServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val entitlements: EntitlementServiceAsync by lazy { EntitlementServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val productCollections: ProductCollectionServiceAsync by lazy {
-        ProductCollectionServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
+    private val productCollections: ProductCollectionServiceAsync by lazy { ProductCollectionServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     override fun sync(): DodoPaymentsClient = sync
 
     override fun withRawResponse(): DodoPaymentsClientAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClientAsync =
-        DodoPaymentsClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClientAsync = DodoPaymentsClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun checkoutSessions(): CheckoutSessionServiceAsync = checkoutSessions
 
@@ -223,114 +178,62 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun close() = clientOptions.close()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        DodoPaymentsClientAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val checkoutSessions: CheckoutSessionServiceAsync.WithRawResponse by lazy {
-            CheckoutSessionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+    ) : DodoPaymentsClientAsync.WithRawResponse {
 
-        private val payments: PaymentServiceAsync.WithRawResponse by lazy {
-            PaymentServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val checkoutSessions: CheckoutSessionServiceAsync.WithRawResponse by lazy { CheckoutSessionServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val subscriptions: SubscriptionServiceAsync.WithRawResponse by lazy {
-            SubscriptionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val payments: PaymentServiceAsync.WithRawResponse by lazy { PaymentServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val invoices: InvoiceServiceAsync.WithRawResponse by lazy {
-            InvoiceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val subscriptions: SubscriptionServiceAsync.WithRawResponse by lazy { SubscriptionServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenses: LicenseServiceAsync.WithRawResponse by lazy {
-            LicenseServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val invoices: InvoiceServiceAsync.WithRawResponse by lazy { InvoiceServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenseKeys: LicenseKeyServiceAsync.WithRawResponse by lazy {
-            LicenseKeyServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenses: LicenseServiceAsync.WithRawResponse by lazy { LicenseServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenseKeyInstances: LicenseKeyInstanceServiceAsync.WithRawResponse by lazy {
-            LicenseKeyInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenseKeys: LicenseKeyServiceAsync.WithRawResponse by lazy { LicenseKeyServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val customers: CustomerServiceAsync.WithRawResponse by lazy {
-            CustomerServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenseKeyInstances: LicenseKeyInstanceServiceAsync.WithRawResponse by lazy { LicenseKeyInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val refunds: RefundServiceAsync.WithRawResponse by lazy {
-            RefundServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val customers: CustomerServiceAsync.WithRawResponse by lazy { CustomerServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val disputes: DisputeServiceAsync.WithRawResponse by lazy {
-            DisputeServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val refunds: RefundServiceAsync.WithRawResponse by lazy { RefundServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val payouts: PayoutServiceAsync.WithRawResponse by lazy {
-            PayoutServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val disputes: DisputeServiceAsync.WithRawResponse by lazy { DisputeServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val products: ProductServiceAsync.WithRawResponse by lazy {
-            ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val payouts: PayoutServiceAsync.WithRawResponse by lazy { PayoutServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val misc: MiscServiceAsync.WithRawResponse by lazy {
-            MiscServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val products: ProductServiceAsync.WithRawResponse by lazy { ProductServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val discounts: DiscountServiceAsync.WithRawResponse by lazy {
-            DiscountServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val misc: MiscServiceAsync.WithRawResponse by lazy { MiscServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val addons: AddonServiceAsync.WithRawResponse by lazy {
-            AddonServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val discounts: DiscountServiceAsync.WithRawResponse by lazy { DiscountServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val brands: BrandServiceAsync.WithRawResponse by lazy {
-            BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val addons: AddonServiceAsync.WithRawResponse by lazy { AddonServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
-            WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val brands: BrandServiceAsync.WithRawResponse by lazy { BrandServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val webhookEvents: WebhookEventServiceAsync.WithRawResponse by lazy {
-            WebhookEventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy { WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val usageEvents: UsageEventServiceAsync.WithRawResponse by lazy {
-            UsageEventServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val webhookEvents: WebhookEventServiceAsync.WithRawResponse by lazy { WebhookEventServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val meters: MeterServiceAsync.WithRawResponse by lazy {
-            MeterServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val usageEvents: UsageEventServiceAsync.WithRawResponse by lazy { UsageEventServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val balances: BalanceServiceAsync.WithRawResponse by lazy {
-            BalanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val meters: MeterServiceAsync.WithRawResponse by lazy { MeterServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val creditEntitlements: CreditEntitlementServiceAsync.WithRawResponse by lazy {
-            CreditEntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val balances: BalanceServiceAsync.WithRawResponse by lazy { BalanceServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val entitlements: EntitlementServiceAsync.WithRawResponse by lazy {
-            EntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val creditEntitlements: CreditEntitlementServiceAsync.WithRawResponse by lazy { CreditEntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        private val productCollections: ProductCollectionServiceAsync.WithRawResponse by lazy {
-            ProductCollectionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val entitlements: EntitlementServiceAsync.WithRawResponse by lazy { EntitlementServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): DodoPaymentsClientAsync.WithRawResponse =
-            DodoPaymentsClientAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val productCollections: ProductCollectionServiceAsync.WithRawResponse by lazy { ProductCollectionServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun checkoutSessions(): CheckoutSessionServiceAsync.WithRawResponse =
-            checkoutSessions
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClientAsync.WithRawResponse = DodoPaymentsClientAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        override fun checkoutSessions(): CheckoutSessionServiceAsync.WithRawResponse = checkoutSessions
 
         override fun payments(): PaymentServiceAsync.WithRawResponse = payments
 
@@ -342,8 +245,7 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         override fun licenseKeys(): LicenseKeyServiceAsync.WithRawResponse = licenseKeys
 
-        override fun licenseKeyInstances(): LicenseKeyInstanceServiceAsync.WithRawResponse =
-            licenseKeyInstances
+        override fun licenseKeyInstances(): LicenseKeyInstanceServiceAsync.WithRawResponse = licenseKeyInstances
 
         override fun customers(): CustomerServiceAsync.WithRawResponse = customers
 
@@ -373,12 +275,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         override fun balances(): BalanceServiceAsync.WithRawResponse = balances
 
-        override fun creditEntitlements(): CreditEntitlementServiceAsync.WithRawResponse =
-            creditEntitlements
+        override fun creditEntitlements(): CreditEntitlementServiceAsync.WithRawResponse = creditEntitlements
 
         override fun entitlements(): EntitlementServiceAsync.WithRawResponse = entitlements
 
-        override fun productCollections(): ProductCollectionServiceAsync.WithRawResponse =
-            productCollections
+        override fun productCollections(): ProductCollectionServiceAsync.WithRawResponse = productCollections
     }
 }

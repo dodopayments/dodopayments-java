@@ -9,14 +9,13 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.webhooks.headers.HeaderRetrieveParams
 import com.dodopayments.api.models.webhooks.headers.HeaderRetrieveResponse
 import com.dodopayments.api.models.webhooks.headers.HeaderUpdateParams
+import com.dodopayments.api.services.blocking.webhooks.HeaderService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface HeaderService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -28,49 +27,64 @@ interface HeaderService {
 
     /** Get a webhook by id */
     fun retrieve(webhookId: String): HeaderRetrieveResponse =
-        retrieve(webhookId, HeaderRetrieveParams.none())
+        retrieve(
+          webhookId, HeaderRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        webhookId: String,
-        params: HeaderRetrieveParams = HeaderRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): HeaderRetrieveResponse =
-        retrieve(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun retrieve(webhookId: String, params: HeaderRetrieveParams = HeaderRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HeaderRetrieveResponse =
+        retrieve(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        webhookId: String,
-        params: HeaderRetrieveParams = HeaderRetrieveParams.none(),
-    ): HeaderRetrieveResponse = retrieve(webhookId, params, RequestOptions.none())
+    fun retrieve(webhookId: String, params: HeaderRetrieveParams = HeaderRetrieveParams.none()): HeaderRetrieveResponse =
+        retrieve(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: HeaderRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): HeaderRetrieveResponse
+    fun retrieve(params: HeaderRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HeaderRetrieveResponse
 
     /** @see retrieve */
     fun retrieve(params: HeaderRetrieveParams): HeaderRetrieveResponse =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(webhookId: String, requestOptions: RequestOptions): HeaderRetrieveResponse =
-        retrieve(webhookId, HeaderRetrieveParams.none(), requestOptions)
+        retrieve(
+          webhookId,
+          HeaderRetrieveParams.none(),
+          requestOptions,
+        )
 
     /** Patch a webhook by id */
     fun update(webhookId: String, params: HeaderUpdateParams) =
-        update(webhookId, params, RequestOptions.none())
+        update(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        webhookId: String,
-        params: HeaderUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = update(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun update(webhookId: String, params: HeaderUpdateParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        update(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(params: HeaderUpdateParams) = update(params, RequestOptions.none())
+    fun update(params: HeaderUpdateParams) =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(params: HeaderUpdateParams, requestOptions: RequestOptions = RequestOptions.none())
@@ -85,76 +99,78 @@ interface HeaderService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): HeaderService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /webhooks/{webhook_id}/headers`, but is otherwise
-         * the same as [HeaderService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /webhooks/{webhook_id}/headers`, but is otherwise the             same as [HeaderService.retrieve]. */
         @MustBeClosed
         fun retrieve(webhookId: String): HttpResponseFor<HeaderRetrieveResponse> =
-            retrieve(webhookId, HeaderRetrieveParams.none())
+            retrieve(
+              webhookId, HeaderRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            params: HeaderRetrieveParams = HeaderRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<HeaderRetrieveResponse> =
-            retrieve(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun retrieve(webhookId: String, params: HeaderRetrieveParams = HeaderRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<HeaderRetrieveResponse> =
+            retrieve(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            params: HeaderRetrieveParams = HeaderRetrieveParams.none(),
-        ): HttpResponseFor<HeaderRetrieveResponse> =
-            retrieve(webhookId, params, RequestOptions.none())
+        fun retrieve(webhookId: String, params: HeaderRetrieveParams = HeaderRetrieveParams.none()): HttpResponseFor<HeaderRetrieveResponse> =
+            retrieve(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: HeaderRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<HeaderRetrieveResponse>
+        fun retrieve(params: HeaderRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<HeaderRetrieveResponse>
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: HeaderRetrieveParams): HttpResponseFor<HeaderRetrieveResponse> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<HeaderRetrieveResponse> =
-            retrieve(webhookId, HeaderRetrieveParams.none(), requestOptions)
+        fun retrieve(webhookId: String, requestOptions: RequestOptions): HttpResponseFor<HeaderRetrieveResponse> =
+            retrieve(
+              webhookId,
+              HeaderRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /webhooks/{webhook_id}/headers`, but is otherwise
-         * the same as [HeaderService.update].
-         */
+        /** Returns a raw HTTP response for `patch /webhooks/{webhook_id}/headers`, but is otherwise the             same as [HeaderService.update]. */
         @MustBeClosed
         fun update(webhookId: String, params: HeaderUpdateParams): HttpResponse =
-            update(webhookId, params, RequestOptions.none())
+            update(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            webhookId: String,
-            params: HeaderUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = update(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun update(webhookId: String, params: HeaderUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            update(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(params: HeaderUpdateParams): HttpResponse = update(params, RequestOptions.none())
+        fun update(params: HeaderUpdateParams): HttpResponse =
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: HeaderUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun update(params: HeaderUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
     }
 }

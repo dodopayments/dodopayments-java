@@ -4,6 +4,8 @@ package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.subscriptions.AttachAddon
+import com.dodopayments.api.models.subscriptions.UpdateSubscriptionPlanReq
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -13,76 +15,64 @@ internal class UpdateSubscriptionPlanReqTest {
 
     @Test
     fun create() {
-        val updateSubscriptionPlanReq =
-            UpdateSubscriptionPlanReq.builder()
-                .productId("product_id")
-                .prorationBillingMode(
-                    UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY
-                )
-                .quantity(0)
-                .adaptiveCurrencyFeesInclusive(true)
-                .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                .discountCode("discount_code")
-                .addDiscountCode("string")
-                .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
-                .metadata(
-                    UpdateSubscriptionPlanReq.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
-                .build()
+      val updateSubscriptionPlanReq = UpdateSubscriptionPlanReq.builder()
+          .productId("product_id")
+          .prorationBillingMode(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
+          .quantity(0)
+          .adaptiveCurrencyFeesInclusive(true)
+          .addAddon(AttachAddon.builder()
+              .addonId("addon_id")
+              .quantity(0)
+              .build())
+          .discountCode("discount_code")
+          .addDiscountCode("string")
+          .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+          .metadata(UpdateSubscriptionPlanReq.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
+          .build()
 
-        assertThat(updateSubscriptionPlanReq.productId()).isEqualTo("product_id")
-        assertThat(updateSubscriptionPlanReq.prorationBillingMode())
-            .isEqualTo(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
-        assertThat(updateSubscriptionPlanReq.quantity()).isEqualTo(0)
-        assertThat(updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive()).contains(true)
-        assertThat(updateSubscriptionPlanReq.addons().getOrNull())
-            .containsExactly(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-        assertThat(updateSubscriptionPlanReq.discountCode()).contains("discount_code")
-        assertThat(updateSubscriptionPlanReq.discountCodes().getOrNull()).containsExactly("string")
-        assertThat(updateSubscriptionPlanReq.effectiveAt())
-            .contains(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
-        assertThat(updateSubscriptionPlanReq.metadata())
-            .contains(
-                UpdateSubscriptionPlanReq.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(updateSubscriptionPlanReq.onPaymentFailure())
-            .contains(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
+      assertThat(updateSubscriptionPlanReq.productId()).isEqualTo("product_id")
+      assertThat(updateSubscriptionPlanReq.prorationBillingMode()).isEqualTo(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
+      assertThat(updateSubscriptionPlanReq.quantity()).isEqualTo(0)
+      assertThat(updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive()).contains(true)
+      assertThat(updateSubscriptionPlanReq.addons().getOrNull()).containsExactly(AttachAddon.builder()
+          .addonId("addon_id")
+          .quantity(0)
+          .build())
+      assertThat(updateSubscriptionPlanReq.discountCode()).contains("discount_code")
+      assertThat(updateSubscriptionPlanReq.discountCodes().getOrNull()).containsExactly("string")
+      assertThat(updateSubscriptionPlanReq.effectiveAt()).contains(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+      assertThat(updateSubscriptionPlanReq.metadata()).contains(UpdateSubscriptionPlanReq.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(updateSubscriptionPlanReq.onPaymentFailure()).contains(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val updateSubscriptionPlanReq =
-            UpdateSubscriptionPlanReq.builder()
-                .productId("product_id")
-                .prorationBillingMode(
-                    UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY
-                )
-                .quantity(0)
-                .adaptiveCurrencyFeesInclusive(true)
-                .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                .discountCode("discount_code")
-                .addDiscountCode("string")
-                .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
-                .metadata(
-                    UpdateSubscriptionPlanReq.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
-                .build()
+      val jsonMapper = jsonMapper()
+      val updateSubscriptionPlanReq = UpdateSubscriptionPlanReq.builder()
+          .productId("product_id")
+          .prorationBillingMode(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
+          .quantity(0)
+          .adaptiveCurrencyFeesInclusive(true)
+          .addAddon(AttachAddon.builder()
+              .addonId("addon_id")
+              .quantity(0)
+              .build())
+          .discountCode("discount_code")
+          .addDiscountCode("string")
+          .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+          .metadata(UpdateSubscriptionPlanReq.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
+          .build()
 
-        val roundtrippedUpdateSubscriptionPlanReq =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(updateSubscriptionPlanReq),
-                jacksonTypeRef<UpdateSubscriptionPlanReq>(),
-            )
+      val roundtrippedUpdateSubscriptionPlanReq = jsonMapper.readValue(jsonMapper.writeValueAsString(updateSubscriptionPlanReq), jacksonTypeRef<UpdateSubscriptionPlanReq>())
 
-        assertThat(roundtrippedUpdateSubscriptionPlanReq).isEqualTo(updateSubscriptionPlanReq)
+      assertThat(roundtrippedUpdateSubscriptionPlanReq).isEqualTo(updateSubscriptionPlanReq)
     }
 }

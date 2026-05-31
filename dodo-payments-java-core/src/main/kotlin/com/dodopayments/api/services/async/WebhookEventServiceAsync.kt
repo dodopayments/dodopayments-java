@@ -3,13 +3,12 @@
 package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
+import com.dodopayments.api.services.async.WebhookEventServiceAsync
 import java.util.function.Consumer
 
 interface WebhookEventServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -19,10 +18,7 @@ interface WebhookEventServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventServiceAsync
 
-    /**
-     * A view of [WebhookEventServiceAsync] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** A view of [WebhookEventServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -30,8 +26,6 @@ interface WebhookEventServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): WebhookEventServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookEventServiceAsync.WithRawResponse
     }
 }

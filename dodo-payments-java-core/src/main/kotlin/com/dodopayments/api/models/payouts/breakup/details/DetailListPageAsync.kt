@@ -5,20 +5,24 @@ package com.dodopayments.api.models.payouts.breakup.details
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.payouts.breakup.details.DetailListPageResponse
+import com.dodopayments.api.models.payouts.breakup.details.DetailListParams
+import com.dodopayments.api.models.payouts.breakup.details.DetailListResponse
 import com.dodopayments.api.services.async.payouts.breakup.DetailServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see DetailServiceAsync.list */
-class DetailListPageAsync
-private constructor(
+class DetailListPageAsync private constructor(
     private val service: DetailServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: DetailListParams,
     private val response: DetailListPageResponse,
+
 ) : PageAsync<DetailListResponse> {
 
     /**
@@ -26,20 +30,23 @@ private constructor(
      *
      * @see DetailListPageResponse.items
      */
-    override fun items(): List<DetailListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<DetailListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): DetailListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): CompletableFuture<DetailListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<DetailListResponse> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): DetailListParams = params
@@ -55,6 +62,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DetailListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -62,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DetailListPageAsync]. */
@@ -74,24 +83,35 @@ private constructor(
         private var response: DetailListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(detailListPageAsync: DetailListPageAsync) = apply {
-            service = detailListPageAsync.service
-            streamHandlerExecutor = detailListPageAsync.streamHandlerExecutor
-            params = detailListPageAsync.params
-            response = detailListPageAsync.response
-        }
+        internal fun from(detailListPageAsync: DetailListPageAsync) =
+            apply {
+                service = detailListPageAsync.service
+                streamHandlerExecutor = detailListPageAsync.streamHandlerExecutor
+                params = detailListPageAsync.params
+                response = detailListPageAsync.response
+            }
 
-        fun service(service: DetailServiceAsync) = apply { this.service = service }
+        fun service(service: DetailServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: DetailListParams) = apply { this.params = params }
+        fun params(params: DetailListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: DetailListPageResponse) = apply { this.response = response }
+        fun response(response: DetailListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [DetailListPageAsync].
@@ -99,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -110,27 +131,30 @@ private constructor(
          */
         fun build(): DetailListPageAsync =
             DetailListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DetailListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is DetailListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "DetailListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "DetailListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

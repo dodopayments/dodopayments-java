@@ -13,6 +13,7 @@ import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.webhookevents.WebhookEventType
+import com.dodopayments.api.models.webhooks.WebhookUpdateParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -23,12 +24,12 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Patch a webhook by id */
-class WebhookUpdateParams
-private constructor(
+class WebhookUpdateParams private constructor(
     private val webhookId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun webhookId(): Optional<String> = Optional.ofNullable(webhookId)
@@ -36,16 +37,14 @@ private constructor(
     /**
      * Description of the webhook
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun description(): Optional<String> = body.description()
 
     /**
      * To Disable the endpoint, set it to true.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun disabled(): Optional<Boolean> = body.disabled()
 
@@ -54,32 +53,28 @@ private constructor(
      *
      * Webhook event will only be sent for events in the list.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun filterTypes(): Optional<List<WebhookEventType>> = body.filterTypes()
 
     /**
      * Metadata
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
      * Rate limit
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun rateLimit(): Optional<Int> = body.rateLimit()
 
     /**
      * Url endpoint
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun url(): Optional<String> = body.url()
 
@@ -137,10 +132,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): WebhookUpdateParams = builder().build()
+        @JvmStatic
+        fun none(): WebhookUpdateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [WebhookUpdateParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [WebhookUpdateParams]. */
@@ -152,14 +149,18 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(webhookUpdateParams: WebhookUpdateParams) = apply {
-            webhookId = webhookUpdateParams.webhookId
-            body = webhookUpdateParams.body.toBuilder()
-            additionalHeaders = webhookUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = webhookUpdateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(webhookUpdateParams: WebhookUpdateParams) =
+            apply {
+                webhookId = webhookUpdateParams.webhookId
+                body = webhookUpdateParams.body.toBuilder()
+                additionalHeaders = webhookUpdateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = webhookUpdateParams.additionalQueryParams.toBuilder()
+            }
 
-        fun webhookId(webhookId: String?) = apply { this.webhookId = webhookId }
+        fun webhookId(webhookId: String?) =
+            apply {
+                this.webhookId = webhookId
+            }
 
         /** Alias for calling [Builder.webhookId] with `webhookId.orElse(null)`. */
         fun webhookId(webhookId: Optional<String>) = webhookId(webhookId.getOrNull())
@@ -167,8 +168,8 @@ private constructor(
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [description]
          * - [disabled]
          * - [filterTypes]
@@ -176,10 +177,16 @@ private constructor(
          * - [rateLimit]
          * - etc.
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
         /** Description of the webhook */
-        fun description(description: String?) = apply { body.description(description) }
+        fun description(description: String?) =
+            apply {
+                body.description(description)
+            }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
         fun description(description: Optional<String>) = description(description.getOrNull())
@@ -187,14 +194,19 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { body.description(description) }
+        fun description(description: JsonField<String>) =
+            apply {
+                body.description(description)
+            }
 
         /** To Disable the endpoint, set it to true. */
-        fun disabled(disabled: Boolean?) = apply { body.disabled(disabled) }
+        fun disabled(disabled: Boolean?) =
+            apply {
+                body.disabled(disabled)
+            }
 
         /**
          * Alias for [Builder.disabled].
@@ -209,45 +221,53 @@ private constructor(
         /**
          * Sets [Builder.disabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun disabled(disabled: JsonField<Boolean>) = apply { body.disabled(disabled) }
+        fun disabled(disabled: JsonField<Boolean>) =
+            apply {
+                body.disabled(disabled)
+            }
 
         /**
          * Filter events to the endpoint.
          *
          * Webhook event will only be sent for events in the list.
          */
-        fun filterTypes(filterTypes: List<WebhookEventType>?) = apply {
-            body.filterTypes(filterTypes)
-        }
+        fun filterTypes(filterTypes: List<WebhookEventType>?) =
+            apply {
+                body.filterTypes(filterTypes)
+            }
 
         /** Alias for calling [Builder.filterTypes] with `filterTypes.orElse(null)`. */
-        fun filterTypes(filterTypes: Optional<List<WebhookEventType>>) =
-            filterTypes(filterTypes.getOrNull())
+        fun filterTypes(filterTypes: Optional<List<WebhookEventType>>) = filterTypes(filterTypes.getOrNull())
 
         /**
          * Sets [Builder.filterTypes] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.filterTypes] with a well-typed `List<WebhookEventType>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.filterTypes] with a well-typed `List<WebhookEventType>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun filterTypes(filterTypes: JsonField<List<WebhookEventType>>) = apply {
-            body.filterTypes(filterTypes)
-        }
+        fun filterTypes(filterTypes: JsonField<List<WebhookEventType>>) =
+            apply {
+                body.filterTypes(filterTypes)
+            }
 
         /**
          * Adds a single [WebhookEventType] to [filterTypes].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addFilterType(filterType: WebhookEventType) = apply { body.addFilterType(filterType) }
+        fun addFilterType(filterType: WebhookEventType) =
+            apply {
+                body.addFilterType(filterType)
+            }
 
         /** Metadata */
-        fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
+        fun metadata(metadata: Metadata?) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
         fun metadata(metadata: Optional<Metadata>) = metadata(metadata.getOrNull())
@@ -255,14 +275,19 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /** Rate limit */
-        fun rateLimit(rateLimit: Int?) = apply { body.rateLimit(rateLimit) }
+        fun rateLimit(rateLimit: Int?) =
+            apply {
+                body.rateLimit(rateLimit)
+            }
 
         /**
          * Alias for [Builder.rateLimit].
@@ -277,13 +302,19 @@ private constructor(
         /**
          * Sets [Builder.rateLimit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.rateLimit] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.rateLimit] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun rateLimit(rateLimit: JsonField<Int>) = apply { body.rateLimit(rateLimit) }
+        fun rateLimit(rateLimit: JsonField<Int>) =
+            apply {
+                body.rateLimit(rateLimit)
+            }
 
         /** Url endpoint */
-        fun url(url: String?) = apply { body.url(url) }
+        fun url(url: String?) =
+            apply {
+                body.url(url)
+            }
 
         /** Alias for calling [Builder.url] with `url.orElse(null)`. */
         fun url(url: Optional<String>) = url(url.getOrNull())
@@ -291,127 +322,164 @@ private constructor(
         /**
          * Sets [Builder.url] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun url(url: JsonField<String>) = apply { body.url(url) }
+        fun url(url: JsonField<String>) =
+            apply {
+                body.url(url)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [WebhookUpdateParams].
@@ -420,10 +488,10 @@ private constructor(
          */
         fun build(): WebhookUpdateParams =
             WebhookUpdateParams(
-                webhookId,
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              webhookId,
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -439,9 +507,7 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val description: JsonField<String>,
         private val disabled: JsonField<Boolean>,
         private val filterTypes: JsonField<List<WebhookEventType>>,
@@ -449,41 +515,38 @@ private constructor(
         private val rateLimit: JsonField<Int>,
         private val url: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("description")
-            @ExcludeMissing
-            description: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("disabled")
-            @ExcludeMissing
-            disabled: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("filter_types")
-            @ExcludeMissing
-            filterTypes: JsonField<List<WebhookEventType>> = JsonMissing.of(),
-            @JsonProperty("metadata")
-            @ExcludeMissing
-            metadata: JsonField<Metadata> = JsonMissing.of(),
-            @JsonProperty("rate_limit")
-            @ExcludeMissing
-            rateLimit: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-        ) : this(description, disabled, filterTypes, metadata, rateLimit, url, mutableMapOf())
+            @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("disabled") @ExcludeMissing disabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("filter_types") @ExcludeMissing filterTypes: JsonField<List<WebhookEventType>> = JsonMissing.of(),
+            @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("rate_limit") @ExcludeMissing rateLimit: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of()
+        ) : this(
+          description,
+          disabled,
+          filterTypes,
+          metadata,
+          rateLimit,
+          url,
+          mutableMapOf(),
+        )
 
         /**
          * Description of the webhook
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
          * To Disable the endpoint, set it to true.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun disabled(): Optional<Boolean> = disabled.getOptional("disabled")
 
@@ -492,33 +555,28 @@ private constructor(
          *
          * Webhook event will only be sent for events in the list.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun filterTypes(): Optional<List<WebhookEventType>> =
-            filterTypes.getOptional("filter_types")
+        fun filterTypes(): Optional<List<WebhookEventType>> = filterTypes.getOptional("filter_types")
 
         /**
          * Metadata
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
          * Rate limit
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun rateLimit(): Optional<Int> = rateLimit.getOptional("rate_limit")
 
         /**
          * Url endpoint
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun url(): Optional<String> = url.getOptional("url")
 
@@ -536,7 +594,9 @@ private constructor(
          *
          * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("disabled") @ExcludeMissing fun _disabled(): JsonField<Boolean> = disabled
+        @JsonProperty("disabled")
+        @ExcludeMissing
+        fun _disabled(): JsonField<Boolean> = disabled
 
         /**
          * Returns the raw JSON value of [filterTypes].
@@ -552,38 +612,44 @@ private constructor(
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+        @JsonProperty("metadata")
+        @ExcludeMissing
+        fun _metadata(): JsonField<Metadata> = metadata
 
         /**
          * Returns the raw JSON value of [rateLimit].
          *
          * Unlike [rateLimit], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("rate_limit") @ExcludeMissing fun _rateLimit(): JsonField<Int> = rateLimit
+        @JsonProperty("rate_limit")
+        @ExcludeMissing
+        fun _rateLimit(): JsonField<Int> = rateLimit
 
         /**
          * Returns the raw JSON value of [url].
          *
          * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+        @JsonProperty("url")
+        @ExcludeMissing
+        fun _url(): JsonField<String> = url
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -598,15 +664,16 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                description = body.description
-                disabled = body.disabled
-                filterTypes = body.filterTypes.map { it.toMutableList() }
-                metadata = body.metadata
-                rateLimit = body.rateLimit
-                url = body.url
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    description = body.description
+                    disabled = body.disabled
+                    filterTypes = body.filterTypes.map { it.toMutableList() }
+                    metadata = body.metadata
+                    rateLimit = body.rateLimit
+                    url = body.url
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             /** Description of the webhook */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -617,13 +684,13 @@ private constructor(
             /**
              * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun description(description: JsonField<String>) = apply {
-                this.description = description
-            }
+            fun description(description: JsonField<String>) =
+                apply {
+                    this.description = description
+                }
 
             /** To Disable the endpoint, set it to true. */
             fun disabled(disabled: Boolean?) = disabled(JsonField.ofNullable(disabled))
@@ -641,46 +708,46 @@ private constructor(
             /**
              * Sets [Builder.disabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun disabled(disabled: JsonField<Boolean>) = apply { this.disabled = disabled }
+            fun disabled(disabled: JsonField<Boolean>) =
+                apply {
+                    this.disabled = disabled
+                }
 
             /**
              * Filter events to the endpoint.
              *
              * Webhook event will only be sent for events in the list.
              */
-            fun filterTypes(filterTypes: List<WebhookEventType>?) =
-                filterTypes(JsonField.ofNullable(filterTypes))
+            fun filterTypes(filterTypes: List<WebhookEventType>?) = filterTypes(JsonField.ofNullable(filterTypes))
 
             /** Alias for calling [Builder.filterTypes] with `filterTypes.orElse(null)`. */
-            fun filterTypes(filterTypes: Optional<List<WebhookEventType>>) =
-                filterTypes(filterTypes.getOrNull())
+            fun filterTypes(filterTypes: Optional<List<WebhookEventType>>) = filterTypes(filterTypes.getOrNull())
 
             /**
              * Sets [Builder.filterTypes] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.filterTypes] with a well-typed
-             * `List<WebhookEventType>` value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
+             * You should usually call [Builder.filterTypes] with a well-typed `List<WebhookEventType>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun filterTypes(filterTypes: JsonField<List<WebhookEventType>>) = apply {
-                this.filterTypes = filterTypes.map { it.toMutableList() }
-            }
+            fun filterTypes(filterTypes: JsonField<List<WebhookEventType>>) =
+                apply {
+                    this.filterTypes = filterTypes.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [WebhookEventType] to [filterTypes].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addFilterType(filterType: WebhookEventType) = apply {
-                filterTypes =
-                    (filterTypes ?: JsonField.of(mutableListOf())).also {
+            fun addFilterType(filterType: WebhookEventType) =
+                apply {
+                    filterTypes = (filterTypes ?: JsonField.of(mutableListOf())).also {
                         checkKnown("filterTypes", it).add(filterType)
                     }
-            }
+                }
 
             /** Metadata */
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
@@ -691,11 +758,13 @@ private constructor(
             /**
              * Sets [Builder.metadata] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.metadata] with a well-typed [Metadata] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+            fun metadata(metadata: JsonField<Metadata>) =
+                apply {
+                    this.metadata = metadata
+                }
 
             /** Rate limit */
             fun rateLimit(rateLimit: Int?) = rateLimit(JsonField.ofNullable(rateLimit))
@@ -713,11 +782,13 @@ private constructor(
             /**
              * Sets [Builder.rateLimit] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.rateLimit] with a well-typed [Int] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.rateLimit] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun rateLimit(rateLimit: JsonField<Int>) = apply { this.rateLimit = rateLimit }
+            fun rateLimit(rateLimit: JsonField<Int>) =
+                apply {
+                    this.rateLimit = rateLimit
+                }
 
             /** Url endpoint */
             fun url(url: String?) = url(JsonField.ofNullable(url))
@@ -728,30 +799,39 @@ private constructor(
             /**
              * Sets [Builder.url] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.url] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.url] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun url(url: JsonField<String>) = apply { this.url = url }
+            fun url(url: JsonField<String>) =
+                apply {
+                    this.url = url
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -760,40 +840,40 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    description,
-                    disabled,
-                    (filterTypes ?: JsonMissing.of()).map { it.toImmutable() },
-                    metadata,
-                    rateLimit,
-                    url,
-                    additionalProperties.toMutableMap(),
+                  description,
+                  disabled,
+                  (filterTypes?: JsonMissing.of()).map { it.toImmutable() },
+                  metadata,
+                  rateLimit,
+                  url,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            description()
-            disabled()
-            filterTypes().ifPresent { it.forEach { it.validate() } }
-            metadata().ifPresent { it.validate() }
-            rateLimit()
-            url()
-            validated = true
-        }
+                description()
+                disabled()
+                filterTypes().ifPresent { it.forEach { it.validate() } }
+                metadata().ifPresent { it.validate() }
+                rateLimit()
+                url()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -804,59 +884,32 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (description.asKnown().isPresent) 1 else 0) +
-                (if (disabled.asKnown().isPresent) 1 else 0) +
-                (filterTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (rateLimit.asKnown().isPresent) 1 else 0) +
-                (if (url.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (description.asKnown().isPresent) 1 else 0) + (if (disabled.asKnown().isPresent) 1 else 0) + (filterTypes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (if (rateLimit.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                description == other.description &&
-                disabled == other.disabled &&
-                filterTypes == other.filterTypes &&
-                metadata == other.metadata &&
-                rateLimit == other.rateLimit &&
-                url == other.url &&
-                additionalProperties == other.additionalProperties
+          return other is Body && description == other.description && disabled == other.disabled && filterTypes == other.filterTypes && metadata == other.metadata && rateLimit == other.rateLimit && url == other.url && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                description,
-                disabled,
-                filterTypes,
-                metadata,
-                rateLimit,
-                url,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(description, disabled, filterTypes, metadata, rateLimit, url, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{description=$description, disabled=$disabled, filterTypes=$filterTypes, metadata=$metadata, rateLimit=$rateLimit, url=$url, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{description=$description, disabled=$disabled, filterTypes=$filterTypes, metadata=$metadata, rateLimit=$rateLimit, url=$url, additionalProperties=$additionalProperties}"
     }
 
     /** Metadata */
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -868,7 +921,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -877,28 +931,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -911,21 +973,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -936,21 +998,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -961,20 +1021,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is WebhookUpdateParams &&
-            webhookId == other.webhookId &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is WebhookUpdateParams && webhookId == other.webhookId && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(webhookId, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(webhookId, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "WebhookUpdateParams{webhookId=$webhookId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "WebhookUpdateParams{webhookId=$webhookId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

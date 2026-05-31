@@ -15,22 +15,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class SubscriptionChargeResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class SubscriptionChargeResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val paymentId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of()
-    ) : this(paymentId, mutableMapOf())
+    ) : this(
+      paymentId, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
@@ -38,17 +36,18 @@ private constructor(
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+    @JsonProperty("payment_id")
+    @ExcludeMissing
+    fun _paymentId(): JsonField<String> = paymentId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -58,11 +57,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [SubscriptionChargeResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .paymentId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionChargeResponse]. */
@@ -72,40 +73,50 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(subscriptionChargeResponse: SubscriptionChargeResponse) = apply {
-            paymentId = subscriptionChargeResponse.paymentId
-            additionalProperties = subscriptionChargeResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(subscriptionChargeResponse: SubscriptionChargeResponse) =
+            apply {
+                paymentId = subscriptionChargeResponse.paymentId
+                additionalProperties = subscriptionChargeResponse.additionalProperties.toMutableMap()
+            }
 
         fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
 
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                this.paymentId = paymentId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionChargeResponse].
@@ -113,6 +124,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .paymentId()
          * ```
@@ -121,8 +133,9 @@ private constructor(
          */
         fun build(): SubscriptionChargeResponse =
             SubscriptionChargeResponse(
-                checkRequired("paymentId", paymentId),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "paymentId", paymentId
+              ), additionalProperties.toMutableMap()
             )
     }
 
@@ -136,14 +149,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SubscriptionChargeResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): SubscriptionChargeResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        paymentId()
-        validated = true
-    }
+            paymentId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -158,22 +172,20 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (paymentId.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int = (if (paymentId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionChargeResponse &&
-            paymentId == other.paymentId &&
-            additionalProperties == other.additionalProperties
+      return other is SubscriptionChargeResponse && paymentId == other.paymentId && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(paymentId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "SubscriptionChargeResponse{paymentId=$paymentId, additionalProperties=$additionalProperties}"
+    override fun toString() = "SubscriptionChargeResponse{paymentId=$paymentId, additionalProperties=$additionalProperties}"
 }

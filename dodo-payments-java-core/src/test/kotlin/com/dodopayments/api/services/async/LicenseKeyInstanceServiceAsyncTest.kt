@@ -4,6 +4,8 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -13,49 +15,46 @@ internal class LicenseKeyInstanceServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
 
-        val licenseKeyInstanceFuture = licenseKeyInstanceServiceAsync.retrieve("lki_123")
+      val licenseKeyInstanceFuture = licenseKeyInstanceServiceAsync.retrieve("lki_123")
 
-        val licenseKeyInstance = licenseKeyInstanceFuture.get()
-        licenseKeyInstance.validate()
+      val licenseKeyInstance = licenseKeyInstanceFuture.get()
+      licenseKeyInstance.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
 
-        val licenseKeyInstanceFuture =
-            licenseKeyInstanceServiceAsync.update(
-                LicenseKeyInstanceUpdateParams.builder().id("lki_123").name("name").build()
-            )
+      val licenseKeyInstanceFuture = licenseKeyInstanceServiceAsync.update(LicenseKeyInstanceUpdateParams.builder()
+          .id("lki_123")
+          .name("name")
+          .build())
 
-        val licenseKeyInstance = licenseKeyInstanceFuture.get()
-        licenseKeyInstance.validate()
+      val licenseKeyInstance = licenseKeyInstanceFuture.get()
+      licenseKeyInstance.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseKeyInstanceServiceAsync = client.licenseKeyInstances()
 
-        val pageFuture = licenseKeyInstanceServiceAsync.list()
+      val pageFuture = licenseKeyInstanceServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 }

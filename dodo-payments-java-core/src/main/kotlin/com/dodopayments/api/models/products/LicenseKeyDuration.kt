@@ -17,32 +17,27 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class LicenseKeyDuration
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class LicenseKeyDuration @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val count: JsonField<Int>,
     private val interval: JsonField<TimeInterval>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("count") @ExcludeMissing count: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("interval")
-        @ExcludeMissing
-        interval: JsonField<TimeInterval> = JsonMissing.of(),
-    ) : this(count, interval, mutableMapOf())
+        @JsonProperty("interval") @ExcludeMissing interval: JsonField<TimeInterval> = JsonMissing.of()
+    ) : this(
+      count,
+      interval,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun count(): Int = count.getRequired("count")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun interval(): TimeInterval = interval.getRequired("interval")
 
     /**
@@ -50,24 +45,27 @@ private constructor(
      *
      * Unlike [count], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("count") @ExcludeMissing fun _count(): JsonField<Int> = count
+    @JsonProperty("count")
+    @ExcludeMissing
+    fun _count(): JsonField<Int> = count
 
     /**
      * Returns the raw JSON value of [interval].
      *
      * Unlike [interval], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("interval") @ExcludeMissing fun _interval(): JsonField<TimeInterval> = interval
+    @JsonProperty("interval")
+    @ExcludeMissing
+    fun _interval(): JsonField<TimeInterval> = interval
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -77,12 +75,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [LicenseKeyDuration].
          *
          * The following fields are required:
+         *
          * ```java
          * .count()
          * .interval()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [LicenseKeyDuration]. */
@@ -93,51 +93,64 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(licenseKeyDuration: LicenseKeyDuration) = apply {
-            count = licenseKeyDuration.count
-            interval = licenseKeyDuration.interval
-            additionalProperties = licenseKeyDuration.additionalProperties.toMutableMap()
-        }
+        internal fun from(licenseKeyDuration: LicenseKeyDuration) =
+            apply {
+                count = licenseKeyDuration.count
+                interval = licenseKeyDuration.interval
+                additionalProperties = licenseKeyDuration.additionalProperties.toMutableMap()
+            }
 
         fun count(count: Int) = count(JsonField.of(count))
 
         /**
          * Sets [Builder.count] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.count] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.count] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun count(count: JsonField<Int>) = apply { this.count = count }
+        fun count(count: JsonField<Int>) =
+            apply {
+                this.count = count
+            }
 
         fun interval(interval: TimeInterval) = interval(JsonField.of(interval))
 
         /**
          * Sets [Builder.interval] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.interval] with a well-typed [TimeInterval] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.interval] with a well-typed [TimeInterval] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun interval(interval: JsonField<TimeInterval>) = apply { this.interval = interval }
+        fun interval(interval: JsonField<TimeInterval>) =
+            apply {
+                this.interval = interval
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [LicenseKeyDuration].
@@ -145,6 +158,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .count()
          * .interval()
@@ -154,9 +168,13 @@ private constructor(
          */
         fun build(): LicenseKeyDuration =
             LicenseKeyDuration(
-                checkRequired("count", count),
-                checkRequired("interval", interval),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "count", count
+              ),
+              checkRequired(
+                "interval", interval
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -170,15 +188,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): LicenseKeyDuration = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): LicenseKeyDuration =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        count()
-        interval().validate()
-        validated = true
-    }
+            count()
+            interval().validate()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -194,25 +213,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (count.asKnown().isPresent) 1 else 0) +
-            (interval.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (count.asKnown().isPresent) 1 else 0) + (interval.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is LicenseKeyDuration &&
-            count == other.count &&
-            interval == other.interval &&
-            additionalProperties == other.additionalProperties
+      return other is LicenseKeyDuration && count == other.count && interval == other.interval && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(count, interval, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "LicenseKeyDuration{count=$count, interval=$interval, additionalProperties=$additionalProperties}"
+    override fun toString() = "LicenseKeyDuration{count=$count, interval=$interval, additionalProperties=$additionalProperties}"
 }

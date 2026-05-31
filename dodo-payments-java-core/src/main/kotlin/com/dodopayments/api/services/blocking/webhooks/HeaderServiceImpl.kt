@@ -20,98 +20,94 @@ import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.webhooks.headers.HeaderRetrieveParams
 import com.dodopayments.api.models.webhooks.headers.HeaderRetrieveResponse
 import com.dodopayments.api.models.webhooks.headers.HeaderUpdateParams
+import com.dodopayments.api.services.blocking.webhooks.HeaderService
+import com.dodopayments.api.services.blocking.webhooks.HeaderServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class HeaderServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    HeaderService {
+class HeaderServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: HeaderService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : HeaderService {
+
+    private val withRawResponse: HeaderService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): HeaderService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): HeaderService =
-        HeaderServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): HeaderService = HeaderServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieve(
-        params: HeaderRetrieveParams,
-        requestOptions: RequestOptions,
-    ): HeaderRetrieveResponse =
+    override fun retrieve(params: HeaderRetrieveParams, requestOptions: RequestOptions): HeaderRetrieveResponse =
         // get /webhooks/{webhook_id}/headers
         withRawResponse().retrieve(params, requestOptions).parse()
 
     override fun update(params: HeaderUpdateParams, requestOptions: RequestOptions) {
-        // patch /webhooks/{webhook_id}/headers
-        withRawResponse().update(params, requestOptions)
+      // patch /webhooks/{webhook_id}/headers
+      withRawResponse().update(params, requestOptions)
     }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        HeaderService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : HeaderService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): HeaderService.WithRawResponse =
-            HeaderServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): HeaderService.WithRawResponse = HeaderServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val retrieveHandler: Handler<HeaderRetrieveResponse> = jsonHandler<HeaderRetrieveResponse>(clientOptions.jsonMapper)
+
+        override fun retrieve(params: HeaderRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<HeaderRetrieveResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("webhookId", params.webhookId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("webhooks", params._pathParam(0), "headers")
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val retrieveHandler: Handler<HeaderRetrieveResponse> =
-            jsonHandler<HeaderRetrieveResponse>(clientOptions.jsonMapper)
-
-        override fun retrieve(
-            params: HeaderRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<HeaderRetrieveResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("webhookId", params.webhookId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("webhooks", params._pathParam(0), "headers")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
         private val updateHandler: Handler<Void?> = emptyHandler()
 
-        override fun update(
-            params: HeaderUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("webhookId", params.webhookId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("webhooks", params._pathParam(0), "headers")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { updateHandler.handle(it) }
-            }
+        override fun update(params: HeaderUpdateParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("webhookId", params.webhookId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("webhooks", params._pathParam(0), "headers")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+          }
         }
     }
 }

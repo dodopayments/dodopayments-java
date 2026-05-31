@@ -3,6 +3,10 @@
 package com.dodopayments.api.models.meters
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.meters.Conjunction
+import com.dodopayments.api.models.meters.FilterOperator
+import com.dodopayments.api.models.meters.FilterType
+import com.dodopayments.api.models.meters.MeterFilter
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,73 +15,55 @@ internal class MeterFilterTest {
 
     @Test
     fun create() {
-        val meterFilter =
-            MeterFilter.builder()
-                .clausesOfMeterFilterConditionList(
-                    listOf(
-                        FilterType.MeterFilterCondition.builder()
-                            .key("user_id")
-                            .operator(FilterOperator.EQUALS)
-                            .value("user123")
-                            .build(),
-                        FilterType.MeterFilterCondition.builder()
-                            .key("amount")
-                            .operator(FilterOperator.GREATER_THAN)
-                            .value(100.0)
-                            .build(),
-                    )
-                )
-                .conjunction(Conjunction.AND)
+      val meterFilter = MeterFilter.builder()
+          .clausesOfMeterFilterConditionList(listOf(
+            FilterType.MeterFilterCondition.builder()
+                .key("user_id")
+                .operator(FilterOperator.EQUALS)
+                .value("user123")
+                .build(), FilterType.MeterFilterCondition.builder()
+                .key("amount")
+                .operator(FilterOperator.GREATER_THAN)
+                .value(100.0)
                 .build()
+          ))
+          .conjunction(Conjunction.AND)
+          .build()
 
-        assertThat(meterFilter.clauses())
-            .isEqualTo(
-                FilterType.ofMeterFilterConditionList(
-                    listOf(
-                        FilterType.MeterFilterCondition.builder()
-                            .key("user_id")
-                            .operator(FilterOperator.EQUALS)
-                            .value("user123")
-                            .build(),
-                        FilterType.MeterFilterCondition.builder()
-                            .key("amount")
-                            .operator(FilterOperator.GREATER_THAN)
-                            .value(100.0)
-                            .build(),
-                    )
-                )
-            )
-        assertThat(meterFilter.conjunction()).isEqualTo(Conjunction.AND)
+      assertThat(meterFilter.clauses()).isEqualTo(FilterType.ofMeterFilterConditionList(listOf(
+        FilterType.MeterFilterCondition.builder()
+            .key("user_id")
+            .operator(FilterOperator.EQUALS)
+            .value("user123")
+            .build(), FilterType.MeterFilterCondition.builder()
+            .key("amount")
+            .operator(FilterOperator.GREATER_THAN)
+            .value(100.0)
+            .build()
+      )))
+      assertThat(meterFilter.conjunction()).isEqualTo(Conjunction.AND)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val meterFilter =
-            MeterFilter.builder()
-                .clausesOfMeterFilterConditionList(
-                    listOf(
-                        FilterType.MeterFilterCondition.builder()
-                            .key("user_id")
-                            .operator(FilterOperator.EQUALS)
-                            .value("user123")
-                            .build(),
-                        FilterType.MeterFilterCondition.builder()
-                            .key("amount")
-                            .operator(FilterOperator.GREATER_THAN)
-                            .value(100.0)
-                            .build(),
-                    )
-                )
-                .conjunction(Conjunction.AND)
+      val jsonMapper = jsonMapper()
+      val meterFilter = MeterFilter.builder()
+          .clausesOfMeterFilterConditionList(listOf(
+            FilterType.MeterFilterCondition.builder()
+                .key("user_id")
+                .operator(FilterOperator.EQUALS)
+                .value("user123")
+                .build(), FilterType.MeterFilterCondition.builder()
+                .key("amount")
+                .operator(FilterOperator.GREATER_THAN)
+                .value(100.0)
                 .build()
+          ))
+          .conjunction(Conjunction.AND)
+          .build()
 
-        val roundtrippedMeterFilter =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(meterFilter),
-                jacksonTypeRef<MeterFilter>(),
-            )
+      val roundtrippedMeterFilter = jsonMapper.readValue(jsonMapper.writeValueAsString(meterFilter), jacksonTypeRef<MeterFilter>())
 
-        assertThat(roundtrippedMeterFilter).isEqualTo(meterFilter)
+      assertThat(roundtrippedMeterFilter).isEqualTo(meterFilter)
     }
 }

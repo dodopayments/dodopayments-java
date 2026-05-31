@@ -10,6 +10,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.balances.BalanceLedgerEntry
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -18,24 +19,20 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class BalanceRetrieveLedgerPageResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class BalanceRetrieveLedgerPageResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val items: JsonField<List<BalanceLedgerEntry>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("items")
-        @ExcludeMissing
-        items: JsonField<List<BalanceLedgerEntry>> = JsonMissing.of()
-    ) : this(items, mutableMapOf())
+        @JsonProperty("items") @ExcludeMissing items: JsonField<List<BalanceLedgerEntry>> = JsonMissing.of()
+    ) : this(
+      items, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun items(): List<BalanceLedgerEntry> = items.getRequired("items")
 
     /**
@@ -43,32 +40,34 @@ private constructor(
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<BalanceLedgerEntry>> = items
+    @JsonProperty("items")
+    @ExcludeMissing
+    fun _items(): JsonField<List<BalanceLedgerEntry>> = items
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [BalanceRetrieveLedgerPageResponse].
+         * Returns a mutable builder for constructing an instance of [BalanceRetrieveLedgerPageResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [BalanceRetrieveLedgerPageResponse]. */
@@ -81,8 +80,7 @@ private constructor(
         internal fun from(balanceRetrieveLedgerPageResponse: BalanceRetrieveLedgerPageResponse) =
             apply {
                 items = balanceRetrieveLedgerPageResponse.items.map { it.toMutableList() }
-                additionalProperties =
-                    balanceRetrieveLedgerPageResponse.additionalProperties.toMutableMap()
+                additionalProperties = balanceRetrieveLedgerPageResponse.additionalProperties.toMutableMap()
             }
 
         fun items(items: List<BalanceLedgerEntry>) = items(JsonField.of(items))
@@ -90,42 +88,51 @@ private constructor(
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<BalanceLedgerEntry>`
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.items] with a well-typed `List<BalanceLedgerEntry>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<BalanceLedgerEntry>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
+        fun items(items: JsonField<List<BalanceLedgerEntry>>) =
+            apply {
+                this.items = items.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [BalanceLedgerEntry] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: BalanceLedgerEntry) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
-        }
+        fun addItem(item: BalanceLedgerEntry) =
+            apply {
+                items = (items ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("items", it).add(item)
+                }
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [BalanceRetrieveLedgerPageResponse].
@@ -133,6 +140,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
@@ -141,8 +149,9 @@ private constructor(
          */
         fun build(): BalanceRetrieveLedgerPageResponse =
             BalanceRetrieveLedgerPageResponse(
-                checkRequired("items", items).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "items", items
+              ).map { it.toImmutable() }, additionalProperties.toMutableMap()
             )
     }
 
@@ -156,14 +165,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BalanceRetrieveLedgerPageResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): BalanceRetrieveLedgerPageResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        items().forEach { it.validate() }
-        validated = true
-    }
+            items().forEach { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -179,23 +189,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+    internal fun validity(): Int = (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is BalanceRetrieveLedgerPageResponse &&
-            items == other.items &&
-            additionalProperties == other.additionalProperties
+      return other is BalanceRetrieveLedgerPageResponse && items == other.items && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(items, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "BalanceRetrieveLedgerPageResponse{items=$items, additionalProperties=$additionalProperties}"
+    override fun toString() = "BalanceRetrieveLedgerPageResponse{items=$items, additionalProperties=$additionalProperties}"
 }

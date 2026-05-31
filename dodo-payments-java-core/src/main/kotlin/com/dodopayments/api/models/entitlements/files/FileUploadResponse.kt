@@ -15,24 +15,24 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class FileUploadResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class FileUploadResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val fileId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("file_id") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of()
-    ) : this(fileId, mutableMapOf())
+    ) : this(
+      fileId, mutableMapOf()
+    )
 
     /**
-     * Identifier of the attached file. Pass it to `DELETE /entitlements/{id}/files/{file_id}` to
-     * detach the file later.
+     * Identifier of the attached file. Pass it to
+     * `DELETE /entitlements/{id}/files/{file_id}` to detach the file later.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun fileId(): String = fileId.getRequired("file_id")
 
@@ -41,17 +41,18 @@ private constructor(
      *
      * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("file_id") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
+    @JsonProperty("file_id")
+    @ExcludeMissing
+    fun _fileId(): JsonField<String> = fileId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -61,11 +62,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [FileUploadResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .fileId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [FileUploadResponse]. */
@@ -75,43 +78,54 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(fileUploadResponse: FileUploadResponse) = apply {
-            fileId = fileUploadResponse.fileId
-            additionalProperties = fileUploadResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(fileUploadResponse: FileUploadResponse) =
+            apply {
+                fileId = fileUploadResponse.fileId
+                additionalProperties = fileUploadResponse.additionalProperties.toMutableMap()
+            }
 
         /**
-         * Identifier of the attached file. Pass it to `DELETE /entitlements/{id}/files/{file_id}`
-         * to detach the file later.
+         * Identifier of the attached file. Pass it to
+         * `DELETE /entitlements/{id}/files/{file_id}` to detach the file later.
          */
         fun fileId(fileId: String) = fileId(JsonField.of(fileId))
 
         /**
          * Sets [Builder.fileId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
+        fun fileId(fileId: JsonField<String>) =
+            apply {
+                this.fileId = fileId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [FileUploadResponse].
@@ -119,6 +133,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .fileId()
          * ```
@@ -126,7 +141,11 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): FileUploadResponse =
-            FileUploadResponse(checkRequired("fileId", fileId), additionalProperties.toMutableMap())
+            FileUploadResponse(
+              checkRequired(
+                "fileId", fileId
+              ), additionalProperties.toMutableMap()
+            )
     }
 
     private var validated: Boolean = false
@@ -139,14 +158,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): FileUploadResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): FileUploadResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        fileId()
-        validated = true
-    }
+            fileId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -161,22 +181,20 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (fileId.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int = (if (fileId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is FileUploadResponse &&
-            fileId == other.fileId &&
-            additionalProperties == other.additionalProperties
+      return other is FileUploadResponse && fileId == other.fileId && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(fileId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "FileUploadResponse{fileId=$fileId, additionalProperties=$additionalProperties}"
+    override fun toString() = "FileUploadResponse{fileId=$fileId, additionalProperties=$additionalProperties}"
 }

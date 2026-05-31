@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.webhooks
 
 import com.dodopayments.api.core.http.QueryParams
+import com.dodopayments.api.models.webhooks.WebhookListParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,25 +11,33 @@ internal class WebhookListParamsTest {
 
     @Test
     fun create() {
-        WebhookListParams.builder().iterator("iterator").limit(0).build()
+      WebhookListParams.builder()
+          .iterator("iterator")
+          .limit(0)
+          .build()
     }
 
     @Test
     fun queryParams() {
-        val params = WebhookListParams.builder().iterator("iterator").limit(0).build()
+      val params = WebhookListParams.builder()
+          .iterator("iterator")
+          .limit(0)
+          .build()
 
-        val queryParams = params._queryParams()
+      val queryParams = params._queryParams()
 
-        assertThat(queryParams)
-            .isEqualTo(QueryParams.builder().put("iterator", "iterator").put("limit", "0").build())
+      assertThat(queryParams).isEqualTo(QueryParams.builder()
+          .put("iterator", "iterator")
+          .put("limit", "0")
+          .build())
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = WebhookListParams.builder().build()
+      val params = WebhookListParams.builder().build()
 
-        val queryParams = params._queryParams()
+      val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
+      assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
 }

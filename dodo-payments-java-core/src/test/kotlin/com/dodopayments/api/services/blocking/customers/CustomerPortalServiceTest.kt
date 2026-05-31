@@ -13,22 +13,18 @@ internal class CustomerPortalServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerPortalService = client.customers().customerPortal()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerPortalService = client.customers().customerPortal()
 
-        val customerPortalSession =
-            customerPortalService.create(
-                CustomerPortalCreateParams.builder()
-                    .customerId("customer_id")
-                    .returnUrl("return_url")
-                    .sendEmail(true)
-                    .build()
-            )
+      val customerPortalSession = customerPortalService.create(CustomerPortalCreateParams.builder()
+          .customerId("customer_id")
+          .returnUrl("return_url")
+          .sendEmail(true)
+          .build())
 
-        customerPortalSession.validate()
+      customerPortalSession.validate()
     }
 }

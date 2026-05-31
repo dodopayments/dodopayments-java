@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.productcollections
 
+import com.dodopayments.api.models.productcollections.ProductCollectionCreateParams
 import com.dodopayments.api.models.productcollections.groups.GroupProduct
 import com.dodopayments.api.models.productcollections.groups.ProductCollectionGroupDetails
 import org.assertj.core.api.Assertions.assertThat
@@ -11,73 +12,70 @@ internal class ProductCollectionCreateParamsTest {
 
     @Test
     fun create() {
-        ProductCollectionCreateParams.builder()
-            .addGroup(
-                ProductCollectionGroupDetails.builder()
-                    .addProduct(GroupProduct.builder().productId("product_id").status(true).build())
-                    .groupName("group_name")
-                    .status(true)
-                    .build()
-            )
-            .name("name")
-            .brandId("brand_id")
-            .description("description")
-            .build()
+      ProductCollectionCreateParams.builder()
+          .addGroup(ProductCollectionGroupDetails.builder()
+              .addProduct(GroupProduct.builder()
+                  .productId("product_id")
+                  .status(true)
+                  .build())
+              .groupName("group_name")
+              .status(true)
+              .build())
+          .name("name")
+          .brandId("brand_id")
+          .description("description")
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            ProductCollectionCreateParams.builder()
-                .addGroup(
-                    ProductCollectionGroupDetails.builder()
-                        .addProduct(
-                            GroupProduct.builder().productId("product_id").status(true).build()
-                        )
-                        .groupName("group_name")
-                        .status(true)
-                        .build()
-                )
-                .name("name")
-                .brandId("brand_id")
-                .description("description")
-                .build()
+      val params = ProductCollectionCreateParams.builder()
+          .addGroup(ProductCollectionGroupDetails.builder()
+              .addProduct(GroupProduct.builder()
+                  .productId("product_id")
+                  .status(true)
+                  .build())
+              .groupName("group_name")
+              .status(true)
+              .build())
+          .name("name")
+          .brandId("brand_id")
+          .description("description")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.groups())
-            .containsExactly(
-                ProductCollectionGroupDetails.builder()
-                    .addProduct(GroupProduct.builder().productId("product_id").status(true).build())
-                    .groupName("group_name")
-                    .status(true)
-                    .build()
-            )
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.brandId()).contains("brand_id")
-        assertThat(body.description()).contains("description")
+      assertThat(body.groups()).containsExactly(ProductCollectionGroupDetails.builder()
+          .addProduct(GroupProduct.builder()
+              .productId("product_id")
+              .status(true)
+              .build())
+          .groupName("group_name")
+          .status(true)
+          .build())
+      assertThat(body.name()).isEqualTo("name")
+      assertThat(body.brandId()).contains("brand_id")
+      assertThat(body.description()).contains("description")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            ProductCollectionCreateParams.builder()
-                .addGroup(
-                    ProductCollectionGroupDetails.builder()
-                        .addProduct(GroupProduct.builder().productId("product_id").build())
-                        .build()
-                )
-                .name("name")
-                .build()
+      val params = ProductCollectionCreateParams.builder()
+          .addGroup(ProductCollectionGroupDetails.builder()
+              .addProduct(GroupProduct.builder()
+                  .productId("product_id")
+                  .build())
+              .build())
+          .name("name")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.groups())
-            .containsExactly(
-                ProductCollectionGroupDetails.builder()
-                    .addProduct(GroupProduct.builder().productId("product_id").build())
-                    .build()
-            )
-        assertThat(body.name()).isEqualTo("name")
+      assertThat(body.groups()).containsExactly(ProductCollectionGroupDetails.builder()
+          .addProduct(GroupProduct.builder()
+              .productId("product_id")
+              .build())
+          .build())
+      assertThat(body.name()).isEqualTo("name")
     }
 }

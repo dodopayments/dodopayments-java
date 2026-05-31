@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.core.http
 
+import com.dodopayments.api.core.http.Headers
 import java.io.InputStream
 
 interface HttpResponse : AutoCloseable {

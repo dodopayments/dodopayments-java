@@ -4,6 +4,7 @@ package com.dodopayments.api.services.async.payouts
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.payouts.breakup.BreakupRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -12,16 +13,15 @@ internal class BreakupServiceAsyncTest {
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val breakupServiceAsync = client.payouts().breakup()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val breakupServiceAsync = client.payouts().breakup()
 
-        val breakupsFuture = breakupServiceAsync.retrieve("payout_id")
+      val breakupsFuture = breakupServiceAsync.retrieve("payout_id")
 
-        val breakups = breakupsFuture.get()
-        breakups.forEach { it.validate() }
+      val breakups = breakupsFuture.get()
+      breakups.forEach { it.validate() }
     }
 }

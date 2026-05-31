@@ -5,6 +5,7 @@ package com.dodopayments.api.models.webhooks
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
+import com.dodopayments.api.models.webhooks.LicenseKeyCreatedWebhookEvent
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -14,85 +15,70 @@ internal class LicenseKeyCreatedWebhookEventTest {
 
     @Test
     fun create() {
-        val licenseKeyCreatedWebhookEvent =
-            LicenseKeyCreatedWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    LicenseKey.builder()
-                        .id("lic_123")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                        .customerId("cus_123")
-                        .instancesCount(0)
-                        .key("key")
-                        .productId("product_id")
-                        .source(LicenseKey.Source.AUTO)
-                        .status(LicenseKeyStatus.ACTIVE)
-                        .activationsLimit(5)
-                        .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                        .paymentId("payment_id")
-                        .subscriptionId("subscription_id")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val licenseKeyCreatedWebhookEvent = LicenseKeyCreatedWebhookEvent.builder()
+          .businessId("business_id")
+          .data(LicenseKey.builder()
+              .id("lic_123")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+              .customerId("cus_123")
+              .instancesCount(0)
+              .key("key")
+              .productId("product_id")
+              .source(LicenseKey.Source.AUTO)
+              .status(LicenseKeyStatus.ACTIVE)
+              .activationsLimit(5)
+              .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+              .paymentId("payment_id")
+              .subscriptionId("subscription_id")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        assertThat(licenseKeyCreatedWebhookEvent.businessId()).isEqualTo("business_id")
-        assertThat(licenseKeyCreatedWebhookEvent.data())
-            .isEqualTo(
-                LicenseKey.builder()
-                    .id("lic_123")
-                    .businessId("business_id")
-                    .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                    .customerId("cus_123")
-                    .instancesCount(0)
-                    .key("key")
-                    .productId("product_id")
-                    .source(LicenseKey.Source.AUTO)
-                    .status(LicenseKeyStatus.ACTIVE)
-                    .activationsLimit(5)
-                    .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                    .paymentId("payment_id")
-                    .subscriptionId("subscription_id")
-                    .build()
-            )
-        assertThat(licenseKeyCreatedWebhookEvent.timestamp())
-            .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(licenseKeyCreatedWebhookEvent.businessId()).isEqualTo("business_id")
+      assertThat(licenseKeyCreatedWebhookEvent.data()).isEqualTo(LicenseKey.builder()
+          .id("lic_123")
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+          .customerId("cus_123")
+          .instancesCount(0)
+          .key("key")
+          .productId("product_id")
+          .source(LicenseKey.Source.AUTO)
+          .status(LicenseKeyStatus.ACTIVE)
+          .activationsLimit(5)
+          .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+          .paymentId("payment_id")
+          .subscriptionId("subscription_id")
+          .build())
+      assertThat(licenseKeyCreatedWebhookEvent.timestamp()).isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val licenseKeyCreatedWebhookEvent =
-            LicenseKeyCreatedWebhookEvent.builder()
-                .businessId("business_id")
-                .data(
-                    LicenseKey.builder()
-                        .id("lic_123")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                        .customerId("cus_123")
-                        .instancesCount(0)
-                        .key("key")
-                        .productId("product_id")
-                        .source(LicenseKey.Source.AUTO)
-                        .status(LicenseKeyStatus.ACTIVE)
-                        .activationsLimit(5)
-                        .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                        .paymentId("payment_id")
-                        .subscriptionId("subscription_id")
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val jsonMapper = jsonMapper()
+      val licenseKeyCreatedWebhookEvent = LicenseKeyCreatedWebhookEvent.builder()
+          .businessId("business_id")
+          .data(LicenseKey.builder()
+              .id("lic_123")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+              .customerId("cus_123")
+              .instancesCount(0)
+              .key("key")
+              .productId("product_id")
+              .source(LicenseKey.Source.AUTO)
+              .status(LicenseKeyStatus.ACTIVE)
+              .activationsLimit(5)
+              .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+              .paymentId("payment_id")
+              .subscriptionId("subscription_id")
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val roundtrippedLicenseKeyCreatedWebhookEvent =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(licenseKeyCreatedWebhookEvent),
-                jacksonTypeRef<LicenseKeyCreatedWebhookEvent>(),
-            )
+      val roundtrippedLicenseKeyCreatedWebhookEvent = jsonMapper.readValue(jsonMapper.writeValueAsString(licenseKeyCreatedWebhookEvent), jacksonTypeRef<LicenseKeyCreatedWebhookEvent>())
 
-        assertThat(roundtrippedLicenseKeyCreatedWebhookEvent)
-            .isEqualTo(licenseKeyCreatedWebhookEvent)
+      assertThat(roundtrippedLicenseKeyCreatedWebhookEvent).isEqualTo(licenseKeyCreatedWebhookEvent)
     }
 }

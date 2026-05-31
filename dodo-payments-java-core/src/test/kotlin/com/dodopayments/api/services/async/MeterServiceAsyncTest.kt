@@ -8,8 +8,12 @@ import com.dodopayments.api.models.meters.Conjunction
 import com.dodopayments.api.models.meters.FilterOperator
 import com.dodopayments.api.models.meters.FilterType
 import com.dodopayments.api.models.meters.MeterAggregation
+import com.dodopayments.api.models.meters.MeterArchiveParams
 import com.dodopayments.api.models.meters.MeterCreateParams
 import com.dodopayments.api.models.meters.MeterFilter
+import com.dodopayments.api.models.meters.MeterListParams
+import com.dodopayments.api.models.meters.MeterRetrieveParams
+import com.dodopayments.api.models.meters.MeterUnarchiveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -18,107 +22,92 @@ internal class MeterServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val meterServiceAsync = client.meters()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val meterServiceAsync = client.meters()
 
-        val meterFuture =
-            meterServiceAsync.create(
-                MeterCreateParams.builder()
-                    .aggregation(
-                        MeterAggregation.builder()
-                            .type(MeterAggregation.Type.COUNT)
-                            .key("key")
-                            .build()
-                    )
-                    .eventName("event_name")
-                    .measurementUnit("measurement_unit")
-                    .name("name")
-                    .description("description")
-                    .filter(
-                        MeterFilter.builder()
-                            .clausesOfMeterFilterConditionList(
-                                listOf(
-                                    FilterType.MeterFilterCondition.builder()
-                                        .key("user_id")
-                                        .operator(FilterOperator.EQUALS)
-                                        .value("user123")
-                                        .build(),
-                                    FilterType.MeterFilterCondition.builder()
-                                        .key("amount")
-                                        .operator(FilterOperator.GREATER_THAN)
-                                        .value(100.0)
-                                        .build(),
-                                )
-                            )
-                            .conjunction(Conjunction.AND)
-                            .build()
-                    )
+      val meterFuture = meterServiceAsync.create(MeterCreateParams.builder()
+          .aggregation(MeterAggregation.builder()
+              .type(MeterAggregation.Type.COUNT)
+              .key("key")
+              .build())
+          .eventName("event_name")
+          .measurementUnit("measurement_unit")
+          .name("name")
+          .description("description")
+          .filter(MeterFilter.builder()
+              .clausesOfMeterFilterConditionList(listOf(
+                FilterType.MeterFilterCondition.builder()
+                    .key("user_id")
+                    .operator(FilterOperator.EQUALS)
+                    .value("user123")
+                    .build(), FilterType.MeterFilterCondition.builder()
+                    .key("amount")
+                    .operator(FilterOperator.GREATER_THAN)
+                    .value(100.0)
                     .build()
-            )
+              ))
+              .conjunction(Conjunction.AND)
+              .build())
+          .build())
 
-        val meter = meterFuture.get()
-        meter.validate()
+      val meter = meterFuture.get()
+      meter.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val meterServiceAsync = client.meters()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val meterServiceAsync = client.meters()
 
-        val meterFuture = meterServiceAsync.retrieve("id")
+      val meterFuture = meterServiceAsync.retrieve("id")
 
-        val meter = meterFuture.get()
-        meter.validate()
+      val meter = meterFuture.get()
+      meter.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val meterServiceAsync = client.meters()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val meterServiceAsync = client.meters()
 
-        val pageFuture = meterServiceAsync.list()
+      val pageFuture = meterServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun archive() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val meterServiceAsync = client.meters()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val meterServiceAsync = client.meters()
 
-        val future = meterServiceAsync.archive("id")
+      val future = meterServiceAsync.archive("id")
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun unarchive() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val meterServiceAsync = client.meters()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val meterServiceAsync = client.meters()
 
-        val future = meterServiceAsync.unarchive("id")
+      val future = meterServiceAsync.unarchive("id")
 
-        val response = future.get()
+      val response = future.get()
     }
 }

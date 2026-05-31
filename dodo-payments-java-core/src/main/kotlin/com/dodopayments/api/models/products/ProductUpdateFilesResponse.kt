@@ -15,30 +15,27 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class ProductUpdateFilesResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProductUpdateFilesResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val fileId: JsonField<String>,
     private val url: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("file_id") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-    ) : this(fileId, url, mutableMapOf())
+        @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of()
+    ) : this(
+      fileId,
+      url,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun fileId(): String = fileId.getRequired("file_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun url(): String = url.getRequired("url")
 
     /**
@@ -46,24 +43,27 @@ private constructor(
      *
      * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("file_id") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
+    @JsonProperty("file_id")
+    @ExcludeMissing
+    fun _fileId(): JsonField<String> = fileId
 
     /**
      * Returns the raw JSON value of [url].
      *
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+    @JsonProperty("url")
+    @ExcludeMissing
+    fun _url(): JsonField<String> = url
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -73,12 +73,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProductUpdateFilesResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .fileId()
          * .url()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductUpdateFilesResponse]. */
@@ -89,50 +91,64 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(productUpdateFilesResponse: ProductUpdateFilesResponse) = apply {
-            fileId = productUpdateFilesResponse.fileId
-            url = productUpdateFilesResponse.url
-            additionalProperties = productUpdateFilesResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(productUpdateFilesResponse: ProductUpdateFilesResponse) =
+            apply {
+                fileId = productUpdateFilesResponse.fileId
+                url = productUpdateFilesResponse.url
+                additionalProperties = productUpdateFilesResponse.additionalProperties.toMutableMap()
+            }
 
         fun fileId(fileId: String) = fileId(JsonField.of(fileId))
 
         /**
          * Sets [Builder.fileId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
+        fun fileId(fileId: JsonField<String>) =
+            apply {
+                this.fileId = fileId
+            }
 
         fun url(url: String) = url(JsonField.of(url))
 
         /**
          * Sets [Builder.url] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun url(url: JsonField<String>) = apply { this.url = url }
+        fun url(url: JsonField<String>) =
+            apply {
+                this.url = url
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductUpdateFilesResponse].
@@ -140,6 +156,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .fileId()
          * .url()
@@ -149,9 +166,13 @@ private constructor(
          */
         fun build(): ProductUpdateFilesResponse =
             ProductUpdateFilesResponse(
-                checkRequired("fileId", fileId),
-                checkRequired("url", url),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "fileId", fileId
+              ),
+              checkRequired(
+                "url", url
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -165,15 +186,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ProductUpdateFilesResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProductUpdateFilesResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        fileId()
-        url()
-        validated = true
-    }
+            fileId()
+            url()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -189,24 +211,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (fileId.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (fileId.asKnown().isPresent) 1 else 0) + (if (url.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductUpdateFilesResponse &&
-            fileId == other.fileId &&
-            url == other.url &&
-            additionalProperties == other.additionalProperties
+      return other is ProductUpdateFilesResponse && fileId == other.fileId && url == other.url && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(fileId, url, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProductUpdateFilesResponse{fileId=$fileId, url=$url, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProductUpdateFilesResponse{fileId=$fileId, url=$url, additionalProperties=$additionalProperties}"
 }

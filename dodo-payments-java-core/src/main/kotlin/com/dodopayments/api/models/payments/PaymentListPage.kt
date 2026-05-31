@@ -5,17 +5,21 @@ package com.dodopayments.api.models.payments
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.payments.PaymentListPageResponse
+import com.dodopayments.api.models.payments.PaymentListParams
+import com.dodopayments.api.models.payments.PaymentListResponse
 import com.dodopayments.api.services.blocking.PaymentService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see PaymentService.list */
-class PaymentListPage
-private constructor(
+class PaymentListPage private constructor(
     private val service: PaymentService,
     private val params: PaymentListParams,
     private val response: PaymentListPageResponse,
+
 ) : Page<PaymentListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see PaymentListPageResponse.items
      */
-    override fun items(): List<PaymentListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<PaymentListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): PaymentListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): PaymentListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [PaymentListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [PaymentListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: PaymentListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(paymentListPage: PaymentListPage) = apply {
-            service = paymentListPage.service
-            params = paymentListPage.params
-            response = paymentListPage.response
-        }
+        internal fun from(paymentListPage: PaymentListPage) =
+            apply {
+                service = paymentListPage.service
+                params = paymentListPage.params
+                response = paymentListPage.response
+            }
 
-        fun service(service: PaymentService) = apply { this.service = service }
+        fun service(service: PaymentService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: PaymentListParams) = apply { this.params = params }
+        fun params(params: PaymentListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: PaymentListPageResponse) = apply { this.response = response }
+        fun response(response: PaymentListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [PaymentListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): PaymentListPage =
             PaymentListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is PaymentListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is PaymentListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "PaymentListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "PaymentListPage{service=$service, params=$params, response=$response}"
 }

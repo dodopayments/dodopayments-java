@@ -18,9 +18,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** One file in a digital-product delivery payload. */
-class DigitalProductDeliveryFile
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class DigitalProductDeliveryFile @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val downloadUrl: JsonField<String>,
     private val expiresIn: JsonField<Long>,
     private val fileId: JsonField<String>,
@@ -28,67 +26,66 @@ private constructor(
     private val contentType: JsonField<String>,
     private val fileSize: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("download_url")
-        @ExcludeMissing
-        downloadUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("download_url") @ExcludeMissing downloadUrl: JsonField<String> = JsonMissing.of(),
         @JsonProperty("expires_in") @ExcludeMissing expiresIn: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("file_id") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("filename") @ExcludeMissing filename: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("content_type")
-        @ExcludeMissing
-        contentType: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("file_size") @ExcludeMissing fileSize: JsonField<Long> = JsonMissing.of(),
-    ) : this(downloadUrl, expiresIn, fileId, filename, contentType, fileSize, mutableMapOf())
+        @JsonProperty("content_type") @ExcludeMissing contentType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("file_size") @ExcludeMissing fileSize: JsonField<Long> = JsonMissing.of()
+    ) : this(
+      downloadUrl,
+      expiresIn,
+      fileId,
+      filename,
+      contentType,
+      fileSize,
+      mutableMapOf(),
+    )
 
     /**
      * Short-lived presigned URL for downloading the file.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun downloadUrl(): String = downloadUrl.getRequired("download_url")
 
     /**
      * Seconds until `download_url` expires.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun expiresIn(): Long = expiresIn.getRequired("expires_in")
 
     /**
      * Identifier of the attached file.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun fileId(): String = fileId.getRequired("file_id")
 
     /**
      * Original filename of the attached file.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun filename(): String = filename.getRequired("filename")
 
     /**
      * Optional content-type declared at upload.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun contentType(): Optional<String> = contentType.getOptional("content_type")
 
     /**
      * Optional size of the file in bytes.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun fileSize(): Optional<Long> = fileSize.getOptional("file_size")
 
@@ -106,21 +103,27 @@ private constructor(
      *
      * Unlike [expiresIn], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("expires_in") @ExcludeMissing fun _expiresIn(): JsonField<Long> = expiresIn
+    @JsonProperty("expires_in")
+    @ExcludeMissing
+    fun _expiresIn(): JsonField<Long> = expiresIn
 
     /**
      * Returns the raw JSON value of [fileId].
      *
      * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("file_id") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
+    @JsonProperty("file_id")
+    @ExcludeMissing
+    fun _fileId(): JsonField<String> = fileId
 
     /**
      * Returns the raw JSON value of [filename].
      *
      * Unlike [filename], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("filename") @ExcludeMissing fun _filename(): JsonField<String> = filename
+    @JsonProperty("filename")
+    @ExcludeMissing
+    fun _filename(): JsonField<String> = filename
 
     /**
      * Returns the raw JSON value of [contentType].
@@ -136,17 +139,18 @@ private constructor(
      *
      * Unlike [fileSize], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("file_size") @ExcludeMissing fun _fileSize(): JsonField<Long> = fileSize
+    @JsonProperty("file_size")
+    @ExcludeMissing
+    fun _fileSize(): JsonField<Long> = fileSize
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -156,6 +160,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DigitalProductDeliveryFile].
          *
          * The following fields are required:
+         *
          * ```java
          * .downloadUrl()
          * .expiresIn()
@@ -163,7 +168,8 @@ private constructor(
          * .filename()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DigitalProductDeliveryFile]. */
@@ -178,15 +184,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(digitalProductDeliveryFile: DigitalProductDeliveryFile) = apply {
-            downloadUrl = digitalProductDeliveryFile.downloadUrl
-            expiresIn = digitalProductDeliveryFile.expiresIn
-            fileId = digitalProductDeliveryFile.fileId
-            filename = digitalProductDeliveryFile.filename
-            contentType = digitalProductDeliveryFile.contentType
-            fileSize = digitalProductDeliveryFile.fileSize
-            additionalProperties = digitalProductDeliveryFile.additionalProperties.toMutableMap()
-        }
+        internal fun from(digitalProductDeliveryFile: DigitalProductDeliveryFile) =
+            apply {
+                downloadUrl = digitalProductDeliveryFile.downloadUrl
+                expiresIn = digitalProductDeliveryFile.expiresIn
+                fileId = digitalProductDeliveryFile.fileId
+                filename = digitalProductDeliveryFile.filename
+                contentType = digitalProductDeliveryFile.contentType
+                fileSize = digitalProductDeliveryFile.fileSize
+                additionalProperties = digitalProductDeliveryFile.additionalProperties.toMutableMap()
+            }
 
         /** Short-lived presigned URL for downloading the file. */
         fun downloadUrl(downloadUrl: String) = downloadUrl(JsonField.of(downloadUrl))
@@ -194,11 +201,13 @@ private constructor(
         /**
          * Sets [Builder.downloadUrl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.downloadUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.downloadUrl] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun downloadUrl(downloadUrl: JsonField<String>) = apply { this.downloadUrl = downloadUrl }
+        fun downloadUrl(downloadUrl: JsonField<String>) =
+            apply {
+                this.downloadUrl = downloadUrl
+            }
 
         /** Seconds until `download_url` expires. */
         fun expiresIn(expiresIn: Long) = expiresIn(JsonField.of(expiresIn))
@@ -206,10 +215,13 @@ private constructor(
         /**
          * Sets [Builder.expiresIn] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.expiresIn] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.expiresIn] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun expiresIn(expiresIn: JsonField<Long>) = apply { this.expiresIn = expiresIn }
+        fun expiresIn(expiresIn: JsonField<Long>) =
+            apply {
+                this.expiresIn = expiresIn
+            }
 
         /** Identifier of the attached file. */
         fun fileId(fileId: String) = fileId(JsonField.of(fileId))
@@ -217,10 +229,13 @@ private constructor(
         /**
          * Sets [Builder.fileId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.fileId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
+        fun fileId(fileId: JsonField<String>) =
+            apply {
+                this.fileId = fileId
+            }
 
         /** Original filename of the attached file. */
         fun filename(filename: String) = filename(JsonField.of(filename))
@@ -228,10 +243,13 @@ private constructor(
         /**
          * Sets [Builder.filename] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.filename] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.filename] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun filename(filename: JsonField<String>) = apply { this.filename = filename }
+        fun filename(filename: JsonField<String>) =
+            apply {
+                this.filename = filename
+            }
 
         /** Optional content-type declared at upload. */
         fun contentType(contentType: String?) = contentType(JsonField.ofNullable(contentType))
@@ -242,11 +260,13 @@ private constructor(
         /**
          * Sets [Builder.contentType] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.contentType] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.contentType] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun contentType(contentType: JsonField<String>) = apply { this.contentType = contentType }
+        fun contentType(contentType: JsonField<String>) =
+            apply {
+                this.contentType = contentType
+            }
 
         /** Optional size of the file in bytes. */
         fun fileSize(fileSize: Long?) = fileSize(JsonField.ofNullable(fileSize))
@@ -264,29 +284,39 @@ private constructor(
         /**
          * Sets [Builder.fileSize] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fileSize] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.fileSize] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fileSize(fileSize: JsonField<Long>) = apply { this.fileSize = fileSize }
+        fun fileSize(fileSize: JsonField<Long>) =
+            apply {
+                this.fileSize = fileSize
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [DigitalProductDeliveryFile].
@@ -294,6 +324,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .downloadUrl()
          * .expiresIn()
@@ -305,13 +336,21 @@ private constructor(
          */
         fun build(): DigitalProductDeliveryFile =
             DigitalProductDeliveryFile(
-                checkRequired("downloadUrl", downloadUrl),
-                checkRequired("expiresIn", expiresIn),
-                checkRequired("fileId", fileId),
-                checkRequired("filename", filename),
-                contentType,
-                fileSize,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "downloadUrl", downloadUrl
+              ),
+              checkRequired(
+                "expiresIn", expiresIn
+              ),
+              checkRequired(
+                "fileId", fileId
+              ),
+              checkRequired(
+                "filename", filename
+              ),
+              contentType,
+              fileSize,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -325,19 +364,20 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): DigitalProductDeliveryFile = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): DigitalProductDeliveryFile =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        downloadUrl()
-        expiresIn()
-        fileId()
-        filename()
-        contentType()
-        fileSize()
-        validated = true
-    }
+            downloadUrl()
+            expiresIn()
+            fileId()
+            filename()
+            contentType()
+            fileSize()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -353,43 +393,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (downloadUrl.asKnown().isPresent) 1 else 0) +
-            (if (expiresIn.asKnown().isPresent) 1 else 0) +
-            (if (fileId.asKnown().isPresent) 1 else 0) +
-            (if (filename.asKnown().isPresent) 1 else 0) +
-            (if (contentType.asKnown().isPresent) 1 else 0) +
-            (if (fileSize.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (downloadUrl.asKnown().isPresent) 1 else 0) + (if (expiresIn.asKnown().isPresent) 1 else 0) + (if (fileId.asKnown().isPresent) 1 else 0) + (if (filename.asKnown().isPresent) 1 else 0) + (if (contentType.asKnown().isPresent) 1 else 0) + (if (fileSize.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DigitalProductDeliveryFile &&
-            downloadUrl == other.downloadUrl &&
-            expiresIn == other.expiresIn &&
-            fileId == other.fileId &&
-            filename == other.filename &&
-            contentType == other.contentType &&
-            fileSize == other.fileSize &&
-            additionalProperties == other.additionalProperties
+      return other is DigitalProductDeliveryFile && downloadUrl == other.downloadUrl && expiresIn == other.expiresIn && fileId == other.fileId && filename == other.filename && contentType == other.contentType && fileSize == other.fileSize && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            downloadUrl,
-            expiresIn,
-            fileId,
-            filename,
-            contentType,
-            fileSize,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(downloadUrl, expiresIn, fileId, filename, contentType, fileSize, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "DigitalProductDeliveryFile{downloadUrl=$downloadUrl, expiresIn=$expiresIn, fileId=$fileId, filename=$filename, contentType=$contentType, fileSize=$fileSize, additionalProperties=$additionalProperties}"
+    override fun toString() = "DigitalProductDeliveryFile{downloadUrl=$downloadUrl, expiresIn=$expiresIn, fileId=$fileId, filename=$filename, contentType=$contentType, fileSize=$fileSize, additionalProperties=$additionalProperties}"
 }

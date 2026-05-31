@@ -3,6 +3,9 @@
 package com.dodopayments.api.models.licensekeys
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyListPageResponse
+import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,77 +15,64 @@ internal class LicenseKeyListPageResponseTest {
 
     @Test
     fun create() {
-        val licenseKeyListPageResponse =
-            LicenseKeyListPageResponse.builder()
-                .addItem(
-                    LicenseKey.builder()
-                        .id("lic_123")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                        .customerId("cus_123")
-                        .instancesCount(0)
-                        .key("key")
-                        .productId("product_id")
-                        .source(LicenseKey.Source.AUTO)
-                        .status(LicenseKeyStatus.ACTIVE)
-                        .activationsLimit(5)
-                        .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                        .paymentId("payment_id")
-                        .subscriptionId("subscription_id")
-                        .build()
-                )
-                .build()
+      val licenseKeyListPageResponse = LicenseKeyListPageResponse.builder()
+          .addItem(LicenseKey.builder()
+              .id("lic_123")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+              .customerId("cus_123")
+              .instancesCount(0)
+              .key("key")
+              .productId("product_id")
+              .source(LicenseKey.Source.AUTO)
+              .status(LicenseKeyStatus.ACTIVE)
+              .activationsLimit(5)
+              .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+              .paymentId("payment_id")
+              .subscriptionId("subscription_id")
+              .build())
+          .build()
 
-        assertThat(licenseKeyListPageResponse.items())
-            .containsExactly(
-                LicenseKey.builder()
-                    .id("lic_123")
-                    .businessId("business_id")
-                    .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                    .customerId("cus_123")
-                    .instancesCount(0)
-                    .key("key")
-                    .productId("product_id")
-                    .source(LicenseKey.Source.AUTO)
-                    .status(LicenseKeyStatus.ACTIVE)
-                    .activationsLimit(5)
-                    .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                    .paymentId("payment_id")
-                    .subscriptionId("subscription_id")
-                    .build()
-            )
+      assertThat(licenseKeyListPageResponse.items()).containsExactly(LicenseKey.builder()
+          .id("lic_123")
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+          .customerId("cus_123")
+          .instancesCount(0)
+          .key("key")
+          .productId("product_id")
+          .source(LicenseKey.Source.AUTO)
+          .status(LicenseKeyStatus.ACTIVE)
+          .activationsLimit(5)
+          .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+          .paymentId("payment_id")
+          .subscriptionId("subscription_id")
+          .build())
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val licenseKeyListPageResponse =
-            LicenseKeyListPageResponse.builder()
-                .addItem(
-                    LicenseKey.builder()
-                        .id("lic_123")
-                        .businessId("business_id")
-                        .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                        .customerId("cus_123")
-                        .instancesCount(0)
-                        .key("key")
-                        .productId("product_id")
-                        .source(LicenseKey.Source.AUTO)
-                        .status(LicenseKeyStatus.ACTIVE)
-                        .activationsLimit(5)
-                        .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                        .paymentId("payment_id")
-                        .subscriptionId("subscription_id")
-                        .build()
-                )
-                .build()
+      val jsonMapper = jsonMapper()
+      val licenseKeyListPageResponse = LicenseKeyListPageResponse.builder()
+          .addItem(LicenseKey.builder()
+              .id("lic_123")
+              .businessId("business_id")
+              .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+              .customerId("cus_123")
+              .instancesCount(0)
+              .key("key")
+              .productId("product_id")
+              .source(LicenseKey.Source.AUTO)
+              .status(LicenseKeyStatus.ACTIVE)
+              .activationsLimit(5)
+              .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+              .paymentId("payment_id")
+              .subscriptionId("subscription_id")
+              .build())
+          .build()
 
-        val roundtrippedLicenseKeyListPageResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(licenseKeyListPageResponse),
-                jacksonTypeRef<LicenseKeyListPageResponse>(),
-            )
+      val roundtrippedLicenseKeyListPageResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(licenseKeyListPageResponse), jacksonTypeRef<LicenseKeyListPageResponse>())
 
-        assertThat(roundtrippedLicenseKeyListPageResponse).isEqualTo(licenseKeyListPageResponse)
+      assertThat(roundtrippedLicenseKeyListPageResponse).isEqualTo(licenseKeyListPageResponse)
     }
 }

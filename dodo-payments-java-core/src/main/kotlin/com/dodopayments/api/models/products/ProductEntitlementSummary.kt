@@ -22,71 +22,59 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * Summary of an entitlement attached to a product.
  *
- * `integration_config` uses [`IntegrationConfigResponse`] (NOT the persisted [`IntegrationConfig`])
- * so digital_files entitlements embed the resolved `digital_files` object — matching what `GET
- * /entitlements/{id}` returns. All other variants pass through unchanged via `#[serde(untagged)]`.
+ * `integration_config` uses [`IntegrationConfigResponse`] (NOT the
+ * persisted [`IntegrationConfig`]) so digital_files entitlements embed the
+ * resolved `digital_files` object — matching what `GET /entitlements/{id}`
+ * returns. All other variants pass through unchanged via
+ * `#[serde(untagged)]`.
  */
-class ProductEntitlementSummary
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProductEntitlementSummary @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val integrationConfig: JsonField<IntegrationConfigResponse>,
     private val integrationType: JsonField<EntitlementIntegrationType>,
     private val name: JsonField<String>,
     private val description: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("integration_config")
-        @ExcludeMissing
-        integrationConfig: JsonField<IntegrationConfigResponse> = JsonMissing.of(),
-        @JsonProperty("integration_type")
-        @ExcludeMissing
-        integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
+        @JsonProperty("integration_config") @ExcludeMissing integrationConfig: JsonField<IntegrationConfigResponse> = JsonMissing.of(),
+        @JsonProperty("integration_type") @ExcludeMissing integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
-    ) : this(id, integrationConfig, integrationType, name, description, mutableMapOf())
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of()
+    ) : this(
+      id,
+      integrationConfig,
+      integrationType,
+      name,
+      description,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun id(): String = id.getRequired("id")
 
     /**
      * Integration-specific configuration on an entitlement read response.
      *
-     * For `digital_files` entitlements the response includes presigned download URLs for each
-     * attached file; other integrations match the shape supplied at creation.
+     * For `digital_files` entitlements the response includes presigned
+     * download URLs for each attached file; other integrations match the
+     * shape supplied at creation.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun integrationConfig(): IntegrationConfigResponse =
-        integrationConfig.getRequired("integration_config")
+    fun integrationConfig(): IntegrationConfigResponse = integrationConfig.getRequired("integration_config")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun integrationType(): EntitlementIntegrationType =
-        integrationType.getRequired("integration_type")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
+    fun integrationType(): EntitlementIntegrationType = integrationType.getRequired("integration_type")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun name(): String = name.getRequired("name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
@@ -94,13 +82,14 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [integrationConfig].
      *
-     * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("integration_config")
     @ExcludeMissing
@@ -120,24 +109,27 @@ private constructor(
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [description].
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -147,6 +139,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProductEntitlementSummary].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .integrationConfig()
@@ -154,7 +147,8 @@ private constructor(
          * .name()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductEntitlementSummary]. */
@@ -168,124 +162,98 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(productEntitlementSummary: ProductEntitlementSummary) = apply {
-            id = productEntitlementSummary.id
-            integrationConfig = productEntitlementSummary.integrationConfig
-            integrationType = productEntitlementSummary.integrationType
-            name = productEntitlementSummary.name
-            description = productEntitlementSummary.description
-            additionalProperties = productEntitlementSummary.additionalProperties.toMutableMap()
-        }
+        internal fun from(productEntitlementSummary: ProductEntitlementSummary) =
+            apply {
+                id = productEntitlementSummary.id
+                integrationConfig = productEntitlementSummary.integrationConfig
+                integrationType = productEntitlementSummary.integrationType
+                name = productEntitlementSummary.name
+                description = productEntitlementSummary.description
+                additionalProperties = productEntitlementSummary.additionalProperties.toMutableMap()
+            }
 
         fun id(id: String) = id(JsonField.of(id))
 
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         /**
          * Integration-specific configuration on an entitlement read response.
          *
-         * For `digital_files` entitlements the response includes presigned download URLs for each
-         * attached file; other integrations match the shape supplied at creation.
+         * For `digital_files` entitlements the response includes presigned
+         * download URLs for each attached file; other integrations match the
+         * shape supplied at creation.
          */
-        fun integrationConfig(integrationConfig: IntegrationConfigResponse) =
-            integrationConfig(JsonField.of(integrationConfig))
+        fun integrationConfig(integrationConfig: IntegrationConfigResponse) = integrationConfig(JsonField.of(integrationConfig))
 
         /**
          * Sets [Builder.integrationConfig] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.integrationConfig] with a well-typed
-         * [IntegrationConfigResponse] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * You should usually call [Builder.integrationConfig] with a well-typed [IntegrationConfigResponse] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun integrationConfig(integrationConfig: JsonField<IntegrationConfigResponse>) = apply {
-            this.integrationConfig = integrationConfig
-        }
+        fun integrationConfig(integrationConfig: JsonField<IntegrationConfigResponse>) =
+            apply {
+                this.integrationConfig = integrationConfig
+            }
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofGitHubConfig(githubConfig)`.
-         */
-        fun integrationConfig(githubConfig: IntegrationConfigResponse.GitHubConfig) =
-            integrationConfig(IntegrationConfigResponse.ofGitHubConfig(githubConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofGitHubConfig(githubConfig)`. */
+        fun integrationConfig(githubConfig: IntegrationConfigResponse.GitHubConfig) = integrationConfig(IntegrationConfigResponse.ofGitHubConfig(githubConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofDiscordConfig(discordConfig)`.
-         */
-        fun integrationConfig(discordConfig: IntegrationConfigResponse.DiscordConfig) =
-            integrationConfig(IntegrationConfigResponse.ofDiscordConfig(discordConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofDiscordConfig(discordConfig)`. */
+        fun integrationConfig(discordConfig: IntegrationConfigResponse.DiscordConfig) = integrationConfig(IntegrationConfigResponse.ofDiscordConfig(discordConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofTelegramConfig(telegramConfig)`.
-         */
-        fun integrationConfig(telegramConfig: IntegrationConfigResponse.TelegramConfig) =
-            integrationConfig(IntegrationConfigResponse.ofTelegramConfig(telegramConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofTelegramConfig(telegramConfig)`. */
+        fun integrationConfig(telegramConfig: IntegrationConfigResponse.TelegramConfig) = integrationConfig(IntegrationConfigResponse.ofTelegramConfig(telegramConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofFigmaConfig(figmaConfig)`.
-         */
-        fun integrationConfig(figmaConfig: IntegrationConfigResponse.FigmaConfig) =
-            integrationConfig(IntegrationConfigResponse.ofFigmaConfig(figmaConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofFigmaConfig(figmaConfig)`. */
+        fun integrationConfig(figmaConfig: IntegrationConfigResponse.FigmaConfig) = integrationConfig(IntegrationConfigResponse.ofFigmaConfig(figmaConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofFramerConfig(framerConfig)`.
-         */
-        fun integrationConfig(framerConfig: IntegrationConfigResponse.FramerConfig) =
-            integrationConfig(IntegrationConfigResponse.ofFramerConfig(framerConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofFramerConfig(framerConfig)`. */
+        fun integrationConfig(framerConfig: IntegrationConfigResponse.FramerConfig) = integrationConfig(IntegrationConfigResponse.ofFramerConfig(framerConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofNotionConfig(notionConfig)`.
-         */
-        fun integrationConfig(notionConfig: IntegrationConfigResponse.NotionConfig) =
-            integrationConfig(IntegrationConfigResponse.ofNotionConfig(notionConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofNotionConfig(notionConfig)`. */
+        fun integrationConfig(notionConfig: IntegrationConfigResponse.NotionConfig) = integrationConfig(IntegrationConfigResponse.ofNotionConfig(notionConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofDigitalFilesConfig(digitalFilesConfig)`.
-         */
-        fun integrationConfig(digitalFilesConfig: IntegrationConfigResponse.DigitalFilesConfig) =
-            integrationConfig(IntegrationConfigResponse.ofDigitalFilesConfig(digitalFilesConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofDigitalFilesConfig(digitalFilesConfig)`. */
+        fun integrationConfig(digitalFilesConfig: IntegrationConfigResponse.DigitalFilesConfig) = integrationConfig(IntegrationConfigResponse.ofDigitalFilesConfig(digitalFilesConfig))
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfigResponse.ofLicenseKeyConfig(licenseKeyConfig)`.
-         */
-        fun integrationConfig(licenseKeyConfig: IntegrationConfigResponse.LicenseKeyConfig) =
-            integrationConfig(IntegrationConfigResponse.ofLicenseKeyConfig(licenseKeyConfig))
+        /** Alias for calling [integrationConfig] with `IntegrationConfigResponse.ofLicenseKeyConfig(licenseKeyConfig)`. */
+        fun integrationConfig(licenseKeyConfig: IntegrationConfigResponse.LicenseKeyConfig) = integrationConfig(IntegrationConfigResponse.ofLicenseKeyConfig(licenseKeyConfig))
 
-        fun integrationType(integrationType: EntitlementIntegrationType) =
-            integrationType(JsonField.of(integrationType))
+        fun integrationType(integrationType: EntitlementIntegrationType) = integrationType(JsonField.of(integrationType))
 
         /**
          * Sets [Builder.integrationType] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.integrationType] with a well-typed
-         * [EntitlementIntegrationType] value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * You should usually call [Builder.integrationType] with a well-typed [EntitlementIntegrationType] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) = apply {
-            this.integrationType = integrationType
-        }
+        fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) =
+            apply {
+                this.integrationType = integrationType
+            }
 
         fun name(name: String) = name(JsonField.of(name))
 
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         fun description(description: String?) = description(JsonField.ofNullable(description))
 
@@ -295,30 +263,39 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductEntitlementSummary].
@@ -326,6 +303,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .integrationConfig()
@@ -337,12 +315,20 @@ private constructor(
          */
         fun build(): ProductEntitlementSummary =
             ProductEntitlementSummary(
-                checkRequired("id", id),
-                checkRequired("integrationConfig", integrationConfig),
-                checkRequired("integrationType", integrationType),
-                checkRequired("name", name),
-                description,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "integrationConfig", integrationConfig
+              ),
+              checkRequired(
+                "integrationType", integrationType
+              ),
+              checkRequired(
+                "name", name
+              ),
+              description,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -356,18 +342,19 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ProductEntitlementSummary = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProductEntitlementSummary =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        integrationConfig().validate()
-        integrationType().validate()
-        name()
-        description()
-        validated = true
-    }
+            id()
+            integrationConfig().validate()
+            integrationType().validate()
+            name()
+            description()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -383,40 +370,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (integrationConfig.asKnown().getOrNull()?.validity() ?: 0) +
-            (integrationType.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (integrationConfig.asKnown().getOrNull()?.validity() ?: 0) + (integrationType.asKnown().getOrNull()?.validity() ?: 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductEntitlementSummary &&
-            id == other.id &&
-            integrationConfig == other.integrationConfig &&
-            integrationType == other.integrationType &&
-            name == other.name &&
-            description == other.description &&
-            additionalProperties == other.additionalProperties
+      return other is ProductEntitlementSummary && id == other.id && integrationConfig == other.integrationConfig && integrationType == other.integrationType && name == other.name && description == other.description && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            integrationConfig,
-            integrationType,
-            name,
-            description,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, integrationConfig, integrationType, name, description, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProductEntitlementSummary{id=$id, integrationConfig=$integrationConfig, integrationType=$integrationType, name=$name, description=$description, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProductEntitlementSummary{id=$id, integrationConfig=$integrationConfig, integrationType=$integrationType, name=$name, description=$description, additionalProperties=$additionalProperties}"
 }

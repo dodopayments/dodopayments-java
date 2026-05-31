@@ -31,6 +31,8 @@ import com.dodopayments.api.models.customers.CustomerRetrieveParams
 import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParams
 import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsResponse
 import com.dodopayments.api.models.customers.CustomerUpdateParams
+import com.dodopayments.api.services.blocking.CustomerService
+import com.dodopayments.api.services.blocking.CustomerServiceImpl
 import com.dodopayments.api.services.blocking.customers.CustomerPortalService
 import com.dodopayments.api.services.blocking.customers.CustomerPortalServiceImpl
 import com.dodopayments.api.services.blocking.customers.WalletService
@@ -38,23 +40,20 @@ import com.dodopayments.api.services.blocking.customers.WalletServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    CustomerService {
+class CustomerServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: CustomerService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : CustomerService {
 
-    private val customerPortal: CustomerPortalService by lazy {
-        CustomerPortalServiceImpl(clientOptions)
-    }
+    private val withRawResponse: CustomerService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
+
+    private val customerPortal: CustomerPortalService by lazy { CustomerPortalServiceImpl(clientOptions) }
 
     private val wallets: WalletService by lazy { WalletServiceImpl(clientOptions) }
 
     override fun withRawResponse(): CustomerService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService =
-        CustomerServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService = CustomerServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun customerPortal(): CustomerPortalService = customerPortal
 
@@ -64,10 +63,7 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
         // post /customers
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
-        params: CustomerRetrieveParams,
-        requestOptions: RequestOptions,
-    ): Customer =
+    override fun retrieve(params: CustomerRetrieveParams, requestOptions: RequestOptions): Customer =
         // get /customers/{customer_id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
@@ -75,307 +71,283 @@ class CustomerServiceImpl internal constructor(private val clientOptions: Client
         // patch /customers/{customer_id}
         withRawResponse().update(params, requestOptions).parse()
 
-    override fun list(
-        params: CustomerListParams,
-        requestOptions: RequestOptions,
-    ): CustomerListPage =
+    override fun list(params: CustomerListParams, requestOptions: RequestOptions): CustomerListPage =
         // get /customers
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun deletePaymentMethod(
-        params: CustomerDeletePaymentMethodParams,
-        requestOptions: RequestOptions,
-    ) {
-        // delete /customers/{customer_id}/payment-methods/{payment_method_id}
-        withRawResponse().deletePaymentMethod(params, requestOptions)
+    override fun deletePaymentMethod(params: CustomerDeletePaymentMethodParams, requestOptions: RequestOptions) {
+      // delete /customers/{customer_id}/payment-methods/{payment_method_id}
+      withRawResponse().deletePaymentMethod(params, requestOptions)
     }
 
-    override fun listCreditEntitlements(
-        params: CustomerListCreditEntitlementsParams,
-        requestOptions: RequestOptions,
-    ): CustomerListCreditEntitlementsResponse =
+    override fun listCreditEntitlements(params: CustomerListCreditEntitlementsParams, requestOptions: RequestOptions): CustomerListCreditEntitlementsResponse =
         // get /customers/{customer_id}/credit-entitlements
         withRawResponse().listCreditEntitlements(params, requestOptions).parse()
 
-    override fun listEntitlements(
-        params: CustomerListEntitlementsParams,
-        requestOptions: RequestOptions,
-    ): CustomerListEntitlementsResponse =
+    override fun listEntitlements(params: CustomerListEntitlementsParams, requestOptions: RequestOptions): CustomerListEntitlementsResponse =
         // get /customers/{customer_id}/entitlements
         withRawResponse().listEntitlements(params, requestOptions).parse()
 
-    override fun retrievePaymentMethods(
-        params: CustomerRetrievePaymentMethodsParams,
-        requestOptions: RequestOptions,
-    ): CustomerRetrievePaymentMethodsResponse =
+    override fun retrievePaymentMethods(params: CustomerRetrievePaymentMethodsParams, requestOptions: RequestOptions): CustomerRetrievePaymentMethodsResponse =
         // get /customers/{customer_id}/payment-methods
         withRawResponse().retrievePaymentMethods(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        CustomerService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : CustomerService.WithRawResponse {
 
-        private val customerPortal: CustomerPortalService.WithRawResponse by lazy {
-            CustomerPortalServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val wallets: WalletService.WithRawResponse by lazy {
-            WalletServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val customerPortal: CustomerPortalService.WithRawResponse by lazy { CustomerPortalServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): CustomerService.WithRawResponse =
-            CustomerServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val wallets: WalletService.WithRawResponse by lazy { WalletServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerService.WithRawResponse = CustomerServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun customerPortal(): CustomerPortalService.WithRawResponse = customerPortal
 
         override fun wallets(): WalletService.WithRawResponse = wallets
 
-        private val createHandler: Handler<Customer> =
-            jsonHandler<Customer>(clientOptions.jsonMapper)
+        private val createHandler: Handler<Customer> = jsonHandler<Customer>(clientOptions.jsonMapper)
 
-        override fun create(
-            params: CustomerCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Customer> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun create(params: CustomerCreateParams, requestOptions: RequestOptions): HttpResponseFor<Customer> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val retrieveHandler: Handler<Customer> =
-            jsonHandler<Customer>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Customer> = jsonHandler<Customer>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: CustomerRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Customer> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: CustomerRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<Customer> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val updateHandler: Handler<Customer> =
-            jsonHandler<Customer>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Customer> = jsonHandler<Customer>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: CustomerUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Customer> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun update(params: CustomerUpdateParams, requestOptions: RequestOptions): HttpResponseFor<Customer> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<CustomerListPageResponse> =
-            jsonHandler<CustomerListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<CustomerListPageResponse> = jsonHandler<CustomerListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: CustomerListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomerListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        CustomerListPage.builder()
-                            .service(CustomerServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: CustomerListParams, requestOptions: RequestOptions): HttpResponseFor<CustomerListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  CustomerListPage.builder()
+                      .service(CustomerServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
         private val deletePaymentMethodHandler: Handler<Void?> = emptyHandler()
 
-        override fun deletePaymentMethod(
-            params: CustomerDeletePaymentMethodParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("paymentMethodId", params.paymentMethodId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "customers",
-                        params._pathParam(0),
-                        "payment-methods",
-                        params._pathParam(1),
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { deletePaymentMethodHandler.handle(it) }
-            }
+        override fun deletePaymentMethod(params: CustomerDeletePaymentMethodParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("paymentMethodId", params.paymentMethodId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "payment-methods", params._pathParam(1))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  deletePaymentMethodHandler.handle(it)
+              }
+          }
         }
 
-        private val listCreditEntitlementsHandler: Handler<CustomerListCreditEntitlementsResponse> =
-            jsonHandler<CustomerListCreditEntitlementsResponse>(clientOptions.jsonMapper)
+        private val listCreditEntitlementsHandler: Handler<CustomerListCreditEntitlementsResponse> = jsonHandler<CustomerListCreditEntitlementsResponse>(clientOptions.jsonMapper)
 
-        override fun listCreditEntitlements(
-            params: CustomerListCreditEntitlementsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomerListCreditEntitlementsResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0), "credit-entitlements")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listCreditEntitlementsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun listCreditEntitlements(params: CustomerListCreditEntitlementsParams, requestOptions: RequestOptions): HttpResponseFor<CustomerListCreditEntitlementsResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "credit-entitlements")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listCreditEntitlementsHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listEntitlementsHandler: Handler<CustomerListEntitlementsResponse> =
-            jsonHandler<CustomerListEntitlementsResponse>(clientOptions.jsonMapper)
+        private val listEntitlementsHandler: Handler<CustomerListEntitlementsResponse> = jsonHandler<CustomerListEntitlementsResponse>(clientOptions.jsonMapper)
 
-        override fun listEntitlements(
-            params: CustomerListEntitlementsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomerListEntitlementsResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0), "entitlements")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listEntitlementsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun listEntitlements(params: CustomerListEntitlementsParams, requestOptions: RequestOptions): HttpResponseFor<CustomerListEntitlementsResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "entitlements")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listEntitlementsHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val retrievePaymentMethodsHandler: Handler<CustomerRetrievePaymentMethodsResponse> =
-            jsonHandler<CustomerRetrievePaymentMethodsResponse>(clientOptions.jsonMapper)
+        private val retrievePaymentMethodsHandler: Handler<CustomerRetrievePaymentMethodsResponse> = jsonHandler<CustomerRetrievePaymentMethodsResponse>(clientOptions.jsonMapper)
 
-        override fun retrievePaymentMethods(
-            params: CustomerRetrievePaymentMethodsParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0), "payment-methods")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrievePaymentMethodsHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrievePaymentMethods(params: CustomerRetrievePaymentMethodsParams, requestOptions: RequestOptions): HttpResponseFor<CustomerRetrievePaymentMethodsResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "payment-methods")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrievePaymentMethodsHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

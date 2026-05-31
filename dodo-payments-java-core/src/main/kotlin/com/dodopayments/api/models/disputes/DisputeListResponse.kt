@@ -8,6 +8,8 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.disputes.DisputeStage
+import com.dodopayments.api.models.disputes.DisputeStatus
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -18,9 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class DisputeListResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class DisputeListResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val amount: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -31,111 +31,93 @@ private constructor(
     private val paymentId: JsonField<String>,
     private val isResolvedByRdr: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("amount") @ExcludeMissing amount: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dispute_id") @ExcludeMissing disputeId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("dispute_stage")
-        @ExcludeMissing
-        disputeStage: JsonField<DisputeStage> = JsonMissing.of(),
-        @JsonProperty("dispute_status")
-        @ExcludeMissing
-        disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
+        @JsonProperty("dispute_stage") @ExcludeMissing disputeStage: JsonField<DisputeStage> = JsonMissing.of(),
+        @JsonProperty("dispute_status") @ExcludeMissing disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("is_resolved_by_rdr")
-        @ExcludeMissing
-        isResolvedByRdr: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("is_resolved_by_rdr") @ExcludeMissing isResolvedByRdr: JsonField<Boolean> = JsonMissing.of()
     ) : this(
-        amount,
-        businessId,
-        createdAt,
-        currency,
-        disputeId,
-        disputeStage,
-        disputeStatus,
-        paymentId,
-        isResolvedByRdr,
-        mutableMapOf(),
+      amount,
+      businessId,
+      createdAt,
+      currency,
+      disputeId,
+      disputeStage,
+      disputeStatus,
+      paymentId,
+      isResolvedByRdr,
+      mutableMapOf(),
     )
 
     /**
      * The amount involved in the dispute, represented as a string to accommodate precision.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun amount(): String = amount.getRequired("amount")
 
     /**
      * The unique identifier of the business involved in the dispute.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun businessId(): String = businessId.getRequired("business_id")
 
     /**
      * The timestamp of when the dispute was created, in UTC.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
      * The currency of the disputed amount, represented as an ISO 4217 currency code.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currency(): String = currency.getRequired("currency")
 
     /**
      * The unique identifier of the dispute.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun disputeId(): String = disputeId.getRequired("dispute_id")
 
     /**
      * The current stage of the dispute process.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun disputeStage(): DisputeStage = disputeStage.getRequired("dispute_stage")
 
     /**
      * The current status of the dispute.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun disputeStatus(): DisputeStatus = disputeStatus.getRequired("dispute_status")
 
     /**
      * The unique identifier of the payment associated with the dispute.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
      * Whether the dispute was resolved by Rapid Dispute Resolution
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun isResolvedByRdr(): Optional<Boolean> = isResolvedByRdr.getOptional("is_resolved_by_rdr")
 
@@ -144,14 +126,18 @@ private constructor(
      *
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<String> = amount
+    @JsonProperty("amount")
+    @ExcludeMissing
+    fun _amount(): JsonField<String> = amount
 
     /**
      * Returns the raw JSON value of [businessId].
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -167,14 +153,18 @@ private constructor(
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<String> = currency
+    @JsonProperty("currency")
+    @ExcludeMissing
+    fun _currency(): JsonField<String> = currency
 
     /**
      * Returns the raw JSON value of [disputeId].
      *
      * Unlike [disputeId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("dispute_id") @ExcludeMissing fun _disputeId(): JsonField<String> = disputeId
+    @JsonProperty("dispute_id")
+    @ExcludeMissing
+    fun _disputeId(): JsonField<String> = disputeId
 
     /**
      * Returns the raw JSON value of [disputeStage].
@@ -199,7 +189,9 @@ private constructor(
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+    @JsonProperty("payment_id")
+    @ExcludeMissing
+    fun _paymentId(): JsonField<String> = paymentId
 
     /**
      * Returns the raw JSON value of [isResolvedByRdr].
@@ -212,13 +204,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -228,6 +219,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DisputeListResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .amount()
          * .businessId()
@@ -239,7 +231,8 @@ private constructor(
          * .paymentId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DisputeListResponse]. */
@@ -257,18 +250,19 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(disputeListResponse: DisputeListResponse) = apply {
-            amount = disputeListResponse.amount
-            businessId = disputeListResponse.businessId
-            createdAt = disputeListResponse.createdAt
-            currency = disputeListResponse.currency
-            disputeId = disputeListResponse.disputeId
-            disputeStage = disputeListResponse.disputeStage
-            disputeStatus = disputeListResponse.disputeStatus
-            paymentId = disputeListResponse.paymentId
-            isResolvedByRdr = disputeListResponse.isResolvedByRdr
-            additionalProperties = disputeListResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(disputeListResponse: DisputeListResponse) =
+            apply {
+                amount = disputeListResponse.amount
+                businessId = disputeListResponse.businessId
+                createdAt = disputeListResponse.createdAt
+                currency = disputeListResponse.currency
+                disputeId = disputeListResponse.disputeId
+                disputeStage = disputeListResponse.disputeStage
+                disputeStatus = disputeListResponse.disputeStatus
+                paymentId = disputeListResponse.paymentId
+                isResolvedByRdr = disputeListResponse.isResolvedByRdr
+                additionalProperties = disputeListResponse.additionalProperties.toMutableMap()
+            }
 
         /** The amount involved in the dispute, represented as a string to accommodate precision. */
         fun amount(amount: String) = amount(JsonField.of(amount))
@@ -276,10 +270,13 @@ private constructor(
         /**
          * Sets [Builder.amount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.amount] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun amount(amount: JsonField<String>) = apply { this.amount = amount }
+        fun amount(amount: JsonField<String>) =
+            apply {
+                this.amount = amount
+            }
 
         /** The unique identifier of the business involved in the dispute. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -287,11 +284,13 @@ private constructor(
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
         /** The timestamp of when the dispute was created, in UTC. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -299,11 +298,13 @@ private constructor(
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         /** The currency of the disputed amount, represented as an ISO 4217 currency code. */
         fun currency(currency: String) = currency(JsonField.of(currency))
@@ -311,10 +312,13 @@ private constructor(
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.currency] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<String>) = apply { this.currency = currency }
+        fun currency(currency: JsonField<String>) =
+            apply {
+                this.currency = currency
+            }
 
         /** The unique identifier of the dispute. */
         fun disputeId(disputeId: String) = disputeId(JsonField.of(disputeId))
@@ -322,11 +326,13 @@ private constructor(
         /**
          * Sets [Builder.disputeId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disputeId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.disputeId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun disputeId(disputeId: JsonField<String>) = apply { this.disputeId = disputeId }
+        fun disputeId(disputeId: JsonField<String>) =
+            apply {
+                this.disputeId = disputeId
+            }
 
         /** The current stage of the dispute process. */
         fun disputeStage(disputeStage: DisputeStage) = disputeStage(JsonField.of(disputeStage))
@@ -334,13 +340,13 @@ private constructor(
         /**
          * Sets [Builder.disputeStage] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disputeStage] with a well-typed [DisputeStage] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.disputeStage] with a well-typed [DisputeStage] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun disputeStage(disputeStage: JsonField<DisputeStage>) = apply {
-            this.disputeStage = disputeStage
-        }
+        fun disputeStage(disputeStage: JsonField<DisputeStage>) =
+            apply {
+                this.disputeStage = disputeStage
+            }
 
         /** The current status of the dispute. */
         fun disputeStatus(disputeStatus: DisputeStatus) = disputeStatus(JsonField.of(disputeStatus))
@@ -348,13 +354,13 @@ private constructor(
         /**
          * Sets [Builder.disputeStatus] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disputeStatus] with a well-typed [DisputeStatus] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.disputeStatus] with a well-typed [DisputeStatus] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun disputeStatus(disputeStatus: JsonField<DisputeStatus>) = apply {
-            this.disputeStatus = disputeStatus
-        }
+        fun disputeStatus(disputeStatus: JsonField<DisputeStatus>) =
+            apply {
+                this.disputeStatus = disputeStatus
+            }
 
         /** The unique identifier of the payment associated with the dispute. */
         fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
@@ -362,15 +368,16 @@ private constructor(
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                this.paymentId = paymentId
+            }
 
         /** Whether the dispute was resolved by Rapid Dispute Resolution */
-        fun isResolvedByRdr(isResolvedByRdr: Boolean?) =
-            isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
+        fun isResolvedByRdr(isResolvedByRdr: Boolean?) = isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
 
         /**
          * Alias for [Builder.isResolvedByRdr].
@@ -380,38 +387,44 @@ private constructor(
         fun isResolvedByRdr(isResolvedByRdr: Boolean) = isResolvedByRdr(isResolvedByRdr as Boolean?)
 
         /** Alias for calling [Builder.isResolvedByRdr] with `isResolvedByRdr.orElse(null)`. */
-        fun isResolvedByRdr(isResolvedByRdr: Optional<Boolean>) =
-            isResolvedByRdr(isResolvedByRdr.getOrNull())
+        fun isResolvedByRdr(isResolvedByRdr: Optional<Boolean>) = isResolvedByRdr(isResolvedByRdr.getOrNull())
 
         /**
          * Sets [Builder.isResolvedByRdr] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isResolvedByRdr] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.isResolvedByRdr] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun isResolvedByRdr(isResolvedByRdr: JsonField<Boolean>) = apply {
-            this.isResolvedByRdr = isResolvedByRdr
-        }
+        fun isResolvedByRdr(isResolvedByRdr: JsonField<Boolean>) =
+            apply {
+                this.isResolvedByRdr = isResolvedByRdr
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [DisputeListResponse].
@@ -419,6 +432,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .amount()
          * .businessId()
@@ -434,16 +448,32 @@ private constructor(
          */
         fun build(): DisputeListResponse =
             DisputeListResponse(
-                checkRequired("amount", amount),
-                checkRequired("businessId", businessId),
-                checkRequired("createdAt", createdAt),
-                checkRequired("currency", currency),
-                checkRequired("disputeId", disputeId),
-                checkRequired("disputeStage", disputeStage),
-                checkRequired("disputeStatus", disputeStatus),
-                checkRequired("paymentId", paymentId),
-                isResolvedByRdr,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "amount", amount
+              ),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "currency", currency
+              ),
+              checkRequired(
+                "disputeId", disputeId
+              ),
+              checkRequired(
+                "disputeStage", disputeStage
+              ),
+              checkRequired(
+                "disputeStatus", disputeStatus
+              ),
+              checkRequired(
+                "paymentId", paymentId
+              ),
+              isResolvedByRdr,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -457,22 +487,23 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): DisputeListResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): DisputeListResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        amount()
-        businessId()
-        createdAt()
-        currency()
-        disputeId()
-        disputeStage().validate()
-        disputeStatus().validate()
-        paymentId()
-        isResolvedByRdr()
-        validated = true
-    }
+            amount()
+            businessId()
+            createdAt()
+            currency()
+            disputeId()
+            disputeStage().validate()
+            disputeStatus().validate()
+            paymentId()
+            isResolvedByRdr()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -488,52 +519,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (amount.asKnown().isPresent) 1 else 0) +
-            (if (businessId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (currency.asKnown().isPresent) 1 else 0) +
-            (if (disputeId.asKnown().isPresent) 1 else 0) +
-            (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
-            (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (if (isResolvedByRdr.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (amount.asKnown().isPresent) 1 else 0) + (if (businessId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (if (currency.asKnown().isPresent) 1 else 0) + (if (disputeId.asKnown().isPresent) 1 else 0) + (disputeStage.asKnown().getOrNull()?.validity() ?: 0) + (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) + (if (paymentId.asKnown().isPresent) 1 else 0) + (if (isResolvedByRdr.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DisputeListResponse &&
-            amount == other.amount &&
-            businessId == other.businessId &&
-            createdAt == other.createdAt &&
-            currency == other.currency &&
-            disputeId == other.disputeId &&
-            disputeStage == other.disputeStage &&
-            disputeStatus == other.disputeStatus &&
-            paymentId == other.paymentId &&
-            isResolvedByRdr == other.isResolvedByRdr &&
-            additionalProperties == other.additionalProperties
+      return other is DisputeListResponse && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && disputeId == other.disputeId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && paymentId == other.paymentId && isResolvedByRdr == other.isResolvedByRdr && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            amount,
-            businessId,
-            createdAt,
-            currency,
-            disputeId,
-            disputeStage,
-            disputeStatus,
-            paymentId,
-            isResolvedByRdr,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(amount, businessId, createdAt, currency, disputeId, disputeStage, disputeStatus, paymentId, isResolvedByRdr, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "DisputeListResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, additionalProperties=$additionalProperties}"
+    override fun toString() = "DisputeListResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, additionalProperties=$additionalProperties}"
 }

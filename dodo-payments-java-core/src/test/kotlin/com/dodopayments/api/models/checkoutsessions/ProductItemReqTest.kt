@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.checkoutsessions
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.checkoutsessions.ProductItemReq
 import com.dodopayments.api.models.subscriptions.AttachAddon
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
@@ -13,57 +14,52 @@ internal class ProductItemReqTest {
 
     @Test
     fun create() {
-        val productItemReq =
-            ProductItemReq.builder()
-                .productId("product_id")
-                .quantity(0)
-                .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                .amount(0)
-                .addCreditEntitlement(
-                    ProductItemReq.CreditEntitlement.builder()
-                        .creditEntitlementId("credit_entitlement_id")
-                        .creditsAmount("credits_amount")
-                        .build()
-                )
-                .build()
+      val productItemReq = ProductItemReq.builder()
+          .productId("product_id")
+          .quantity(0)
+          .addAddon(AttachAddon.builder()
+              .addonId("addon_id")
+              .quantity(0)
+              .build())
+          .amount(0)
+          .addCreditEntitlement(ProductItemReq.CreditEntitlement.builder()
+              .creditEntitlementId("credit_entitlement_id")
+              .creditsAmount("credits_amount")
+              .build())
+          .build()
 
-        assertThat(productItemReq.productId()).isEqualTo("product_id")
-        assertThat(productItemReq.quantity()).isEqualTo(0)
-        assertThat(productItemReq.addons().getOrNull())
-            .containsExactly(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-        assertThat(productItemReq.amount()).contains(0)
-        assertThat(productItemReq.creditEntitlements().getOrNull())
-            .containsExactly(
-                ProductItemReq.CreditEntitlement.builder()
-                    .creditEntitlementId("credit_entitlement_id")
-                    .creditsAmount("credits_amount")
-                    .build()
-            )
+      assertThat(productItemReq.productId()).isEqualTo("product_id")
+      assertThat(productItemReq.quantity()).isEqualTo(0)
+      assertThat(productItemReq.addons().getOrNull()).containsExactly(AttachAddon.builder()
+          .addonId("addon_id")
+          .quantity(0)
+          .build())
+      assertThat(productItemReq.amount()).contains(0)
+      assertThat(productItemReq.creditEntitlements().getOrNull()).containsExactly(ProductItemReq.CreditEntitlement.builder()
+          .creditEntitlementId("credit_entitlement_id")
+          .creditsAmount("credits_amount")
+          .build())
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val productItemReq =
-            ProductItemReq.builder()
-                .productId("product_id")
-                .quantity(0)
-                .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                .amount(0)
-                .addCreditEntitlement(
-                    ProductItemReq.CreditEntitlement.builder()
-                        .creditEntitlementId("credit_entitlement_id")
-                        .creditsAmount("credits_amount")
-                        .build()
-                )
-                .build()
+      val jsonMapper = jsonMapper()
+      val productItemReq = ProductItemReq.builder()
+          .productId("product_id")
+          .quantity(0)
+          .addAddon(AttachAddon.builder()
+              .addonId("addon_id")
+              .quantity(0)
+              .build())
+          .amount(0)
+          .addCreditEntitlement(ProductItemReq.CreditEntitlement.builder()
+              .creditEntitlementId("credit_entitlement_id")
+              .creditsAmount("credits_amount")
+              .build())
+          .build()
 
-        val roundtrippedProductItemReq =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(productItemReq),
-                jacksonTypeRef<ProductItemReq>(),
-            )
+      val roundtrippedProductItemReq = jsonMapper.readValue(jsonMapper.writeValueAsString(productItemReq), jacksonTypeRef<ProductItemReq>())
 
-        assertThat(roundtrippedProductItemReq).isEqualTo(productItemReq)
+      assertThat(roundtrippedProductItemReq).isEqualTo(productItemReq)
     }
 }

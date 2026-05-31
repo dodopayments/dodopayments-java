@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.products.images
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.products.images.ImageUpdateResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,31 +12,25 @@ internal class ImageUpdateResponseTest {
 
     @Test
     fun create() {
-        val imageUpdateResponse =
-            ImageUpdateResponse.builder()
-                .url("url")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
+      val imageUpdateResponse = ImageUpdateResponse.builder()
+          .url("url")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
 
-        assertThat(imageUpdateResponse.url()).isEqualTo("url")
-        assertThat(imageUpdateResponse.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      assertThat(imageUpdateResponse.url()).isEqualTo("url")
+      assertThat(imageUpdateResponse.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val imageUpdateResponse =
-            ImageUpdateResponse.builder()
-                .url("url")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
+      val jsonMapper = jsonMapper()
+      val imageUpdateResponse = ImageUpdateResponse.builder()
+          .url("url")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build()
 
-        val roundtrippedImageUpdateResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(imageUpdateResponse),
-                jacksonTypeRef<ImageUpdateResponse>(),
-            )
+      val roundtrippedImageUpdateResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(imageUpdateResponse), jacksonTypeRef<ImageUpdateResponse>())
 
-        assertThat(roundtrippedImageUpdateResponse).isEqualTo(imageUpdateResponse)
+      assertThat(roundtrippedImageUpdateResponse).isEqualTo(imageUpdateResponse)
     }
 }

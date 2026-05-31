@@ -6,6 +6,7 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.products.shortlinks.ShortLinkCreateParams
+import com.dodopayments.api.models.products.shortlinks.ShortLinkListParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -14,40 +15,33 @@ internal class ShortLinkServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val shortLinkService = client.products().shortLinks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val shortLinkService = client.products().shortLinks()
 
-        val shortLink =
-            shortLinkService.create(
-                ShortLinkCreateParams.builder()
-                    .id("id")
-                    .slug("slug")
-                    .staticCheckoutParams(
-                        ShortLinkCreateParams.StaticCheckoutParams.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .build()
-            )
+      val shortLink = shortLinkService.create(ShortLinkCreateParams.builder()
+          .id("id")
+          .slug("slug")
+          .staticCheckoutParams(ShortLinkCreateParams.StaticCheckoutParams.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build())
 
-        shortLink.validate()
+      shortLink.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val shortLinkService = client.products().shortLinks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val shortLinkService = client.products().shortLinks()
 
-        val page = shortLinkService.list()
+      val page = shortLinkService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 }

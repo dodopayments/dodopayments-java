@@ -10,6 +10,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -19,22 +20,20 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerListCreditEntitlementsResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomerListCreditEntitlementsResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val items: JsonField<List<Item>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of()
-    ) : this(items, mutableMapOf())
+    ) : this(
+      items, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun items(): List<Item> = items.getRequired("items")
 
     /**
@@ -42,32 +41,34 @@ private constructor(
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+    @JsonProperty("items")
+    @ExcludeMissing
+    fun _items(): JsonField<List<Item>> = items
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CustomerListCreditEntitlementsResponse].
+         * Returns a mutable builder for constructing an instance of [CustomerListCreditEntitlementsResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerListCreditEntitlementsResponse]. */
@@ -77,55 +78,62 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            customerListCreditEntitlementsResponse: CustomerListCreditEntitlementsResponse
-        ) = apply {
-            items = customerListCreditEntitlementsResponse.items.map { it.toMutableList() }
-            additionalProperties =
-                customerListCreditEntitlementsResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(customerListCreditEntitlementsResponse: CustomerListCreditEntitlementsResponse) =
+            apply {
+                items = customerListCreditEntitlementsResponse.items.map { it.toMutableList() }
+                additionalProperties = customerListCreditEntitlementsResponse.additionalProperties.toMutableMap()
+            }
 
         fun items(items: List<Item>) = items(JsonField.of(items))
 
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<Item>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
+        fun items(items: JsonField<List<Item>>) =
+            apply {
+                this.items = items.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [Item] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: Item) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
-        }
+        fun addItem(item: Item) =
+            apply {
+                items = (items ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("items", it).add(item)
+                }
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomerListCreditEntitlementsResponse].
@@ -133,6 +141,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
@@ -141,8 +150,9 @@ private constructor(
          */
         fun build(): CustomerListCreditEntitlementsResponse =
             CustomerListCreditEntitlementsResponse(
-                checkRequired("items", items).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "items", items
+              ).map { it.toImmutable() }, additionalProperties.toMutableMap()
             )
     }
 
@@ -156,14 +166,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomerListCreditEntitlementsResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomerListCreditEntitlementsResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        items().forEach { it.validate() }
-        validated = true
-    }
+            items().forEach { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -179,13 +190,10 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+    internal fun validity(): Int = (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
     /** A credit entitlement with the customer's current balance */
-    class Item
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Item @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val balance: JsonField<String>,
         private val creditEntitlementId: JsonField<String>,
         private val name: JsonField<String>,
@@ -193,67 +201,66 @@ private constructor(
         private val unit: JsonField<String>,
         private val description: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("balance") @ExcludeMissing balance: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("credit_entitlement_id")
-            @ExcludeMissing
-            creditEntitlementId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("credit_entitlement_id") @ExcludeMissing creditEntitlementId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("overage") @ExcludeMissing overage: JsonField<String> = JsonMissing.of(),
             @JsonProperty("unit") @ExcludeMissing unit: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("description")
-            @ExcludeMissing
-            description: JsonField<String> = JsonMissing.of(),
-        ) : this(balance, creditEntitlementId, name, overage, unit, description, mutableMapOf())
+            @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of()
+        ) : this(
+          balance,
+          creditEntitlementId,
+          name,
+          overage,
+          unit,
+          description,
+          mutableMapOf(),
+        )
 
         /**
          * Customer's current remaining credit balance
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun balance(): String = balance.getRequired("balance")
 
         /**
          * Credit entitlement ID
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun creditEntitlementId(): String = creditEntitlementId.getRequired("credit_entitlement_id")
 
         /**
          * Name of the credit entitlement
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun name(): String = name.getRequired("name")
 
         /**
          * Customer's current overage balance
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun overage(): String = overage.getRequired("overage")
 
         /**
          * Unit label (e.g. "API Calls", "Tokens")
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun unit(): String = unit.getRequired("unit")
 
         /**
          * Description of the credit entitlement
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
 
@@ -262,13 +269,14 @@ private constructor(
          *
          * Unlike [balance], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("balance") @ExcludeMissing fun _balance(): JsonField<String> = balance
+        @JsonProperty("balance")
+        @ExcludeMissing
+        fun _balance(): JsonField<String> = balance
 
         /**
          * Returns the raw JSON value of [creditEntitlementId].
          *
-         * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("credit_entitlement_id")
         @ExcludeMissing
@@ -279,21 +287,27 @@ private constructor(
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("name")
+        @ExcludeMissing
+        fun _name(): JsonField<String> = name
 
         /**
          * Returns the raw JSON value of [overage].
          *
          * Unlike [overage], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("overage") @ExcludeMissing fun _overage(): JsonField<String> = overage
+        @JsonProperty("overage")
+        @ExcludeMissing
+        fun _overage(): JsonField<String> = overage
 
         /**
          * Returns the raw JSON value of [unit].
          *
          * Unlike [unit], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("unit") @ExcludeMissing fun _unit(): JsonField<String> = unit
+        @JsonProperty("unit")
+        @ExcludeMissing
+        fun _unit(): JsonField<String> = unit
 
         /**
          * Returns the raw JSON value of [description].
@@ -306,13 +320,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -322,6 +335,7 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Item].
              *
              * The following fields are required:
+             *
              * ```java
              * .balance()
              * .creditEntitlementId()
@@ -330,7 +344,8 @@ private constructor(
              * .unit()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Item]. */
@@ -345,15 +360,16 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(item: Item) = apply {
-                balance = item.balance
-                creditEntitlementId = item.creditEntitlementId
-                name = item.name
-                overage = item.overage
-                unit = item.unit
-                description = item.description
-                additionalProperties = item.additionalProperties.toMutableMap()
-            }
+            internal fun from(item: Item) =
+                apply {
+                    balance = item.balance
+                    creditEntitlementId = item.creditEntitlementId
+                    name = item.name
+                    overage = item.overage
+                    unit = item.unit
+                    description = item.description
+                    additionalProperties = item.additionalProperties.toMutableMap()
+                }
 
             /** Customer's current remaining credit balance */
             fun balance(balance: String) = balance(JsonField.of(balance))
@@ -361,26 +377,27 @@ private constructor(
             /**
              * Sets [Builder.balance] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.balance] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.balance] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun balance(balance: JsonField<String>) = apply { this.balance = balance }
+            fun balance(balance: JsonField<String>) =
+                apply {
+                    this.balance = balance
+                }
 
             /** Credit entitlement ID */
-            fun creditEntitlementId(creditEntitlementId: String) =
-                creditEntitlementId(JsonField.of(creditEntitlementId))
+            fun creditEntitlementId(creditEntitlementId: String) = creditEntitlementId(JsonField.of(creditEntitlementId))
 
             /**
              * Sets [Builder.creditEntitlementId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.creditEntitlementId] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun creditEntitlementId(creditEntitlementId: JsonField<String>) = apply {
-                this.creditEntitlementId = creditEntitlementId
-            }
+            fun creditEntitlementId(creditEntitlementId: JsonField<String>) =
+                apply {
+                    this.creditEntitlementId = creditEntitlementId
+                }
 
             /** Name of the credit entitlement */
             fun name(name: String) = name(JsonField.of(name))
@@ -388,11 +405,13 @@ private constructor(
             /**
              * Sets [Builder.name] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun name(name: JsonField<String>) =
+                apply {
+                    this.name = name
+                }
 
             /** Customer's current overage balance */
             fun overage(overage: String) = overage(JsonField.of(overage))
@@ -400,11 +419,13 @@ private constructor(
             /**
              * Sets [Builder.overage] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.overage] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.overage] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun overage(overage: JsonField<String>) = apply { this.overage = overage }
+            fun overage(overage: JsonField<String>) =
+                apply {
+                    this.overage = overage
+                }
 
             /** Unit label (e.g. "API Calls", "Tokens") */
             fun unit(unit: String) = unit(JsonField.of(unit))
@@ -412,11 +433,13 @@ private constructor(
             /**
              * Sets [Builder.unit] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.unit] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.unit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun unit(unit: JsonField<String>) = apply { this.unit = unit }
+            fun unit(unit: JsonField<String>) =
+                apply {
+                    this.unit = unit
+                }
 
             /** Description of the credit entitlement */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -427,32 +450,39 @@ private constructor(
             /**
              * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun description(description: JsonField<String>) = apply {
-                this.description = description
-            }
+            fun description(description: JsonField<String>) =
+                apply {
+                    this.description = description
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Item].
@@ -460,6 +490,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .balance()
              * .creditEntitlementId()
@@ -472,40 +503,50 @@ private constructor(
              */
             fun build(): Item =
                 Item(
-                    checkRequired("balance", balance),
-                    checkRequired("creditEntitlementId", creditEntitlementId),
-                    checkRequired("name", name),
-                    checkRequired("overage", overage),
-                    checkRequired("unit", unit),
-                    description,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "balance", balance
+                  ),
+                  checkRequired(
+                    "creditEntitlementId", creditEntitlementId
+                  ),
+                  checkRequired(
+                    "name", name
+                  ),
+                  checkRequired(
+                    "overage", overage
+                  ),
+                  checkRequired(
+                    "unit", unit
+                  ),
+                  description,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Item = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Item =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            balance()
-            creditEntitlementId()
-            name()
-            overage()
-            unit()
-            description()
-            validated = true
-        }
+                balance()
+                creditEntitlementId()
+                name()
+                overage()
+                unit()
+                description()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -516,67 +557,39 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (balance.asKnown().isPresent) 1 else 0) +
-                (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
-                (if (overage.asKnown().isPresent) 1 else 0) +
-                (if (unit.asKnown().isPresent) 1 else 0) +
-                (if (description.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (balance.asKnown().isPresent) 1 else 0) + (if (creditEntitlementId.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (overage.asKnown().isPresent) 1 else 0) + (if (unit.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Item &&
-                balance == other.balance &&
-                creditEntitlementId == other.creditEntitlementId &&
-                name == other.name &&
-                overage == other.overage &&
-                unit == other.unit &&
-                description == other.description &&
-                additionalProperties == other.additionalProperties
+          return other is Item && balance == other.balance && creditEntitlementId == other.creditEntitlementId && name == other.name && overage == other.overage && unit == other.unit && description == other.description && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                balance,
-                creditEntitlementId,
-                name,
-                overage,
-                unit,
-                description,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(balance, creditEntitlementId, name, overage, unit, description, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Item{balance=$balance, creditEntitlementId=$creditEntitlementId, name=$name, overage=$overage, unit=$unit, description=$description, additionalProperties=$additionalProperties}"
+        override fun toString() = "Item{balance=$balance, creditEntitlementId=$creditEntitlementId, name=$name, overage=$overage, unit=$unit, description=$description, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerListCreditEntitlementsResponse &&
-            items == other.items &&
-            additionalProperties == other.additionalProperties
+      return other is CustomerListCreditEntitlementsResponse && items == other.items && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(items, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomerListCreditEntitlementsResponse{items=$items, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomerListCreditEntitlementsResponse{items=$items, additionalProperties=$additionalProperties}"
 }

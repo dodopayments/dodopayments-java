@@ -6,7 +6,10 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.entitlements.EntitlementCreateParams
+import com.dodopayments.api.models.entitlements.EntitlementDeleteParams
 import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
+import com.dodopayments.api.models.entitlements.EntitlementListParams
+import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
 import com.dodopayments.api.models.entitlements.GitHubPermission
 import com.dodopayments.api.models.entitlements.IntegrationConfig
@@ -18,105 +21,86 @@ internal class EntitlementServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val entitlementService = client.entitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val entitlementService = client.entitlements()
 
-        val entitlement =
-            entitlementService.create(
-                EntitlementCreateParams.builder()
-                    .integrationConfig(
-                        IntegrationConfig.GitHubConfig.builder()
-                            .permission(GitHubPermission.PULL)
-                            .targetId("target_id")
-                            .build()
-                    )
-                    .integrationType(EntitlementIntegrationType.DISCORD)
-                    .name("name")
-                    .description("description")
-                    .metadata(
-                        EntitlementCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .build()
-            )
+      val entitlement = entitlementService.create(EntitlementCreateParams.builder()
+          .integrationConfig(IntegrationConfig.GitHubConfig.builder()
+              .permission(GitHubPermission.PULL)
+              .targetId("target_id")
+              .build())
+          .integrationType(EntitlementIntegrationType.DISCORD)
+          .name("name")
+          .description("description")
+          .metadata(EntitlementCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build())
 
-        entitlement.validate()
+      entitlement.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val entitlementService = client.entitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val entitlementService = client.entitlements()
 
-        val entitlement = entitlementService.retrieve("id")
+      val entitlement = entitlementService.retrieve("id")
 
-        entitlement.validate()
+      entitlement.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val entitlementService = client.entitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val entitlementService = client.entitlements()
 
-        val entitlement =
-            entitlementService.update(
-                EntitlementUpdateParams.builder()
-                    .id("id")
-                    .description("description")
-                    .integrationConfig(
-                        IntegrationConfig.GitHubConfig.builder()
-                            .permission(GitHubPermission.PULL)
-                            .targetId("target_id")
-                            .build()
-                    )
-                    .metadata(
-                        EntitlementUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .build()
-            )
+      val entitlement = entitlementService.update(EntitlementUpdateParams.builder()
+          .id("id")
+          .description("description")
+          .integrationConfig(IntegrationConfig.GitHubConfig.builder()
+              .permission(GitHubPermission.PULL)
+              .targetId("target_id")
+              .build())
+          .metadata(EntitlementUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .build())
 
-        entitlement.validate()
+      entitlement.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val entitlementService = client.entitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val entitlementService = client.entitlements()
 
-        val page = entitlementService.list()
+      val page = entitlementService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val entitlementService = client.entitlements()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val entitlementService = client.entitlements()
 
-        entitlementService.delete("id")
+      entitlementService.delete("id")
     }
 }

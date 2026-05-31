@@ -5,17 +5,21 @@ package com.dodopayments.api.models.meters
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.meters.Meter
+import com.dodopayments.api.models.meters.MeterListPageResponse
+import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.services.blocking.MeterService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see MeterService.list */
-class MeterListPage
-private constructor(
+class MeterListPage private constructor(
     private val service: MeterService,
     private val params: MeterListParams,
     private val response: MeterListPageResponse,
+
 ) : Page<Meter> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see MeterListPageResponse.items
      */
-    override fun items(): List<Meter> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Meter> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): MeterListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): MeterListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [MeterListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [MeterListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: MeterListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(meterListPage: MeterListPage) = apply {
-            service = meterListPage.service
-            params = meterListPage.params
-            response = meterListPage.response
-        }
+        internal fun from(meterListPage: MeterListPage) =
+            apply {
+                service = meterListPage.service
+                params = meterListPage.params
+                response = meterListPage.response
+            }
 
-        fun service(service: MeterService) = apply { this.service = service }
+        fun service(service: MeterService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: MeterListParams) = apply { this.params = params }
+        fun params(params: MeterListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: MeterListPageResponse) = apply { this.response = response }
+        fun response(response: MeterListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [MeterListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,21 +116,24 @@ private constructor(
          */
         fun build(): MeterListPage =
             MeterListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is MeterListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is MeterListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)

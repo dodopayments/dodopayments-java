@@ -5,17 +5,21 @@ package com.dodopayments.api.models.entitlements.grants
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
+import com.dodopayments.api.models.entitlements.grants.GrantListPageResponse
+import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.services.blocking.entitlements.GrantService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see GrantService.list */
-class GrantListPage
-private constructor(
+class GrantListPage private constructor(
     private val service: GrantService,
     private val params: GrantListParams,
     private val response: GrantListPageResponse,
+
 ) : Page<EntitlementGrant> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see GrantListPageResponse.items
      */
-    override fun items(): List<EntitlementGrant> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<EntitlementGrant> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): GrantListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): GrantListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [GrantListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [GrantListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: GrantListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(grantListPage: GrantListPage) = apply {
-            service = grantListPage.service
-            params = grantListPage.params
-            response = grantListPage.response
-        }
+        internal fun from(grantListPage: GrantListPage) =
+            apply {
+                service = grantListPage.service
+                params = grantListPage.params
+                response = grantListPage.response
+            }
 
-        fun service(service: GrantService) = apply { this.service = service }
+        fun service(service: GrantService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: GrantListParams) = apply { this.params = params }
+        fun params(params: GrantListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: GrantListPageResponse) = apply { this.response = response }
+        fun response(response: GrantListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [GrantListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,21 +116,24 @@ private constructor(
          */
         fun build(): GrantListPage =
             GrantListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is GrantListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is GrantListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)

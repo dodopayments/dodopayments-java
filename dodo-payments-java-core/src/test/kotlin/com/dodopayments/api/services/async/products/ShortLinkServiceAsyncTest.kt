@@ -6,6 +6,7 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.products.shortlinks.ShortLinkCreateParams
+import com.dodopayments.api.models.products.shortlinks.ShortLinkListParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -14,42 +15,35 @@ internal class ShortLinkServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val shortLinkServiceAsync = client.products().shortLinks()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val shortLinkServiceAsync = client.products().shortLinks()
 
-        val shortLinkFuture =
-            shortLinkServiceAsync.create(
-                ShortLinkCreateParams.builder()
-                    .id("id")
-                    .slug("slug")
-                    .staticCheckoutParams(
-                        ShortLinkCreateParams.StaticCheckoutParams.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .build()
-            )
+      val shortLinkFuture = shortLinkServiceAsync.create(ShortLinkCreateParams.builder()
+          .id("id")
+          .slug("slug")
+          .staticCheckoutParams(ShortLinkCreateParams.StaticCheckoutParams.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build())
 
-        val shortLink = shortLinkFuture.get()
-        shortLink.validate()
+      val shortLink = shortLinkFuture.get()
+      shortLink.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val shortLinkServiceAsync = client.products().shortLinks()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val shortLinkServiceAsync = client.products().shortLinks()
 
-        val pageFuture = shortLinkServiceAsync.list()
+      val pageFuture = shortLinkServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 }

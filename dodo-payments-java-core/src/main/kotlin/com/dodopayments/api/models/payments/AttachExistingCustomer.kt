@@ -15,24 +15,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class AttachExistingCustomer
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class AttachExistingCustomer @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val customerId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("customer_id")
-        @ExcludeMissing
-        customerId: JsonField<String> = JsonMissing.of()
-    ) : this(customerId, mutableMapOf())
+        @JsonProperty("customer_id") @ExcludeMissing customerId: JsonField<String> = JsonMissing.of()
+    ) : this(
+      customerId, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun customerId(): String = customerId.getRequired("customer_id")
 
     /**
@@ -40,17 +36,18 @@ private constructor(
      *
      * Unlike [customerId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("customer_id") @ExcludeMissing fun _customerId(): JsonField<String> = customerId
+    @JsonProperty("customer_id")
+    @ExcludeMissing
+    fun _customerId(): JsonField<String> = customerId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -60,11 +57,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [AttachExistingCustomer].
          *
          * The following fields are required:
+         *
          * ```java
          * .customerId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AttachExistingCustomer]. */
@@ -74,40 +73,50 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(attachExistingCustomer: AttachExistingCustomer) = apply {
-            customerId = attachExistingCustomer.customerId
-            additionalProperties = attachExistingCustomer.additionalProperties.toMutableMap()
-        }
+        internal fun from(attachExistingCustomer: AttachExistingCustomer) =
+            apply {
+                customerId = attachExistingCustomer.customerId
+                additionalProperties = attachExistingCustomer.additionalProperties.toMutableMap()
+            }
 
         fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
         /**
          * Sets [Builder.customerId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.customerId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customerId(customerId: JsonField<String>) = apply { this.customerId = customerId }
+        fun customerId(customerId: JsonField<String>) =
+            apply {
+                this.customerId = customerId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [AttachExistingCustomer].
@@ -115,6 +124,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .customerId()
          * ```
@@ -123,8 +133,9 @@ private constructor(
          */
         fun build(): AttachExistingCustomer =
             AttachExistingCustomer(
-                checkRequired("customerId", customerId),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "customerId", customerId
+              ), additionalProperties.toMutableMap()
             )
     }
 
@@ -138,14 +149,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): AttachExistingCustomer = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): AttachExistingCustomer =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        customerId()
-        validated = true
-    }
+            customerId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -160,22 +172,20 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (customerId.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int = (if (customerId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AttachExistingCustomer &&
-            customerId == other.customerId &&
-            additionalProperties == other.additionalProperties
+      return other is AttachExistingCustomer && customerId == other.customerId && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(customerId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "AttachExistingCustomer{customerId=$customerId, additionalProperties=$additionalProperties}"
+    override fun toString() = "AttachExistingCustomer{customerId=$customerId, additionalProperties=$additionalProperties}"
 }

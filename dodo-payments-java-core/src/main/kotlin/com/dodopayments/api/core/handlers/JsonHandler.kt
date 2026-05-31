@@ -2,11 +2,12 @@
 
 package com.dodopayments.api.core.handlers
 
-import com.dodopayments.api.core.http.HttpResponse
-import com.dodopayments.api.core.http.HttpResponse.Handler
-import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.dodopayments.api.core.http.HttpResponse
+import com.dodopayments.api.core.http.HttpResponse.Handler
+import com.dodopayments.api.errors.DodoPaymentsException
+import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 
 @JvmSynthetic
 internal inline fun <reified T> jsonHandler(jsonMapper: JsonMapper): Handler<T> =

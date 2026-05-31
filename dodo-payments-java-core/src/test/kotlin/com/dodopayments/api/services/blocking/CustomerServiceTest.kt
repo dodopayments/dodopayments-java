@@ -7,6 +7,11 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
+import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListParams
+import com.dodopayments.api.models.customers.CustomerRetrieveParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,141 +21,121 @@ internal class CustomerServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val customer =
-            customerService.create(
-                CustomerCreateParams.builder()
-                    .email("email")
-                    .name("name")
-                    .metadata(
-                        CustomerCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .phoneNumber("phone_number")
-                    .build()
-            )
+      val customer = customerService.create(CustomerCreateParams.builder()
+          .email("email")
+          .name("name")
+          .metadata(CustomerCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .phoneNumber("phone_number")
+          .build())
 
-        customer.validate()
+      customer.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val customer = customerService.retrieve("customer_id")
+      val customer = customerService.retrieve("customer_id")
 
-        customer.validate()
+      customer.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val customer =
-            customerService.update(
-                CustomerUpdateParams.builder()
-                    .customerId("customer_id")
-                    .email("email")
-                    .metadata(
-                        CustomerUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .phoneNumber("phone_number")
-                    .build()
-            )
+      val customer = customerService.update(CustomerUpdateParams.builder()
+          .customerId("customer_id")
+          .email("email")
+          .metadata(CustomerUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .phoneNumber("phone_number")
+          .build())
 
-        customer.validate()
+      customer.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val page = customerService.list()
+      val page = customerService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun deletePaymentMethod() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        customerService.deletePaymentMethod(
-            CustomerDeletePaymentMethodParams.builder()
-                .customerId("customer_id")
-                .paymentMethodId("payment_method_id")
-                .build()
-        )
+      customerService.deletePaymentMethod(CustomerDeletePaymentMethodParams.builder()
+          .customerId("customer_id")
+          .paymentMethodId("payment_method_id")
+          .build())
     }
 
     @Test
     fun listCreditEntitlements() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val response = customerService.listCreditEntitlements("customer_id")
+      val response = customerService.listCreditEntitlements("customer_id")
 
-        response.validate()
+      response.validate()
     }
 
     @Test
     fun listEntitlements() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val response = customerService.listEntitlements("customer_id")
+      val response = customerService.listEntitlements("customer_id")
 
-        response.validate()
+      response.validate()
     }
 
     @Test
     fun retrievePaymentMethods() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerService = client.customers()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerService = client.customers()
 
-        val response = customerService.retrievePaymentMethods("customer_id")
+      val response = customerService.retrievePaymentMethods("customer_id")
 
-        response.validate()
+      response.validate()
     }
 }

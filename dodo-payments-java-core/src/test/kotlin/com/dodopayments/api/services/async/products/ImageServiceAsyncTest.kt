@@ -13,17 +13,18 @@ internal class ImageServiceAsyncTest {
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val imageServiceAsync = client.products().images()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val imageServiceAsync = client.products().images()
 
-        val imageFuture =
-            imageServiceAsync.update(ImageUpdateParams.builder().id("id").forceUpdate(true).build())
+      val imageFuture = imageServiceAsync.update(ImageUpdateParams.builder()
+          .id("id")
+          .forceUpdate(true)
+          .build())
 
-        val image = imageFuture.get()
-        image.validate()
+      val image = imageFuture.get()
+      image.validate()
     }
 }

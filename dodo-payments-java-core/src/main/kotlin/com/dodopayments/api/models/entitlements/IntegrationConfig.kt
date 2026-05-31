@@ -14,6 +14,7 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.getOrThrow
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.entitlements.GitHubPermission
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -32,13 +33,13 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Integration-specific configuration supplied when creating or updating an entitlement. The shape
- * required matches the entitlement's `integration_type`.
+ * Integration-specific configuration supplied when creating or updating
+ * an entitlement. The shape required matches the entitlement's
+ * `integration_type`.
  */
 @JsonDeserialize(using = IntegrationConfig.Deserializer::class)
 @JsonSerialize(using = IntegrationConfig.Serializer::class)
-class IntegrationConfig
-private constructor(
+class IntegrationConfig private constructor(
     private val github: GitHubConfig? = null,
     private val discord: DiscordConfig? = null,
     private val telegram: TelegramConfig? = null,
@@ -48,6 +49,7 @@ private constructor(
     private val digitalFiles: DigitalFilesConfig? = null,
     private val licenseKey: LicenseKeyConfig? = null,
     private val _json: JsonValue? = null,
+
 ) {
 
     fun github(): Optional<GitHubConfig> = Optional.ofNullable(github)
@@ -104,8 +106,9 @@ private constructor(
      * Maps this instance's current variant to a value of type [T] using the given [visitor].
      *
      * Note that this method is _not_ forwards compatible with new variants from the API, unless
-     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the
-     * SDK gracefully, consider overriding [Visitor.unknown]:
+     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the SDK
+     * gracefully, consider overriding [Visitor.unknown]:
+     *
      * ```java
      * import com.dodopayments.api.core.JsonValue;
      * import java.util.Optional;
@@ -126,8 +129,8 @@ private constructor(
      * });
      * ```
      *
-     * @throws DodoPaymentsInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
-     *   and the current variant is unknown.
+     * @throws DodoPaymentsInvalidDataException if [Visitor.unknown] is not overridden in
+     *   [visitor] and the current variant is unknown.
      */
     fun <T> accept(visitor: Visitor<T>): T =
         when {
@@ -152,48 +155,47 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): IntegrationConfig = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): IntegrationConfig =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        accept(
-            object : Visitor<Unit> {
+            accept(object : Visitor<Unit> {
                 override fun visitGitHub(github: GitHubConfig) {
-                    github.validate()
+                  github.validate()
                 }
 
                 override fun visitDiscord(discord: DiscordConfig) {
-                    discord.validate()
+                  discord.validate()
                 }
 
                 override fun visitTelegram(telegram: TelegramConfig) {
-                    telegram.validate()
+                  telegram.validate()
                 }
 
                 override fun visitFigma(figma: FigmaConfig) {
-                    figma.validate()
+                  figma.validate()
                 }
 
                 override fun visitFramer(framer: FramerConfig) {
-                    framer.validate()
+                  framer.validate()
                 }
 
                 override fun visitNotion(notion: NotionConfig) {
-                    notion.validate()
+                  notion.validate()
                 }
 
                 override fun visitDigitalFiles(digitalFiles: DigitalFilesConfig) {
-                    digitalFiles.validate()
+                  digitalFiles.validate()
                 }
 
                 override fun visitLicenseKey(licenseKey: LicenseKeyConfig) {
-                    licenseKey.validate()
+                  licenseKey.validate()
                 }
-            }
-        )
-        validated = true
-    }
+            })
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -210,47 +212,35 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitGitHub(github: GitHubConfig) = github.validity()
+        accept(object : Visitor<Int> {
+            override fun visitGitHub(github: GitHubConfig) = github.validity()
 
-                override fun visitDiscord(discord: DiscordConfig) = discord.validity()
+            override fun visitDiscord(discord: DiscordConfig) = discord.validity()
 
-                override fun visitTelegram(telegram: TelegramConfig) = telegram.validity()
+            override fun visitTelegram(telegram: TelegramConfig) = telegram.validity()
 
-                override fun visitFigma(figma: FigmaConfig) = figma.validity()
+            override fun visitFigma(figma: FigmaConfig) = figma.validity()
 
-                override fun visitFramer(framer: FramerConfig) = framer.validity()
+            override fun visitFramer(framer: FramerConfig) = framer.validity()
 
-                override fun visitNotion(notion: NotionConfig) = notion.validity()
+            override fun visitNotion(notion: NotionConfig) = notion.validity()
 
-                override fun visitDigitalFiles(digitalFiles: DigitalFilesConfig) =
-                    digitalFiles.validity()
+            override fun visitDigitalFiles(digitalFiles: DigitalFilesConfig) = digitalFiles.validity()
 
-                override fun visitLicenseKey(licenseKey: LicenseKeyConfig) = licenseKey.validity()
+            override fun visitLicenseKey(licenseKey: LicenseKeyConfig) = licenseKey.validity()
 
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+            override fun unknown(json: JsonValue?) = 0
+        })
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is IntegrationConfig &&
-            github == other.github &&
-            discord == other.discord &&
-            telegram == other.telegram &&
-            figma == other.figma &&
-            framer == other.framer &&
-            notion == other.notion &&
-            digitalFiles == other.digitalFiles &&
-            licenseKey == other.licenseKey
+      return other is IntegrationConfig && github == other.github && discord == other.discord && telegram == other.telegram && figma == other.figma && framer == other.framer && notion == other.notion && digitalFiles == other.digitalFiles && licenseKey == other.licenseKey
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(github, discord, telegram, figma, framer, notion, digitalFiles, licenseKey)
+    override fun hashCode(): Int = Objects.hash(github, discord, telegram, figma, framer, notion, digitalFiles, licenseKey)
 
     override fun toString(): String =
         when {
@@ -268,30 +258,32 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun ofGitHub(github: GitHubConfig) = IntegrationConfig(github = github)
-
-        @JvmStatic fun ofDiscord(discord: DiscordConfig) = IntegrationConfig(discord = discord)
-
-        @JvmStatic fun ofTelegram(telegram: TelegramConfig) = IntegrationConfig(telegram = telegram)
-
-        @JvmStatic fun ofFigma(figma: FigmaConfig) = IntegrationConfig(figma = figma)
-
-        @JvmStatic fun ofFramer(framer: FramerConfig) = IntegrationConfig(framer = framer)
-
-        @JvmStatic fun ofNotion(notion: NotionConfig) = IntegrationConfig(notion = notion)
+        @JvmStatic
+        fun ofGitHub(github: GitHubConfig) = IntegrationConfig(github = github)
 
         @JvmStatic
-        fun ofDigitalFiles(digitalFiles: DigitalFilesConfig) =
-            IntegrationConfig(digitalFiles = digitalFiles)
+        fun ofDiscord(discord: DiscordConfig) = IntegrationConfig(discord = discord)
+
+        @JvmStatic
+        fun ofTelegram(telegram: TelegramConfig) = IntegrationConfig(telegram = telegram)
+
+        @JvmStatic
+        fun ofFigma(figma: FigmaConfig) = IntegrationConfig(figma = figma)
+
+        @JvmStatic
+        fun ofFramer(framer: FramerConfig) = IntegrationConfig(framer = framer)
+
+        @JvmStatic
+        fun ofNotion(notion: NotionConfig) = IntegrationConfig(notion = notion)
+
+        @JvmStatic
+        fun ofDigitalFiles(digitalFiles: DigitalFilesConfig) = IntegrationConfig(digitalFiles = digitalFiles)
 
         @JvmStatic
         fun ofLicenseKey(licenseKey: LicenseKeyConfig) = IntegrationConfig(licenseKey = licenseKey)
     }
 
-    /**
-     * An interface that defines how to map each variant of [IntegrationConfig] to a value of type
-     * [T].
-     */
+    /** An interface that defines how to map each variant of [IntegrationConfig] to a value of type [T]. */
     interface Visitor<out T> {
 
         fun visitGitHub(github: GitHubConfig): T
@@ -313,118 +305,115 @@ private constructor(
         /**
          * Maps an unknown variant of [IntegrationConfig] to a value of type [T].
          *
-         * An instance of [IntegrationConfig] can contain an unknown variant if it was deserialized
-         * from data that doesn't match any known variant. For example, if the SDK is on an older
-         * version than the API, then the API may respond with new variants that the SDK is unaware
-         * of.
+         * An instance of [IntegrationConfig] can contain an unknown variant if it was deserialized from data
+         * that doesn't match any known variant. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new variants that the SDK is unaware of.
          *
          * @throws DodoPaymentsInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw DodoPaymentsInvalidDataException("Unknown IntegrationConfig: $json")
+          throw DodoPaymentsInvalidDataException("Unknown IntegrationConfig: $json")
         }
     }
 
     internal class Deserializer : BaseDeserializer<IntegrationConfig>(IntegrationConfig::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): IntegrationConfig {
-            val json = JsonValue.fromJsonNode(node)
+          val json = JsonValue.fromJsonNode(node)
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<GitHubConfig>())?.let {
-                            IntegrationConfig(github = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<DiscordConfig>())?.let {
-                            IntegrationConfig(discord = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<TelegramConfig>())?.let {
-                            IntegrationConfig(telegram = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FigmaConfig>())?.let {
-                            IntegrationConfig(figma = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FramerConfig>())?.let {
-                            IntegrationConfig(framer = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<NotionConfig>())?.let {
-                            IntegrationConfig(notion = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<DigitalFilesConfig>())?.let {
-                            IntegrationConfig(digitalFiles = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<LicenseKeyConfig>())?.let {
-                            IntegrationConfig(licenseKey = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> IntegrationConfig(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-            }
+          val bestMatches = sequenceOf(
+                  tryDeserialize(node, jacksonTypeRef<GitHubConfig>())
+                      ?.let {
+                          IntegrationConfig(github = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<DiscordConfig>())
+                      ?.let {
+                          IntegrationConfig(discord = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<TelegramConfig>())
+                      ?.let {
+                          IntegrationConfig(telegram = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<FigmaConfig>())
+                      ?.let {
+                          IntegrationConfig(figma = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<FramerConfig>())
+                      ?.let {
+                          IntegrationConfig(framer = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<NotionConfig>())
+                      ?.let {
+                          IntegrationConfig(notion = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<DigitalFilesConfig>())
+                      ?.let {
+                          IntegrationConfig(digitalFiles = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<LicenseKeyConfig>())
+                      ?.let {
+                          IntegrationConfig(licenseKey = it, _json = json)
+                      }
+              )
+              .filterNotNull()
+              .allMaxBy { it.validity() }
+              .toList()
+          return when (bestMatches.size) {
+              // This can happen if what we're deserializing is completely incompatible with all the possible variants (e.g. deserializing from boolean).
+              0 -> IntegrationConfig(_json = json)
+              1 -> bestMatches.single()
+              // If there's more than one match with the highest validity, then use the first completely valid match, or simply the first match if none are completely valid.
+              else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+          }
         }
     }
 
     internal class Serializer : BaseSerializer<IntegrationConfig>(IntegrationConfig::class) {
 
-        override fun serialize(
-            value: IntegrationConfig,
-            generator: JsonGenerator,
-            provider: SerializerProvider,
-        ) {
-            when {
-                value.github != null -> generator.writeObject(value.github)
-                value.discord != null -> generator.writeObject(value.discord)
-                value.telegram != null -> generator.writeObject(value.telegram)
-                value.figma != null -> generator.writeObject(value.figma)
-                value.framer != null -> generator.writeObject(value.framer)
-                value.notion != null -> generator.writeObject(value.notion)
-                value.digitalFiles != null -> generator.writeObject(value.digitalFiles)
-                value.licenseKey != null -> generator.writeObject(value.licenseKey)
-                value._json != null -> generator.writeObject(value._json)
-                else -> throw IllegalStateException("Invalid IntegrationConfig")
-            }
+        override fun serialize(value: IntegrationConfig, generator: JsonGenerator, provider: SerializerProvider) {
+          when {
+              value.github != null -> generator.writeObject(value.github)
+              value.discord != null -> generator.writeObject(value.discord)
+              value.telegram != null -> generator.writeObject(value.telegram)
+              value.figma != null -> generator.writeObject(value.figma)
+              value.framer != null -> generator.writeObject(value.framer)
+              value.notion != null -> generator.writeObject(value.notion)
+              value.digitalFiles != null -> generator.writeObject(value.digitalFiles)
+              value.licenseKey != null -> generator.writeObject(value.licenseKey)
+              value._json != null -> generator.writeObject(value._json)
+              else -> throw IllegalStateException("Invalid IntegrationConfig")
+          }
         }
     }
 
-    class GitHubConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class GitHubConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val permission: JsonField<GitHubPermission>,
         private val targetId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("permission")
-            @ExcludeMissing
-            permission: JsonField<GitHubPermission> = JsonMissing.of(),
-            @JsonProperty("target_id")
-            @ExcludeMissing
-            targetId: JsonField<String> = JsonMissing.of(),
-        ) : this(permission, targetId, mutableMapOf())
+            @JsonProperty("permission") @ExcludeMissing permission: JsonField<GitHubPermission> = JsonMissing.of(),
+            @JsonProperty("target_id") @ExcludeMissing targetId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          permission,
+          targetId,
+          mutableMapOf(),
+        )
 
         /**
          * Permission to grant on the repository.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun permission(): GitHubPermission = permission.getRequired("permission")
 
         /**
          * Repository or organisation slug to grant access to.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun targetId(): String = targetId.getRequired("target_id")
 
@@ -442,17 +431,18 @@ private constructor(
          *
          * Unlike [targetId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("target_id") @ExcludeMissing fun _targetId(): JsonField<String> = targetId
+        @JsonProperty("target_id")
+        @ExcludeMissing
+        fun _targetId(): JsonField<String> = targetId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -462,12 +452,14 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [GitHubConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .permission()
              * .targetId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [GitHubConfig]. */
@@ -478,11 +470,12 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(githubConfig: GitHubConfig) = apply {
-                permission = githubConfig.permission
-                targetId = githubConfig.targetId
-                additionalProperties = githubConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(githubConfig: GitHubConfig) =
+                apply {
+                    permission = githubConfig.permission
+                    targetId = githubConfig.targetId
+                    additionalProperties = githubConfig.additionalProperties.toMutableMap()
+                }
 
             /** Permission to grant on the repository. */
             fun permission(permission: GitHubPermission) = permission(JsonField.of(permission))
@@ -490,13 +483,13 @@ private constructor(
             /**
              * Sets [Builder.permission] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.permission] with a well-typed [GitHubPermission]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.permission] with a well-typed [GitHubPermission] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun permission(permission: JsonField<GitHubPermission>) = apply {
-                this.permission = permission
-            }
+            fun permission(permission: JsonField<GitHubPermission>) =
+                apply {
+                    this.permission = permission
+                }
 
             /** Repository or organisation slug to grant access to. */
             fun targetId(targetId: String) = targetId(JsonField.of(targetId))
@@ -504,30 +497,39 @@ private constructor(
             /**
              * Sets [Builder.targetId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.targetId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.targetId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun targetId(targetId: JsonField<String>) = apply { this.targetId = targetId }
+            fun targetId(targetId: JsonField<String>) =
+                apply {
+                    this.targetId = targetId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [GitHubConfig].
@@ -535,6 +537,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .permission()
              * .targetId()
@@ -544,32 +547,36 @@ private constructor(
              */
             fun build(): GitHubConfig =
                 GitHubConfig(
-                    checkRequired("permission", permission),
-                    checkRequired("targetId", targetId),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "permission", permission
+                  ),
+                  checkRequired(
+                    "targetId", targetId
+                  ),
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): GitHubConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): GitHubConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            permission().validate()
-            targetId()
-            validated = true
-        }
+                permission().validate()
+                targetId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -580,64 +587,56 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (permission.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (targetId.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (permission.asKnown().getOrNull()?.validity() ?: 0) + (if (targetId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is GitHubConfig &&
-                permission == other.permission &&
-                targetId == other.targetId &&
-                additionalProperties == other.additionalProperties
+          return other is GitHubConfig && permission == other.permission && targetId == other.targetId && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(permission, targetId, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(permission, targetId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "GitHubConfig{permission=$permission, targetId=$targetId, additionalProperties=$additionalProperties}"
+        override fun toString() = "GitHubConfig{permission=$permission, targetId=$targetId, additionalProperties=$additionalProperties}"
     }
 
-    class DiscordConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class DiscordConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val guildId: JsonField<String>,
         private val roleId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("guild_id") @ExcludeMissing guildId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("role_id") @ExcludeMissing roleId: JsonField<String> = JsonMissing.of(),
-        ) : this(guildId, roleId, mutableMapOf())
+            @JsonProperty("role_id") @ExcludeMissing roleId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          guildId,
+          roleId,
+          mutableMapOf(),
+        )
 
         /**
          * Discord guild (server) ID.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun guildId(): String = guildId.getRequired("guild_id")
 
         /**
          * Optional Discord role to assign within the guild.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun roleId(): Optional<String> = roleId.getOptional("role_id")
 
@@ -646,24 +645,27 @@ private constructor(
          *
          * Unlike [guildId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("guild_id") @ExcludeMissing fun _guildId(): JsonField<String> = guildId
+        @JsonProperty("guild_id")
+        @ExcludeMissing
+        fun _guildId(): JsonField<String> = guildId
 
         /**
          * Returns the raw JSON value of [roleId].
          *
          * Unlike [roleId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("role_id") @ExcludeMissing fun _roleId(): JsonField<String> = roleId
+        @JsonProperty("role_id")
+        @ExcludeMissing
+        fun _roleId(): JsonField<String> = roleId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -673,11 +675,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [DiscordConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .guildId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [DiscordConfig]. */
@@ -688,11 +692,12 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(discordConfig: DiscordConfig) = apply {
-                guildId = discordConfig.guildId
-                roleId = discordConfig.roleId
-                additionalProperties = discordConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(discordConfig: DiscordConfig) =
+                apply {
+                    guildId = discordConfig.guildId
+                    roleId = discordConfig.roleId
+                    additionalProperties = discordConfig.additionalProperties.toMutableMap()
+                }
 
             /** Discord guild (server) ID. */
             fun guildId(guildId: String) = guildId(JsonField.of(guildId))
@@ -700,11 +705,13 @@ private constructor(
             /**
              * Sets [Builder.guildId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.guildId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.guildId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun guildId(guildId: JsonField<String>) = apply { this.guildId = guildId }
+            fun guildId(guildId: JsonField<String>) =
+                apply {
+                    this.guildId = guildId
+                }
 
             /** Optional Discord role to assign within the guild. */
             fun roleId(roleId: String?) = roleId(JsonField.ofNullable(roleId))
@@ -715,30 +722,39 @@ private constructor(
             /**
              * Sets [Builder.roleId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.roleId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.roleId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun roleId(roleId: JsonField<String>) = apply { this.roleId = roleId }
+            fun roleId(roleId: JsonField<String>) =
+                apply {
+                    this.roleId = roleId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [DiscordConfig].
@@ -746,6 +762,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .guildId()
              * ```
@@ -754,32 +771,34 @@ private constructor(
              */
             fun build(): DiscordConfig =
                 DiscordConfig(
-                    checkRequired("guildId", guildId),
-                    roleId,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "guildId", guildId
+                  ),
+                  roleId,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): DiscordConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): DiscordConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            guildId()
-            roleId()
-            validated = true
-        }
+                guildId()
+                roleId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -790,51 +809,45 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (guildId.asKnown().isPresent) 1 else 0) + (if (roleId.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (guildId.asKnown().isPresent) 1 else 0) + (if (roleId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is DiscordConfig &&
-                guildId == other.guildId &&
-                roleId == other.roleId &&
-                additionalProperties == other.additionalProperties
+          return other is DiscordConfig && guildId == other.guildId && roleId == other.roleId && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(guildId, roleId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "DiscordConfig{guildId=$guildId, roleId=$roleId, additionalProperties=$additionalProperties}"
+        override fun toString() = "DiscordConfig{guildId=$guildId, roleId=$roleId, additionalProperties=$additionalProperties}"
     }
 
-    class TelegramConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class TelegramConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val chatId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("chat_id") @ExcludeMissing chatId: JsonField<String> = JsonMissing.of()
-        ) : this(chatId, mutableMapOf())
+        ) : this(
+          chatId, mutableMapOf()
+        )
 
         /**
          * Telegram chat ID. For groups this is typically a negative integer.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun chatId(): String = chatId.getRequired("chat_id")
 
@@ -843,17 +856,18 @@ private constructor(
          *
          * Unlike [chatId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("chat_id") @ExcludeMissing fun _chatId(): JsonField<String> = chatId
+        @JsonProperty("chat_id")
+        @ExcludeMissing
+        fun _chatId(): JsonField<String> = chatId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -863,11 +877,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [TelegramConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .chatId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [TelegramConfig]. */
@@ -877,10 +893,11 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(telegramConfig: TelegramConfig) = apply {
-                chatId = telegramConfig.chatId
-                additionalProperties = telegramConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(telegramConfig: TelegramConfig) =
+                apply {
+                    chatId = telegramConfig.chatId
+                    additionalProperties = telegramConfig.additionalProperties.toMutableMap()
+                }
 
             /** Telegram chat ID. For groups this is typically a negative integer. */
             fun chatId(chatId: String) = chatId(JsonField.of(chatId))
@@ -888,30 +905,39 @@ private constructor(
             /**
              * Sets [Builder.chatId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.chatId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.chatId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun chatId(chatId: JsonField<String>) = apply { this.chatId = chatId }
+            fun chatId(chatId: JsonField<String>) =
+                apply {
+                    this.chatId = chatId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [TelegramConfig].
@@ -919,6 +945,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .chatId()
              * ```
@@ -926,28 +953,32 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): TelegramConfig =
-                TelegramConfig(checkRequired("chatId", chatId), additionalProperties.toMutableMap())
+                TelegramConfig(
+                  checkRequired(
+                    "chatId", chatId
+                  ), additionalProperties.toMutableMap()
+                )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): TelegramConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): TelegramConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            chatId()
-            validated = true
-        }
+                chatId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -958,50 +989,45 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (chatId.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int = (if (chatId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is TelegramConfig &&
-                chatId == other.chatId &&
-                additionalProperties == other.additionalProperties
+          return other is TelegramConfig && chatId == other.chatId && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(chatId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "TelegramConfig{chatId=$chatId, additionalProperties=$additionalProperties}"
+        override fun toString() = "TelegramConfig{chatId=$chatId, additionalProperties=$additionalProperties}"
     }
 
-    class FigmaConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class FigmaConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val figmaFileId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("figma_file_id")
-            @ExcludeMissing
-            figmaFileId: JsonField<String> = JsonMissing.of()
-        ) : this(figmaFileId, mutableMapOf())
+            @JsonProperty("figma_file_id") @ExcludeMissing figmaFileId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          figmaFileId, mutableMapOf()
+        )
 
         /**
          * Figma file identifier to grant access to.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun figmaFileId(): String = figmaFileId.getRequired("figma_file_id")
 
@@ -1016,13 +1042,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -1032,11 +1057,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [FigmaConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .figmaFileId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [FigmaConfig]. */
@@ -1046,10 +1073,11 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(figmaConfig: FigmaConfig) = apply {
-                figmaFileId = figmaConfig.figmaFileId
-                additionalProperties = figmaConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(figmaConfig: FigmaConfig) =
+                apply {
+                    figmaFileId = figmaConfig.figmaFileId
+                    additionalProperties = figmaConfig.additionalProperties.toMutableMap()
+                }
 
             /** Figma file identifier to grant access to. */
             fun figmaFileId(figmaFileId: String) = figmaFileId(JsonField.of(figmaFileId))
@@ -1057,32 +1085,39 @@ private constructor(
             /**
              * Sets [Builder.figmaFileId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.figmaFileId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.figmaFileId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun figmaFileId(figmaFileId: JsonField<String>) = apply {
-                this.figmaFileId = figmaFileId
-            }
+            fun figmaFileId(figmaFileId: JsonField<String>) =
+                apply {
+                    this.figmaFileId = figmaFileId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [FigmaConfig].
@@ -1090,6 +1125,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .figmaFileId()
              * ```
@@ -1098,30 +1134,31 @@ private constructor(
              */
             fun build(): FigmaConfig =
                 FigmaConfig(
-                    checkRequired("figmaFileId", figmaFileId),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "figmaFileId", figmaFileId
+                  ), additionalProperties.toMutableMap()
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): FigmaConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): FigmaConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            figmaFileId()
-            validated = true
-        }
+                figmaFileId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1132,58 +1169,52 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (figmaFileId.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int = (if (figmaFileId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is FigmaConfig &&
-                figmaFileId == other.figmaFileId &&
-                additionalProperties == other.additionalProperties
+          return other is FigmaConfig && figmaFileId == other.figmaFileId && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(figmaFileId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "FigmaConfig{figmaFileId=$figmaFileId, additionalProperties=$additionalProperties}"
+        override fun toString() = "FigmaConfig{figmaFileId=$figmaFileId, additionalProperties=$additionalProperties}"
     }
 
-    class FramerConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class FramerConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val framerTemplateId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("framer_template_id")
-            @ExcludeMissing
-            framerTemplateId: JsonField<String> = JsonMissing.of()
-        ) : this(framerTemplateId, mutableMapOf())
+            @JsonProperty("framer_template_id") @ExcludeMissing framerTemplateId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          framerTemplateId, mutableMapOf()
+        )
 
         /**
          * Framer template identifier to grant access to.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun framerTemplateId(): String = framerTemplateId.getRequired("framer_template_id")
 
         /**
          * Returns the raw JSON value of [framerTemplateId].
          *
-         * Unlike [framerTemplateId], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [framerTemplateId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("framer_template_id")
         @ExcludeMissing
@@ -1191,13 +1222,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -1207,11 +1237,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [FramerConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .framerTemplateId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [FramerConfig]. */
@@ -1221,44 +1253,51 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(framerConfig: FramerConfig) = apply {
-                framerTemplateId = framerConfig.framerTemplateId
-                additionalProperties = framerConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(framerConfig: FramerConfig) =
+                apply {
+                    framerTemplateId = framerConfig.framerTemplateId
+                    additionalProperties = framerConfig.additionalProperties.toMutableMap()
+                }
 
             /** Framer template identifier to grant access to. */
-            fun framerTemplateId(framerTemplateId: String) =
-                framerTemplateId(JsonField.of(framerTemplateId))
+            fun framerTemplateId(framerTemplateId: String) = framerTemplateId(JsonField.of(framerTemplateId))
 
             /**
              * Sets [Builder.framerTemplateId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.framerTemplateId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.framerTemplateId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun framerTemplateId(framerTemplateId: JsonField<String>) = apply {
-                this.framerTemplateId = framerTemplateId
-            }
+            fun framerTemplateId(framerTemplateId: JsonField<String>) =
+                apply {
+                    this.framerTemplateId = framerTemplateId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [FramerConfig].
@@ -1266,6 +1305,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .framerTemplateId()
              * ```
@@ -1274,30 +1314,31 @@ private constructor(
              */
             fun build(): FramerConfig =
                 FramerConfig(
-                    checkRequired("framerTemplateId", framerTemplateId),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "framerTemplateId", framerTemplateId
+                  ), additionalProperties.toMutableMap()
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): FramerConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): FramerConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            framerTemplateId()
-            validated = true
-        }
+                framerTemplateId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1308,8 +1349,7 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
@@ -1317,50 +1357,44 @@ private constructor(
         internal fun validity(): Int = (if (framerTemplateId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is FramerConfig &&
-                framerTemplateId == other.framerTemplateId &&
-                additionalProperties == other.additionalProperties
+          return other is FramerConfig && framerTemplateId == other.framerTemplateId && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(framerTemplateId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "FramerConfig{framerTemplateId=$framerTemplateId, additionalProperties=$additionalProperties}"
+        override fun toString() = "FramerConfig{framerTemplateId=$framerTemplateId, additionalProperties=$additionalProperties}"
     }
 
-    class NotionConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class NotionConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val notionTemplateId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("notion_template_id")
-            @ExcludeMissing
-            notionTemplateId: JsonField<String> = JsonMissing.of()
-        ) : this(notionTemplateId, mutableMapOf())
+            @JsonProperty("notion_template_id") @ExcludeMissing notionTemplateId: JsonField<String> = JsonMissing.of()
+        ) : this(
+          notionTemplateId, mutableMapOf()
+        )
 
         /**
          * Notion template identifier to grant access to.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun notionTemplateId(): String = notionTemplateId.getRequired("notion_template_id")
 
         /**
          * Returns the raw JSON value of [notionTemplateId].
          *
-         * Unlike [notionTemplateId], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [notionTemplateId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("notion_template_id")
         @ExcludeMissing
@@ -1368,13 +1402,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -1384,11 +1417,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [NotionConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .notionTemplateId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [NotionConfig]. */
@@ -1398,44 +1433,51 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(notionConfig: NotionConfig) = apply {
-                notionTemplateId = notionConfig.notionTemplateId
-                additionalProperties = notionConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(notionConfig: NotionConfig) =
+                apply {
+                    notionTemplateId = notionConfig.notionTemplateId
+                    additionalProperties = notionConfig.additionalProperties.toMutableMap()
+                }
 
             /** Notion template identifier to grant access to. */
-            fun notionTemplateId(notionTemplateId: String) =
-                notionTemplateId(JsonField.of(notionTemplateId))
+            fun notionTemplateId(notionTemplateId: String) = notionTemplateId(JsonField.of(notionTemplateId))
 
             /**
              * Sets [Builder.notionTemplateId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.notionTemplateId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.notionTemplateId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun notionTemplateId(notionTemplateId: JsonField<String>) = apply {
-                this.notionTemplateId = notionTemplateId
-            }
+            fun notionTemplateId(notionTemplateId: JsonField<String>) =
+                apply {
+                    this.notionTemplateId = notionTemplateId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [NotionConfig].
@@ -1443,6 +1485,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .notionTemplateId()
              * ```
@@ -1451,30 +1494,31 @@ private constructor(
              */
             fun build(): NotionConfig =
                 NotionConfig(
-                    checkRequired("notionTemplateId", notionTemplateId),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "notionTemplateId", notionTemplateId
+                  ), additionalProperties.toMutableMap()
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): NotionConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): NotionConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            notionTemplateId()
-            validated = true
-        }
+                notionTemplateId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1485,8 +1529,7 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
@@ -1494,93 +1537,85 @@ private constructor(
         internal fun validity(): Int = (if (notionTemplateId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is NotionConfig &&
-                notionTemplateId == other.notionTemplateId &&
-                additionalProperties == other.additionalProperties
+          return other is NotionConfig && notionTemplateId == other.notionTemplateId && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(notionTemplateId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "NotionConfig{notionTemplateId=$notionTemplateId, additionalProperties=$additionalProperties}"
+        override fun toString() = "NotionConfig{notionTemplateId=$notionTemplateId, additionalProperties=$additionalProperties}"
     }
 
-    class DigitalFilesConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class DigitalFilesConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val digitalFileIds: JsonField<List<String>>,
         private val externalUrl: JsonField<String>,
         private val instructions: JsonField<String>,
         private val legacyFileIds: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("digital_file_ids")
-            @ExcludeMissing
-            digitalFileIds: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("external_url")
-            @ExcludeMissing
-            externalUrl: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("instructions")
-            @ExcludeMissing
-            instructions: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("legacy_file_ids")
-            @ExcludeMissing
-            legacyFileIds: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(digitalFileIds, externalUrl, instructions, legacyFileIds, mutableMapOf())
+            @JsonProperty("digital_file_ids") @ExcludeMissing digitalFileIds: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("external_url") @ExcludeMissing externalUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("instructions") @ExcludeMissing instructions: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("legacy_file_ids") @ExcludeMissing legacyFileIds: JsonField<List<String>> = JsonMissing.of()
+        ) : this(
+          digitalFileIds,
+          externalUrl,
+          instructions,
+          legacyFileIds,
+          mutableMapOf(),
+        )
 
         /**
-         * Files attached to this entitlement. Add files via `POST /entitlements/{id}/files` and
-         * remove them via `DELETE /entitlements/{id}/files/{file_id}`.
+         * Files attached to this entitlement. Add files via
+         * `POST /entitlements/{id}/files` and remove them via
+         * `DELETE /entitlements/{id}/files/{file_id}`.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun digitalFileIds(): List<String> = digitalFileIds.getRequired("digital_file_ids")
 
         /**
          * Optional external URL shown to the customer alongside the files.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun externalUrl(): Optional<String> = externalUrl.getOptional("external_url")
 
         /**
-         * Optional human-readable delivery instructions shown to the customer alongside the files.
+         * Optional human-readable delivery instructions shown to the customer
+         * alongside the files.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
         /**
          * Three-way patchable list of legacy file identifiers:
+         *
          * * omitted → preserve the current value
-         * * `null` → clear
+         * * `null`  → clear
          * * `[...]` → replace
          *
-         * On create, an omitted field, an explicit `null`, or an empty array all result in no
-         * legacy files attached.
+         * On create, an omitted field, an explicit `null`, or an empty
+         * array all result in no legacy files attached.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun legacyFileIds(): Optional<List<String>> = legacyFileIds.getOptional("legacy_file_ids")
 
         /**
          * Returns the raw JSON value of [digitalFileIds].
          *
-         * Unlike [digitalFileIds], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [digitalFileIds], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("digital_file_ids")
         @ExcludeMissing
@@ -1598,8 +1633,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [instructions].
          *
-         * Unlike [instructions], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [instructions], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("instructions")
         @ExcludeMissing
@@ -1608,8 +1642,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [legacyFileIds].
          *
-         * Unlike [legacyFileIds], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [legacyFileIds], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("legacy_file_ids")
         @ExcludeMissing
@@ -1617,13 +1650,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -1633,11 +1665,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [DigitalFilesConfig].
              *
              * The following fields are required:
+             *
              * ```java
              * .digitalFileIds()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [DigitalFilesConfig]. */
@@ -1650,43 +1684,44 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(digitalFilesConfig: DigitalFilesConfig) = apply {
-                digitalFileIds = digitalFilesConfig.digitalFileIds.map { it.toMutableList() }
-                externalUrl = digitalFilesConfig.externalUrl
-                instructions = digitalFilesConfig.instructions
-                legacyFileIds = digitalFilesConfig.legacyFileIds.map { it.toMutableList() }
-                additionalProperties = digitalFilesConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(digitalFilesConfig: DigitalFilesConfig) =
+                apply {
+                    digitalFileIds = digitalFilesConfig.digitalFileIds.map { it.toMutableList() }
+                    externalUrl = digitalFilesConfig.externalUrl
+                    instructions = digitalFilesConfig.instructions
+                    legacyFileIds = digitalFilesConfig.legacyFileIds.map { it.toMutableList() }
+                    additionalProperties = digitalFilesConfig.additionalProperties.toMutableMap()
+                }
 
             /**
-             * Files attached to this entitlement. Add files via `POST /entitlements/{id}/files` and
-             * remove them via `DELETE /entitlements/{id}/files/{file_id}`.
+             * Files attached to this entitlement. Add files via
+             * `POST /entitlements/{id}/files` and remove them via
+             * `DELETE /entitlements/{id}/files/{file_id}`.
              */
-            fun digitalFileIds(digitalFileIds: List<String>) =
-                digitalFileIds(JsonField.of(digitalFileIds))
+            fun digitalFileIds(digitalFileIds: List<String>) = digitalFileIds(JsonField.of(digitalFileIds))
 
             /**
              * Sets [Builder.digitalFileIds] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.digitalFileIds] with a well-typed `List<String>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.digitalFileIds] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun digitalFileIds(digitalFileIds: JsonField<List<String>>) = apply {
-                this.digitalFileIds = digitalFileIds.map { it.toMutableList() }
-            }
+            fun digitalFileIds(digitalFileIds: JsonField<List<String>>) =
+                apply {
+                    this.digitalFileIds = digitalFileIds.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [digitalFileIds].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addDigitalFileId(digitalFileId: String) = apply {
-                digitalFileIds =
-                    (digitalFileIds ?: JsonField.of(mutableListOf())).also {
+            fun addDigitalFileId(digitalFileId: String) =
+                apply {
+                    digitalFileIds = (digitalFileIds ?: JsonField.of(mutableListOf())).also {
                         checkKnown("digitalFileIds", it).add(digitalFileId)
                     }
-            }
+                }
 
             /** Optional external URL shown to the customer alongside the files. */
             fun externalUrl(externalUrl: String?) = externalUrl(JsonField.ofNullable(externalUrl))
@@ -1697,93 +1732,97 @@ private constructor(
             /**
              * Sets [Builder.externalUrl] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.externalUrl] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.externalUrl] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun externalUrl(externalUrl: JsonField<String>) = apply {
-                this.externalUrl = externalUrl
-            }
+            fun externalUrl(externalUrl: JsonField<String>) =
+                apply {
+                    this.externalUrl = externalUrl
+                }
 
             /**
-             * Optional human-readable delivery instructions shown to the customer alongside the
-             * files.
+             * Optional human-readable delivery instructions shown to the customer
+             * alongside the files.
              */
-            fun instructions(instructions: String?) =
-                instructions(JsonField.ofNullable(instructions))
+            fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
 
             /** Alias for calling [Builder.instructions] with `instructions.orElse(null)`. */
-            fun instructions(instructions: Optional<String>) =
-                instructions(instructions.getOrNull())
+            fun instructions(instructions: Optional<String>) = instructions(instructions.getOrNull())
 
             /**
              * Sets [Builder.instructions] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.instructions] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.instructions] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun instructions(instructions: JsonField<String>) = apply {
-                this.instructions = instructions
-            }
+            fun instructions(instructions: JsonField<String>) =
+                apply {
+                    this.instructions = instructions
+                }
 
             /**
              * Three-way patchable list of legacy file identifiers:
+             *
              * * omitted → preserve the current value
-             * * `null` → clear
+             * * `null`  → clear
              * * `[...]` → replace
              *
-             * On create, an omitted field, an explicit `null`, or an empty array all result in no
-             * legacy files attached.
+             * On create, an omitted field, an explicit `null`, or an empty
+             * array all result in no legacy files attached.
              */
-            fun legacyFileIds(legacyFileIds: List<String>?) =
-                legacyFileIds(JsonField.ofNullable(legacyFileIds))
+            fun legacyFileIds(legacyFileIds: List<String>?) = legacyFileIds(JsonField.ofNullable(legacyFileIds))
 
             /** Alias for calling [Builder.legacyFileIds] with `legacyFileIds.orElse(null)`. */
-            fun legacyFileIds(legacyFileIds: Optional<List<String>>) =
-                legacyFileIds(legacyFileIds.getOrNull())
+            fun legacyFileIds(legacyFileIds: Optional<List<String>>) = legacyFileIds(legacyFileIds.getOrNull())
 
             /**
              * Sets [Builder.legacyFileIds] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.legacyFileIds] with a well-typed `List<String>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.legacyFileIds] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun legacyFileIds(legacyFileIds: JsonField<List<String>>) = apply {
-                this.legacyFileIds = legacyFileIds.map { it.toMutableList() }
-            }
+            fun legacyFileIds(legacyFileIds: JsonField<List<String>>) =
+                apply {
+                    this.legacyFileIds = legacyFileIds.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [legacyFileIds].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addLegacyFileId(legacyFileId: String) = apply {
-                legacyFileIds =
-                    (legacyFileIds ?: JsonField.of(mutableListOf())).also {
+            fun addLegacyFileId(legacyFileId: String) =
+                apply {
+                    legacyFileIds = (legacyFileIds ?: JsonField.of(mutableListOf())).also {
                         checkKnown("legacyFileIds", it).add(legacyFileId)
                     }
-            }
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [DigitalFilesConfig].
@@ -1791,6 +1830,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .digitalFileIds()
              * ```
@@ -1799,36 +1839,38 @@ private constructor(
              */
             fun build(): DigitalFilesConfig =
                 DigitalFilesConfig(
-                    checkRequired("digitalFileIds", digitalFileIds).map { it.toImmutable() },
-                    externalUrl,
-                    instructions,
-                    (legacyFileIds ?: JsonMissing.of()).map { it.toImmutable() },
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "digitalFileIds", digitalFileIds
+                  ).map { it.toImmutable() },
+                  externalUrl,
+                  instructions,
+                  (legacyFileIds?: JsonMissing.of()).map { it.toImmutable() },
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): DigitalFilesConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): DigitalFilesConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            digitalFileIds()
-            externalUrl()
-            instructions()
-            legacyFileIds()
-            validated = true
-        }
+                digitalFileIds()
+                externalUrl()
+                instructions()
+                legacyFileIds()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1839,119 +1881,86 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (digitalFileIds.asKnown().getOrNull()?.size ?: 0) +
-                (if (externalUrl.asKnown().isPresent) 1 else 0) +
-                (if (instructions.asKnown().isPresent) 1 else 0) +
-                (legacyFileIds.asKnown().getOrNull()?.size ?: 0)
+        internal fun validity(): Int = (digitalFileIds.asKnown().getOrNull()?.size ?: 0) + (if (externalUrl.asKnown().isPresent) 1 else 0) + (if (instructions.asKnown().isPresent) 1 else 0) + (legacyFileIds.asKnown().getOrNull()?.size ?: 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is DigitalFilesConfig &&
-                digitalFileIds == other.digitalFileIds &&
-                externalUrl == other.externalUrl &&
-                instructions == other.instructions &&
-                legacyFileIds == other.legacyFileIds &&
-                additionalProperties == other.additionalProperties
+          return other is DigitalFilesConfig && digitalFileIds == other.digitalFileIds && externalUrl == other.externalUrl && instructions == other.instructions && legacyFileIds == other.legacyFileIds && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                digitalFileIds,
-                externalUrl,
-                instructions,
-                legacyFileIds,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(digitalFileIds, externalUrl, instructions, legacyFileIds, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "DigitalFilesConfig{digitalFileIds=$digitalFileIds, externalUrl=$externalUrl, instructions=$instructions, legacyFileIds=$legacyFileIds, additionalProperties=$additionalProperties}"
+        override fun toString() = "DigitalFilesConfig{digitalFileIds=$digitalFileIds, externalUrl=$externalUrl, instructions=$instructions, legacyFileIds=$legacyFileIds, additionalProperties=$additionalProperties}"
     }
 
-    class LicenseKeyConfig
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class LicenseKeyConfig @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val activationMessage: JsonField<String>,
         private val activationsLimit: JsonField<Int>,
         private val durationCount: JsonField<Int>,
         private val durationInterval: JsonField<TimeInterval>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("activation_message")
-            @ExcludeMissing
-            activationMessage: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("activations_limit")
-            @ExcludeMissing
-            activationsLimit: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("duration_count")
-            @ExcludeMissing
-            durationCount: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("duration_interval")
-            @ExcludeMissing
-            durationInterval: JsonField<TimeInterval> = JsonMissing.of(),
+            @JsonProperty("activation_message") @ExcludeMissing activationMessage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("activations_limit") @ExcludeMissing activationsLimit: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("duration_count") @ExcludeMissing durationCount: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("duration_interval") @ExcludeMissing durationInterval: JsonField<TimeInterval> = JsonMissing.of()
         ) : this(
-            activationMessage,
-            activationsLimit,
-            durationCount,
-            durationInterval,
-            mutableMapOf(),
+          activationMessage,
+          activationsLimit,
+          durationCount,
+          durationInterval,
+          mutableMapOf(),
         )
 
         /**
-         * Optional message displayed when a customer activates the license key (≤ 2500 characters).
+         * Optional message displayed when a customer activates the license
+         * key (≤ 2500 characters).
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun activationMessage(): Optional<String> =
-            activationMessage.getOptional("activation_message")
+        fun activationMessage(): Optional<String> = activationMessage.getOptional("activation_message")
 
         /**
          * Maximum activations allowed per issued license key. Omit for unlimited.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun activationsLimit(): Optional<Int> = activationsLimit.getOptional("activations_limit")
 
         /**
-         * Validity duration of issued license keys. Provide both `duration_count` and
-         * `duration_interval` together for a fixed duration; omit both for non-expiring keys.
+         * Validity duration of issued license keys. Provide both
+         * `duration_count` and `duration_interval` together for a fixed
+         * duration; omit both for non-expiring keys.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun durationCount(): Optional<Int> = durationCount.getOptional("duration_count")
 
         /**
          * Unit of `duration_count`.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun durationInterval(): Optional<TimeInterval> =
-            durationInterval.getOptional("duration_interval")
+        fun durationInterval(): Optional<TimeInterval> = durationInterval.getOptional("duration_interval")
 
         /**
          * Returns the raw JSON value of [activationMessage].
          *
-         * Unlike [activationMessage], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [activationMessage], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("activation_message")
         @ExcludeMissing
@@ -1960,8 +1969,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [activationsLimit].
          *
-         * Unlike [activationsLimit], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [activationsLimit], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("activations_limit")
         @ExcludeMissing
@@ -1970,8 +1978,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [durationCount].
          *
-         * Unlike [durationCount], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [durationCount], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("duration_count")
         @ExcludeMissing
@@ -1980,8 +1987,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [durationInterval].
          *
-         * Unlike [durationInterval], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [durationInterval], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("duration_interval")
         @ExcludeMissing
@@ -1989,20 +1995,20 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [LicenseKeyConfig]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [LicenseKeyConfig]. */
@@ -2015,41 +2021,37 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(licenseKeyConfig: LicenseKeyConfig) = apply {
-                activationMessage = licenseKeyConfig.activationMessage
-                activationsLimit = licenseKeyConfig.activationsLimit
-                durationCount = licenseKeyConfig.durationCount
-                durationInterval = licenseKeyConfig.durationInterval
-                additionalProperties = licenseKeyConfig.additionalProperties.toMutableMap()
-            }
+            internal fun from(licenseKeyConfig: LicenseKeyConfig) =
+                apply {
+                    activationMessage = licenseKeyConfig.activationMessage
+                    activationsLimit = licenseKeyConfig.activationsLimit
+                    durationCount = licenseKeyConfig.durationCount
+                    durationInterval = licenseKeyConfig.durationInterval
+                    additionalProperties = licenseKeyConfig.additionalProperties.toMutableMap()
+                }
 
             /**
-             * Optional message displayed when a customer activates the license key (≤ 2500
-             * characters).
+             * Optional message displayed when a customer activates the license
+             * key (≤ 2500 characters).
              */
-            fun activationMessage(activationMessage: String?) =
-                activationMessage(JsonField.ofNullable(activationMessage))
+            fun activationMessage(activationMessage: String?) = activationMessage(JsonField.ofNullable(activationMessage))
 
-            /**
-             * Alias for calling [Builder.activationMessage] with `activationMessage.orElse(null)`.
-             */
-            fun activationMessage(activationMessage: Optional<String>) =
-                activationMessage(activationMessage.getOrNull())
+            /** Alias for calling [Builder.activationMessage] with `activationMessage.orElse(null)`. */
+            fun activationMessage(activationMessage: Optional<String>) = activationMessage(activationMessage.getOrNull())
 
             /**
              * Sets [Builder.activationMessage] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.activationMessage] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.activationMessage] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun activationMessage(activationMessage: JsonField<String>) = apply {
-                this.activationMessage = activationMessage
-            }
+            fun activationMessage(activationMessage: JsonField<String>) =
+                apply {
+                    this.activationMessage = activationMessage
+                }
 
             /** Maximum activations allowed per issued license key. Omit for unlimited. */
-            fun activationsLimit(activationsLimit: Int?) =
-                activationsLimit(JsonField.ofNullable(activationsLimit))
+            fun activationsLimit(activationsLimit: Int?) = activationsLimit(JsonField.ofNullable(activationsLimit))
 
             /**
              * Alias for [Builder.activationsLimit].
@@ -2058,29 +2060,26 @@ private constructor(
              */
             fun activationsLimit(activationsLimit: Int) = activationsLimit(activationsLimit as Int?)
 
-            /**
-             * Alias for calling [Builder.activationsLimit] with `activationsLimit.orElse(null)`.
-             */
-            fun activationsLimit(activationsLimit: Optional<Int>) =
-                activationsLimit(activationsLimit.getOrNull())
+            /** Alias for calling [Builder.activationsLimit] with `activationsLimit.orElse(null)`. */
+            fun activationsLimit(activationsLimit: Optional<Int>) = activationsLimit(activationsLimit.getOrNull())
 
             /**
              * Sets [Builder.activationsLimit] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.activationsLimit] with a well-typed [Int] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.activationsLimit] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun activationsLimit(activationsLimit: JsonField<Int>) = apply {
-                this.activationsLimit = activationsLimit
-            }
+            fun activationsLimit(activationsLimit: JsonField<Int>) =
+                apply {
+                    this.activationsLimit = activationsLimit
+                }
 
             /**
-             * Validity duration of issued license keys. Provide both `duration_count` and
-             * `duration_interval` together for a fixed duration; omit both for non-expiring keys.
+             * Validity duration of issued license keys. Provide both
+             * `duration_count` and `duration_interval` together for a fixed
+             * duration; omit both for non-expiring keys.
              */
-            fun durationCount(durationCount: Int?) =
-                durationCount(JsonField.ofNullable(durationCount))
+            fun durationCount(durationCount: Int?) = durationCount(JsonField.ofNullable(durationCount))
 
             /**
              * Alias for [Builder.durationCount].
@@ -2090,59 +2089,61 @@ private constructor(
             fun durationCount(durationCount: Int) = durationCount(durationCount as Int?)
 
             /** Alias for calling [Builder.durationCount] with `durationCount.orElse(null)`. */
-            fun durationCount(durationCount: Optional<Int>) =
-                durationCount(durationCount.getOrNull())
+            fun durationCount(durationCount: Optional<Int>) = durationCount(durationCount.getOrNull())
 
             /**
              * Sets [Builder.durationCount] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.durationCount] with a well-typed [Int] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.durationCount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun durationCount(durationCount: JsonField<Int>) = apply {
-                this.durationCount = durationCount
-            }
+            fun durationCount(durationCount: JsonField<Int>) =
+                apply {
+                    this.durationCount = durationCount
+                }
 
             /** Unit of `duration_count`. */
-            fun durationInterval(durationInterval: TimeInterval?) =
-                durationInterval(JsonField.ofNullable(durationInterval))
+            fun durationInterval(durationInterval: TimeInterval?) = durationInterval(JsonField.ofNullable(durationInterval))
 
-            /**
-             * Alias for calling [Builder.durationInterval] with `durationInterval.orElse(null)`.
-             */
-            fun durationInterval(durationInterval: Optional<TimeInterval>) =
-                durationInterval(durationInterval.getOrNull())
+            /** Alias for calling [Builder.durationInterval] with `durationInterval.orElse(null)`. */
+            fun durationInterval(durationInterval: Optional<TimeInterval>) = durationInterval(durationInterval.getOrNull())
 
             /**
              * Sets [Builder.durationInterval] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.durationInterval] with a well-typed [TimeInterval]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.durationInterval] with a well-typed [TimeInterval] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun durationInterval(durationInterval: JsonField<TimeInterval>) = apply {
-                this.durationInterval = durationInterval
-            }
+            fun durationInterval(durationInterval: JsonField<TimeInterval>) =
+                apply {
+                    this.durationInterval = durationInterval
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [LicenseKeyConfig].
@@ -2151,36 +2152,36 @@ private constructor(
              */
             fun build(): LicenseKeyConfig =
                 LicenseKeyConfig(
-                    activationMessage,
-                    activationsLimit,
-                    durationCount,
-                    durationInterval,
-                    additionalProperties.toMutableMap(),
+                  activationMessage,
+                  activationsLimit,
+                  durationCount,
+                  durationInterval,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): LicenseKeyConfig = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): LicenseKeyConfig =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            activationMessage()
-            activationsLimit()
-            durationCount()
-            durationInterval().ifPresent { it.validate() }
-            validated = true
-        }
+                activationMessage()
+                activationsLimit()
+                durationCount()
+                durationInterval().ifPresent { it.validate() }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -2191,44 +2192,25 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (activationMessage.asKnown().isPresent) 1 else 0) +
-                (if (activationsLimit.asKnown().isPresent) 1 else 0) +
-                (if (durationCount.asKnown().isPresent) 1 else 0) +
-                (durationInterval.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (if (activationMessage.asKnown().isPresent) 1 else 0) + (if (activationsLimit.asKnown().isPresent) 1 else 0) + (if (durationCount.asKnown().isPresent) 1 else 0) + (durationInterval.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is LicenseKeyConfig &&
-                activationMessage == other.activationMessage &&
-                activationsLimit == other.activationsLimit &&
-                durationCount == other.durationCount &&
-                durationInterval == other.durationInterval &&
-                additionalProperties == other.additionalProperties
+          return other is LicenseKeyConfig && activationMessage == other.activationMessage && activationsLimit == other.activationsLimit && durationCount == other.durationCount && durationInterval == other.durationInterval && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                activationMessage,
-                activationsLimit,
-                durationCount,
-                durationInterval,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(activationMessage, activationsLimit, durationCount, durationInterval, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "LicenseKeyConfig{activationMessage=$activationMessage, activationsLimit=$activationsLimit, durationCount=$durationCount, durationInterval=$durationInterval, additionalProperties=$additionalProperties}"
+        override fun toString() = "LicenseKeyConfig{activationMessage=$activationMessage, activationsLimit=$activationsLimit, durationCount=$durationCount, durationInterval=$durationInterval, additionalProperties=$additionalProperties}"
     }
 }

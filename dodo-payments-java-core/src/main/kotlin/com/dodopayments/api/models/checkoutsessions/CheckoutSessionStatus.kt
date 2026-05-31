@@ -19,9 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CheckoutSessionStatus
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CheckoutSessionStatus @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customerEmail: JsonField<String>,
@@ -29,55 +27,52 @@ private constructor(
     private val paymentId: JsonField<String>,
     private val paymentStatus: JsonField<IntentStatus>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("customer_email")
-        @ExcludeMissing
-        customerEmail: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("customer_name")
-        @ExcludeMissing
-        customerName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("customer_email") @ExcludeMissing customerEmail: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("customer_name") @ExcludeMissing customerName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("payment_status")
-        @ExcludeMissing
-        paymentStatus: JsonField<IntentStatus> = JsonMissing.of(),
-    ) : this(id, createdAt, customerEmail, customerName, paymentId, paymentStatus, mutableMapOf())
+        @JsonProperty("payment_status") @ExcludeMissing paymentStatus: JsonField<IntentStatus> = JsonMissing.of()
+    ) : this(
+      id,
+      createdAt,
+      customerEmail,
+      customerName,
+      paymentId,
+      paymentStatus,
+      mutableMapOf(),
+    )
 
     /**
      * Id of the checkout session
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
 
     /**
      * Created at timestamp
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
      * Customer email: prefers payment's customer, falls back to session
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun customerEmail(): Optional<String> = customerEmail.getOptional("customer_email")
 
     /**
      * Customer name: prefers payment's customer, falls back to session
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun customerName(): Optional<String> = customerName.getOptional("customer_name")
 
@@ -86,8 +81,7 @@ private constructor(
      *
      * Null if checkout sessions is still at the details collection stage.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
 
@@ -96,8 +90,7 @@ private constructor(
      *
      * Null if checkout sessions is still at the details collection stage.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun paymentStatus(): Optional<IntentStatus> = paymentStatus.getOptional("payment_status")
 
@@ -106,7 +99,9 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -140,7 +135,9 @@ private constructor(
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+    @JsonProperty("payment_id")
+    @ExcludeMissing
+    fun _paymentId(): JsonField<String> = paymentId
 
     /**
      * Returns the raw JSON value of [paymentStatus].
@@ -153,13 +150,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -169,12 +165,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CheckoutSessionStatus].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .createdAt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CheckoutSessionStatus]. */
@@ -189,15 +187,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(checkoutSessionStatus: CheckoutSessionStatus) = apply {
-            id = checkoutSessionStatus.id
-            createdAt = checkoutSessionStatus.createdAt
-            customerEmail = checkoutSessionStatus.customerEmail
-            customerName = checkoutSessionStatus.customerName
-            paymentId = checkoutSessionStatus.paymentId
-            paymentStatus = checkoutSessionStatus.paymentStatus
-            additionalProperties = checkoutSessionStatus.additionalProperties.toMutableMap()
-        }
+        internal fun from(checkoutSessionStatus: CheckoutSessionStatus) =
+            apply {
+                id = checkoutSessionStatus.id
+                createdAt = checkoutSessionStatus.createdAt
+                customerEmail = checkoutSessionStatus.customerEmail
+                customerName = checkoutSessionStatus.customerName
+                paymentId = checkoutSessionStatus.paymentId
+                paymentStatus = checkoutSessionStatus.paymentStatus
+                additionalProperties = checkoutSessionStatus.additionalProperties.toMutableMap()
+            }
 
         /** Id of the checkout session */
         fun id(id: String) = id(JsonField.of(id))
@@ -205,10 +204,13 @@ private constructor(
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         /** Created at timestamp */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -216,30 +218,30 @@ private constructor(
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         /** Customer email: prefers payment's customer, falls back to session */
-        fun customerEmail(customerEmail: String?) =
-            customerEmail(JsonField.ofNullable(customerEmail))
+        fun customerEmail(customerEmail: String?) = customerEmail(JsonField.ofNullable(customerEmail))
 
         /** Alias for calling [Builder.customerEmail] with `customerEmail.orElse(null)`. */
-        fun customerEmail(customerEmail: Optional<String>) =
-            customerEmail(customerEmail.getOrNull())
+        fun customerEmail(customerEmail: Optional<String>) = customerEmail(customerEmail.getOrNull())
 
         /**
          * Sets [Builder.customerEmail] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerEmail] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.customerEmail] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customerEmail(customerEmail: JsonField<String>) = apply {
-            this.customerEmail = customerEmail
-        }
+        fun customerEmail(customerEmail: JsonField<String>) =
+            apply {
+                this.customerEmail = customerEmail
+            }
 
         /** Customer name: prefers payment's customer, falls back to session */
         fun customerName(customerName: String?) = customerName(JsonField.ofNullable(customerName))
@@ -250,13 +252,13 @@ private constructor(
         /**
          * Sets [Builder.customerName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.customerName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customerName(customerName: JsonField<String>) = apply {
-            this.customerName = customerName
-        }
+        fun customerName(customerName: JsonField<String>) =
+            apply {
+                this.customerName = customerName
+            }
 
         /**
          * Id of the payment created by the checkout sessions.
@@ -271,53 +273,60 @@ private constructor(
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                this.paymentId = paymentId
+            }
 
         /**
          * status of the payment.
          *
          * Null if checkout sessions is still at the details collection stage.
          */
-        fun paymentStatus(paymentStatus: IntentStatus?) =
-            paymentStatus(JsonField.ofNullable(paymentStatus))
+        fun paymentStatus(paymentStatus: IntentStatus?) = paymentStatus(JsonField.ofNullable(paymentStatus))
 
         /** Alias for calling [Builder.paymentStatus] with `paymentStatus.orElse(null)`. */
-        fun paymentStatus(paymentStatus: Optional<IntentStatus>) =
-            paymentStatus(paymentStatus.getOrNull())
+        fun paymentStatus(paymentStatus: Optional<IntentStatus>) = paymentStatus(paymentStatus.getOrNull())
 
         /**
          * Sets [Builder.paymentStatus] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentStatus] with a well-typed [IntentStatus] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.paymentStatus] with a well-typed [IntentStatus] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun paymentStatus(paymentStatus: JsonField<IntentStatus>) = apply {
-            this.paymentStatus = paymentStatus
-        }
+        fun paymentStatus(paymentStatus: JsonField<IntentStatus>) =
+            apply {
+                this.paymentStatus = paymentStatus
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CheckoutSessionStatus].
@@ -325,6 +334,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .createdAt()
@@ -334,13 +344,17 @@ private constructor(
          */
         fun build(): CheckoutSessionStatus =
             CheckoutSessionStatus(
-                checkRequired("id", id),
-                checkRequired("createdAt", createdAt),
-                customerEmail,
-                customerName,
-                paymentId,
-                paymentStatus,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              customerEmail,
+              customerName,
+              paymentId,
+              paymentStatus,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -354,19 +368,20 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CheckoutSessionStatus = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CheckoutSessionStatus =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        createdAt()
-        customerEmail()
-        customerName()
-        paymentId()
-        paymentStatus().ifPresent { it.validate() }
-        validated = true
-    }
+            id()
+            createdAt()
+            customerEmail()
+            customerName()
+            paymentId()
+            paymentStatus().ifPresent { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -382,43 +397,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (customerEmail.asKnown().isPresent) 1 else 0) +
-            (if (customerName.asKnown().isPresent) 1 else 0) +
-            (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (paymentStatus.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (if (customerEmail.asKnown().isPresent) 1 else 0) + (if (customerName.asKnown().isPresent) 1 else 0) + (if (paymentId.asKnown().isPresent) 1 else 0) + (paymentStatus.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CheckoutSessionStatus &&
-            id == other.id &&
-            createdAt == other.createdAt &&
-            customerEmail == other.customerEmail &&
-            customerName == other.customerName &&
-            paymentId == other.paymentId &&
-            paymentStatus == other.paymentStatus &&
-            additionalProperties == other.additionalProperties
+      return other is CheckoutSessionStatus && id == other.id && createdAt == other.createdAt && customerEmail == other.customerEmail && customerName == other.customerName && paymentId == other.paymentId && paymentStatus == other.paymentStatus && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            createdAt,
-            customerEmail,
-            customerName,
-            paymentId,
-            paymentStatus,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, createdAt, customerEmail, customerName, paymentId, paymentStatus, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CheckoutSessionStatus{id=$id, createdAt=$createdAt, customerEmail=$customerEmail, customerName=$customerName, paymentId=$paymentId, paymentStatus=$paymentStatus, additionalProperties=$additionalProperties}"
+    override fun toString() = "CheckoutSessionStatus{id=$id, createdAt=$createdAt, customerEmail=$customerEmail, customerName=$customerName, paymentId=$paymentId, paymentStatus=$paymentStatus, additionalProperties=$additionalProperties}"
 }

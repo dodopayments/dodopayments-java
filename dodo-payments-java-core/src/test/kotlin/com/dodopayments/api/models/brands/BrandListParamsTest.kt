@@ -2,12 +2,13 @@
 
 package com.dodopayments.api.models.brands
 
+import com.dodopayments.api.models.brands.BrandListParams
 import org.junit.jupiter.api.Test
 
 internal class BrandListParamsTest {
 
     @Test
     fun create() {
-        BrandListParams.builder().build()
+      BrandListParams.builder().build()
     }
 }

@@ -8,14 +8,13 @@ import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
 import com.dodopayments.api.models.invoices.payments.PaymentRetrievePayoutParams
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
+import com.dodopayments.api.services.async.invoices.PaymentServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface PaymentServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -26,110 +25,120 @@ interface PaymentServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentServiceAsync
 
     fun retrieve(paymentId: String): CompletableFuture<HttpResponse> =
-        retrieve(paymentId, PaymentRetrieveParams.none())
+        retrieve(
+          paymentId, PaymentRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        paymentId: String,
-        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse> =
-        retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+    fun retrieve(paymentId: String, params: PaymentRetrieveParams = PaymentRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+        retrieve(
+          params.toBuilder()
+              .paymentId(paymentId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        paymentId: String,
-        params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
-    ): CompletableFuture<HttpResponse> = retrieve(paymentId, params, RequestOptions.none())
+    fun retrieve(paymentId: String, params: PaymentRetrieveParams = PaymentRetrieveParams.none()): CompletableFuture<HttpResponse> =
+        retrieve(
+          paymentId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: PaymentRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse>
+    fun retrieve(params: PaymentRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
     /** @see retrieve */
     fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponse> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        paymentId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> =
-        retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+    fun retrieve(paymentId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+        retrieve(
+          paymentId,
+          PaymentRetrieveParams.none(),
+          requestOptions,
+        )
 
     fun retrievePayout(payoutId: String): CompletableFuture<HttpResponse> =
-        retrievePayout(payoutId, PaymentRetrievePayoutParams.none())
+        retrievePayout(
+          payoutId, PaymentRetrievePayoutParams.none()
+        )
 
     /** @see retrievePayout */
-    fun retrievePayout(
-        payoutId: String,
-        params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse> =
-        retrievePayout(params.toBuilder().payoutId(payoutId).build(), requestOptions)
+    fun retrievePayout(payoutId: String, params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+        retrievePayout(
+          params.toBuilder()
+              .payoutId(payoutId)
+              .build(), requestOptions
+        )
 
     /** @see retrievePayout */
-    fun retrievePayout(
-        payoutId: String,
-        params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
-    ): CompletableFuture<HttpResponse> = retrievePayout(payoutId, params, RequestOptions.none())
+    fun retrievePayout(payoutId: String, params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none()): CompletableFuture<HttpResponse> =
+        retrievePayout(
+          payoutId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrievePayout */
-    fun retrievePayout(
-        params: PaymentRetrievePayoutParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse>
+    fun retrievePayout(params: PaymentRetrievePayoutParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
     /** @see retrievePayout */
     fun retrievePayout(params: PaymentRetrievePayoutParams): CompletableFuture<HttpResponse> =
-        retrievePayout(params, RequestOptions.none())
+        retrievePayout(
+          params, RequestOptions.none()
+        )
 
     /** @see retrievePayout */
-    fun retrievePayout(
-        payoutId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> =
-        retrievePayout(payoutId, PaymentRetrievePayoutParams.none(), requestOptions)
+    fun retrievePayout(payoutId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+        retrievePayout(
+          payoutId,
+          PaymentRetrievePayoutParams.none(),
+          requestOptions,
+        )
 
     fun retrieveRefund(refundId: String): CompletableFuture<HttpResponse> =
-        retrieveRefund(refundId, PaymentRetrieveRefundParams.none())
+        retrieveRefund(
+          refundId, PaymentRetrieveRefundParams.none()
+        )
 
     /** @see retrieveRefund */
-    fun retrieveRefund(
-        refundId: String,
-        params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse> =
-        retrieveRefund(params.toBuilder().refundId(refundId).build(), requestOptions)
+    fun retrieveRefund(refundId: String, params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+        retrieveRefund(
+          params.toBuilder()
+              .refundId(refundId)
+              .build(), requestOptions
+        )
 
     /** @see retrieveRefund */
-    fun retrieveRefund(
-        refundId: String,
-        params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
-    ): CompletableFuture<HttpResponse> = retrieveRefund(refundId, params, RequestOptions.none())
+    fun retrieveRefund(refundId: String, params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none()): CompletableFuture<HttpResponse> =
+        retrieveRefund(
+          refundId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieveRefund */
-    fun retrieveRefund(
-        params: PaymentRetrieveRefundParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<HttpResponse>
+    fun retrieveRefund(params: PaymentRetrieveRefundParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
     /** @see retrieveRefund */
     fun retrieveRefund(params: PaymentRetrieveRefundParams): CompletableFuture<HttpResponse> =
-        retrieveRefund(params, RequestOptions.none())
+        retrieveRefund(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieveRefund */
-    fun retrieveRefund(
-        refundId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<HttpResponse> =
-        retrieveRefund(refundId, PaymentRetrieveRefundParams.none(), requestOptions)
+    fun retrieveRefund(refundId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+        retrieveRefund(
+          refundId,
+          PaymentRetrieveRefundParams.none(),
+          requestOptions,
+        )
 
-    /**
-     * A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -137,122 +146,123 @@ interface PaymentServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): PaymentServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /invoices/payments/{payment_id}`, but is otherwise
-         * the same as [PaymentServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /invoices/payments/{payment_id}`, but is otherwise the             same as [PaymentServiceAsync.retrieve]. */
         fun retrieve(paymentId: String): CompletableFuture<HttpResponse> =
-            retrieve(paymentId, PaymentRetrieveParams.none())
+            retrieve(
+              paymentId, PaymentRetrieveParams.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            paymentId: String,
-            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            retrieve(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+        fun retrieve(paymentId: String, params: PaymentRetrieveParams = PaymentRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            retrieve(
+              params.toBuilder()
+                  .paymentId(paymentId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            paymentId: String,
-            params: PaymentRetrieveParams = PaymentRetrieveParams.none(),
-        ): CompletableFuture<HttpResponse> = retrieve(paymentId, params, RequestOptions.none())
+        fun retrieve(paymentId: String, params: PaymentRetrieveParams = PaymentRetrieveParams.none()): CompletableFuture<HttpResponse> =
+            retrieve(
+              paymentId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: PaymentRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun retrieve(params: PaymentRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
         /** @see retrieve */
         fun retrieve(params: PaymentRetrieveParams): CompletableFuture<HttpResponse> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            paymentId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            retrieve(paymentId, PaymentRetrieveParams.none(), requestOptions)
+        fun retrieve(paymentId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            retrieve(
+              paymentId,
+              PaymentRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /invoices/payouts/{payout_id}`, but is otherwise the
-         * same as [PaymentServiceAsync.retrievePayout].
-         */
+        /** Returns a raw HTTP response for `get /invoices/payouts/{payout_id}`, but is otherwise the             same as [PaymentServiceAsync.retrievePayout]. */
         fun retrievePayout(payoutId: String): CompletableFuture<HttpResponse> =
-            retrievePayout(payoutId, PaymentRetrievePayoutParams.none())
+            retrievePayout(
+              payoutId, PaymentRetrievePayoutParams.none()
+            )
 
         /** @see retrievePayout */
-        fun retrievePayout(
-            payoutId: String,
-            params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            retrievePayout(params.toBuilder().payoutId(payoutId).build(), requestOptions)
+        fun retrievePayout(payoutId: String, params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            retrievePayout(
+              params.toBuilder()
+                  .payoutId(payoutId)
+                  .build(), requestOptions
+            )
 
         /** @see retrievePayout */
-        fun retrievePayout(
-            payoutId: String,
-            params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none(),
-        ): CompletableFuture<HttpResponse> = retrievePayout(payoutId, params, RequestOptions.none())
+        fun retrievePayout(payoutId: String, params: PaymentRetrievePayoutParams = PaymentRetrievePayoutParams.none()): CompletableFuture<HttpResponse> =
+            retrievePayout(
+              payoutId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrievePayout */
-        fun retrievePayout(
-            params: PaymentRetrievePayoutParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun retrievePayout(params: PaymentRetrievePayoutParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
         /** @see retrievePayout */
         fun retrievePayout(params: PaymentRetrievePayoutParams): CompletableFuture<HttpResponse> =
-            retrievePayout(params, RequestOptions.none())
+            retrievePayout(
+              params, RequestOptions.none()
+            )
 
         /** @see retrievePayout */
-        fun retrievePayout(
-            payoutId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            retrievePayout(payoutId, PaymentRetrievePayoutParams.none(), requestOptions)
+        fun retrievePayout(payoutId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            retrievePayout(
+              payoutId,
+              PaymentRetrievePayoutParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /invoices/refunds/{refund_id}`, but is otherwise the
-         * same as [PaymentServiceAsync.retrieveRefund].
-         */
+        /** Returns a raw HTTP response for `get /invoices/refunds/{refund_id}`, but is otherwise the             same as [PaymentServiceAsync.retrieveRefund]. */
         fun retrieveRefund(refundId: String): CompletableFuture<HttpResponse> =
-            retrieveRefund(refundId, PaymentRetrieveRefundParams.none())
+            retrieveRefund(
+              refundId, PaymentRetrieveRefundParams.none()
+            )
 
         /** @see retrieveRefund */
-        fun retrieveRefund(
-            refundId: String,
-            params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            retrieveRefund(params.toBuilder().refundId(refundId).build(), requestOptions)
+        fun retrieveRefund(refundId: String, params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            retrieveRefund(
+              params.toBuilder()
+                  .refundId(refundId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieveRefund */
-        fun retrieveRefund(
-            refundId: String,
-            params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none(),
-        ): CompletableFuture<HttpResponse> = retrieveRefund(refundId, params, RequestOptions.none())
+        fun retrieveRefund(refundId: String, params: PaymentRetrieveRefundParams = PaymentRetrieveRefundParams.none()): CompletableFuture<HttpResponse> =
+            retrieveRefund(
+              refundId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieveRefund */
-        fun retrieveRefund(
-            params: PaymentRetrieveRefundParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun retrieveRefund(params: PaymentRetrieveRefundParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
         /** @see retrieveRefund */
         fun retrieveRefund(params: PaymentRetrieveRefundParams): CompletableFuture<HttpResponse> =
-            retrieveRefund(params, RequestOptions.none())
+            retrieveRefund(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieveRefund */
-        fun retrieveRefund(
-            refundId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            retrieveRefund(refundId, PaymentRetrieveRefundParams.none(), requestOptions)
+        fun retrieveRefund(refundId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            retrieveRefund(
+              refundId,
+              PaymentRetrieveRefundParams.none(),
+              requestOptions,
+            )
     }
 }

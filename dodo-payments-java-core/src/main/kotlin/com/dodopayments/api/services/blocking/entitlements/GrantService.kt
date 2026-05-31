@@ -9,14 +9,13 @@ import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.GrantListPage
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
+import com.dodopayments.api.services.blocking.entitlements.GrantService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface GrantService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -27,54 +26,71 @@ interface GrantService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantService
 
     /** GET /entitlements/{id}/grants (public API) */
-    fun list(id: String): GrantListPage = list(id, GrantListParams.none())
+    fun list(id: String): GrantListPage =
+        list(
+          id, GrantListParams.none()
+        )
 
     /** @see list */
-    fun list(
-        id: String,
-        params: GrantListParams = GrantListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): GrantListPage = list(params.toBuilder().id(id).build(), requestOptions)
+    fun list(id: String, params: GrantListParams = GrantListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): GrantListPage =
+        list(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see list */
     fun list(id: String, params: GrantListParams = GrantListParams.none()): GrantListPage =
-        list(id, params, RequestOptions.none())
+        list(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see list */
-    fun list(
-        params: GrantListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): GrantListPage
+    fun list(params: GrantListParams, requestOptions: RequestOptions = RequestOptions.none()): GrantListPage
 
     /** @see list */
-    fun list(params: GrantListParams): GrantListPage = list(params, RequestOptions.none())
+    fun list(params: GrantListParams): GrantListPage =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(id: String, requestOptions: RequestOptions): GrantListPage =
-        list(id, GrantListParams.none(), requestOptions)
+        list(
+          id,
+          GrantListParams.none(),
+          requestOptions,
+        )
 
     /**
-     * Revoke a single grant. Idempotent: re-revoking an already-revoked grant returns the grant in
-     * its current state.
+     * Revoke a single grant. Idempotent: re-revoking an already-revoked
+     * grant returns the grant in its current state.
      */
     fun revoke(grantId: String, params: GrantRevokeParams): EntitlementGrant =
-        revoke(grantId, params, RequestOptions.none())
+        revoke(
+          grantId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see revoke */
-    fun revoke(
-        grantId: String,
-        params: GrantRevokeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementGrant = revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
+    fun revoke(grantId: String, params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): EntitlementGrant =
+        revoke(
+          params.toBuilder()
+              .grantId(grantId)
+              .build(), requestOptions
+        )
 
     /** @see revoke */
-    fun revoke(params: GrantRevokeParams): EntitlementGrant = revoke(params, RequestOptions.none())
+    fun revoke(params: GrantRevokeParams): EntitlementGrant =
+        revoke(
+          params, RequestOptions.none()
+        )
 
     /** @see revoke */
-    fun revoke(
-        params: GrantRevokeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementGrant
+    fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): EntitlementGrant
 
     /** A view of [GrantService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -86,72 +102,78 @@ interface GrantService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /entitlements/{id}/grants`, but is otherwise the
-         * same as [GrantService.list].
-         */
+        /** Returns a raw HTTP response for `get /entitlements/{id}/grants`, but is otherwise the             same as [GrantService.list]. */
         @MustBeClosed
-        fun list(id: String): HttpResponseFor<GrantListPage> = list(id, GrantListParams.none())
+        fun list(id: String): HttpResponseFor<GrantListPage> =
+            list(
+              id, GrantListParams.none()
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            id: String,
-            params: GrantListParams = GrantListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<GrantListPage> = list(params.toBuilder().id(id).build(), requestOptions)
+        fun list(id: String, params: GrantListParams = GrantListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<GrantListPage> =
+            list(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            id: String,
-            params: GrantListParams = GrantListParams.none(),
-        ): HttpResponseFor<GrantListPage> = list(id, params, RequestOptions.none())
+        fun list(id: String, params: GrantListParams = GrantListParams.none()): HttpResponseFor<GrantListPage> =
+            list(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: GrantListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<GrantListPage>
+        fun list(params: GrantListParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<GrantListPage>
 
         /** @see list */
         @MustBeClosed
         fun list(params: GrantListParams): HttpResponseFor<GrantListPage> =
-            list(params, RequestOptions.none())
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
         fun list(id: String, requestOptions: RequestOptions): HttpResponseFor<GrantListPage> =
-            list(id, GrantListParams.none(), requestOptions)
+            list(
+              id,
+              GrantListParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /entitlements/{id}/grants/{grant_id}`, but is
-         * otherwise the same as [GrantService.revoke].
-         */
+        /** Returns a raw HTTP response for `delete /entitlements/{id}/grants/{grant_id}`, but is otherwise the             same as [GrantService.revoke]. */
         @MustBeClosed
         fun revoke(grantId: String, params: GrantRevokeParams): HttpResponseFor<EntitlementGrant> =
-            revoke(grantId, params, RequestOptions.none())
+            revoke(
+              grantId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see revoke */
         @MustBeClosed
-        fun revoke(
-            grantId: String,
-            params: GrantRevokeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementGrant> =
-            revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
+        fun revoke(grantId: String, params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<EntitlementGrant> =
+            revoke(
+              params.toBuilder()
+                  .grantId(grantId)
+                  .build(), requestOptions
+            )
 
         /** @see revoke */
         @MustBeClosed
         fun revoke(params: GrantRevokeParams): HttpResponseFor<EntitlementGrant> =
-            revoke(params, RequestOptions.none())
+            revoke(
+              params, RequestOptions.none()
+            )
 
         /** @see revoke */
         @MustBeClosed
-        fun revoke(
-            params: GrantRevokeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementGrant>
+        fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<EntitlementGrant>
     }
 }

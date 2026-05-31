@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.products.DigitalProductDeliveryFile
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,43 +12,37 @@ internal class DigitalProductDeliveryFileTest {
 
     @Test
     fun create() {
-        val digitalProductDeliveryFile =
-            DigitalProductDeliveryFile.builder()
-                .downloadUrl("download_url")
-                .expiresIn(0L)
-                .fileId("file_id")
-                .filename("filename")
-                .contentType("content_type")
-                .fileSize(0L)
-                .build()
+      val digitalProductDeliveryFile = DigitalProductDeliveryFile.builder()
+          .downloadUrl("download_url")
+          .expiresIn(0L)
+          .fileId("file_id")
+          .filename("filename")
+          .contentType("content_type")
+          .fileSize(0L)
+          .build()
 
-        assertThat(digitalProductDeliveryFile.downloadUrl()).isEqualTo("download_url")
-        assertThat(digitalProductDeliveryFile.expiresIn()).isEqualTo(0L)
-        assertThat(digitalProductDeliveryFile.fileId()).isEqualTo("file_id")
-        assertThat(digitalProductDeliveryFile.filename()).isEqualTo("filename")
-        assertThat(digitalProductDeliveryFile.contentType()).contains("content_type")
-        assertThat(digitalProductDeliveryFile.fileSize()).contains(0L)
+      assertThat(digitalProductDeliveryFile.downloadUrl()).isEqualTo("download_url")
+      assertThat(digitalProductDeliveryFile.expiresIn()).isEqualTo(0L)
+      assertThat(digitalProductDeliveryFile.fileId()).isEqualTo("file_id")
+      assertThat(digitalProductDeliveryFile.filename()).isEqualTo("filename")
+      assertThat(digitalProductDeliveryFile.contentType()).contains("content_type")
+      assertThat(digitalProductDeliveryFile.fileSize()).contains(0L)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val digitalProductDeliveryFile =
-            DigitalProductDeliveryFile.builder()
-                .downloadUrl("download_url")
-                .expiresIn(0L)
-                .fileId("file_id")
-                .filename("filename")
-                .contentType("content_type")
-                .fileSize(0L)
-                .build()
+      val jsonMapper = jsonMapper()
+      val digitalProductDeliveryFile = DigitalProductDeliveryFile.builder()
+          .downloadUrl("download_url")
+          .expiresIn(0L)
+          .fileId("file_id")
+          .filename("filename")
+          .contentType("content_type")
+          .fileSize(0L)
+          .build()
 
-        val roundtrippedDigitalProductDeliveryFile =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(digitalProductDeliveryFile),
-                jacksonTypeRef<DigitalProductDeliveryFile>(),
-            )
+      val roundtrippedDigitalProductDeliveryFile = jsonMapper.readValue(jsonMapper.writeValueAsString(digitalProductDeliveryFile), jacksonTypeRef<DigitalProductDeliveryFile>())
 
-        assertThat(roundtrippedDigitalProductDeliveryFile).isEqualTo(digitalProductDeliveryFile)
+      assertThat(roundtrippedDigitalProductDeliveryFile).isEqualTo(digitalProductDeliveryFile)
     }
 }

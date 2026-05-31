@@ -2,6 +2,10 @@
 
 package com.dodopayments.api.client
 
+import com.dodopayments.api.client.DodoPaymentsClient
+import com.dodopayments.api.client.DodoPaymentsClientAsync
+import com.dodopayments.api.client.DodoPaymentsClientAsyncImpl
+import com.dodopayments.api.client.DodoPaymentsClientImpl
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.getPackageVersion
 import com.dodopayments.api.services.blocking.AddonService
@@ -54,50 +58,37 @@ import com.dodopayments.api.services.blocking.WebhookService
 import com.dodopayments.api.services.blocking.WebhookServiceImpl
 import java.util.function.Consumer
 
-class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPaymentsClient {
+class DodoPaymentsClientImpl(
+    private val clientOptions: ClientOptions,
+
+) : DodoPaymentsClient {
 
     private val clientOptionsWithUserAgent =
-        if (clientOptions.headers.names().contains("User-Agent")) clientOptions
-        else
-            clientOptions
-                .toBuilder()
-                .putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}")
-                .build()
+
+      if (clientOptions.headers.names().contains("User-Agent")) clientOptions
+
+      else clientOptions.toBuilder().putHeader("User-Agent", "${javaClass.simpleName}/Java ${getPackageVersion()}").build()
 
     // Pass the original clientOptions so that this client sets its own User-Agent.
-    private val async: DodoPaymentsClientAsync by lazy {
-        DodoPaymentsClientAsyncImpl(clientOptions)
-    }
+    private val async: DodoPaymentsClientAsync by lazy { DodoPaymentsClientAsyncImpl(clientOptions) }
 
-    private val withRawResponse: DodoPaymentsClient.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+    private val withRawResponse: DodoPaymentsClient.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
-    private val checkoutSessions: CheckoutSessionService by lazy {
-        CheckoutSessionServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val checkoutSessions: CheckoutSessionService by lazy { CheckoutSessionServiceImpl(clientOptionsWithUserAgent) }
 
     private val payments: PaymentService by lazy { PaymentServiceImpl(clientOptionsWithUserAgent) }
 
-    private val subscriptions: SubscriptionService by lazy {
-        SubscriptionServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val subscriptions: SubscriptionService by lazy { SubscriptionServiceImpl(clientOptionsWithUserAgent) }
 
     private val invoices: InvoiceService by lazy { InvoiceServiceImpl(clientOptionsWithUserAgent) }
 
     private val licenses: LicenseService by lazy { LicenseServiceImpl(clientOptionsWithUserAgent) }
 
-    private val licenseKeys: LicenseKeyService by lazy {
-        LicenseKeyServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val licenseKeys: LicenseKeyService by lazy { LicenseKeyServiceImpl(clientOptionsWithUserAgent) }
 
-    private val licenseKeyInstances: LicenseKeyInstanceService by lazy {
-        LicenseKeyInstanceServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val licenseKeyInstances: LicenseKeyInstanceService by lazy { LicenseKeyInstanceServiceImpl(clientOptionsWithUserAgent) }
 
-    private val customers: CustomerService by lazy {
-        CustomerServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val customers: CustomerService by lazy { CustomerServiceImpl(clientOptionsWithUserAgent) }
 
     private val refunds: RefundService by lazy { RefundServiceImpl(clientOptionsWithUserAgent) }
 
@@ -109,9 +100,7 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val misc: MiscService by lazy { MiscServiceImpl(clientOptionsWithUserAgent) }
 
-    private val discounts: DiscountService by lazy {
-        DiscountServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val discounts: DiscountService by lazy { DiscountServiceImpl(clientOptionsWithUserAgent) }
 
     private val addons: AddonService by lazy { AddonServiceImpl(clientOptionsWithUserAgent) }
 
@@ -119,36 +108,25 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
 
-    private val webhookEvents: WebhookEventService by lazy {
-        WebhookEventServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val webhookEvents: WebhookEventService by lazy { WebhookEventServiceImpl(clientOptionsWithUserAgent) }
 
-    private val usageEvents: UsageEventService by lazy {
-        UsageEventServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val usageEvents: UsageEventService by lazy { UsageEventServiceImpl(clientOptionsWithUserAgent) }
 
     private val meters: MeterService by lazy { MeterServiceImpl(clientOptionsWithUserAgent) }
 
     private val balances: BalanceService by lazy { BalanceServiceImpl(clientOptionsWithUserAgent) }
 
-    private val creditEntitlements: CreditEntitlementService by lazy {
-        CreditEntitlementServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val creditEntitlements: CreditEntitlementService by lazy { CreditEntitlementServiceImpl(clientOptionsWithUserAgent) }
 
-    private val entitlements: EntitlementService by lazy {
-        EntitlementServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val entitlements: EntitlementService by lazy { EntitlementServiceImpl(clientOptionsWithUserAgent) }
 
-    private val productCollections: ProductCollectionService by lazy {
-        ProductCollectionServiceImpl(clientOptionsWithUserAgent)
-    }
+    private val productCollections: ProductCollectionService by lazy { ProductCollectionServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): DodoPaymentsClientAsync = async
 
     override fun withRawResponse(): DodoPaymentsClient.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient =
-        DodoPaymentsClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient = DodoPaymentsClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun checkoutSessions(): CheckoutSessionService = checkoutSessions
 
@@ -200,111 +178,60 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     override fun close() = clientOptions.close()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        DodoPaymentsClient.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val checkoutSessions: CheckoutSessionService.WithRawResponse by lazy {
-            CheckoutSessionServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+    ) : DodoPaymentsClient.WithRawResponse {
 
-        private val payments: PaymentService.WithRawResponse by lazy {
-            PaymentServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val checkoutSessions: CheckoutSessionService.WithRawResponse by lazy { CheckoutSessionServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val subscriptions: SubscriptionService.WithRawResponse by lazy {
-            SubscriptionServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val payments: PaymentService.WithRawResponse by lazy { PaymentServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val invoices: InvoiceService.WithRawResponse by lazy {
-            InvoiceServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val subscriptions: SubscriptionService.WithRawResponse by lazy { SubscriptionServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenses: LicenseService.WithRawResponse by lazy {
-            LicenseServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val invoices: InvoiceService.WithRawResponse by lazy { InvoiceServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenseKeys: LicenseKeyService.WithRawResponse by lazy {
-            LicenseKeyServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenses: LicenseService.WithRawResponse by lazy { LicenseServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val licenseKeyInstances: LicenseKeyInstanceService.WithRawResponse by lazy {
-            LicenseKeyInstanceServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenseKeys: LicenseKeyService.WithRawResponse by lazy { LicenseKeyServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val customers: CustomerService.WithRawResponse by lazy {
-            CustomerServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val licenseKeyInstances: LicenseKeyInstanceService.WithRawResponse by lazy { LicenseKeyInstanceServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val refunds: RefundService.WithRawResponse by lazy {
-            RefundServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val customers: CustomerService.WithRawResponse by lazy { CustomerServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val disputes: DisputeService.WithRawResponse by lazy {
-            DisputeServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val refunds: RefundService.WithRawResponse by lazy { RefundServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val payouts: PayoutService.WithRawResponse by lazy {
-            PayoutServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val disputes: DisputeService.WithRawResponse by lazy { DisputeServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val products: ProductService.WithRawResponse by lazy {
-            ProductServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val payouts: PayoutService.WithRawResponse by lazy { PayoutServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val misc: MiscService.WithRawResponse by lazy {
-            MiscServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val products: ProductService.WithRawResponse by lazy { ProductServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val discounts: DiscountService.WithRawResponse by lazy {
-            DiscountServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val misc: MiscService.WithRawResponse by lazy { MiscServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val addons: AddonService.WithRawResponse by lazy {
-            AddonServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val discounts: DiscountService.WithRawResponse by lazy { DiscountServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val brands: BrandService.WithRawResponse by lazy {
-            BrandServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val addons: AddonService.WithRawResponse by lazy { AddonServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val webhooks: WebhookService.WithRawResponse by lazy {
-            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val brands: BrandService.WithRawResponse by lazy { BrandServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val webhookEvents: WebhookEventService.WithRawResponse by lazy {
-            WebhookEventServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val webhooks: WebhookService.WithRawResponse by lazy { WebhookServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val usageEvents: UsageEventService.WithRawResponse by lazy {
-            UsageEventServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val webhookEvents: WebhookEventService.WithRawResponse by lazy { WebhookEventServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val meters: MeterService.WithRawResponse by lazy {
-            MeterServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val usageEvents: UsageEventService.WithRawResponse by lazy { UsageEventServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val balances: BalanceService.WithRawResponse by lazy {
-            BalanceServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val meters: MeterService.WithRawResponse by lazy { MeterServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val creditEntitlements: CreditEntitlementService.WithRawResponse by lazy {
-            CreditEntitlementServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val balances: BalanceService.WithRawResponse by lazy { BalanceServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val entitlements: EntitlementService.WithRawResponse by lazy {
-            EntitlementServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val creditEntitlements: CreditEntitlementService.WithRawResponse by lazy { CreditEntitlementServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        private val productCollections: ProductCollectionService.WithRawResponse by lazy {
-            ProductCollectionServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val entitlements: EntitlementService.WithRawResponse by lazy { EntitlementServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): DodoPaymentsClient.WithRawResponse =
-            DodoPaymentsClientImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val productCollections: ProductCollectionService.WithRawResponse by lazy { ProductCollectionServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient.WithRawResponse = DodoPaymentsClientImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun checkoutSessions(): CheckoutSessionService.WithRawResponse = checkoutSessions
 
@@ -318,8 +245,7 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
         override fun licenseKeys(): LicenseKeyService.WithRawResponse = licenseKeys
 
-        override fun licenseKeyInstances(): LicenseKeyInstanceService.WithRawResponse =
-            licenseKeyInstances
+        override fun licenseKeyInstances(): LicenseKeyInstanceService.WithRawResponse = licenseKeyInstances
 
         override fun customers(): CustomerService.WithRawResponse = customers
 
@@ -349,12 +275,10 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
         override fun balances(): BalanceService.WithRawResponse = balances
 
-        override fun creditEntitlements(): CreditEntitlementService.WithRawResponse =
-            creditEntitlements
+        override fun creditEntitlements(): CreditEntitlementService.WithRawResponse = creditEntitlements
 
         override fun entitlements(): EntitlementService.WithRawResponse = entitlements
 
-        override fun productCollections(): ProductCollectionService.WithRawResponse =
-            productCollections
+        override fun productCollections(): ProductCollectionService.WithRawResponse = productCollections
     }
 }

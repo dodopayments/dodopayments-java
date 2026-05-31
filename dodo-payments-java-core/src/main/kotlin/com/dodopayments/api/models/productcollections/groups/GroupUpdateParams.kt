@@ -22,13 +22,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class GroupUpdateParams
-private constructor(
+class GroupUpdateParams private constructor(
     private val id: String,
     private val groupId: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun id(): String = id
@@ -36,27 +36,23 @@ private constructor(
     fun groupId(): Optional<String> = Optional.ofNullable(groupId)
 
     /**
-     * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None = no
-     * change
+     * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None = no change
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun groupName(): Optional<String> = body.groupName()
 
     /**
      * Optional new order for products in this group (array of product_collection_group_pdts UUIDs)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun productOrder(): Optional<List<String>> = body.productOrder()
 
     /**
      * Optional status update
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun status(): Optional<Boolean> = body.status()
 
@@ -97,11 +93,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [GroupUpdateParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [GroupUpdateParams]. */
@@ -114,17 +112,24 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(groupUpdateParams: GroupUpdateParams) = apply {
-            id = groupUpdateParams.id
-            groupId = groupUpdateParams.groupId
-            body = groupUpdateParams.body.toBuilder()
-            additionalHeaders = groupUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = groupUpdateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(groupUpdateParams: GroupUpdateParams) =
+            apply {
+                id = groupUpdateParams.id
+                groupId = groupUpdateParams.groupId
+                body = groupUpdateParams.body.toBuilder()
+                additionalHeaders = groupUpdateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = groupUpdateParams.additionalQueryParams.toBuilder()
+            }
 
-        fun id(id: String) = apply { this.id = id }
+        fun id(id: String) =
+            apply {
+                this.id = id
+            }
 
-        fun groupId(groupId: String?) = apply { this.groupId = groupId }
+        fun groupId(groupId: String?) =
+            apply {
+                this.groupId = groupId
+            }
 
         /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
         fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
@@ -132,19 +137,22 @@ private constructor(
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [groupName]
          * - [productOrder]
          * - [status]
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
-        /**
-         * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None =
-         * no change
-         */
-        fun groupName(groupName: String?) = apply { body.groupName(groupName) }
+        /** Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None = no change */
+        fun groupName(groupName: String?) =
+            apply {
+                body.groupName(groupName)
+            }
 
         /** Alias for calling [Builder.groupName] with `groupName.orElse(null)`. */
         fun groupName(groupName: Optional<String>) = groupName(groupName.getOrNull())
@@ -152,42 +160,49 @@ private constructor(
         /**
          * Sets [Builder.groupName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.groupName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.groupName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun groupName(groupName: JsonField<String>) = apply { body.groupName(groupName) }
+        fun groupName(groupName: JsonField<String>) =
+            apply {
+                body.groupName(groupName)
+            }
 
-        /**
-         * Optional new order for products in this group (array of product_collection_group_pdts
-         * UUIDs)
-         */
-        fun productOrder(productOrder: List<String>?) = apply { body.productOrder(productOrder) }
+        /** Optional new order for products in this group (array of product_collection_group_pdts UUIDs) */
+        fun productOrder(productOrder: List<String>?) =
+            apply {
+                body.productOrder(productOrder)
+            }
 
         /** Alias for calling [Builder.productOrder] with `productOrder.orElse(null)`. */
-        fun productOrder(productOrder: Optional<List<String>>) =
-            productOrder(productOrder.getOrNull())
+        fun productOrder(productOrder: Optional<List<String>>) = productOrder(productOrder.getOrNull())
 
         /**
          * Sets [Builder.productOrder] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productOrder] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.productOrder] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun productOrder(productOrder: JsonField<List<String>>) = apply {
-            body.productOrder(productOrder)
-        }
+        fun productOrder(productOrder: JsonField<List<String>>) =
+            apply {
+                body.productOrder(productOrder)
+            }
 
         /**
          * Adds a single [String] to [Builder.productOrder].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addProductOrder(productOrder: String) = apply { body.addProductOrder(productOrder) }
+        fun addProductOrder(productOrder: String) =
+            apply {
+                body.addProductOrder(productOrder)
+            }
 
         /** Optional status update */
-        fun status(status: Boolean?) = apply { body.status(status) }
+        fun status(status: Boolean?) =
+            apply {
+                body.status(status)
+            }
 
         /**
          * Alias for [Builder.status].
@@ -202,127 +217,164 @@ private constructor(
         /**
          * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun status(status: JsonField<Boolean>) = apply { body.status(status) }
+        fun status(status: JsonField<Boolean>) =
+            apply {
+                body.status(status)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [GroupUpdateParams].
@@ -330,6 +382,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * ```
@@ -338,11 +391,13 @@ private constructor(
          */
         fun build(): GroupUpdateParams =
             GroupUpdateParams(
-                checkRequired("id", id),
-                groupId,
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              checkRequired(
+                "id", id
+              ),
+              groupId,
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -359,49 +414,44 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val groupName: JsonField<String>,
         private val productOrder: JsonField<List<String>>,
         private val status: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("group_name")
-            @ExcludeMissing
-            groupName: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("product_order")
-            @ExcludeMissing
-            productOrder: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("status") @ExcludeMissing status: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(groupName, productOrder, status, mutableMapOf())
+            @JsonProperty("group_name") @ExcludeMissing groupName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("product_order") @ExcludeMissing productOrder: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonField<Boolean> = JsonMissing.of()
+        ) : this(
+          groupName,
+          productOrder,
+          status,
+          mutableMapOf(),
+        )
 
         /**
-         * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None =
-         * no change
+         * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None = no change
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun groupName(): Optional<String> = groupName.getOptional("group_name")
 
         /**
-         * Optional new order for products in this group (array of product_collection_group_pdts
-         * UUIDs)
+         * Optional new order for products in this group (array of product_collection_group_pdts UUIDs)
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun productOrder(): Optional<List<String>> = productOrder.getOptional("product_order")
 
         /**
          * Optional status update
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun status(): Optional<Boolean> = status.getOptional("status")
 
@@ -410,13 +460,14 @@ private constructor(
          *
          * Unlike [groupName], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("group_name") @ExcludeMissing fun _groupName(): JsonField<String> = groupName
+        @JsonProperty("group_name")
+        @ExcludeMissing
+        fun _groupName(): JsonField<String> = groupName
 
         /**
          * Returns the raw JSON value of [productOrder].
          *
-         * Unlike [productOrder], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [productOrder], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("product_order")
         @ExcludeMissing
@@ -427,24 +478,26 @@ private constructor(
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Boolean> = status
+        @JsonProperty("status")
+        @ExcludeMissing
+        fun _status(): JsonField<Boolean> = status
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -456,17 +509,15 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                groupName = body.groupName
-                productOrder = body.productOrder.map { it.toMutableList() }
-                status = body.status
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    groupName = body.groupName
+                    productOrder = body.productOrder.map { it.toMutableList() }
+                    status = body.status
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
-            /**
-             * Optional group name update: Some(Some(name)) = set name, Some(None) = clear name,
-             * None = no change
-             */
+            /** Optional group name update: Some(Some(name)) = set name, Some(None) = clear name, None = no change */
             fun groupName(groupName: String?) = groupName(JsonField.ofNullable(groupName))
 
             /** Alias for calling [Builder.groupName] with `groupName.orElse(null)`. */
@@ -475,45 +526,42 @@ private constructor(
             /**
              * Sets [Builder.groupName] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.groupName] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.groupName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun groupName(groupName: JsonField<String>) = apply { this.groupName = groupName }
+            fun groupName(groupName: JsonField<String>) =
+                apply {
+                    this.groupName = groupName
+                }
 
-            /**
-             * Optional new order for products in this group (array of product_collection_group_pdts
-             * UUIDs)
-             */
-            fun productOrder(productOrder: List<String>?) =
-                productOrder(JsonField.ofNullable(productOrder))
+            /** Optional new order for products in this group (array of product_collection_group_pdts UUIDs) */
+            fun productOrder(productOrder: List<String>?) = productOrder(JsonField.ofNullable(productOrder))
 
             /** Alias for calling [Builder.productOrder] with `productOrder.orElse(null)`. */
-            fun productOrder(productOrder: Optional<List<String>>) =
-                productOrder(productOrder.getOrNull())
+            fun productOrder(productOrder: Optional<List<String>>) = productOrder(productOrder.getOrNull())
 
             /**
              * Sets [Builder.productOrder] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.productOrder] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.productOrder] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun productOrder(productOrder: JsonField<List<String>>) = apply {
-                this.productOrder = productOrder.map { it.toMutableList() }
-            }
+            fun productOrder(productOrder: JsonField<List<String>>) =
+                apply {
+                    this.productOrder = productOrder.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [Builder.productOrder].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addProductOrder(productOrder: String) = apply {
-                this.productOrder =
-                    (this.productOrder ?: JsonField.of(mutableListOf())).also {
+            fun addProductOrder(productOrder: String) =
+                apply {
+                    this.productOrder = (this.productOrder ?: JsonField.of(mutableListOf())).also {
                         checkKnown("productOrder", it).add(productOrder)
                     }
-            }
+                }
 
             /** Optional status update */
             fun status(status: Boolean?) = status(JsonField.ofNullable(status))
@@ -531,30 +579,39 @@ private constructor(
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Boolean] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Boolean>) = apply { this.status = status }
+            fun status(status: JsonField<Boolean>) =
+                apply {
+                    this.status = status
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -563,34 +620,34 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    groupName,
-                    (productOrder ?: JsonMissing.of()).map { it.toImmutable() },
-                    status,
-                    additionalProperties.toMutableMap(),
+                  groupName,
+                  (productOrder?: JsonMissing.of()).map { it.toImmutable() },
+                  status,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            groupName()
-            productOrder()
-            status()
-            validated = true
-        }
+                groupName()
+                productOrder()
+                status()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -601,55 +658,37 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (groupName.asKnown().isPresent) 1 else 0) +
-                (productOrder.asKnown().getOrNull()?.size ?: 0) +
-                (if (status.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (groupName.asKnown().isPresent) 1 else 0) + (productOrder.asKnown().getOrNull()?.size ?: 0) + (if (status.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                groupName == other.groupName &&
-                productOrder == other.productOrder &&
-                status == other.status &&
-                additionalProperties == other.additionalProperties
+          return other is Body && groupName == other.groupName && productOrder == other.productOrder && status == other.status && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(groupName, productOrder, status, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(groupName, productOrder, status, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{groupName=$groupName, productOrder=$productOrder, status=$status, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{groupName=$groupName, productOrder=$productOrder, status=$status, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is GroupUpdateParams &&
-            id == other.id &&
-            groupId == other.groupId &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is GroupUpdateParams && id == other.id && groupId == other.groupId && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(id, groupId, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(id, groupId, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "GroupUpdateParams{id=$id, groupId=$groupId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "GroupUpdateParams{id=$id, groupId=$groupId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

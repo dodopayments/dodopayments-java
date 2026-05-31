@@ -10,14 +10,13 @@ import com.dodopayments.api.models.productcollections.groups.items.ItemCreatePar
 import com.dodopayments.api.models.productcollections.groups.items.ItemDeleteParams
 import com.dodopayments.api.models.productcollections.groups.items.ItemUpdateParams
 import com.dodopayments.api.models.productcollections.groups.items.ProductCollectionProduct
+import com.dodopayments.api.services.blocking.productcollections.groups.ItemService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface ItemService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -28,54 +27,73 @@ interface ItemService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ItemService
 
     fun create(groupId: String, params: ItemCreateParams): List<ProductCollectionProduct> =
-        create(groupId, params, RequestOptions.none())
+        create(
+          groupId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see create */
-    fun create(
-        groupId: String,
-        params: ItemCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<ProductCollectionProduct> =
-        create(params.toBuilder().groupId(groupId).build(), requestOptions)
+    fun create(groupId: String, params: ItemCreateParams, requestOptions: RequestOptions = RequestOptions.none()): List<ProductCollectionProduct> =
+        create(
+          params.toBuilder()
+              .groupId(groupId)
+              .build(), requestOptions
+        )
 
     /** @see create */
     fun create(params: ItemCreateParams): List<ProductCollectionProduct> =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: ItemCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<ProductCollectionProduct>
+    fun create(params: ItemCreateParams, requestOptions: RequestOptions = RequestOptions.none()): List<ProductCollectionProduct>
 
     fun update(itemId: String, params: ItemUpdateParams) =
-        update(itemId, params, RequestOptions.none())
+        update(
+          itemId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        itemId: String,
-        params: ItemUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = update(params.toBuilder().itemId(itemId).build(), requestOptions)
+    fun update(itemId: String, params: ItemUpdateParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        update(
+          params.toBuilder()
+              .itemId(itemId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(params: ItemUpdateParams) = update(params, RequestOptions.none())
+    fun update(params: ItemUpdateParams) =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(params: ItemUpdateParams, requestOptions: RequestOptions = RequestOptions.none())
 
     fun delete(itemId: String, params: ItemDeleteParams) =
-        delete(itemId, params, RequestOptions.none())
+        delete(
+          itemId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        itemId: String,
-        params: ItemDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().itemId(itemId).build(), requestOptions)
+    fun delete(itemId: String, params: ItemDeleteParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        delete(
+          params.toBuilder()
+              .itemId(itemId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
-    fun delete(params: ItemDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: ItemDeleteParams) =
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(params: ItemDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
@@ -90,92 +108,91 @@ interface ItemService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ItemService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /product-collections/{id}/groups/{group_id}/items`,
-         * but is otherwise the same as [ItemService.create].
-         */
+        /** Returns a raw HTTP response for `post /product-collections/{id}/groups/{group_id}/items`, but is otherwise the             same as [ItemService.create]. */
         @MustBeClosed
-        fun create(
-            groupId: String,
-            params: ItemCreateParams,
-        ): HttpResponseFor<List<ProductCollectionProduct>> =
-            create(groupId, params, RequestOptions.none())
+        fun create(groupId: String, params: ItemCreateParams): HttpResponseFor<List<ProductCollectionProduct>> =
+            create(
+              groupId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            groupId: String,
-            params: ItemCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<ProductCollectionProduct>> =
-            create(params.toBuilder().groupId(groupId).build(), requestOptions)
+        fun create(groupId: String, params: ItemCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<List<ProductCollectionProduct>> =
+            create(
+              params.toBuilder()
+                  .groupId(groupId)
+                  .build(), requestOptions
+            )
 
         /** @see create */
         @MustBeClosed
         fun create(params: ItemCreateParams): HttpResponseFor<List<ProductCollectionProduct>> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: ItemCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<ProductCollectionProduct>>
+        fun create(params: ItemCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<List<ProductCollectionProduct>>
 
-        /**
-         * Returns a raw HTTP response for `patch
-         * /product-collections/{id}/groups/{group_id}/items/{item_id}`, but is otherwise the same
-         * as [ItemService.update].
-         */
+        /** Returns a raw HTTP response for `patch /product-collections/{id}/groups/{group_id}/items/{item_id}`, but is otherwise the             same as [ItemService.update]. */
         @MustBeClosed
         fun update(itemId: String, params: ItemUpdateParams): HttpResponse =
-            update(itemId, params, RequestOptions.none())
+            update(
+              itemId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            itemId: String,
-            params: ItemUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = update(params.toBuilder().itemId(itemId).build(), requestOptions)
+        fun update(itemId: String, params: ItemUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            update(
+              params.toBuilder()
+                  .itemId(itemId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(params: ItemUpdateParams): HttpResponse = update(params, RequestOptions.none())
+        fun update(params: ItemUpdateParams): HttpResponse =
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: ItemUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun update(params: ItemUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
-        /**
-         * Returns a raw HTTP response for `delete
-         * /product-collections/{id}/groups/{group_id}/items/{item_id}`, but is otherwise the same
-         * as [ItemService.delete].
-         */
+        /** Returns a raw HTTP response for `delete /product-collections/{id}/groups/{group_id}/items/{item_id}`, but is otherwise the             same as [ItemService.delete]. */
         @MustBeClosed
         fun delete(itemId: String, params: ItemDeleteParams): HttpResponse =
-            delete(itemId, params, RequestOptions.none())
+            delete(
+              itemId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            itemId: String,
-            params: ItemDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().itemId(itemId).build(), requestOptions)
+        fun delete(itemId: String, params: ItemDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            delete(
+              params.toBuilder()
+                  .itemId(itemId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: ItemDeleteParams): HttpResponse = delete(params, RequestOptions.none())
+        fun delete(params: ItemDeleteParams): HttpResponse =
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: ItemDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun delete(params: ItemDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
     }
 }

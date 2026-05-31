@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.subscriptions
 
+import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,16 +10,19 @@ internal class SubscriptionCancelChangePlanParamsTest {
 
     @Test
     fun create() {
-        SubscriptionCancelChangePlanParams.builder().subscriptionId("subscription_id").build()
+      SubscriptionCancelChangePlanParams.builder()
+          .subscriptionId("subscription_id")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params =
-            SubscriptionCancelChangePlanParams.builder().subscriptionId("subscription_id").build()
+      val params = SubscriptionCancelChangePlanParams.builder()
+          .subscriptionId("subscription_id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("subscription_id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("subscription_id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

@@ -16,33 +16,34 @@ import java.util.Collections
 import java.util.Objects
 
 /** Customer's response to a custom field */
-class CustomFieldResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomFieldResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val key: JsonField<String>,
     private val value: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("value") @ExcludeMissing value: JsonField<String> = JsonMissing.of(),
-    ) : this(key, value, mutableMapOf())
+        @JsonProperty("value") @ExcludeMissing value: JsonField<String> = JsonMissing.of()
+    ) : this(
+      key,
+      value,
+      mutableMapOf(),
+    )
 
     /**
      * Key matching the custom field definition
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun key(): String = key.getRequired("key")
 
     /**
      * Value provided by customer
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun value(): String = value.getRequired("value")
 
@@ -51,24 +52,27 @@ private constructor(
      *
      * Unlike [key], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("key") @ExcludeMissing fun _key(): JsonField<String> = key
+    @JsonProperty("key")
+    @ExcludeMissing
+    fun _key(): JsonField<String> = key
 
     /**
      * Returns the raw JSON value of [value].
      *
      * Unlike [value], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("value") @ExcludeMissing fun _value(): JsonField<String> = value
+    @JsonProperty("value")
+    @ExcludeMissing
+    fun _value(): JsonField<String> = value
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -78,12 +82,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CustomFieldResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .key()
          * .value()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomFieldResponse]. */
@@ -94,11 +100,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(customFieldResponse: CustomFieldResponse) = apply {
-            key = customFieldResponse.key
-            value = customFieldResponse.value
-            additionalProperties = customFieldResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(customFieldResponse: CustomFieldResponse) =
+            apply {
+                key = customFieldResponse.key
+                value = customFieldResponse.value
+                additionalProperties = customFieldResponse.additionalProperties.toMutableMap()
+            }
 
         /** Key matching the custom field definition */
         fun key(key: String) = key(JsonField.of(key))
@@ -106,10 +113,13 @@ private constructor(
         /**
          * Sets [Builder.key] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.key] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.key] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun key(key: JsonField<String>) = apply { this.key = key }
+        fun key(key: JsonField<String>) =
+            apply {
+                this.key = key
+            }
 
         /** Value provided by customer */
         fun value(value: String) = value(JsonField.of(value))
@@ -117,29 +127,39 @@ private constructor(
         /**
          * Sets [Builder.value] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.value] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.value] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun value(value: JsonField<String>) = apply { this.value = value }
+        fun value(value: JsonField<String>) =
+            apply {
+                this.value = value
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomFieldResponse].
@@ -147,6 +167,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .key()
          * .value()
@@ -156,9 +177,13 @@ private constructor(
          */
         fun build(): CustomFieldResponse =
             CustomFieldResponse(
-                checkRequired("key", key),
-                checkRequired("value", value),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "key", key
+              ),
+              checkRequired(
+                "value", value
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -172,15 +197,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomFieldResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomFieldResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        key()
-        value()
-        validated = true
-    }
+            key()
+            value()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -196,24 +222,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (key.asKnown().isPresent) 1 else 0) + (if (value.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (key.asKnown().isPresent) 1 else 0) + (if (value.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomFieldResponse &&
-            key == other.key &&
-            value == other.value &&
-            additionalProperties == other.additionalProperties
+      return other is CustomFieldResponse && key == other.key && value == other.value && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(key, value, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomFieldResponse{key=$key, value=$value, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomFieldResponse{key=$key, value=$value, additionalProperties=$additionalProperties}"
 }

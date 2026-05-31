@@ -11,7 +11,10 @@ import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.PaymentCreateParams
+import com.dodopayments.api.models.payments.PaymentListParams
 import com.dodopayments.api.models.payments.PaymentMethodTypes
+import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
+import com.dodopayments.api.models.payments.PaymentRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -20,102 +23,91 @@ internal class PaymentServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.payments()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.payments()
 
-        val paymentFuture =
-            paymentServiceAsync.create(
-                PaymentCreateParams.builder()
-                    .billing(
-                        BillingAddress.builder()
-                            .country(CountryCode.AF)
-                            .city("city")
-                            .state("state")
-                            .street("street")
-                            .zipcode("zipcode")
-                            .build()
-                    )
-                    .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
-                    .addProductCart(
-                        OneTimeProductCartItem.builder()
-                            .productId("product_id")
-                            .quantity(0)
-                            .amount(0)
-                            .build()
-                    )
-                    .adaptiveCurrencyFeesInclusive(true)
-                    .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
-                    .billingCurrency(Currency.AED)
-                    .customerBusinessName("customer_business_name")
-                    .discountCode("discount_code")
-                    .addDiscountCode("string")
-                    .force3ds(true)
-                    .metadata(
-                        PaymentCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .paymentLink(true)
-                    .paymentMethodId("payment_method_id")
-                    .redirectImmediately(true)
-                    .requirePhoneNumber(true)
-                    .returnUrl("return_url")
-                    .shortLink(true)
-                    .showSavedPaymentMethods(true)
-                    .taxId("tax_id")
-                    .build()
-            )
+      val paymentFuture = paymentServiceAsync.create(PaymentCreateParams.builder()
+          .billing(BillingAddress.builder()
+              .country(CountryCode.AF)
+              .city("city")
+              .state("state")
+              .street("street")
+              .zipcode("zipcode")
+              .build())
+          .customer(AttachExistingCustomer.builder()
+              .customerId("customer_id")
+              .build())
+          .addProductCart(OneTimeProductCartItem.builder()
+              .productId("product_id")
+              .quantity(0)
+              .amount(0)
+              .build())
+          .adaptiveCurrencyFeesInclusive(true)
+          .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
+          .billingCurrency(Currency.AED)
+          .customerBusinessName("customer_business_name")
+          .discountCode("discount_code")
+          .addDiscountCode("string")
+          .force3ds(true)
+          .metadata(PaymentCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .paymentLink(true)
+          .paymentMethodId("payment_method_id")
+          .redirectImmediately(true)
+          .requirePhoneNumber(true)
+          .returnUrl("return_url")
+          .shortLink(true)
+          .showSavedPaymentMethods(true)
+          .taxId("tax_id")
+          .build())
 
-        val payment = paymentFuture.get()
-        payment.validate()
+      val payment = paymentFuture.get()
+      payment.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.payments()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.payments()
 
-        val paymentFuture = paymentServiceAsync.retrieve("payment_id")
+      val paymentFuture = paymentServiceAsync.retrieve("payment_id")
 
-        val payment = paymentFuture.get()
-        payment.validate()
+      val payment = paymentFuture.get()
+      payment.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.payments()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.payments()
 
-        val pageFuture = paymentServiceAsync.list()
+      val pageFuture = paymentServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun retrieveLineItems() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.payments()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.payments()
 
-        val responseFuture = paymentServiceAsync.retrieveLineItems("payment_id")
+      val responseFuture = paymentServiceAsync.retrieveLineItems("payment_id")
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 }

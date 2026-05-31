@@ -17,52 +17,39 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class SubscriptionUpdatePaymentMethodResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class SubscriptionUpdatePaymentMethodResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val clientSecret: JsonField<String>,
     private val expiresOn: JsonField<OffsetDateTime>,
     private val paymentId: JsonField<String>,
     private val paymentLink: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("client_secret")
-        @ExcludeMissing
-        clientSecret: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("expires_on")
-        @ExcludeMissing
-        expiresOn: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("client_secret") @ExcludeMissing clientSecret: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expires_on") @ExcludeMissing expiresOn: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("payment_link")
-        @ExcludeMissing
-        paymentLink: JsonField<String> = JsonMissing.of(),
-    ) : this(clientSecret, expiresOn, paymentId, paymentLink, mutableMapOf())
+        @JsonProperty("payment_link") @ExcludeMissing paymentLink: JsonField<String> = JsonMissing.of()
+    ) : this(
+      clientSecret,
+      expiresOn,
+      paymentId,
+      paymentLink,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun clientSecret(): Optional<String> = clientSecret.getOptional("client_secret")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun expiresOn(): Optional<OffsetDateTime> = expiresOn.getOptional("expires_on")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun paymentLink(): Optional<String> = paymentLink.getOptional("payment_link")
 
     /**
@@ -88,7 +75,9 @@ private constructor(
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+    @JsonProperty("payment_id")
+    @ExcludeMissing
+    fun _paymentId(): JsonField<String> = paymentId
 
     /**
      * Returns the raw JSON value of [paymentLink].
@@ -101,23 +90,20 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [SubscriptionUpdatePaymentMethodResponse].
-         */
-        @JvmStatic fun builder() = Builder()
+        /** Returns a mutable builder for constructing an instance of [SubscriptionUpdatePaymentMethodResponse]. */
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionUpdatePaymentMethodResponse]. */
@@ -130,16 +116,14 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            subscriptionUpdatePaymentMethodResponse: SubscriptionUpdatePaymentMethodResponse
-        ) = apply {
-            clientSecret = subscriptionUpdatePaymentMethodResponse.clientSecret
-            expiresOn = subscriptionUpdatePaymentMethodResponse.expiresOn
-            paymentId = subscriptionUpdatePaymentMethodResponse.paymentId
-            paymentLink = subscriptionUpdatePaymentMethodResponse.paymentLink
-            additionalProperties =
-                subscriptionUpdatePaymentMethodResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(subscriptionUpdatePaymentMethodResponse: SubscriptionUpdatePaymentMethodResponse) =
+            apply {
+                clientSecret = subscriptionUpdatePaymentMethodResponse.clientSecret
+                expiresOn = subscriptionUpdatePaymentMethodResponse.expiresOn
+                paymentId = subscriptionUpdatePaymentMethodResponse.paymentId
+                paymentLink = subscriptionUpdatePaymentMethodResponse.paymentLink
+                additionalProperties = subscriptionUpdatePaymentMethodResponse.additionalProperties.toMutableMap()
+            }
 
         fun clientSecret(clientSecret: String?) = clientSecret(JsonField.ofNullable(clientSecret))
 
@@ -149,13 +133,13 @@ private constructor(
         /**
          * Sets [Builder.clientSecret] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.clientSecret] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.clientSecret] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun clientSecret(clientSecret: JsonField<String>) = apply {
-            this.clientSecret = clientSecret
-        }
+        fun clientSecret(clientSecret: JsonField<String>) =
+            apply {
+                this.clientSecret = clientSecret
+            }
 
         fun expiresOn(expiresOn: OffsetDateTime?) = expiresOn(JsonField.ofNullable(expiresOn))
 
@@ -165,11 +149,13 @@ private constructor(
         /**
          * Sets [Builder.expiresOn] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.expiresOn] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.expiresOn] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun expiresOn(expiresOn: JsonField<OffsetDateTime>) = apply { this.expiresOn = expiresOn }
+        fun expiresOn(expiresOn: JsonField<OffsetDateTime>) =
+            apply {
+                this.expiresOn = expiresOn
+            }
 
         fun paymentId(paymentId: String?) = paymentId(JsonField.ofNullable(paymentId))
 
@@ -179,11 +165,13 @@ private constructor(
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                this.paymentId = paymentId
+            }
 
         fun paymentLink(paymentLink: String?) = paymentLink(JsonField.ofNullable(paymentLink))
 
@@ -193,30 +181,39 @@ private constructor(
         /**
          * Sets [Builder.paymentLink] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentLink] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentLink] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentLink(paymentLink: JsonField<String>) = apply { this.paymentLink = paymentLink }
+        fun paymentLink(paymentLink: JsonField<String>) =
+            apply {
+                this.paymentLink = paymentLink
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionUpdatePaymentMethodResponse].
@@ -225,11 +222,11 @@ private constructor(
          */
         fun build(): SubscriptionUpdatePaymentMethodResponse =
             SubscriptionUpdatePaymentMethodResponse(
-                clientSecret,
-                expiresOn,
-                paymentId,
-                paymentLink,
-                additionalProperties.toMutableMap(),
+              clientSecret,
+              expiresOn,
+              paymentId,
+              paymentLink,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -243,17 +240,18 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SubscriptionUpdatePaymentMethodResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): SubscriptionUpdatePaymentMethodResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        clientSecret()
-        expiresOn()
-        paymentId()
-        paymentLink()
-        validated = true
-    }
+            clientSecret()
+            expiresOn()
+            paymentId()
+            paymentLink()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -269,31 +267,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (clientSecret.asKnown().isPresent) 1 else 0) +
-            (if (expiresOn.asKnown().isPresent) 1 else 0) +
-            (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (if (paymentLink.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (clientSecret.asKnown().isPresent) 1 else 0) + (if (expiresOn.asKnown().isPresent) 1 else 0) + (if (paymentId.asKnown().isPresent) 1 else 0) + (if (paymentLink.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionUpdatePaymentMethodResponse &&
-            clientSecret == other.clientSecret &&
-            expiresOn == other.expiresOn &&
-            paymentId == other.paymentId &&
-            paymentLink == other.paymentLink &&
-            additionalProperties == other.additionalProperties
+      return other is SubscriptionUpdatePaymentMethodResponse && clientSecret == other.clientSecret && expiresOn == other.expiresOn && paymentId == other.paymentId && paymentLink == other.paymentLink && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(clientSecret, expiresOn, paymentId, paymentLink, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(clientSecret, expiresOn, paymentId, paymentLink, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "SubscriptionUpdatePaymentMethodResponse{clientSecret=$clientSecret, expiresOn=$expiresOn, paymentId=$paymentId, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
+    override fun toString() = "SubscriptionUpdatePaymentMethodResponse{clientSecret=$clientSecret, expiresOn=$expiresOn, paymentId=$paymentId, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
 }

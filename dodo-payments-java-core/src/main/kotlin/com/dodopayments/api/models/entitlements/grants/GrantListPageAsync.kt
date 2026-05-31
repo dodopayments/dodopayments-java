@@ -5,20 +5,24 @@ package com.dodopayments.api.models.entitlements.grants
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
+import com.dodopayments.api.models.entitlements.grants.GrantListPageResponse
+import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.services.async.entitlements.GrantServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see GrantServiceAsync.list */
-class GrantListPageAsync
-private constructor(
+class GrantListPageAsync private constructor(
     private val service: GrantServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: GrantListParams,
     private val response: GrantListPageResponse,
+
 ) : PageAsync<EntitlementGrant> {
 
     /**
@@ -26,20 +30,23 @@ private constructor(
      *
      * @see GrantListPageResponse.items
      */
-    override fun items(): List<EntitlementGrant> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<EntitlementGrant> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): GrantListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): CompletableFuture<GrantListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<EntitlementGrant> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): GrantListParams = params
@@ -55,6 +62,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [GrantListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -62,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [GrantListPageAsync]. */
@@ -74,24 +83,35 @@ private constructor(
         private var response: GrantListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(grantListPageAsync: GrantListPageAsync) = apply {
-            service = grantListPageAsync.service
-            streamHandlerExecutor = grantListPageAsync.streamHandlerExecutor
-            params = grantListPageAsync.params
-            response = grantListPageAsync.response
-        }
+        internal fun from(grantListPageAsync: GrantListPageAsync) =
+            apply {
+                service = grantListPageAsync.service
+                streamHandlerExecutor = grantListPageAsync.streamHandlerExecutor
+                params = grantListPageAsync.params
+                response = grantListPageAsync.response
+            }
 
-        fun service(service: GrantServiceAsync) = apply { this.service = service }
+        fun service(service: GrantServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: GrantListParams) = apply { this.params = params }
+        fun params(params: GrantListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: GrantListPageResponse) = apply { this.response = response }
+        fun response(response: GrantListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [GrantListPageAsync].
@@ -99,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -110,27 +131,30 @@ private constructor(
          */
         fun build(): GrantListPageAsync =
             GrantListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is GrantListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is GrantListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "GrantListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "GrantListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

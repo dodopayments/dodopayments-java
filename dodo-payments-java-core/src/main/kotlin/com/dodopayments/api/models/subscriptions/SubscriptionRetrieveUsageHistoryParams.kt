@@ -12,9 +12,8 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Get detailed usage history for a subscription that includes usage-based billing (metered
- * components). This endpoint provides insights into customer usage patterns and billing
- * calculations over time.
+ * Get detailed usage history for a subscription that includes usage-based billing (metered components).
+ * This endpoint provides insights into customer usage patterns and billing calculations over time.
  *
  * ## What You'll Get:
  * - **Billing periods**: Each item represents a billing cycle with start and end dates
@@ -45,8 +44,7 @@ import kotlin.jvm.optionals.getOrNull
  * - Paginate results: `?page_size=20&page_number=1`
  * - Recent usage: `?start_date=2024-03-01T00:00:00Z` (from March 1st to now)
  */
-class SubscriptionRetrieveUsageHistoryParams
-private constructor(
+class SubscriptionRetrieveUsageHistoryParams private constructor(
     private val subscriptionId: String?,
     private val endDate: OffsetDateTime?,
     private val meterId: String?,
@@ -55,6 +53,7 @@ private constructor(
     private val startDate: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun subscriptionId(): Optional<String> = Optional.ofNullable(subscriptionId)
@@ -84,13 +83,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): SubscriptionRetrieveUsageHistoryParams = builder().build()
+        @JvmStatic
+        fun none(): SubscriptionRetrieveUsageHistoryParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [SubscriptionRetrieveUsageHistoryParams].
-         */
-        @JvmStatic fun builder() = Builder()
+        /** Returns a mutable builder for constructing an instance of [SubscriptionRetrieveUsageHistoryParams]. */
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionRetrieveUsageHistoryParams]. */
@@ -106,40 +104,49 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(
-            subscriptionRetrieveUsageHistoryParams: SubscriptionRetrieveUsageHistoryParams
-        ) = apply {
-            subscriptionId = subscriptionRetrieveUsageHistoryParams.subscriptionId
-            endDate = subscriptionRetrieveUsageHistoryParams.endDate
-            meterId = subscriptionRetrieveUsageHistoryParams.meterId
-            pageNumber = subscriptionRetrieveUsageHistoryParams.pageNumber
-            pageSize = subscriptionRetrieveUsageHistoryParams.pageSize
-            startDate = subscriptionRetrieveUsageHistoryParams.startDate
-            additionalHeaders = subscriptionRetrieveUsageHistoryParams.additionalHeaders.toBuilder()
-            additionalQueryParams =
-                subscriptionRetrieveUsageHistoryParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(subscriptionRetrieveUsageHistoryParams: SubscriptionRetrieveUsageHistoryParams) =
+            apply {
+                subscriptionId = subscriptionRetrieveUsageHistoryParams.subscriptionId
+                endDate = subscriptionRetrieveUsageHistoryParams.endDate
+                meterId = subscriptionRetrieveUsageHistoryParams.meterId
+                pageNumber = subscriptionRetrieveUsageHistoryParams.pageNumber
+                pageSize = subscriptionRetrieveUsageHistoryParams.pageSize
+                startDate = subscriptionRetrieveUsageHistoryParams.startDate
+                additionalHeaders = subscriptionRetrieveUsageHistoryParams.additionalHeaders.toBuilder()
+                additionalQueryParams = subscriptionRetrieveUsageHistoryParams.additionalQueryParams.toBuilder()
+            }
 
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
+        fun subscriptionId(subscriptionId: String?) =
+            apply {
+                this.subscriptionId = subscriptionId
+            }
 
         /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: Optional<String>) = subscriptionId(subscriptionId.getOrNull())
 
         /** Filter by end date (inclusive) */
-        fun endDate(endDate: OffsetDateTime?) = apply { this.endDate = endDate }
+        fun endDate(endDate: OffsetDateTime?) =
+            apply {
+                this.endDate = endDate
+            }
 
         /** Alias for calling [Builder.endDate] with `endDate.orElse(null)`. */
         fun endDate(endDate: Optional<OffsetDateTime>) = endDate(endDate.getOrNull())
 
         /** Filter by specific meter ID */
-        fun meterId(meterId: String?) = apply { this.meterId = meterId }
+        fun meterId(meterId: String?) =
+            apply {
+                this.meterId = meterId
+            }
 
         /** Alias for calling [Builder.meterId] with `meterId.orElse(null)`. */
         fun meterId(meterId: Optional<String>) = meterId(meterId.getOrNull())
 
         /** Page number (default: 0) */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -152,7 +159,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size (default: 10, max: 100) */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -165,108 +175,137 @@ private constructor(
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
         /** Filter by start date (inclusive) */
-        fun startDate(startDate: OffsetDateTime?) = apply { this.startDate = startDate }
+        fun startDate(startDate: OffsetDateTime?) =
+            apply {
+                this.startDate = startDate
+            }
 
         /** Alias for calling [Builder.startDate] with `startDate.orElse(null)`. */
         fun startDate(startDate: Optional<OffsetDateTime>) = startDate(startDate.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionRetrieveUsageHistoryParams].
@@ -275,14 +314,14 @@ private constructor(
          */
         fun build(): SubscriptionRetrieveUsageHistoryParams =
             SubscriptionRetrieveUsageHistoryParams(
-                subscriptionId,
-                endDate,
-                meterId,
-                pageNumber,
-                pageSize,
-                startDate,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              subscriptionId,
+              endDate,
+              meterId,
+              pageNumber,
+              pageSize,
+              startDate,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -301,41 +340,20 @@ private constructor(
                 meterId?.let { put("meter_id", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
-                startDate?.let {
-                    put("start_date", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                startDate?.let { put("start_date", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
             }
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionRetrieveUsageHistoryParams &&
-            subscriptionId == other.subscriptionId &&
-            endDate == other.endDate &&
-            meterId == other.meterId &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            startDate == other.startDate &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is SubscriptionRetrieveUsageHistoryParams && subscriptionId == other.subscriptionId && endDate == other.endDate && meterId == other.meterId && pageNumber == other.pageNumber && pageSize == other.pageSize && startDate == other.startDate && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            subscriptionId,
-            endDate,
-            meterId,
-            pageNumber,
-            pageSize,
-            startDate,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(subscriptionId, endDate, meterId, pageNumber, pageSize, startDate, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "SubscriptionRetrieveUsageHistoryParams{subscriptionId=$subscriptionId, endDate=$endDate, meterId=$meterId, pageNumber=$pageNumber, pageSize=$pageSize, startDate=$startDate, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "SubscriptionRetrieveUsageHistoryParams{subscriptionId=$subscriptionId, endDate=$endDate, meterId=$meterId, pageNumber=$pageNumber, pageSize=$pageSize, startDate=$startDate, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

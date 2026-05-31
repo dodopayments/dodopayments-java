@@ -15,22 +15,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class LicenseValidateResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class LicenseValidateResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val valid: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("valid") @ExcludeMissing valid: JsonField<Boolean> = JsonMissing.of()
-    ) : this(valid, mutableMapOf())
+    ) : this(
+      valid, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun valid(): Boolean = valid.getRequired("valid")
 
     /**
@@ -38,17 +36,18 @@ private constructor(
      *
      * Unlike [valid], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("valid") @ExcludeMissing fun _valid(): JsonField<Boolean> = valid
+    @JsonProperty("valid")
+    @ExcludeMissing
+    fun _valid(): JsonField<Boolean> = valid
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -58,11 +57,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [LicenseValidateResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .valid()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [LicenseValidateResponse]. */
@@ -72,39 +73,50 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(licenseValidateResponse: LicenseValidateResponse) = apply {
-            valid = licenseValidateResponse.valid
-            additionalProperties = licenseValidateResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(licenseValidateResponse: LicenseValidateResponse) =
+            apply {
+                valid = licenseValidateResponse.valid
+                additionalProperties = licenseValidateResponse.additionalProperties.toMutableMap()
+            }
 
         fun valid(valid: Boolean) = valid(JsonField.of(valid))
 
         /**
          * Sets [Builder.valid] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.valid] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.valid] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun valid(valid: JsonField<Boolean>) = apply { this.valid = valid }
+        fun valid(valid: JsonField<Boolean>) =
+            apply {
+                this.valid = valid
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [LicenseValidateResponse].
@@ -112,6 +124,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .valid()
          * ```
@@ -120,8 +133,9 @@ private constructor(
          */
         fun build(): LicenseValidateResponse =
             LicenseValidateResponse(
-                checkRequired("valid", valid),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "valid", valid
+              ), additionalProperties.toMutableMap()
             )
     }
 
@@ -135,14 +149,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): LicenseValidateResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): LicenseValidateResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        valid()
-        validated = true
-    }
+            valid()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -157,22 +172,20 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (valid.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int = (if (valid.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is LicenseValidateResponse &&
-            valid == other.valid &&
-            additionalProperties == other.additionalProperties
+      return other is LicenseValidateResponse && valid == other.valid && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(valid, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "LicenseValidateResponse{valid=$valid, additionalProperties=$additionalProperties}"
+    override fun toString() = "LicenseValidateResponse{valid=$valid, additionalProperties=$additionalProperties}"
 }

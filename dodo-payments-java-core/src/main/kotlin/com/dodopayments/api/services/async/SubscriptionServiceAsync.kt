@@ -25,14 +25,13 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistor
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
+import com.dodopayments.api.services.async.SubscriptionServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface SubscriptionServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -44,258 +43,258 @@ interface SubscriptionServiceAsync {
 
     @Deprecated("deprecated")
     fun create(params: SubscriptionCreateParams): CompletableFuture<SubscriptionCreateResponse> =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
     @Deprecated("deprecated")
-    fun create(
-        params: SubscriptionCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionCreateResponse>
+    fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionCreateResponse>
 
     fun retrieve(subscriptionId: String): CompletableFuture<Subscription> =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none())
+        retrieve(
+          subscriptionId, SubscriptionRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription> =
-        retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Subscription> =
+        retrieve(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-    ): CompletableFuture<Subscription> = retrieve(subscriptionId, params, RequestOptions.none())
+    fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none()): CompletableFuture<Subscription> =
+        retrieve(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: SubscriptionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription>
+    fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Subscription>
 
     /** @see retrieve */
     fun retrieve(params: SubscriptionRetrieveParams): CompletableFuture<Subscription> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
+    fun retrieve(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<Subscription> =
+        retrieve(
+          subscriptionId,
+          SubscriptionRetrieveParams.none(),
+          requestOptions,
+        )
 
     fun update(subscriptionId: String): CompletableFuture<Subscription> =
-        update(subscriptionId, SubscriptionUpdateParams.none())
+        update(
+          subscriptionId, SubscriptionUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription> =
-        update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Subscription> =
+        update(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-    ): CompletableFuture<Subscription> = update(subscriptionId, params, RequestOptions.none())
+    fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none()): CompletableFuture<Subscription> =
+        update(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        params: SubscriptionUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Subscription>
+    fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Subscription>
 
     /** @see update */
     fun update(params: SubscriptionUpdateParams): CompletableFuture<Subscription> =
-        update(params, RequestOptions.none())
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
-    fun update(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
-        update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
+    fun update(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<Subscription> =
+        update(
+          subscriptionId,
+          SubscriptionUpdateParams.none(),
+          requestOptions,
+        )
 
     fun list(): CompletableFuture<SubscriptionListPageAsync> = list(SubscriptionListParams.none())
 
     /** @see list */
-    fun list(
-        params: SubscriptionListParams = SubscriptionListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionListPageAsync>
+    fun list(params: SubscriptionListParams = SubscriptionListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionListPageAsync>
 
     /** @see list */
-    fun list(
-        params: SubscriptionListParams = SubscriptionListParams.none()
-    ): CompletableFuture<SubscriptionListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: SubscriptionListParams = SubscriptionListParams.none()): CompletableFuture<SubscriptionListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<SubscriptionListPageAsync> =
-        list(SubscriptionListParams.none(), requestOptions)
+        list(
+          SubscriptionListParams.none(), requestOptions
+        )
 
     fun cancelChangePlan(subscriptionId: String): CompletableFuture<Void?> =
-        cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none())
+        cancelChangePlan(
+          subscriptionId, SubscriptionCancelChangePlanParams.none()
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        subscriptionId: String,
-        params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        cancelChangePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?> =
+        cancelChangePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        subscriptionId: String,
-        params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-    ): CompletableFuture<Void?> = cancelChangePlan(subscriptionId, params, RequestOptions.none())
+    fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none()): CompletableFuture<Void?> =
+        cancelChangePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        params: SubscriptionCancelChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?>
 
     /** @see cancelChangePlan */
     fun cancelChangePlan(params: SubscriptionCancelChangePlanParams): CompletableFuture<Void?> =
-        cancelChangePlan(params, RequestOptions.none())
+        cancelChangePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
-        cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none(), requestOptions)
+    fun cancelChangePlan(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        cancelChangePlan(
+          subscriptionId,
+          SubscriptionCancelChangePlanParams.none(),
+          requestOptions,
+        )
 
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-    ): CompletableFuture<Void?> = changePlan(subscriptionId, params, RequestOptions.none())
+    fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): CompletableFuture<Void?> =
+        changePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see changePlan */
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?> =
+        changePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see changePlan */
     fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<Void?> =
-        changePlan(params, RequestOptions.none())
+        changePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see changePlan */
-    fun changePlan(
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?>
 
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-    ): CompletableFuture<SubscriptionChargeResponse> =
-        charge(subscriptionId, params, RequestOptions.none())
+    fun charge(subscriptionId: String, params: SubscriptionChargeParams): CompletableFuture<SubscriptionChargeResponse> =
+        charge(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see charge */
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionChargeResponse> =
-        charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun charge(subscriptionId: String, params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionChargeResponse> =
+        charge(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see charge */
     fun charge(params: SubscriptionChargeParams): CompletableFuture<SubscriptionChargeResponse> =
-        charge(params, RequestOptions.none())
+        charge(
+          params, RequestOptions.none()
+        )
 
     /** @see charge */
-    fun charge(
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionChargeResponse>
+    fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionChargeResponse>
 
-    fun previewChangePlan(
-        subscriptionId: String,
-        params: SubscriptionPreviewChangePlanParams,
-    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
-        previewChangePlan(subscriptionId, params, RequestOptions.none())
+    fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        subscriptionId: String,
-        params: SubscriptionPreviewChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
-        previewChangePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        params: SubscriptionPreviewChangePlanParams
-    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
-        previewChangePlan(params, RequestOptions.none())
+    fun previewChangePlan(params: SubscriptionPreviewChangePlanParams): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+        previewChangePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        params: SubscriptionPreviewChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionPreviewChangePlanResponse>
+    fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionPreviewChangePlanResponse>
 
-    fun retrieveCreditUsage(
-        subscriptionId: String
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
-        retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        params: SubscriptionRetrieveCreditUsageParams =
-            SubscriptionRetrieveCreditUsageParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+    fun retrieveCreditUsage(subscriptionId: String): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
         retrieveCreditUsage(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId, SubscriptionRetrieveCreditUsageParams.none()
         )
 
     /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(),
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
-        retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        params: SubscriptionRetrieveCreditUsageParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse>
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        params: SubscriptionRetrieveCreditUsageParams
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
-        retrieveCreditUsage(params, RequestOptions.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+    fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
         retrieveCreditUsage(
-            subscriptionId,
-            SubscriptionRetrieveCreditUsageParams.none(),
-            requestOptions,
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none()): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionRetrieveCreditUsageResponse>
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(
+          params, RequestOptions.none()
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+        retrieveCreditUsage(
+          subscriptionId,
+          SubscriptionRetrieveCreditUsageParams.none(),
+          requestOptions,
         )
 
     /**
-     * Get detailed usage history for a subscription that includes usage-based billing (metered
-     * components). This endpoint provides insights into customer usage patterns and billing
-     * calculations over time.
+     * Get detailed usage history for a subscription that includes usage-based billing (metered components).
+     * This endpoint provides insights into customer usage patterns and billing calculations over time.
      *
      * ## What You'll Get:
      * - **Billing periods**: Each item represents a billing cycle with start and end dates
@@ -326,87 +325,69 @@ interface SubscriptionServiceAsync {
      * - Paginate results: `?page_size=20&page_number=1`
      * - Recent usage: `?start_date=2024-03-01T00:00:00Z` (from March 1st to now)
      */
-    fun retrieveUsageHistory(
-        subscriptionId: String
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
-        retrieveUsageHistory(subscriptionId, SubscriptionRetrieveUsageHistoryParams.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        params: SubscriptionRetrieveUsageHistoryParams =
-            SubscriptionRetrieveUsageHistoryParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+    fun retrieveUsageHistory(subscriptionId: String): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
         retrieveUsageHistory(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId, SubscriptionRetrieveUsageHistoryParams.none()
         )
 
     /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        params: SubscriptionRetrieveUsageHistoryParams =
-            SubscriptionRetrieveUsageHistoryParams.none(),
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
-        retrieveUsageHistory(subscriptionId, params, RequestOptions.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        params: SubscriptionRetrieveUsageHistoryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync>
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        params: SubscriptionRetrieveUsageHistoryParams
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
-        retrieveUsageHistory(params, RequestOptions.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+    fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
         retrieveUsageHistory(
-            subscriptionId,
-            SubscriptionRetrieveUsageHistoryParams.none(),
-            requestOptions,
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
         )
 
-    fun updatePaymentMethod(
-        subscriptionId: String,
-        params: SubscriptionUpdatePaymentMethodParams,
-    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
-        updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none()): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+        retrieveUsageHistory(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
-    /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        subscriptionId: String,
-        params: SubscriptionUpdatePaymentMethodParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync>
+
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+        retrieveUsageHistory(
+          params, RequestOptions.none()
+        )
+
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+        retrieveUsageHistory(
+          subscriptionId,
+          SubscriptionRetrieveUsageHistoryParams.none(),
+          requestOptions,
+        )
+
+    fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
         updatePaymentMethod(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId,
+          params,
+          RequestOptions.none(),
         )
 
     /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        params: SubscriptionUpdatePaymentMethodParams
-    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
-        updatePaymentMethod(params, RequestOptions.none())
+    fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        updatePaymentMethod(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        params: SubscriptionUpdatePaymentMethodParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse>
+    fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+        updatePaymentMethod(
+          params, RequestOptions.none()
+        )
 
-    /**
-     * A view of [SubscriptionServiceAsync] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<SubscriptionUpdatePaymentMethodResponse>
+
+    /** A view of [SubscriptionServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -414,409 +395,330 @@ interface SubscriptionServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): SubscriptionServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions`, but is otherwise the same as
-         * [SubscriptionServiceAsync.create].
-         */
+        /** Returns a raw HTTP response for `post /subscriptions`, but is otherwise the             same as [SubscriptionServiceAsync.create]. */
         @Deprecated("deprecated")
-        fun create(
-            params: SubscriptionCreateParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
-            create(params, RequestOptions.none())
+        fun create(params: SubscriptionCreateParams): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @Deprecated("deprecated")
-        fun create(
-            params: SubscriptionCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>>
+        fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}`, but is otherwise
-         * the same as [SubscriptionServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}`, but is otherwise the             same as [SubscriptionServiceAsync.retrieve]. */
         fun retrieve(subscriptionId: String): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none())
+            retrieve(
+              subscriptionId, SubscriptionRetrieveParams.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Subscription>> =
+            retrieve(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, params, RequestOptions.none())
+        fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none()): CompletableFuture<HttpResponseFor<Subscription>> =
+            retrieve(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: SubscriptionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>>
+        fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Subscription>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: SubscriptionRetrieveParams
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(params: SubscriptionRetrieveParams): CompletableFuture<HttpResponseFor<Subscription>> =
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
+        fun retrieve(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Subscription>> =
+            retrieve(
+              subscriptionId,
+              SubscriptionRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /subscriptions/{subscription_id}`, but is
-         * otherwise the same as [SubscriptionServiceAsync.update].
-         */
+        /** Returns a raw HTTP response for `patch /subscriptions/{subscription_id}`, but is otherwise the             same as [SubscriptionServiceAsync.update]. */
         fun update(subscriptionId: String): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, SubscriptionUpdateParams.none())
+            update(
+              subscriptionId, SubscriptionUpdateParams.none()
+            )
 
         /** @see update */
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Subscription>> =
+            update(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, params, RequestOptions.none())
+        fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none()): CompletableFuture<HttpResponseFor<Subscription>> =
+            update(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
-        fun update(
-            params: SubscriptionUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Subscription>>
+        fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Subscription>>
 
         /** @see update */
-        fun update(
-            params: SubscriptionUpdateParams
-        ): CompletableFuture<HttpResponseFor<Subscription>> = update(params, RequestOptions.none())
+        fun update(params: SubscriptionUpdateParams): CompletableFuture<HttpResponseFor<Subscription>> =
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
-        fun update(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> =
-            update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
+        fun update(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Subscription>> =
+            update(
+              subscriptionId,
+              SubscriptionUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions`, but is otherwise the same as
-         * [SubscriptionServiceAsync.list].
-         */
-        fun list(): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> =
-            list(SubscriptionListParams.none())
+        /** Returns a raw HTTP response for `get /subscriptions`, but is otherwise the             same as [SubscriptionServiceAsync.list]. */
+        fun list(): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> = list(SubscriptionListParams.none())
 
         /** @see list */
-        fun list(
-            params: SubscriptionListParams = SubscriptionListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>>
+        fun list(params: SubscriptionListParams = SubscriptionListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>>
 
         /** @see list */
-        fun list(
-            params: SubscriptionListParams = SubscriptionListParams.none()
-        ): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: SubscriptionListParams = SubscriptionListParams.none()): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> =
-            list(SubscriptionListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> =
+            list(
+              SubscriptionListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete
-         * /subscriptions/{subscription_id}/change-plan/scheduled`, but is otherwise the same as
-         * [SubscriptionServiceAsync.cancelChangePlan].
-         */
+        /** Returns a raw HTTP response for `delete /subscriptions/{subscription_id}/change-plan/scheduled`, but is otherwise the             same as [SubscriptionServiceAsync.cancelChangePlan]. */
         fun cancelChangePlan(subscriptionId: String): CompletableFuture<HttpResponse> =
-            cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none())
-
-        /** @see cancelChangePlan */
-        fun cancelChangePlan(
-            subscriptionId: String,
-            params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
             cancelChangePlan(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionCancelChangePlanParams.none()
             )
 
         /** @see cancelChangePlan */
-        fun cancelChangePlan(
-            subscriptionId: String,
-            params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-        ): CompletableFuture<HttpResponse> =
-            cancelChangePlan(subscriptionId, params, RequestOptions.none())
-
-        /** @see cancelChangePlan */
-        fun cancelChangePlan(
-            params: SubscriptionCancelChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
-
-        /** @see cancelChangePlan */
-        fun cancelChangePlan(
-            params: SubscriptionCancelChangePlanParams
-        ): CompletableFuture<HttpResponse> = cancelChangePlan(params, RequestOptions.none())
-
-        /** @see cancelChangePlan */
-        fun cancelChangePlan(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
+        fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
             cancelChangePlan(
-                subscriptionId,
-                SubscriptionCancelChangePlanParams.none(),
-                requestOptions,
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
             )
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but
-         * is otherwise the same as [SubscriptionServiceAsync.changePlan].
-         */
-        fun changePlan(
-            subscriptionId: String,
-            params: SubscriptionChangePlanParams,
-        ): CompletableFuture<HttpResponse> =
-            changePlan(subscriptionId, params, RequestOptions.none())
+        /** @see cancelChangePlan */
+        fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none()): CompletableFuture<HttpResponse> =
+            cancelChangePlan(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see cancelChangePlan */
+        fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
+
+        /** @see cancelChangePlan */
+        fun cancelChangePlan(params: SubscriptionCancelChangePlanParams): CompletableFuture<HttpResponse> =
+            cancelChangePlan(
+              params, RequestOptions.none()
+            )
+
+        /** @see cancelChangePlan */
+        fun cancelChangePlan(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            cancelChangePlan(
+              subscriptionId,
+              SubscriptionCancelChangePlanParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but is otherwise the             same as [SubscriptionServiceAsync.changePlan]. */
+        fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): CompletableFuture<HttpResponse> =
+            changePlan(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see changePlan */
-        fun changePlan(
-            subscriptionId: String,
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            changePlan(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see changePlan */
         fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<HttpResponse> =
-            changePlan(params, RequestOptions.none())
+            changePlan(
+              params, RequestOptions.none()
+            )
 
         /** @see changePlan */
-        fun changePlan(
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
-         * otherwise the same as [SubscriptionServiceAsync.charge].
-         */
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
-            charge(subscriptionId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is otherwise the             same as [SubscriptionServiceAsync.charge]. */
+        fun charge(subscriptionId: String, params: SubscriptionChargeParams): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
+            charge(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see charge */
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
-            charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun charge(subscriptionId: String, params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
+            charge(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see charge */
-        fun charge(
-            params: SubscriptionChargeParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
-            charge(params, RequestOptions.none())
+        fun charge(params: SubscriptionChargeParams): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> =
+            charge(
+              params, RequestOptions.none()
+            )
 
         /** @see charge */
-        fun charge(
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>>
+        fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>>
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /subscriptions/{subscription_id}/change-plan/preview`, but is otherwise the same as
-         * [SubscriptionServiceAsync.previewChangePlan].
-         */
-        fun previewChangePlan(
-            subscriptionId: String,
-            params: SubscriptionPreviewChangePlanParams,
-        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
-            previewChangePlan(subscriptionId, params, RequestOptions.none())
-
-        /** @see previewChangePlan */
-        fun previewChangePlan(
-            subscriptionId: String,
-            params: SubscriptionPreviewChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan/preview`, but is otherwise the             same as [SubscriptionServiceAsync.previewChangePlan]. */
+        fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
             previewChangePlan(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId,
+              params,
+              RequestOptions.none(),
             )
 
         /** @see previewChangePlan */
-        fun previewChangePlan(
-            params: SubscriptionPreviewChangePlanParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
-            previewChangePlan(params, RequestOptions.none())
+        fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+            previewChangePlan(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see previewChangePlan */
-        fun previewChangePlan(
-            params: SubscriptionPreviewChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>>
+        fun previewChangePlan(params: SubscriptionPreviewChangePlanParams): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> =
+            previewChangePlan(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/credit-usage`, but
-         * is otherwise the same as [SubscriptionServiceAsync.retrieveCreditUsage].
-         */
-        fun retrieveCreditUsage(
-            subscriptionId: String
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
-            retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
+        /** @see previewChangePlan */
+        fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>>
 
-        /** @see retrieveCreditUsage */
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            params: SubscriptionRetrieveCreditUsageParams =
-                SubscriptionRetrieveCreditUsageParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}/credit-usage`, but is otherwise the             same as [SubscriptionServiceAsync.retrieveCreditUsage]. */
+        fun retrieveCreditUsage(subscriptionId: String): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
             retrieveCreditUsage(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionRetrieveCreditUsageParams.none()
             )
 
         /** @see retrieveCreditUsage */
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            params: SubscriptionRetrieveCreditUsageParams =
-                SubscriptionRetrieveCreditUsageParams.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
-            retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
-
-        /** @see retrieveCreditUsage */
-        fun retrieveCreditUsage(
-            params: SubscriptionRetrieveCreditUsageParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>>
-
-        /** @see retrieveCreditUsage */
-        fun retrieveCreditUsage(
-            params: SubscriptionRetrieveCreditUsageParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
-            retrieveCreditUsage(params, RequestOptions.none())
-
-        /** @see retrieveCreditUsage */
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+        fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
             retrieveCreditUsage(
-                subscriptionId,
-                SubscriptionRetrieveCreditUsageParams.none(),
-                requestOptions,
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
             )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but
-         * is otherwise the same as [SubscriptionServiceAsync.retrieveUsageHistory].
-         */
-        fun retrieveUsageHistory(
-            subscriptionId: String
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
-            retrieveUsageHistory(subscriptionId, SubscriptionRetrieveUsageHistoryParams.none())
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
-        /** @see retrieveUsageHistory */
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            params: SubscriptionRetrieveUsageHistoryParams =
-                SubscriptionRetrieveUsageHistoryParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>>
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(
+              params, RequestOptions.none()
+            )
+
+        /** @see retrieveCreditUsage */
+        fun retrieveCreditUsage(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> =
+            retrieveCreditUsage(
+              subscriptionId,
+              SubscriptionRetrieveCreditUsageParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but is otherwise the             same as [SubscriptionServiceAsync.retrieveUsageHistory]. */
+        fun retrieveUsageHistory(subscriptionId: String): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
             retrieveUsageHistory(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionRetrieveUsageHistoryParams.none()
             )
 
         /** @see retrieveUsageHistory */
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            params: SubscriptionRetrieveUsageHistoryParams =
-                SubscriptionRetrieveUsageHistoryParams.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
-            retrieveUsageHistory(subscriptionId, params, RequestOptions.none())
-
-        /** @see retrieveUsageHistory */
-        fun retrieveUsageHistory(
-            params: SubscriptionRetrieveUsageHistoryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>>
-
-        /** @see retrieveUsageHistory */
-        fun retrieveUsageHistory(
-            params: SubscriptionRetrieveUsageHistoryParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
-            retrieveUsageHistory(params, RequestOptions.none())
-
-        /** @see retrieveUsageHistory */
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
+        fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
             retrieveUsageHistory(
-                subscriptionId,
-                SubscriptionRetrieveUsageHistoryParams.none(),
-                requestOptions,
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
             )
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the same as
-         * [SubscriptionServiceAsync.updatePaymentMethod].
-         */
-        fun updatePaymentMethod(
-            subscriptionId: String,
-            params: SubscriptionUpdatePaymentMethodParams,
-        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
-            updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+        /** @see retrieveUsageHistory */
+        fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
+            retrieveUsageHistory(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
-        /** @see updatePaymentMethod */
-        fun updatePaymentMethod(
-            subscriptionId: String,
-            params: SubscriptionUpdatePaymentMethodParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+        /** @see retrieveUsageHistory */
+        fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>>
+
+        /** @see retrieveUsageHistory */
+        fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
+            retrieveUsageHistory(
+              params, RequestOptions.none()
+            )
+
+        /** @see retrieveUsageHistory */
+        fun retrieveUsageHistory(subscriptionId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> =
+            retrieveUsageHistory(
+              subscriptionId,
+              SubscriptionRetrieveUsageHistoryParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the             same as [SubscriptionServiceAsync.updatePaymentMethod]. */
+        fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
             updatePaymentMethod(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId,
+              params,
+              RequestOptions.none(),
             )
 
         /** @see updatePaymentMethod */
-        fun updatePaymentMethod(
-            params: SubscriptionUpdatePaymentMethodParams
-        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
-            updatePaymentMethod(params, RequestOptions.none())
+        fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+            updatePaymentMethod(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see updatePaymentMethod */
-        fun updatePaymentMethod(
-            params: SubscriptionUpdatePaymentMethodParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>>
+        fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> =
+            updatePaymentMethod(
+              params, RequestOptions.none()
+            )
+
+        /** @see updatePaymentMethod */
+        fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>>
     }
 }

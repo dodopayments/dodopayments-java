@@ -16,34 +16,34 @@ import java.util.Collections
 import java.util.Objects
 
 /** Payout breakup aggregated by event type, with amounts in the payout's currency. */
-class BreakupRetrieveResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class BreakupRetrieveResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val eventType: JsonField<String>,
     private val total: JsonField<Long>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("event_type") @ExcludeMissing eventType: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("total") @ExcludeMissing total: JsonField<Long> = JsonMissing.of(),
-    ) : this(eventType, total, mutableMapOf())
+        @JsonProperty("total") @ExcludeMissing total: JsonField<Long> = JsonMissing.of()
+    ) : this(
+      eventType,
+      total,
+      mutableMapOf(),
+    )
 
     /**
      * The type of balance ledger event (e.g., "payment", "refund", "dispute", "payment_fees").
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun eventType(): String = eventType.getRequired("event_type")
 
     /**
-     * Total amount for this event type in the payout's currency (in smallest currency unit, e.g.,
-     * cents).
+     * Total amount for this event type in the payout's currency (in smallest currency unit, e.g., cents).
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun total(): Long = total.getRequired("total")
 
@@ -52,24 +52,27 @@ private constructor(
      *
      * Unlike [eventType], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("event_type") @ExcludeMissing fun _eventType(): JsonField<String> = eventType
+    @JsonProperty("event_type")
+    @ExcludeMissing
+    fun _eventType(): JsonField<String> = eventType
 
     /**
      * Returns the raw JSON value of [total].
      *
      * Unlike [total], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Long> = total
+    @JsonProperty("total")
+    @ExcludeMissing
+    fun _total(): JsonField<Long> = total
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -79,12 +82,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [BreakupRetrieveResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .eventType()
          * .total()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [BreakupRetrieveResponse]. */
@@ -95,58 +100,66 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(breakupRetrieveResponse: BreakupRetrieveResponse) = apply {
-            eventType = breakupRetrieveResponse.eventType
-            total = breakupRetrieveResponse.total
-            additionalProperties = breakupRetrieveResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(breakupRetrieveResponse: BreakupRetrieveResponse) =
+            apply {
+                eventType = breakupRetrieveResponse.eventType
+                total = breakupRetrieveResponse.total
+                additionalProperties = breakupRetrieveResponse.additionalProperties.toMutableMap()
+            }
 
-        /**
-         * The type of balance ledger event (e.g., "payment", "refund", "dispute", "payment_fees").
-         */
+        /** The type of balance ledger event (e.g., "payment", "refund", "dispute", "payment_fees"). */
         fun eventType(eventType: String) = eventType(JsonField.of(eventType))
 
         /**
          * Sets [Builder.eventType] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.eventType] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.eventType] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun eventType(eventType: JsonField<String>) = apply { this.eventType = eventType }
+        fun eventType(eventType: JsonField<String>) =
+            apply {
+                this.eventType = eventType
+            }
 
-        /**
-         * Total amount for this event type in the payout's currency (in smallest currency unit,
-         * e.g., cents).
-         */
+        /** Total amount for this event type in the payout's currency (in smallest currency unit, e.g., cents). */
         fun total(total: Long) = total(JsonField.of(total))
 
         /**
          * Sets [Builder.total] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.total] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.total] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun total(total: JsonField<Long>) = apply { this.total = total }
+        fun total(total: JsonField<Long>) =
+            apply {
+                this.total = total
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [BreakupRetrieveResponse].
@@ -154,6 +167,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .eventType()
          * .total()
@@ -163,9 +177,13 @@ private constructor(
          */
         fun build(): BreakupRetrieveResponse =
             BreakupRetrieveResponse(
-                checkRequired("eventType", eventType),
-                checkRequired("total", total),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "eventType", eventType
+              ),
+              checkRequired(
+                "total", total
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -179,15 +197,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BreakupRetrieveResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): BreakupRetrieveResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        eventType()
-        total()
-        validated = true
-    }
+            eventType()
+            total()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -203,24 +222,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (eventType.asKnown().isPresent) 1 else 0) + (if (total.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (eventType.asKnown().isPresent) 1 else 0) + (if (total.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is BreakupRetrieveResponse &&
-            eventType == other.eventType &&
-            total == other.total &&
-            additionalProperties == other.additionalProperties
+      return other is BreakupRetrieveResponse && eventType == other.eventType && total == other.total && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(eventType, total, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "BreakupRetrieveResponse{eventType=$eventType, total=$total, additionalProperties=$additionalProperties}"
+    override fun toString() = "BreakupRetrieveResponse{eventType=$eventType, total=$total, additionalProperties=$additionalProperties}"
 }

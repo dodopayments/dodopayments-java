@@ -8,6 +8,7 @@ import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.payments.PaymentListParams
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -15,8 +16,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class PaymentListParams
-private constructor(
+class PaymentListParams private constructor(
     private val brandId: String?,
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
@@ -28,6 +28,7 @@ private constructor(
     private val subscriptionId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** filter by Brand id */
@@ -67,10 +68,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): PaymentListParams = builder().build()
+        @JvmStatic
+        fun none(): PaymentListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [PaymentListParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [PaymentListParams]. */
@@ -89,48 +92,62 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(paymentListParams: PaymentListParams) = apply {
-            brandId = paymentListParams.brandId
-            createdAtGte = paymentListParams.createdAtGte
-            createdAtLte = paymentListParams.createdAtLte
-            customerId = paymentListParams.customerId
-            pageNumber = paymentListParams.pageNumber
-            pageSize = paymentListParams.pageSize
-            productId = paymentListParams.productId
-            status = paymentListParams.status
-            subscriptionId = paymentListParams.subscriptionId
-            additionalHeaders = paymentListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = paymentListParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(paymentListParams: PaymentListParams) =
+            apply {
+                brandId = paymentListParams.brandId
+                createdAtGte = paymentListParams.createdAtGte
+                createdAtLte = paymentListParams.createdAtLte
+                customerId = paymentListParams.customerId
+                pageNumber = paymentListParams.pageNumber
+                pageSize = paymentListParams.pageSize
+                productId = paymentListParams.productId
+                status = paymentListParams.status
+                subscriptionId = paymentListParams.subscriptionId
+                additionalHeaders = paymentListParams.additionalHeaders.toBuilder()
+                additionalQueryParams = paymentListParams.additionalQueryParams.toBuilder()
+            }
 
         /** filter by Brand id */
-        fun brandId(brandId: String?) = apply { this.brandId = brandId }
+        fun brandId(brandId: String?) =
+            apply {
+                this.brandId = brandId
+            }
 
         /** Alias for calling [Builder.brandId] with `brandId.orElse(null)`. */
         fun brandId(brandId: Optional<String>) = brandId(brandId.getOrNull())
 
         /** Get events after this created time */
-        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+        fun createdAtGte(createdAtGte: OffsetDateTime?) =
+            apply {
+                this.createdAtGte = createdAtGte
+            }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
-        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
-            createdAtGte(createdAtGte.getOrNull())
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) = createdAtGte(createdAtGte.getOrNull())
 
         /** Get events created before this time */
-        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+        fun createdAtLte(createdAtLte: OffsetDateTime?) =
+            apply {
+                this.createdAtLte = createdAtLte
+            }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
-        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
-            createdAtLte(createdAtLte.getOrNull())
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) = createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer id */
-        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+        fun customerId(customerId: String?) =
+            apply {
+                this.customerId = customerId
+            }
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Page number default is 0 */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -143,7 +160,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -156,121 +176,155 @@ private constructor(
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
         /** Filter by product id */
-        fun productId(productId: String?) = apply { this.productId = productId }
+        fun productId(productId: String?) =
+            apply {
+                this.productId = productId
+            }
 
         /** Alias for calling [Builder.productId] with `productId.orElse(null)`. */
         fun productId(productId: Optional<String>) = productId(productId.getOrNull())
 
         /** Filter by status */
-        fun status(status: Status?) = apply { this.status = status }
+        fun status(status: Status?) =
+            apply {
+                this.status = status
+            }
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
         fun status(status: Optional<Status>) = status(status.getOrNull())
 
         /** Filter by subscription id */
-        fun subscriptionId(subscriptionId: String?) = apply { this.subscriptionId = subscriptionId }
+        fun subscriptionId(subscriptionId: String?) =
+            apply {
+                this.subscriptionId = subscriptionId
+            }
 
         /** Alias for calling [Builder.subscriptionId] with `subscriptionId.orElse(null)`. */
-        fun subscriptionId(subscriptionId: Optional<String>) =
-            subscriptionId(subscriptionId.getOrNull())
+        fun subscriptionId(subscriptionId: Optional<String>) = subscriptionId(subscriptionId.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [PaymentListParams].
@@ -279,17 +333,17 @@ private constructor(
          */
         fun build(): PaymentListParams =
             PaymentListParams(
-                brandId,
-                createdAtGte,
-                createdAtLte,
-                customerId,
-                pageNumber,
-                pageSize,
-                productId,
-                status,
-                subscriptionId,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              brandId,
+              createdAtGte,
+              createdAtLte,
+              customerId,
+              pageNumber,
+              pageSize,
+              productId,
+              status,
+              subscriptionId,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -299,12 +353,8 @@ private constructor(
         QueryParams.builder()
             .apply {
                 brandId?.let { put("brand_id", it) }
-                createdAtGte?.let {
-                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
-                createdAtLte?.let {
-                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                createdAtGte?.let { put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                createdAtLte?.let { put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 customerId?.let { put("customer_id", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
@@ -316,17 +366,20 @@ private constructor(
             .build()
 
     /** Filter by status */
-    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Status @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -350,8 +403,7 @@ private constructor(
 
             @JvmField val PARTIALLY_CAPTURED = of("partially_captured")
 
-            @JvmField
-            val PARTIALLY_CAPTURED_AND_CAPTURABLE = of("partially_captured_and_capturable")
+            @JvmField val PARTIALLY_CAPTURED_AND_CAPTURABLE = of("partially_captured_and_capturable")
 
             @JvmStatic fun of(value: String) = Status(JsonField.of(value))
         }
@@ -375,9 +427,11 @@ private constructor(
          * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Status] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -397,11 +451,11 @@ private constructor(
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -422,11 +476,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -447,36 +500,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Status = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Status =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -487,19 +537,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Status && value == other.value
+          return other is Status && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -508,39 +558,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is PaymentListParams &&
-            brandId == other.brandId &&
-            createdAtGte == other.createdAtGte &&
-            createdAtLte == other.createdAtLte &&
-            customerId == other.customerId &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            productId == other.productId &&
-            status == other.status &&
-            subscriptionId == other.subscriptionId &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is PaymentListParams && brandId == other.brandId && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && customerId == other.customerId && pageNumber == other.pageNumber && pageSize == other.pageSize && productId == other.productId && status == other.status && subscriptionId == other.subscriptionId && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            brandId,
-            createdAtGte,
-            createdAtLte,
-            customerId,
-            pageNumber,
-            pageSize,
-            productId,
-            status,
-            subscriptionId,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(brandId, createdAtGte, createdAtLte, customerId, pageNumber, pageSize, productId, status, subscriptionId, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "PaymentListParams{brandId=$brandId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "PaymentListParams{brandId=$brandId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, subscriptionId=$subscriptionId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

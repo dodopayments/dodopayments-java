@@ -10,6 +10,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.webhooks.WebhookDetails
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -19,57 +20,54 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class WebhookListPageResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class WebhookListPageResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val data: JsonField<List<WebhookDetails>>,
     private val done: JsonField<Boolean>,
     private val iterator: JsonField<String>,
     private val prevIterator: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("data")
-        @ExcludeMissing
-        data: JsonField<List<WebhookDetails>> = JsonMissing.of(),
+        @JsonProperty("data") @ExcludeMissing data: JsonField<List<WebhookDetails>> = JsonMissing.of(),
         @JsonProperty("done") @ExcludeMissing done: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("iterator") @ExcludeMissing iterator: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("prev_iterator")
-        @ExcludeMissing
-        prevIterator: JsonField<String> = JsonMissing.of(),
-    ) : this(data, done, iterator, prevIterator, mutableMapOf())
+        @JsonProperty("prev_iterator") @ExcludeMissing prevIterator: JsonField<String> = JsonMissing.of()
+    ) : this(
+      data,
+      done,
+      iterator,
+      prevIterator,
+      mutableMapOf(),
+    )
 
     /**
      * List of webhoooks
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun data(): List<WebhookDetails> = data.getRequired("data")
 
     /**
      * true if no more values are to be fetched.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun done(): Boolean = done.getRequired("done")
 
     /**
      * Cursor pointing to the next paginated object
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun iterator(): Optional<String> = iterator.getOptional("iterator")
 
     /**
      * Cursor pointing to the previous paginated object
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun prevIterator(): Optional<String> = prevIterator.getOptional("prev_iterator")
 
@@ -78,21 +76,27 @@ private constructor(
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<WebhookDetails>> = data
+    @JsonProperty("data")
+    @ExcludeMissing
+    fun _data(): JsonField<List<WebhookDetails>> = data
 
     /**
      * Returns the raw JSON value of [done].
      *
      * Unlike [done], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("done") @ExcludeMissing fun _done(): JsonField<Boolean> = done
+    @JsonProperty("done")
+    @ExcludeMissing
+    fun _done(): JsonField<Boolean> = done
 
     /**
      * Returns the raw JSON value of [iterator].
      *
      * Unlike [iterator], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("iterator") @ExcludeMissing fun _iterator(): JsonField<String> = iterator
+    @JsonProperty("iterator")
+    @ExcludeMissing
+    fun _iterator(): JsonField<String> = iterator
 
     /**
      * Returns the raw JSON value of [prevIterator].
@@ -105,13 +109,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -121,12 +124,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [WebhookListPageResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .data()
          * .done()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [WebhookListPageResponse]. */
@@ -139,13 +144,14 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(webhookListPageResponse: WebhookListPageResponse) = apply {
-            data = webhookListPageResponse.data.map { it.toMutableList() }
-            done = webhookListPageResponse.done
-            iterator = webhookListPageResponse.iterator
-            prevIterator = webhookListPageResponse.prevIterator
-            additionalProperties = webhookListPageResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(webhookListPageResponse: WebhookListPageResponse) =
+            apply {
+                data = webhookListPageResponse.data.map { it.toMutableList() }
+                done = webhookListPageResponse.done
+                iterator = webhookListPageResponse.iterator
+                prevIterator = webhookListPageResponse.prevIterator
+                additionalProperties = webhookListPageResponse.additionalProperties.toMutableMap()
+            }
 
         /** List of webhoooks */
         fun data(data: List<WebhookDetails>) = data(JsonField.of(data))
@@ -153,25 +159,25 @@ private constructor(
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed `List<WebhookDetails>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.data] with a well-typed `List<WebhookDetails>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun data(data: JsonField<List<WebhookDetails>>) = apply {
-            this.data = data.map { it.toMutableList() }
-        }
+        fun data(data: JsonField<List<WebhookDetails>>) =
+            apply {
+                this.data = data.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [WebhookDetails] to [Builder.data].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addData(data: WebhookDetails) = apply {
-            this.data =
-                (this.data ?: JsonField.of(mutableListOf())).also {
+        fun addData(data: WebhookDetails) =
+            apply {
+                this.data = (this.data ?: JsonField.of(mutableListOf())).also {
                     checkKnown("data", it).add(data)
                 }
-        }
+            }
 
         /** true if no more values are to be fetched. */
         fun done(done: Boolean) = done(JsonField.of(done))
@@ -179,10 +185,13 @@ private constructor(
         /**
          * Sets [Builder.done] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.done] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.done] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun done(done: JsonField<Boolean>) = apply { this.done = done }
+        fun done(done: JsonField<Boolean>) =
+            apply {
+                this.done = done
+            }
 
         /** Cursor pointing to the next paginated object */
         fun iterator(iterator: String?) = iterator(JsonField.ofNullable(iterator))
@@ -193,10 +202,13 @@ private constructor(
         /**
          * Sets [Builder.iterator] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.iterator] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.iterator] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun iterator(iterator: JsonField<String>) = apply { this.iterator = iterator }
+        fun iterator(iterator: JsonField<String>) =
+            apply {
+                this.iterator = iterator
+            }
 
         /** Cursor pointing to the previous paginated object */
         fun prevIterator(prevIterator: String?) = prevIterator(JsonField.ofNullable(prevIterator))
@@ -207,32 +219,39 @@ private constructor(
         /**
          * Sets [Builder.prevIterator] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.prevIterator] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.prevIterator] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun prevIterator(prevIterator: JsonField<String>) = apply {
-            this.prevIterator = prevIterator
-        }
+        fun prevIterator(prevIterator: JsonField<String>) =
+            apply {
+                this.prevIterator = prevIterator
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [WebhookListPageResponse].
@@ -240,6 +259,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .data()
          * .done()
@@ -249,11 +269,15 @@ private constructor(
          */
         fun build(): WebhookListPageResponse =
             WebhookListPageResponse(
-                checkRequired("data", data).map { it.toImmutable() },
-                checkRequired("done", done),
-                iterator,
-                prevIterator,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "data", data
+              ).map { it.toImmutable() },
+              checkRequired(
+                "done", done
+              ),
+              iterator,
+              prevIterator,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -267,17 +291,18 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): WebhookListPageResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): WebhookListPageResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        data().forEach { it.validate() }
-        done()
-        iterator()
-        prevIterator()
-        validated = true
-    }
+            data().forEach { it.validate() }
+            done()
+            iterator()
+            prevIterator()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -293,31 +318,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (done.asKnown().isPresent) 1 else 0) +
-            (if (iterator.asKnown().isPresent) 1 else 0) +
-            (if (prevIterator.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (done.asKnown().isPresent) 1 else 0) + (if (iterator.asKnown().isPresent) 1 else 0) + (if (prevIterator.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is WebhookListPageResponse &&
-            data == other.data &&
-            done == other.done &&
-            iterator == other.iterator &&
-            prevIterator == other.prevIterator &&
-            additionalProperties == other.additionalProperties
+      return other is WebhookListPageResponse && data == other.data && done == other.done && iterator == other.iterator && prevIterator == other.prevIterator && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(data, done, iterator, prevIterator, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(data, done, iterator, prevIterator, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "WebhookListPageResponse{data=$data, done=$done, iterator=$iterator, prevIterator=$prevIterator, additionalProperties=$additionalProperties}"
+    override fun toString() = "WebhookListPageResponse{data=$data, done=$done, iterator=$iterator, prevIterator=$prevIterator, additionalProperties=$additionalProperties}"
 }

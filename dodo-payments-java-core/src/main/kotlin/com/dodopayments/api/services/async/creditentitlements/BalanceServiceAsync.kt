@@ -15,14 +15,13 @@ import com.dodopayments.api.models.creditentitlements.balances.BalanceListPageAs
 import com.dodopayments.api.models.creditentitlements.balances.BalanceListParams
 import com.dodopayments.api.models.creditentitlements.balances.BalanceRetrieveParams
 import com.dodopayments.api.models.creditentitlements.balances.CustomerCreditBalance
+import com.dodopayments.api.services.async.creditentitlements.BalanceServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface BalanceServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -47,29 +46,29 @@ interface BalanceServiceAsync {
      * - `404 Not Found` - Credit entitlement or customer balance not found
      * - `500 Internal Server Error` - Database or server error
      */
-    fun retrieve(
-        customerId: String,
-        params: BalanceRetrieveParams,
-    ): CompletableFuture<CustomerCreditBalance> =
-        retrieve(customerId, params, RequestOptions.none())
+    fun retrieve(customerId: String, params: BalanceRetrieveParams): CompletableFuture<CustomerCreditBalance> =
+        retrieve(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        customerId: String,
-        params: BalanceRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomerCreditBalance> =
-        retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun retrieve(customerId: String, params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<CustomerCreditBalance> =
+        retrieve(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
     fun retrieve(params: BalanceRetrieveParams): CompletableFuture<CustomerCreditBalance> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: BalanceRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomerCreditBalance>
+    fun retrieve(params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<CustomerCreditBalance>
 
     /**
      * Returns a paginated list of customer credit balances for the given credit entitlement.
@@ -91,43 +90,46 @@ interface BalanceServiceAsync {
      * - `500 Internal Server Error` - Database or server error
      */
     fun list(creditEntitlementId: String): CompletableFuture<BalanceListPageAsync> =
-        list(creditEntitlementId, BalanceListParams.none())
+        list(
+          creditEntitlementId, BalanceListParams.none()
+        )
 
     /** @see list */
-    fun list(
-        creditEntitlementId: String,
-        params: BalanceListParams = BalanceListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListPageAsync> =
-        list(params.toBuilder().creditEntitlementId(creditEntitlementId).build(), requestOptions)
+    fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListPageAsync> =
+        list(
+          params.toBuilder()
+              .creditEntitlementId(creditEntitlementId)
+              .build(), requestOptions
+        )
 
     /** @see list */
-    fun list(
-        creditEntitlementId: String,
-        params: BalanceListParams = BalanceListParams.none(),
-    ): CompletableFuture<BalanceListPageAsync> =
-        list(creditEntitlementId, params, RequestOptions.none())
+    fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none()): CompletableFuture<BalanceListPageAsync> =
+        list(
+          creditEntitlementId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see list */
-    fun list(
-        params: BalanceListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListPageAsync>
+    fun list(params: BalanceListParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListPageAsync>
 
     /** @see list */
     fun list(params: BalanceListParams): CompletableFuture<BalanceListPageAsync> =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
-    fun list(
-        creditEntitlementId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<BalanceListPageAsync> =
-        list(creditEntitlementId, BalanceListParams.none(), requestOptions)
+    fun list(creditEntitlementId: String, requestOptions: RequestOptions): CompletableFuture<BalanceListPageAsync> =
+        list(
+          creditEntitlementId,
+          BalanceListParams.none(),
+          requestOptions,
+        )
 
     /**
-     * For credit entries, a new grant is created. For debit entries, credits are deducted from
-     * existing grants using FIFO (oldest first).
+     * For credit entries, a new grant is created. For debit entries, credits are
+     * deducted from existing grants using FIFO (oldest first).
      *
      * # Authentication
      * Requires an API key with `Editor` role.
@@ -150,31 +152,29 @@ interface BalanceServiceAsync {
      * - `409 Conflict` - Idempotency key already exists
      * - `500 Internal Server Error` - Database or server error
      */
-    fun createLedgerEntry(
-        customerId: String,
-        params: BalanceCreateLedgerEntryParams,
-    ): CompletableFuture<BalanceCreateLedgerEntryResponse> =
-        createLedgerEntry(customerId, params, RequestOptions.none())
+    fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams): CompletableFuture<BalanceCreateLedgerEntryResponse> =
+        createLedgerEntry(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        customerId: String,
-        params: BalanceCreateLedgerEntryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceCreateLedgerEntryResponse> =
-        createLedgerEntry(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceCreateLedgerEntryResponse> =
+        createLedgerEntry(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        params: BalanceCreateLedgerEntryParams
-    ): CompletableFuture<BalanceCreateLedgerEntryResponse> =
-        createLedgerEntry(params, RequestOptions.none())
+    fun createLedgerEntry(params: BalanceCreateLedgerEntryParams): CompletableFuture<BalanceCreateLedgerEntryResponse> =
+        createLedgerEntry(
+          params, RequestOptions.none()
+        )
 
     /** @see createLedgerEntry */
-    fun createLedgerEntry(
-        params: BalanceCreateLedgerEntryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceCreateLedgerEntryResponse>
+    fun createLedgerEntry(params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceCreateLedgerEntryResponse>
 
     /**
      * Returns a paginated list of credit grants with optional filtering by status.
@@ -196,29 +196,29 @@ interface BalanceServiceAsync {
      * - `404 Not Found` - Credit entitlement not found
      * - `500 Internal Server Error` - Database or server error
      */
-    fun listGrants(
-        customerId: String,
-        params: BalanceListGrantsParams,
-    ): CompletableFuture<BalanceListGrantsPageAsync> =
-        listGrants(customerId, params, RequestOptions.none())
+    fun listGrants(customerId: String, params: BalanceListGrantsParams): CompletableFuture<BalanceListGrantsPageAsync> =
+        listGrants(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listGrants */
-    fun listGrants(
-        customerId: String,
-        params: BalanceListGrantsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListGrantsPageAsync> =
-        listGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun listGrants(customerId: String, params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListGrantsPageAsync> =
+        listGrants(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see listGrants */
     fun listGrants(params: BalanceListGrantsParams): CompletableFuture<BalanceListGrantsPageAsync> =
-        listGrants(params, RequestOptions.none())
+        listGrants(
+          params, RequestOptions.none()
+        )
 
     /** @see listGrants */
-    fun listGrants(
-        params: BalanceListGrantsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListGrantsPageAsync>
+    fun listGrants(params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListGrantsPageAsync>
 
     /**
      * Returns a paginated list of credit transaction history with optional filtering.
@@ -242,33 +242,31 @@ interface BalanceServiceAsync {
      * - `404 Not Found` - Credit entitlement not found
      * - `500 Internal Server Error` - Database or server error
      */
-    fun listLedger(
-        customerId: String,
-        params: BalanceListLedgerParams,
-    ): CompletableFuture<BalanceListLedgerPageAsync> =
-        listLedger(customerId, params, RequestOptions.none())
+    fun listLedger(customerId: String, params: BalanceListLedgerParams): CompletableFuture<BalanceListLedgerPageAsync> =
+        listLedger(
+          customerId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see listLedger */
-    fun listLedger(
-        customerId: String,
-        params: BalanceListLedgerParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListLedgerPageAsync> =
-        listLedger(params.toBuilder().customerId(customerId).build(), requestOptions)
+    fun listLedger(customerId: String, params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListLedgerPageAsync> =
+        listLedger(
+          params.toBuilder()
+              .customerId(customerId)
+              .build(), requestOptions
+        )
 
     /** @see listLedger */
     fun listLedger(params: BalanceListLedgerParams): CompletableFuture<BalanceListLedgerPageAsync> =
-        listLedger(params, RequestOptions.none())
+        listLedger(
+          params, RequestOptions.none()
+        )
 
     /** @see listLedger */
-    fun listLedger(
-        params: BalanceListLedgerParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<BalanceListLedgerPageAsync>
+    fun listLedger(params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<BalanceListLedgerPageAsync>
 
-    /**
-     * A view of [BalanceServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [BalanceServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -276,179 +274,145 @@ interface BalanceServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): BalanceServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): BalanceServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}`, but is otherwise
-         * the same as [BalanceServiceAsync.retrieve].
-         */
-        fun retrieve(
-            customerId: String,
-            params: BalanceRetrieveParams,
-        ): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
-            retrieve(customerId, params, RequestOptions.none())
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}`, but is otherwise the             same as [BalanceServiceAsync.retrieve]. */
+        fun retrieve(customerId: String, params: BalanceRetrieveParams): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
+            retrieve(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            customerId: String,
-            params: BalanceRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
-            retrieve(params.toBuilder().customerId(customerId).build(), requestOptions)
+        fun retrieve(customerId: String, params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
+            retrieve(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: BalanceRetrieveParams
-        ): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
-            retrieve(params, RequestOptions.none())
+        fun retrieve(params: BalanceRetrieveParams): CompletableFuture<HttpResponseFor<CustomerCreditBalance>> =
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: BalanceRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomerCreditBalance>>
+        fun retrieve(params: BalanceRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<CustomerCreditBalance>>
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances`, but is otherwise the same as
-         * [BalanceServiceAsync.list].
-         */
-        fun list(
-            creditEntitlementId: String
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
-            list(creditEntitlementId, BalanceListParams.none())
-
-        /** @see list */
-        fun list(
-            creditEntitlementId: String,
-            params: BalanceListParams = BalanceListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances`, but is otherwise the             same as [BalanceServiceAsync.list]. */
+        fun list(creditEntitlementId: String): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
             list(
-                params.toBuilder().creditEntitlementId(creditEntitlementId).build(),
-                requestOptions,
+              creditEntitlementId, BalanceListParams.none()
             )
 
         /** @see list */
-        fun list(
-            creditEntitlementId: String,
-            params: BalanceListParams = BalanceListParams.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
-            list(creditEntitlementId, params, RequestOptions.none())
+        fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
+            list(
+              params.toBuilder()
+                  .creditEntitlementId(creditEntitlementId)
+                  .build(), requestOptions
+            )
 
         /** @see list */
-        fun list(
-            params: BalanceListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>>
+        fun list(creditEntitlementId: String, params: BalanceListParams = BalanceListParams.none()): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
+            list(
+              creditEntitlementId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see list */
-        fun list(
-            params: BalanceListParams
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: BalanceListParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListPageAsync>>
 
         /** @see list */
-        fun list(
-            creditEntitlementId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
-            list(creditEntitlementId, BalanceListParams.none(), requestOptions)
+        fun list(params: BalanceListParams): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger-entries`, but
-         * is otherwise the same as [BalanceServiceAsync.createLedgerEntry].
-         */
-        fun createLedgerEntry(
-            customerId: String,
-            params: BalanceCreateLedgerEntryParams,
-        ): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
-            createLedgerEntry(customerId, params, RequestOptions.none())
+        /** @see list */
+        fun list(creditEntitlementId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<BalanceListPageAsync>> =
+            list(
+              creditEntitlementId,
+              BalanceListParams.none(),
+              requestOptions,
+            )
 
-        /** @see createLedgerEntry */
-        fun createLedgerEntry(
-            customerId: String,
-            params: BalanceCreateLedgerEntryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
-            createLedgerEntry(params.toBuilder().customerId(customerId).build(), requestOptions)
+        /** Returns a raw HTTP response for `post /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger-entries`, but is otherwise the             same as [BalanceServiceAsync.createLedgerEntry]. */
+        fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
+            createLedgerEntry(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see createLedgerEntry */
-        fun createLedgerEntry(
-            params: BalanceCreateLedgerEntryParams
-        ): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
-            createLedgerEntry(params, RequestOptions.none())
+        fun createLedgerEntry(customerId: String, params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
+            createLedgerEntry(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see createLedgerEntry */
-        fun createLedgerEntry(
-            params: BalanceCreateLedgerEntryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>>
+        fun createLedgerEntry(params: BalanceCreateLedgerEntryParams): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>> =
+            createLedgerEntry(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/grants`, but is
-         * otherwise the same as [BalanceServiceAsync.listGrants].
-         */
-        fun listGrants(
-            customerId: String,
-            params: BalanceListGrantsParams,
-        ): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
-            listGrants(customerId, params, RequestOptions.none())
+        /** @see createLedgerEntry */
+        fun createLedgerEntry(params: BalanceCreateLedgerEntryParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceCreateLedgerEntryResponse>>
 
-        /** @see listGrants */
-        fun listGrants(
-            customerId: String,
-            params: BalanceListGrantsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
-            listGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/grants`, but is otherwise the             same as [BalanceServiceAsync.listGrants]. */
+        fun listGrants(customerId: String, params: BalanceListGrantsParams): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
+            listGrants(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listGrants */
-        fun listGrants(
-            params: BalanceListGrantsParams
-        ): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
-            listGrants(params, RequestOptions.none())
+        fun listGrants(customerId: String, params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
+            listGrants(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see listGrants */
-        fun listGrants(
-            params: BalanceListGrantsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>>
+        fun listGrants(params: BalanceListGrantsParams): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>> =
+            listGrants(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get
-         * /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger`, but is
-         * otherwise the same as [BalanceServiceAsync.listLedger].
-         */
-        fun listLedger(
-            customerId: String,
-            params: BalanceListLedgerParams,
-        ): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
-            listLedger(customerId, params, RequestOptions.none())
+        /** @see listGrants */
+        fun listGrants(params: BalanceListGrantsParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListGrantsPageAsync>>
 
-        /** @see listLedger */
-        fun listLedger(
-            customerId: String,
-            params: BalanceListLedgerParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
-            listLedger(params.toBuilder().customerId(customerId).build(), requestOptions)
+        /** Returns a raw HTTP response for `get /credit-entitlements/{credit_entitlement_id}/balances/{customer_id}/ledger`, but is otherwise the             same as [BalanceServiceAsync.listLedger]. */
+        fun listLedger(customerId: String, params: BalanceListLedgerParams): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
+            listLedger(
+              customerId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see listLedger */
-        fun listLedger(
-            params: BalanceListLedgerParams
-        ): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
-            listLedger(params, RequestOptions.none())
+        fun listLedger(customerId: String, params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
+            listLedger(
+              params.toBuilder()
+                  .customerId(customerId)
+                  .build(), requestOptions
+            )
 
         /** @see listLedger */
-        fun listLedger(
-            params: BalanceListLedgerParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>>
+        fun listLedger(params: BalanceListLedgerParams): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>> =
+            listLedger(
+              params, RequestOptions.none()
+            )
+
+        /** @see listLedger */
+        fun listLedger(params: BalanceListLedgerParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<BalanceListLedgerPageAsync>>
     }
 }

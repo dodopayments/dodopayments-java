@@ -18,15 +18,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CheckoutSessionBillingAddress
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CheckoutSessionBillingAddress @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val country: JsonField<CountryCode>,
     private val city: JsonField<String>,
     private val state: JsonField<String>,
     private val street: JsonField<String>,
     private val zipcode: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
@@ -35,46 +34,48 @@ private constructor(
         @JsonProperty("city") @ExcludeMissing city: JsonField<String> = JsonMissing.of(),
         @JsonProperty("state") @ExcludeMissing state: JsonField<String> = JsonMissing.of(),
         @JsonProperty("street") @ExcludeMissing street: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("zipcode") @ExcludeMissing zipcode: JsonField<String> = JsonMissing.of(),
-    ) : this(country, city, state, street, zipcode, mutableMapOf())
+        @JsonProperty("zipcode") @ExcludeMissing zipcode: JsonField<String> = JsonMissing.of()
+    ) : this(
+      country,
+      city,
+      state,
+      street,
+      zipcode,
+      mutableMapOf(),
+    )
 
     /**
      * Two-letter ISO country code (ISO 3166-1 alpha-2)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun country(): CountryCode = country.getRequired("country")
 
     /**
      * City name
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun city(): Optional<String> = city.getOptional("city")
 
     /**
      * State or province name
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun state(): Optional<String> = state.getOptional("state")
 
     /**
      * Street address including house number and unit/apartment if applicable
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun street(): Optional<String> = street.getOptional("street")
 
     /**
      * Postal code or ZIP code
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun zipcode(): Optional<String> = zipcode.getOptional("zipcode")
 
@@ -83,60 +84,70 @@ private constructor(
      *
      * Unlike [country], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("country") @ExcludeMissing fun _country(): JsonField<CountryCode> = country
+    @JsonProperty("country")
+    @ExcludeMissing
+    fun _country(): JsonField<CountryCode> = country
 
     /**
      * Returns the raw JSON value of [city].
      *
      * Unlike [city], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("city") @ExcludeMissing fun _city(): JsonField<String> = city
+    @JsonProperty("city")
+    @ExcludeMissing
+    fun _city(): JsonField<String> = city
 
     /**
      * Returns the raw JSON value of [state].
      *
      * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<String> = state
+    @JsonProperty("state")
+    @ExcludeMissing
+    fun _state(): JsonField<String> = state
 
     /**
      * Returns the raw JSON value of [street].
      *
      * Unlike [street], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("street") @ExcludeMissing fun _street(): JsonField<String> = street
+    @JsonProperty("street")
+    @ExcludeMissing
+    fun _street(): JsonField<String> = street
 
     /**
      * Returns the raw JSON value of [zipcode].
      *
      * Unlike [zipcode], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("zipcode") @ExcludeMissing fun _zipcode(): JsonField<String> = zipcode
+    @JsonProperty("zipcode")
+    @ExcludeMissing
+    fun _zipcode(): JsonField<String> = zipcode
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CheckoutSessionBillingAddress].
+         * Returns a mutable builder for constructing an instance of [CheckoutSessionBillingAddress].
          *
          * The following fields are required:
+         *
          * ```java
          * .country()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CheckoutSessionBillingAddress]. */
@@ -150,14 +161,15 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(checkoutSessionBillingAddress: CheckoutSessionBillingAddress) = apply {
-            country = checkoutSessionBillingAddress.country
-            city = checkoutSessionBillingAddress.city
-            state = checkoutSessionBillingAddress.state
-            street = checkoutSessionBillingAddress.street
-            zipcode = checkoutSessionBillingAddress.zipcode
-            additionalProperties = checkoutSessionBillingAddress.additionalProperties.toMutableMap()
-        }
+        internal fun from(checkoutSessionBillingAddress: CheckoutSessionBillingAddress) =
+            apply {
+                country = checkoutSessionBillingAddress.country
+                city = checkoutSessionBillingAddress.city
+                state = checkoutSessionBillingAddress.state
+                street = checkoutSessionBillingAddress.street
+                zipcode = checkoutSessionBillingAddress.zipcode
+                additionalProperties = checkoutSessionBillingAddress.additionalProperties.toMutableMap()
+            }
 
         /** Two-letter ISO country code (ISO 3166-1 alpha-2) */
         fun country(country: CountryCode) = country(JsonField.of(country))
@@ -165,11 +177,13 @@ private constructor(
         /**
          * Sets [Builder.country] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.country] with a well-typed [CountryCode] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.country] with a well-typed [CountryCode] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun country(country: JsonField<CountryCode>) = apply { this.country = country }
+        fun country(country: JsonField<CountryCode>) =
+            apply {
+                this.country = country
+            }
 
         /** City name */
         fun city(city: String?) = city(JsonField.ofNullable(city))
@@ -180,10 +194,13 @@ private constructor(
         /**
          * Sets [Builder.city] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.city] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.city] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun city(city: JsonField<String>) = apply { this.city = city }
+        fun city(city: JsonField<String>) =
+            apply {
+                this.city = city
+            }
 
         /** State or province name */
         fun state(state: String?) = state(JsonField.ofNullable(state))
@@ -194,10 +211,13 @@ private constructor(
         /**
          * Sets [Builder.state] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.state] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.state] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun state(state: JsonField<String>) = apply { this.state = state }
+        fun state(state: JsonField<String>) =
+            apply {
+                this.state = state
+            }
 
         /** Street address including house number and unit/apartment if applicable */
         fun street(street: String?) = street(JsonField.ofNullable(street))
@@ -208,10 +228,13 @@ private constructor(
         /**
          * Sets [Builder.street] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.street] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.street] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun street(street: JsonField<String>) = apply { this.street = street }
+        fun street(street: JsonField<String>) =
+            apply {
+                this.street = street
+            }
 
         /** Postal code or ZIP code */
         fun zipcode(zipcode: String?) = zipcode(JsonField.ofNullable(zipcode))
@@ -222,29 +245,39 @@ private constructor(
         /**
          * Sets [Builder.zipcode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.zipcode] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.zipcode] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun zipcode(zipcode: JsonField<String>) = apply { this.zipcode = zipcode }
+        fun zipcode(zipcode: JsonField<String>) =
+            apply {
+                this.zipcode = zipcode
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CheckoutSessionBillingAddress].
@@ -252,6 +285,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .country()
          * ```
@@ -260,12 +294,14 @@ private constructor(
          */
         fun build(): CheckoutSessionBillingAddress =
             CheckoutSessionBillingAddress(
-                checkRequired("country", country),
-                city,
-                state,
-                street,
-                zipcode,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "country", country
+              ),
+              city,
+              state,
+              street,
+              zipcode,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -279,18 +315,19 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CheckoutSessionBillingAddress = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CheckoutSessionBillingAddress =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        country().validate()
-        city()
-        state()
-        street()
-        zipcode()
-        validated = true
-    }
+            country().validate()
+            city()
+            state()
+            street()
+            zipcode()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -306,33 +343,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (country.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (city.asKnown().isPresent) 1 else 0) +
-            (if (state.asKnown().isPresent) 1 else 0) +
-            (if (street.asKnown().isPresent) 1 else 0) +
-            (if (zipcode.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (country.asKnown().getOrNull()?.validity() ?: 0) + (if (city.asKnown().isPresent) 1 else 0) + (if (state.asKnown().isPresent) 1 else 0) + (if (street.asKnown().isPresent) 1 else 0) + (if (zipcode.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CheckoutSessionBillingAddress &&
-            country == other.country &&
-            city == other.city &&
-            state == other.state &&
-            street == other.street &&
-            zipcode == other.zipcode &&
-            additionalProperties == other.additionalProperties
+      return other is CheckoutSessionBillingAddress && country == other.country && city == other.city && state == other.state && street == other.street && zipcode == other.zipcode && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(country, city, state, street, zipcode, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(country, city, state, street, zipcode, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CheckoutSessionBillingAddress{country=$country, city=$city, state=$state, street=$street, zipcode=$zipcode, additionalProperties=$additionalProperties}"
+    override fun toString() = "CheckoutSessionBillingAddress{country=$country, city=$city, state=$state, street=$street, zipcode=$zipcode, additionalProperties=$additionalProperties}"
 }

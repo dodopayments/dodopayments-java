@@ -18,88 +18,69 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class OnDemandSubscription
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class OnDemandSubscription @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val mandateOnly: JsonField<Boolean>,
     private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
     private val productCurrency: JsonField<Currency>,
     private val productDescription: JsonField<String>,
     private val productPrice: JsonField<Int>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("mandate_only")
-        @ExcludeMissing
-        mandateOnly: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("adaptive_currency_fees_inclusive")
-        @ExcludeMissing
-        adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("product_currency")
-        @ExcludeMissing
-        productCurrency: JsonField<Currency> = JsonMissing.of(),
-        @JsonProperty("product_description")
-        @ExcludeMissing
-        productDescription: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("product_price")
-        @ExcludeMissing
-        productPrice: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("mandate_only") @ExcludeMissing mandateOnly: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("adaptive_currency_fees_inclusive") @ExcludeMissing adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("product_currency") @ExcludeMissing productCurrency: JsonField<Currency> = JsonMissing.of(),
+        @JsonProperty("product_description") @ExcludeMissing productDescription: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("product_price") @ExcludeMissing productPrice: JsonField<Int> = JsonMissing.of()
     ) : this(
-        mandateOnly,
-        adaptiveCurrencyFeesInclusive,
-        productCurrency,
-        productDescription,
-        productPrice,
-        mutableMapOf(),
+      mandateOnly,
+      adaptiveCurrencyFeesInclusive,
+      productCurrency,
+      productDescription,
+      productPrice,
+      mutableMapOf(),
     )
 
     /**
-     * If set as True, does not perform any charge and only authorizes payment method details for
-     * future use.
+     * If set as True, does not perform any charge and only authorizes payment method details for future use.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun mandateOnly(): Boolean = mandateOnly.getRequired("mandate_only")
 
     /**
-     * Whether adaptive currency fees should be included in the product_price (true) or added on top
-     * (false). This field is ignored if adaptive pricing is not enabled for the business.
+     * Whether adaptive currency fees should be included in the product_price (true) or added on top (false).
+     * This field is ignored if adaptive pricing is not enabled for the business.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> =
-        adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
+    fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> = adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
 
     /**
-     * Optional currency of the product price. If not specified, defaults to the currency of the
-     * product.
+     * Optional currency of the product price. If not specified, defaults to the currency of the product.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun productCurrency(): Optional<Currency> = productCurrency.getOptional("product_currency")
 
     /**
-     * Optional product description override for billing and line items. If not specified, the
-     * stored description of the product will be used.
+     * Optional product description override for billing and line items.
+     * If not specified, the stored description of the product will be used.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun productDescription(): Optional<String> =
-        productDescription.getOptional("product_description")
+    fun productDescription(): Optional<String> = productDescription.getOptional("product_description")
 
     /**
-     * Product price for the initial charge to customer If not specified the stored price of the
-     * product will be used Represented in the lowest denomination of the currency (e.g., cents for
-     * USD). For example, to charge $1.00, pass `100`.
+     * Product price for the initial charge to customer
+     * If not specified the stored price of the product will be used
+     * Represented in the lowest denomination of the currency (e.g., cents for USD).
+     * For example, to charge $1.00, pass `100`.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun productPrice(): Optional<Int> = productPrice.getOptional("product_price")
 
@@ -115,8 +96,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [adaptiveCurrencyFeesInclusive].
      *
-     * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("adaptive_currency_fees_inclusive")
     @ExcludeMissing
@@ -134,8 +114,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [productDescription].
      *
-     * Unlike [productDescription], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [productDescription], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("product_description")
     @ExcludeMissing
@@ -152,13 +131,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -168,11 +146,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [OnDemandSubscription].
          *
          * The following fields are required:
+         *
          * ```java
          * .mandateOnly()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [OnDemandSubscription]. */
@@ -186,114 +166,99 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(onDemandSubscription: OnDemandSubscription) = apply {
-            mandateOnly = onDemandSubscription.mandateOnly
-            adaptiveCurrencyFeesInclusive = onDemandSubscription.adaptiveCurrencyFeesInclusive
-            productCurrency = onDemandSubscription.productCurrency
-            productDescription = onDemandSubscription.productDescription
-            productPrice = onDemandSubscription.productPrice
-            additionalProperties = onDemandSubscription.additionalProperties.toMutableMap()
-        }
+        internal fun from(onDemandSubscription: OnDemandSubscription) =
+            apply {
+                mandateOnly = onDemandSubscription.mandateOnly
+                adaptiveCurrencyFeesInclusive = onDemandSubscription.adaptiveCurrencyFeesInclusive
+                productCurrency = onDemandSubscription.productCurrency
+                productDescription = onDemandSubscription.productDescription
+                productPrice = onDemandSubscription.productPrice
+                additionalProperties = onDemandSubscription.additionalProperties.toMutableMap()
+            }
 
-        /**
-         * If set as True, does not perform any charge and only authorizes payment method details
-         * for future use.
-         */
+        /** If set as True, does not perform any charge and only authorizes payment method details for future use. */
         fun mandateOnly(mandateOnly: Boolean) = mandateOnly(JsonField.of(mandateOnly))
 
         /**
          * Sets [Builder.mandateOnly] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.mandateOnly] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.mandateOnly] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun mandateOnly(mandateOnly: JsonField<Boolean>) = apply { this.mandateOnly = mandateOnly }
+        fun mandateOnly(mandateOnly: JsonField<Boolean>) =
+            apply {
+                this.mandateOnly = mandateOnly
+            }
 
         /**
-         * Whether adaptive currency fees should be included in the product_price (true) or added on
-         * top (false). This field is ignored if adaptive pricing is not enabled for the business.
+         * Whether adaptive currency fees should be included in the product_price (true) or added on top (false).
+         * This field is ignored if adaptive pricing is not enabled for the business.
          */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) =
-            adaptiveCurrencyFeesInclusive(JsonField.ofNullable(adaptiveCurrencyFeesInclusive))
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) = adaptiveCurrencyFeesInclusive(JsonField.ofNullable(adaptiveCurrencyFeesInclusive))
 
         /**
          * Alias for [Builder.adaptiveCurrencyFeesInclusive].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) =
-            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) = adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
 
-        /**
-         * Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with
-         * `adaptiveCurrencyFeesInclusive.orElse(null)`.
-         */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) =
-            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
+        /** Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with `adaptiveCurrencyFeesInclusive.orElse(null)`. */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) = adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
 
         /**
          * Sets [Builder.adaptiveCurrencyFeesInclusive] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed
-         * [Boolean] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: JsonField<Boolean>) =
             apply {
                 this.adaptiveCurrencyFeesInclusive = adaptiveCurrencyFeesInclusive
             }
 
-        /**
-         * Optional currency of the product price. If not specified, defaults to the currency of the
-         * product.
-         */
-        fun productCurrency(productCurrency: Currency?) =
-            productCurrency(JsonField.ofNullable(productCurrency))
+        /** Optional currency of the product price. If not specified, defaults to the currency of the product. */
+        fun productCurrency(productCurrency: Currency?) = productCurrency(JsonField.ofNullable(productCurrency))
 
         /** Alias for calling [Builder.productCurrency] with `productCurrency.orElse(null)`. */
-        fun productCurrency(productCurrency: Optional<Currency>) =
-            productCurrency(productCurrency.getOrNull())
+        fun productCurrency(productCurrency: Optional<Currency>) = productCurrency(productCurrency.getOrNull())
 
         /**
          * Sets [Builder.productCurrency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productCurrency] with a well-typed [Currency] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.productCurrency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun productCurrency(productCurrency: JsonField<Currency>) = apply {
-            this.productCurrency = productCurrency
-        }
+        fun productCurrency(productCurrency: JsonField<Currency>) =
+            apply {
+                this.productCurrency = productCurrency
+            }
 
         /**
-         * Optional product description override for billing and line items. If not specified, the
-         * stored description of the product will be used.
+         * Optional product description override for billing and line items.
+         * If not specified, the stored description of the product will be used.
          */
-        fun productDescription(productDescription: String?) =
-            productDescription(JsonField.ofNullable(productDescription))
+        fun productDescription(productDescription: String?) = productDescription(JsonField.ofNullable(productDescription))
 
-        /**
-         * Alias for calling [Builder.productDescription] with `productDescription.orElse(null)`.
-         */
-        fun productDescription(productDescription: Optional<String>) =
-            productDescription(productDescription.getOrNull())
+        /** Alias for calling [Builder.productDescription] with `productDescription.orElse(null)`. */
+        fun productDescription(productDescription: Optional<String>) = productDescription(productDescription.getOrNull())
 
         /**
          * Sets [Builder.productDescription] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productDescription] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.productDescription] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun productDescription(productDescription: JsonField<String>) = apply {
-            this.productDescription = productDescription
-        }
+        fun productDescription(productDescription: JsonField<String>) =
+            apply {
+                this.productDescription = productDescription
+            }
 
         /**
-         * Product price for the initial charge to customer If not specified the stored price of the
-         * product will be used Represented in the lowest denomination of the currency (e.g., cents
-         * for USD). For example, to charge $1.00, pass `100`.
+         * Product price for the initial charge to customer
+         * If not specified the stored price of the product will be used
+         * Represented in the lowest denomination of the currency (e.g., cents for USD).
+         * For example, to charge $1.00, pass `100`.
          */
         fun productPrice(productPrice: Int?) = productPrice(JsonField.ofNullable(productPrice))
 
@@ -310,30 +275,39 @@ private constructor(
         /**
          * Sets [Builder.productPrice] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productPrice] with a well-typed [Int] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productPrice] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productPrice(productPrice: JsonField<Int>) = apply { this.productPrice = productPrice }
+        fun productPrice(productPrice: JsonField<Int>) =
+            apply {
+                this.productPrice = productPrice
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [OnDemandSubscription].
@@ -341,6 +315,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .mandateOnly()
          * ```
@@ -349,12 +324,14 @@ private constructor(
          */
         fun build(): OnDemandSubscription =
             OnDemandSubscription(
-                checkRequired("mandateOnly", mandateOnly),
-                adaptiveCurrencyFeesInclusive,
-                productCurrency,
-                productDescription,
-                productPrice,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "mandateOnly", mandateOnly
+              ),
+              adaptiveCurrencyFeesInclusive,
+              productCurrency,
+              productDescription,
+              productPrice,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -368,18 +345,19 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): OnDemandSubscription = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): OnDemandSubscription =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        mandateOnly()
-        adaptiveCurrencyFeesInclusive()
-        productCurrency().ifPresent { it.validate() }
-        productDescription()
-        productPrice()
-        validated = true
-    }
+            mandateOnly()
+            adaptiveCurrencyFeesInclusive()
+            productCurrency().ifPresent { it.validate() }
+            productDescription()
+            productPrice()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -395,40 +373,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (mandateOnly.asKnown().isPresent) 1 else 0) +
-            (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
-            (productCurrency.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (productDescription.asKnown().isPresent) 1 else 0) +
-            (if (productPrice.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (mandateOnly.asKnown().isPresent) 1 else 0) + (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) + (productCurrency.asKnown().getOrNull()?.validity() ?: 0) + (if (productDescription.asKnown().isPresent) 1 else 0) + (if (productPrice.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is OnDemandSubscription &&
-            mandateOnly == other.mandateOnly &&
-            adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
-            productCurrency == other.productCurrency &&
-            productDescription == other.productDescription &&
-            productPrice == other.productPrice &&
-            additionalProperties == other.additionalProperties
+      return other is OnDemandSubscription && mandateOnly == other.mandateOnly && adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive && productCurrency == other.productCurrency && productDescription == other.productDescription && productPrice == other.productPrice && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            mandateOnly,
-            adaptiveCurrencyFeesInclusive,
-            productCurrency,
-            productDescription,
-            productPrice,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(mandateOnly, adaptiveCurrencyFeesInclusive, productCurrency, productDescription, productPrice, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "OnDemandSubscription{mandateOnly=$mandateOnly, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, productCurrency=$productCurrency, productDescription=$productDescription, productPrice=$productPrice, additionalProperties=$additionalProperties}"
+    override fun toString() = "OnDemandSubscription{mandateOnly=$mandateOnly, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, productCurrency=$productCurrency, productDescription=$productDescription, productPrice=$productPrice, additionalProperties=$additionalProperties}"
 }

@@ -10,6 +10,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.webhooks.headers.HeaderRetrieveResponse
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -21,37 +22,37 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * The value of the headers is returned in the `headers` field.
  *
- * Sensitive headers that have been redacted are returned in the sensitive field.
+ * Sensitive headers that have been redacted are returned in the sensitive
+ * field.
  */
-class HeaderRetrieveResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class HeaderRetrieveResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val headers: JsonField<Headers>,
     private val sensitive: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("headers") @ExcludeMissing headers: JsonField<Headers> = JsonMissing.of(),
-        @JsonProperty("sensitive")
-        @ExcludeMissing
-        sensitive: JsonField<List<String>> = JsonMissing.of(),
-    ) : this(headers, sensitive, mutableMapOf())
+        @JsonProperty("sensitive") @ExcludeMissing sensitive: JsonField<List<String>> = JsonMissing.of()
+    ) : this(
+      headers,
+      sensitive,
+      mutableMapOf(),
+    )
 
     /**
      * List of headers configured
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun headers(): Headers = headers.getRequired("headers")
 
     /**
      * Sensitive headers without the value
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun sensitive(): List<String> = sensitive.getRequired("sensitive")
 
@@ -60,24 +61,27 @@ private constructor(
      *
      * Unlike [headers], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("headers") @ExcludeMissing fun _headers(): JsonField<Headers> = headers
+    @JsonProperty("headers")
+    @ExcludeMissing
+    fun _headers(): JsonField<Headers> = headers
 
     /**
      * Returns the raw JSON value of [sensitive].
      *
      * Unlike [sensitive], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("sensitive") @ExcludeMissing fun _sensitive(): JsonField<List<String>> = sensitive
+    @JsonProperty("sensitive")
+    @ExcludeMissing
+    fun _sensitive(): JsonField<List<String>> = sensitive
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -87,12 +91,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [HeaderRetrieveResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .headers()
          * .sensitive()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [HeaderRetrieveResponse]. */
@@ -103,11 +109,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(headerRetrieveResponse: HeaderRetrieveResponse) = apply {
-            headers = headerRetrieveResponse.headers
-            sensitive = headerRetrieveResponse.sensitive.map { it.toMutableList() }
-            additionalProperties = headerRetrieveResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(headerRetrieveResponse: HeaderRetrieveResponse) =
+            apply {
+                headers = headerRetrieveResponse.headers
+                sensitive = headerRetrieveResponse.sensitive.map { it.toMutableList() }
+                additionalProperties = headerRetrieveResponse.additionalProperties.toMutableMap()
+            }
 
         /** List of headers configured */
         fun headers(headers: Headers) = headers(JsonField.of(headers))
@@ -115,10 +122,13 @@ private constructor(
         /**
          * Sets [Builder.headers] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.headers] with a well-typed [Headers] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.headers] with a well-typed [Headers] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun headers(headers: JsonField<Headers>) = apply { this.headers = headers }
+        fun headers(headers: JsonField<Headers>) =
+            apply {
+                this.headers = headers
+            }
 
         /** Sensitive headers without the value */
         fun sensitive(sensitive: List<String>) = sensitive(JsonField.of(sensitive))
@@ -126,44 +136,51 @@ private constructor(
         /**
          * Sets [Builder.sensitive] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.sensitive] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.sensitive] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun sensitive(sensitive: JsonField<List<String>>) = apply {
-            this.sensitive = sensitive.map { it.toMutableList() }
-        }
+        fun sensitive(sensitive: JsonField<List<String>>) =
+            apply {
+                this.sensitive = sensitive.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [String] to [Builder.sensitive].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addSensitive(sensitive: String) = apply {
-            this.sensitive =
-                (this.sensitive ?: JsonField.of(mutableListOf())).also {
+        fun addSensitive(sensitive: String) =
+            apply {
+                this.sensitive = (this.sensitive ?: JsonField.of(mutableListOf())).also {
                     checkKnown("sensitive", it).add(sensitive)
                 }
-        }
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [HeaderRetrieveResponse].
@@ -171,6 +188,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .headers()
          * .sensitive()
@@ -180,9 +198,13 @@ private constructor(
          */
         fun build(): HeaderRetrieveResponse =
             HeaderRetrieveResponse(
-                checkRequired("headers", headers),
-                checkRequired("sensitive", sensitive).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "headers", headers
+              ),
+              checkRequired(
+                "sensitive", sensitive
+              ).map { it.toImmutable() },
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -196,15 +218,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): HeaderRetrieveResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): HeaderRetrieveResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        headers().validate()
-        sensitive()
-        validated = true
-    }
+            headers().validate()
+            sensitive()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -220,16 +243,12 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (headers.asKnown().getOrNull()?.validity() ?: 0) +
-            (sensitive.asKnown().getOrNull()?.size ?: 0)
+    internal fun validity(): Int = (headers.asKnown().getOrNull()?.validity() ?: 0) + (sensitive.asKnown().getOrNull()?.size ?: 0)
 
     /** List of headers configured */
-    class Headers
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Headers @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -241,7 +260,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Headers]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Headers]. */
@@ -250,28 +270,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(headers: Headers) = apply {
-                additionalProperties = headers.additionalProperties.toMutableMap()
-            }
+            internal fun from(headers: Headers) =
+                apply {
+                    additionalProperties = headers.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Headers].
@@ -284,21 +312,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Headers = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Headers =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -309,21 +337,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Headers && additionalProperties == other.additionalProperties
+          return other is Headers && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -334,20 +360,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is HeaderRetrieveResponse &&
-            headers == other.headers &&
-            sensitive == other.sensitive &&
-            additionalProperties == other.additionalProperties
+      return other is HeaderRetrieveResponse && headers == other.headers && sensitive == other.sensitive && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(headers, sensitive, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "HeaderRetrieveResponse{headers=$headers, sensitive=$sensitive, additionalProperties=$additionalProperties}"
+    override fun toString() = "HeaderRetrieveResponse{headers=$headers, sensitive=$sensitive, additionalProperties=$additionalProperties}"
 }

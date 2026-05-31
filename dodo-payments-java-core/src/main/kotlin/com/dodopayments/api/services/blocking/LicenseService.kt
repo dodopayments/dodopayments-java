@@ -11,14 +11,13 @@ import com.dodopayments.api.models.licenses.LicenseActivateResponse
 import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
+import com.dodopayments.api.services.blocking.LicenseService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface LicenseService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -29,30 +28,28 @@ interface LicenseService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseService
 
     fun activate(params: LicenseActivateParams): LicenseActivateResponse =
-        activate(params, RequestOptions.none())
+        activate(
+          params, RequestOptions.none()
+        )
 
     /** @see activate */
-    fun activate(
-        params: LicenseActivateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): LicenseActivateResponse
+    fun activate(params: LicenseActivateParams, requestOptions: RequestOptions = RequestOptions.none()): LicenseActivateResponse
 
-    fun deactivate(params: LicenseDeactivateParams) = deactivate(params, RequestOptions.none())
+    fun deactivate(params: LicenseDeactivateParams) =
+        deactivate(
+          params, RequestOptions.none()
+        )
 
     /** @see deactivate */
-    fun deactivate(
-        params: LicenseDeactivateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun deactivate(params: LicenseDeactivateParams, requestOptions: RequestOptions = RequestOptions.none())
 
     fun validate(params: LicenseValidateParams): LicenseValidateResponse =
-        validate(params, RequestOptions.none())
+        validate(
+          params, RequestOptions.none()
+        )
 
     /** @see validate */
-    fun validate(
-        params: LicenseValidateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): LicenseValidateResponse
+    fun validate(params: LicenseValidateParams, requestOptions: RequestOptions = RequestOptions.none()): LicenseValidateResponse
 
     /** A view of [LicenseService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -64,49 +61,37 @@ interface LicenseService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /licenses/activate`, but is otherwise the same as
-         * [LicenseService.activate].
-         */
+        /** Returns a raw HTTP response for `post /licenses/activate`, but is otherwise the             same as [LicenseService.activate]. */
         @MustBeClosed
         fun activate(params: LicenseActivateParams): HttpResponseFor<LicenseActivateResponse> =
-            activate(params, RequestOptions.none())
+            activate(
+              params, RequestOptions.none()
+            )
 
         /** @see activate */
         @MustBeClosed
-        fun activate(
-            params: LicenseActivateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<LicenseActivateResponse>
+        fun activate(params: LicenseActivateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<LicenseActivateResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /licenses/deactivate`, but is otherwise the same as
-         * [LicenseService.deactivate].
-         */
+        /** Returns a raw HTTP response for `post /licenses/deactivate`, but is otherwise the             same as [LicenseService.deactivate]. */
         @MustBeClosed
         fun deactivate(params: LicenseDeactivateParams): HttpResponse =
-            deactivate(params, RequestOptions.none())
+            deactivate(
+              params, RequestOptions.none()
+            )
 
         /** @see deactivate */
         @MustBeClosed
-        fun deactivate(
-            params: LicenseDeactivateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun deactivate(params: LicenseDeactivateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
-        /**
-         * Returns a raw HTTP response for `post /licenses/validate`, but is otherwise the same as
-         * [LicenseService.validate].
-         */
+        /** Returns a raw HTTP response for `post /licenses/validate`, but is otherwise the             same as [LicenseService.validate]. */
         @MustBeClosed
         fun validate(params: LicenseValidateParams): HttpResponseFor<LicenseValidateResponse> =
-            validate(params, RequestOptions.none())
+            validate(
+              params, RequestOptions.none()
+            )
 
         /** @see validate */
         @MustBeClosed
-        fun validate(
-            params: LicenseValidateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<LicenseValidateResponse>
+        fun validate(params: LicenseValidateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<LicenseValidateResponse>
     }
 }

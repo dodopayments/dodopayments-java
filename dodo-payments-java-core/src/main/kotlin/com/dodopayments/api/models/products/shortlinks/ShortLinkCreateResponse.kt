@@ -15,33 +15,34 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class ShortLinkCreateResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ShortLinkCreateResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val fullUrl: JsonField<String>,
     private val shortUrl: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("full_url") @ExcludeMissing fullUrl: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("short_url") @ExcludeMissing shortUrl: JsonField<String> = JsonMissing.of(),
-    ) : this(fullUrl, shortUrl, mutableMapOf())
+        @JsonProperty("short_url") @ExcludeMissing shortUrl: JsonField<String> = JsonMissing.of()
+    ) : this(
+      fullUrl,
+      shortUrl,
+      mutableMapOf(),
+    )
 
     /**
      * Full URL.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun fullUrl(): String = fullUrl.getRequired("full_url")
 
     /**
      * Short URL.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun shortUrl(): String = shortUrl.getRequired("short_url")
 
@@ -50,24 +51,27 @@ private constructor(
      *
      * Unlike [fullUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("full_url") @ExcludeMissing fun _fullUrl(): JsonField<String> = fullUrl
+    @JsonProperty("full_url")
+    @ExcludeMissing
+    fun _fullUrl(): JsonField<String> = fullUrl
 
     /**
      * Returns the raw JSON value of [shortUrl].
      *
      * Unlike [shortUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("short_url") @ExcludeMissing fun _shortUrl(): JsonField<String> = shortUrl
+    @JsonProperty("short_url")
+    @ExcludeMissing
+    fun _shortUrl(): JsonField<String> = shortUrl
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -77,12 +81,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ShortLinkCreateResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .fullUrl()
          * .shortUrl()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ShortLinkCreateResponse]. */
@@ -93,11 +99,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(shortLinkCreateResponse: ShortLinkCreateResponse) = apply {
-            fullUrl = shortLinkCreateResponse.fullUrl
-            shortUrl = shortLinkCreateResponse.shortUrl
-            additionalProperties = shortLinkCreateResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(shortLinkCreateResponse: ShortLinkCreateResponse) =
+            apply {
+                fullUrl = shortLinkCreateResponse.fullUrl
+                shortUrl = shortLinkCreateResponse.shortUrl
+                additionalProperties = shortLinkCreateResponse.additionalProperties.toMutableMap()
+            }
 
         /** Full URL. */
         fun fullUrl(fullUrl: String) = fullUrl(JsonField.of(fullUrl))
@@ -105,10 +112,13 @@ private constructor(
         /**
          * Sets [Builder.fullUrl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fullUrl] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.fullUrl] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun fullUrl(fullUrl: JsonField<String>) = apply { this.fullUrl = fullUrl }
+        fun fullUrl(fullUrl: JsonField<String>) =
+            apply {
+                this.fullUrl = fullUrl
+            }
 
         /** Short URL. */
         fun shortUrl(shortUrl: String) = shortUrl(JsonField.of(shortUrl))
@@ -116,29 +126,39 @@ private constructor(
         /**
          * Sets [Builder.shortUrl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.shortUrl] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.shortUrl] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun shortUrl(shortUrl: JsonField<String>) = apply { this.shortUrl = shortUrl }
+        fun shortUrl(shortUrl: JsonField<String>) =
+            apply {
+                this.shortUrl = shortUrl
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ShortLinkCreateResponse].
@@ -146,6 +166,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .fullUrl()
          * .shortUrl()
@@ -155,9 +176,13 @@ private constructor(
          */
         fun build(): ShortLinkCreateResponse =
             ShortLinkCreateResponse(
-                checkRequired("fullUrl", fullUrl),
-                checkRequired("shortUrl", shortUrl),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "fullUrl", fullUrl
+              ),
+              checkRequired(
+                "shortUrl", shortUrl
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -171,15 +196,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ShortLinkCreateResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ShortLinkCreateResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        fullUrl()
-        shortUrl()
-        validated = true
-    }
+            fullUrl()
+            shortUrl()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -195,24 +221,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (fullUrl.asKnown().isPresent) 1 else 0) + (if (shortUrl.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (fullUrl.asKnown().isPresent) 1 else 0) + (if (shortUrl.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ShortLinkCreateResponse &&
-            fullUrl == other.fullUrl &&
-            shortUrl == other.shortUrl &&
-            additionalProperties == other.additionalProperties
+      return other is ShortLinkCreateResponse && fullUrl == other.fullUrl && shortUrl == other.shortUrl && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(fullUrl, shortUrl, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ShortLinkCreateResponse{fullUrl=$fullUrl, shortUrl=$shortUrl, additionalProperties=$additionalProperties}"
+    override fun toString() = "ShortLinkCreateResponse{fullUrl=$fullUrl, shortUrl=$shortUrl, additionalProperties=$additionalProperties}"
 }

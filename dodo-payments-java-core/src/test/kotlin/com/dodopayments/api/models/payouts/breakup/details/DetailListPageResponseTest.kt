@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.payouts.breakup.details
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.payouts.breakup.details.DetailListPageResponse
+import com.dodopayments.api.models.payouts.breakup.details.DetailListResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,65 +14,52 @@ internal class DetailListPageResponseTest {
 
     @Test
     fun create() {
-        val detailListPageResponse =
-            DetailListPageResponse.builder()
-                .addItem(
-                    DetailListResponse.builder()
-                        .id("id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .eventType("event_type")
-                        .originalAmount(0L)
-                        .originalCurrency("original_currency")
-                        .payoutCurrencyAmount(0L)
-                        .usdEquivalentAmount(0L)
-                        .description("description")
-                        .referenceObjectId("reference_object_id")
-                        .build()
-                )
-                .build()
+      val detailListPageResponse = DetailListPageResponse.builder()
+          .addItem(DetailListResponse.builder()
+              .id("id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .eventType("event_type")
+              .originalAmount(0L)
+              .originalCurrency("original_currency")
+              .payoutCurrencyAmount(0L)
+              .usdEquivalentAmount(0L)
+              .description("description")
+              .referenceObjectId("reference_object_id")
+              .build())
+          .build()
 
-        assertThat(detailListPageResponse.items())
-            .containsExactly(
-                DetailListResponse.builder()
-                    .id("id")
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .eventType("event_type")
-                    .originalAmount(0L)
-                    .originalCurrency("original_currency")
-                    .payoutCurrencyAmount(0L)
-                    .usdEquivalentAmount(0L)
-                    .description("description")
-                    .referenceObjectId("reference_object_id")
-                    .build()
-            )
+      assertThat(detailListPageResponse.items()).containsExactly(DetailListResponse.builder()
+          .id("id")
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .eventType("event_type")
+          .originalAmount(0L)
+          .originalCurrency("original_currency")
+          .payoutCurrencyAmount(0L)
+          .usdEquivalentAmount(0L)
+          .description("description")
+          .referenceObjectId("reference_object_id")
+          .build())
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val detailListPageResponse =
-            DetailListPageResponse.builder()
-                .addItem(
-                    DetailListResponse.builder()
-                        .id("id")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .eventType("event_type")
-                        .originalAmount(0L)
-                        .originalCurrency("original_currency")
-                        .payoutCurrencyAmount(0L)
-                        .usdEquivalentAmount(0L)
-                        .description("description")
-                        .referenceObjectId("reference_object_id")
-                        .build()
-                )
-                .build()
+      val jsonMapper = jsonMapper()
+      val detailListPageResponse = DetailListPageResponse.builder()
+          .addItem(DetailListResponse.builder()
+              .id("id")
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .eventType("event_type")
+              .originalAmount(0L)
+              .originalCurrency("original_currency")
+              .payoutCurrencyAmount(0L)
+              .usdEquivalentAmount(0L)
+              .description("description")
+              .referenceObjectId("reference_object_id")
+              .build())
+          .build()
 
-        val roundtrippedDetailListPageResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(detailListPageResponse),
-                jacksonTypeRef<DetailListPageResponse>(),
-            )
+      val roundtrippedDetailListPageResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(detailListPageResponse), jacksonTypeRef<DetailListPageResponse>())
 
-        assertThat(roundtrippedDetailListPageResponse).isEqualTo(detailListPageResponse)
+      assertThat(roundtrippedDetailListPageResponse).isEqualTo(detailListPageResponse)
     }
 }

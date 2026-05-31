@@ -20,103 +20,95 @@ import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.entitlements.files.FileDeleteParams
 import com.dodopayments.api.models.entitlements.files.FileUploadParams
 import com.dodopayments.api.models.entitlements.files.FileUploadResponse
+import com.dodopayments.api.services.blocking.entitlements.FileService
+import com.dodopayments.api.services.blocking.entitlements.FileServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class FileServiceImpl internal constructor(private val clientOptions: ClientOptions) : FileService {
+class FileServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: FileService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : FileService {
+
+    private val withRawResponse: FileService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): FileService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService =
-        FileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService = FileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun delete(params: FileDeleteParams, requestOptions: RequestOptions) {
-        // delete /entitlements/{id}/files/{file_id}
-        withRawResponse().delete(params, requestOptions)
+      // delete /entitlements/{id}/files/{file_id}
+      withRawResponse().delete(params, requestOptions)
     }
 
-    override fun upload(
-        params: FileUploadParams,
-        requestOptions: RequestOptions,
-    ): FileUploadResponse =
+    override fun upload(params: FileUploadParams, requestOptions: RequestOptions): FileUploadResponse =
         // post /entitlements/{id}/files
         withRawResponse().upload(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        FileService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : FileService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): FileService.WithRawResponse =
-            FileServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService.WithRawResponse = FileServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
-        override fun delete(
-            params: FileDeleteParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("fileId", params.fileId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "entitlements",
-                        params._pathParam(0),
-                        "files",
-                        params._pathParam(1),
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { deleteHandler.handle(it) }
-            }
+        override fun delete(params: FileDeleteParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("fileId", params.fileId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0), "files", params._pathParam(1))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  deleteHandler.handle(it)
+              }
+          }
         }
 
-        private val uploadHandler: Handler<FileUploadResponse> =
-            jsonHandler<FileUploadResponse>(clientOptions.jsonMapper)
+        private val uploadHandler: Handler<FileUploadResponse> = jsonHandler<FileUploadResponse>(clientOptions.jsonMapper)
 
-        override fun upload(
-            params: FileUploadParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<FileUploadResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements", params._pathParam(0), "files")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { uploadHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun upload(params: FileUploadParams, requestOptions: RequestOptions): HttpResponseFor<FileUploadResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0), "files")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  uploadHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

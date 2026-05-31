@@ -3,6 +3,10 @@
 package com.dodopayments.api.models.entitlements
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.entitlements.EntitlementCreateParams
+import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
+import com.dodopayments.api.models.entitlements.GitHubPermission
+import com.dodopayments.api.models.entitlements.IntegrationConfig
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,92 +14,67 @@ internal class EntitlementCreateParamsTest {
 
     @Test
     fun create() {
-        EntitlementCreateParams.builder()
-            .integrationConfig(
-                IntegrationConfig.GitHubConfig.builder()
-                    .permission(GitHubPermission.PULL)
-                    .targetId("target_id")
-                    .build()
-            )
-            .integrationType(EntitlementIntegrationType.DISCORD)
-            .name("name")
-            .description("description")
-            .metadata(
-                EntitlementCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-            .build()
+      EntitlementCreateParams.builder()
+          .integrationConfig(IntegrationConfig.GitHubConfig.builder()
+              .permission(GitHubPermission.PULL)
+              .targetId("target_id")
+              .build())
+          .integrationType(EntitlementIntegrationType.DISCORD)
+          .name("name")
+          .description("description")
+          .metadata(EntitlementCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            EntitlementCreateParams.builder()
-                .integrationConfig(
-                    IntegrationConfig.GitHubConfig.builder()
-                        .permission(GitHubPermission.PULL)
-                        .targetId("target_id")
-                        .build()
-                )
-                .integrationType(EntitlementIntegrationType.DISCORD)
-                .name("name")
-                .description("description")
-                .metadata(
-                    EntitlementCreateParams.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .build()
+      val params = EntitlementCreateParams.builder()
+          .integrationConfig(IntegrationConfig.GitHubConfig.builder()
+              .permission(GitHubPermission.PULL)
+              .targetId("target_id")
+              .build())
+          .integrationType(EntitlementIntegrationType.DISCORD)
+          .name("name")
+          .description("description")
+          .metadata(EntitlementCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.integrationConfig())
-            .isEqualTo(
-                IntegrationConfig.ofGitHub(
-                    IntegrationConfig.GitHubConfig.builder()
-                        .permission(GitHubPermission.PULL)
-                        .targetId("target_id")
-                        .build()
-                )
-            )
-        assertThat(body.integrationType()).isEqualTo(EntitlementIntegrationType.DISCORD)
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.description()).contains("description")
-        assertThat(body.metadata())
-            .contains(
-                EntitlementCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
+      assertThat(body.integrationConfig()).isEqualTo(IntegrationConfig.ofGitHub(IntegrationConfig.GitHubConfig.builder()
+          .permission(GitHubPermission.PULL)
+          .targetId("target_id")
+          .build()))
+      assertThat(body.integrationType()).isEqualTo(EntitlementIntegrationType.DISCORD)
+      assertThat(body.name()).isEqualTo("name")
+      assertThat(body.description()).contains("description")
+      assertThat(body.metadata()).contains(EntitlementCreateParams.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            EntitlementCreateParams.builder()
-                .integrationConfig(
-                    IntegrationConfig.GitHubConfig.builder()
-                        .permission(GitHubPermission.PULL)
-                        .targetId("target_id")
-                        .build()
-                )
-                .integrationType(EntitlementIntegrationType.DISCORD)
-                .name("name")
-                .build()
+      val params = EntitlementCreateParams.builder()
+          .integrationConfig(IntegrationConfig.GitHubConfig.builder()
+              .permission(GitHubPermission.PULL)
+              .targetId("target_id")
+              .build())
+          .integrationType(EntitlementIntegrationType.DISCORD)
+          .name("name")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.integrationConfig())
-            .isEqualTo(
-                IntegrationConfig.ofGitHub(
-                    IntegrationConfig.GitHubConfig.builder()
-                        .permission(GitHubPermission.PULL)
-                        .targetId("target_id")
-                        .build()
-                )
-            )
-        assertThat(body.integrationType()).isEqualTo(EntitlementIntegrationType.DISCORD)
-        assertThat(body.name()).isEqualTo("name")
+      assertThat(body.integrationConfig()).isEqualTo(IntegrationConfig.ofGitHub(IntegrationConfig.GitHubConfig.builder()
+          .permission(GitHubPermission.PULL)
+          .targetId("target_id")
+          .build()))
+      assertThat(body.integrationType()).isEqualTo(EntitlementIntegrationType.DISCORD)
+      assertThat(body.name()).isEqualTo("name")
     }
 }

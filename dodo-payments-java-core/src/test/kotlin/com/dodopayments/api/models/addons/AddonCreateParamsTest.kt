@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.addons
 
+import com.dodopayments.api.models.addons.AddonCreateParams
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
 import org.assertj.core.api.Assertions.assertThat
@@ -11,50 +12,48 @@ internal class AddonCreateParamsTest {
 
     @Test
     fun create() {
-        AddonCreateParams.builder()
-            .currency(Currency.AED)
-            .name("name")
-            .price(0)
-            .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-            .description("description")
-            .build()
+      AddonCreateParams.builder()
+          .currency(Currency.AED)
+          .name("name")
+          .price(0)
+          .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+          .description("description")
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            AddonCreateParams.builder()
-                .currency(Currency.AED)
-                .name("name")
-                .price(0)
-                .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                .description("description")
-                .build()
+      val params = AddonCreateParams.builder()
+          .currency(Currency.AED)
+          .name("name")
+          .price(0)
+          .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+          .description("description")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.currency()).isEqualTo(Currency.AED)
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.price()).isEqualTo(0)
-        assertThat(body.taxCategory()).isEqualTo(TaxCategory.DIGITAL_PRODUCTS)
-        assertThat(body.description()).contains("description")
+      assertThat(body.currency()).isEqualTo(Currency.AED)
+      assertThat(body.name()).isEqualTo("name")
+      assertThat(body.price()).isEqualTo(0)
+      assertThat(body.taxCategory()).isEqualTo(TaxCategory.DIGITAL_PRODUCTS)
+      assertThat(body.description()).contains("description")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            AddonCreateParams.builder()
-                .currency(Currency.AED)
-                .name("name")
-                .price(0)
-                .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                .build()
+      val params = AddonCreateParams.builder()
+          .currency(Currency.AED)
+          .name("name")
+          .price(0)
+          .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.currency()).isEqualTo(Currency.AED)
-        assertThat(body.name()).isEqualTo("name")
-        assertThat(body.price()).isEqualTo(0)
-        assertThat(body.taxCategory()).isEqualTo(TaxCategory.DIGITAL_PRODUCTS)
+      assertThat(body.currency()).isEqualTo(Currency.AED)
+      assertThat(body.name()).isEqualTo("name")
+      assertThat(body.price()).isEqualTo(0)
+      assertThat(body.taxCategory()).isEqualTo(TaxCategory.DIGITAL_PRODUCTS)
     }
 }

@@ -16,66 +16,57 @@ internal class ItemServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemServiceAsync = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemServiceAsync = client.productCollections().groups().items()
 
-        val productCollectionProductsFuture =
-            itemServiceAsync.create(
-                ItemCreateParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .addProduct(GroupProduct.builder().productId("product_id").status(true).build())
-                    .build()
-            )
+      val productCollectionProductsFuture = itemServiceAsync.create(ItemCreateParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .addProduct(GroupProduct.builder()
+              .productId("product_id")
+              .status(true)
+              .build())
+          .build())
 
-        val productCollectionProducts = productCollectionProductsFuture.get()
-        productCollectionProducts.forEach { it.validate() }
+      val productCollectionProducts = productCollectionProductsFuture.get()
+      productCollectionProducts.forEach { it.validate() }
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemServiceAsync = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemServiceAsync = client.productCollections().groups().items()
 
-        val future =
-            itemServiceAsync.update(
-                ItemUpdateParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .status(true)
-                    .build()
-            )
+      val future = itemServiceAsync.update(ItemUpdateParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .status(true)
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemServiceAsync = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemServiceAsync = client.productCollections().groups().items()
 
-        val future =
-            itemServiceAsync.delete(
-                ItemDeleteParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .build()
-            )
+      val future = itemServiceAsync.delete(ItemDeleteParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 }

@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
+import com.dodopayments.api.models.subscriptions.TimeInterval
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -19,9 +20,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Response struct representing credit entitlement cart details for a subscription */
-class CreditEntitlementCartResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CreditEntitlementCartResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val creditEntitlementId: JsonField<String>,
     private val creditEntitlementName: JsonField<String>,
     private val creditsAmount: JsonField<String>,
@@ -40,204 +39,127 @@ private constructor(
     private val rolloverTimeframeCount: JsonField<Int>,
     private val rolloverTimeframeInterval: JsonField<TimeInterval>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("credit_entitlement_id")
-        @ExcludeMissing
-        creditEntitlementId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("credit_entitlement_name")
-        @ExcludeMissing
-        creditEntitlementName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("credits_amount")
-        @ExcludeMissing
-        creditsAmount: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("overage_balance")
-        @ExcludeMissing
-        overageBalance: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("overage_behavior")
-        @ExcludeMissing
-        overageBehavior: JsonField<CbbOverageBehavior> = JsonMissing.of(),
-        @JsonProperty("overage_enabled")
-        @ExcludeMissing
-        overageEnabled: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("credit_entitlement_id") @ExcludeMissing creditEntitlementId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("credit_entitlement_name") @ExcludeMissing creditEntitlementName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("credits_amount") @ExcludeMissing creditsAmount: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("overage_balance") @ExcludeMissing overageBalance: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("overage_behavior") @ExcludeMissing overageBehavior: JsonField<CbbOverageBehavior> = JsonMissing.of(),
+        @JsonProperty("overage_enabled") @ExcludeMissing overageEnabled: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("remaining_balance")
-        @ExcludeMissing
-        remainingBalance: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("rollover_enabled")
-        @ExcludeMissing
-        rolloverEnabled: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("remaining_balance") @ExcludeMissing remainingBalance: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("rollover_enabled") @ExcludeMissing rolloverEnabled: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("unit") @ExcludeMissing unit: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("expires_after_days")
-        @ExcludeMissing
-        expiresAfterDays: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("low_balance_threshold_percent")
-        @ExcludeMissing
-        lowBalanceThresholdPercent: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("max_rollover_count")
-        @ExcludeMissing
-        maxRolloverCount: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("overage_limit")
-        @ExcludeMissing
-        overageLimit: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("rollover_percentage")
-        @ExcludeMissing
-        rolloverPercentage: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("rollover_timeframe_count")
-        @ExcludeMissing
-        rolloverTimeframeCount: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("rollover_timeframe_interval")
-        @ExcludeMissing
-        rolloverTimeframeInterval: JsonField<TimeInterval> = JsonMissing.of(),
+        @JsonProperty("expires_after_days") @ExcludeMissing expiresAfterDays: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("low_balance_threshold_percent") @ExcludeMissing lowBalanceThresholdPercent: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("max_rollover_count") @ExcludeMissing maxRolloverCount: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("overage_limit") @ExcludeMissing overageLimit: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("rollover_percentage") @ExcludeMissing rolloverPercentage: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("rollover_timeframe_count") @ExcludeMissing rolloverTimeframeCount: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("rollover_timeframe_interval") @ExcludeMissing rolloverTimeframeInterval: JsonField<TimeInterval> = JsonMissing.of()
     ) : this(
-        creditEntitlementId,
-        creditEntitlementName,
-        creditsAmount,
-        overageBalance,
-        overageBehavior,
-        overageEnabled,
-        productId,
-        remainingBalance,
-        rolloverEnabled,
-        unit,
-        expiresAfterDays,
-        lowBalanceThresholdPercent,
-        maxRolloverCount,
-        overageLimit,
-        rolloverPercentage,
-        rolloverTimeframeCount,
-        rolloverTimeframeInterval,
-        mutableMapOf(),
+      creditEntitlementId,
+      creditEntitlementName,
+      creditsAmount,
+      overageBalance,
+      overageBehavior,
+      overageEnabled,
+      productId,
+      remainingBalance,
+      rolloverEnabled,
+      unit,
+      expiresAfterDays,
+      lowBalanceThresholdPercent,
+      maxRolloverCount,
+      overageLimit,
+      rolloverPercentage,
+      rolloverTimeframeCount,
+      rolloverTimeframeInterval,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun creditEntitlementId(): String = creditEntitlementId.getRequired("credit_entitlement_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun creditEntitlementName(): String =
-        creditEntitlementName.getRequired("credit_entitlement_name")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
+    fun creditEntitlementName(): String = creditEntitlementName.getRequired("credit_entitlement_name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun creditsAmount(): String = creditsAmount.getRequired("credits_amount")
 
     /**
      * Customer's current overage balance for this entitlement
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun overageBalance(): String = overageBalance.getRequired("overage_balance")
 
     /**
      * Controls how overage is handled at the end of a billing cycle.
      *
-     * |Preset                    |Charge at billing|Credits reduce overage|Preserve overage at reset|
-     * |--------------------------|:---------------:|:--------------------:|:-----------------------:|
-     * |`forgive_at_reset`        |       No        |          No          |           No            |
-     * |`invoice_at_billing`      |       Yes       |          No          |           No            |
-     * |`carry_deficit`           |       No        |          No          |           Yes           |
-     * |`carry_deficit_auto_repay`|       No        |         Yes          |           Yes           |
+     * | Preset                  | Charge at billing | Credits reduce overage | Preserve overage at reset |
+     * |-------------------------|:-----------------:|:---------------------:|:-------------------------:|
+     * | `forgive_at_reset`      | No                | No                    | No                        |
+     * | `invoice_at_billing`    | Yes               | No                    | No                        |
+     * | `carry_deficit`         | No                | No                    | Yes                       |
+     * | `carry_deficit_auto_repay` | No             | Yes                   | Yes                       |
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun overageBehavior(): CbbOverageBehavior = overageBehavior.getRequired("overage_behavior")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun overageEnabled(): Boolean = overageEnabled.getRequired("overage_enabled")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun productId(): String = productId.getRequired("product_id")
 
     /**
      * Customer's current remaining credit balance for this entitlement
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun remainingBalance(): String = remainingBalance.getRequired("remaining_balance")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun rolloverEnabled(): Boolean = rolloverEnabled.getRequired("rollover_enabled")
 
     /**
      * Unit label for the credit entitlement (e.g., "API Calls", "Tokens")
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun unit(): String = unit.getRequired("unit")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun expiresAfterDays(): Optional<Int> = expiresAfterDays.getOptional("expires_after_days")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun lowBalanceThresholdPercent(): Optional<Int> =
-        lowBalanceThresholdPercent.getOptional("low_balance_threshold_percent")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun lowBalanceThresholdPercent(): Optional<Int> = lowBalanceThresholdPercent.getOptional("low_balance_threshold_percent")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun maxRolloverCount(): Optional<Int> = maxRolloverCount.getOptional("max_rollover_count")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun overageLimit(): Optional<String> = overageLimit.getOptional("overage_limit")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun rolloverPercentage(): Optional<Int> = rolloverPercentage.getOptional("rollover_percentage")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun rolloverTimeframeCount(): Optional<Int> =
-        rolloverTimeframeCount.getOptional("rollover_timeframe_count")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun rolloverTimeframeCount(): Optional<Int> = rolloverTimeframeCount.getOptional("rollover_timeframe_count")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun rolloverTimeframeInterval(): Optional<TimeInterval> =
-        rolloverTimeframeInterval.getOptional("rollover_timeframe_interval")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun rolloverTimeframeInterval(): Optional<TimeInterval> = rolloverTimeframeInterval.getOptional("rollover_timeframe_interval")
 
     /**
      * Returns the raw JSON value of [creditEntitlementId].
      *
-     * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [creditEntitlementId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("credit_entitlement_id")
     @ExcludeMissing
@@ -246,8 +168,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [creditEntitlementName].
      *
-     * Unlike [creditEntitlementName], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [creditEntitlementName], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("credit_entitlement_name")
     @ExcludeMissing
@@ -294,13 +215,14 @@ private constructor(
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+    @JsonProperty("product_id")
+    @ExcludeMissing
+    fun _productId(): JsonField<String> = productId
 
     /**
      * Returns the raw JSON value of [remainingBalance].
      *
-     * Unlike [remainingBalance], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [remainingBalance], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("remaining_balance")
     @ExcludeMissing
@@ -320,13 +242,14 @@ private constructor(
      *
      * Unlike [unit], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("unit") @ExcludeMissing fun _unit(): JsonField<String> = unit
+    @JsonProperty("unit")
+    @ExcludeMissing
+    fun _unit(): JsonField<String> = unit
 
     /**
      * Returns the raw JSON value of [expiresAfterDays].
      *
-     * Unlike [expiresAfterDays], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [expiresAfterDays], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("expires_after_days")
     @ExcludeMissing
@@ -335,8 +258,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [lowBalanceThresholdPercent].
      *
-     * Unlike [lowBalanceThresholdPercent], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [lowBalanceThresholdPercent], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("low_balance_threshold_percent")
     @ExcludeMissing
@@ -345,8 +267,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [maxRolloverCount].
      *
-     * Unlike [maxRolloverCount], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [maxRolloverCount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("max_rollover_count")
     @ExcludeMissing
@@ -364,8 +285,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [rolloverPercentage].
      *
-     * Unlike [rolloverPercentage], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [rolloverPercentage], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("rollover_percentage")
     @ExcludeMissing
@@ -374,8 +294,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [rolloverTimeframeCount].
      *
-     * Unlike [rolloverTimeframeCount], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [rolloverTimeframeCount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("rollover_timeframe_count")
     @ExcludeMissing
@@ -384,8 +303,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [rolloverTimeframeInterval].
      *
-     * Unlike [rolloverTimeframeInterval], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [rolloverTimeframeInterval], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("rollover_timeframe_interval")
     @ExcludeMissing
@@ -393,23 +311,22 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CreditEntitlementCartResponse].
+         * Returns a mutable builder for constructing an instance of [CreditEntitlementCartResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .creditEntitlementId()
          * .creditEntitlementName()
@@ -423,7 +340,8 @@ private constructor(
          * .unit()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CreditEntitlementCartResponse]. */
@@ -449,67 +367,66 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(creditEntitlementCartResponse: CreditEntitlementCartResponse) = apply {
-            creditEntitlementId = creditEntitlementCartResponse.creditEntitlementId
-            creditEntitlementName = creditEntitlementCartResponse.creditEntitlementName
-            creditsAmount = creditEntitlementCartResponse.creditsAmount
-            overageBalance = creditEntitlementCartResponse.overageBalance
-            overageBehavior = creditEntitlementCartResponse.overageBehavior
-            overageEnabled = creditEntitlementCartResponse.overageEnabled
-            productId = creditEntitlementCartResponse.productId
-            remainingBalance = creditEntitlementCartResponse.remainingBalance
-            rolloverEnabled = creditEntitlementCartResponse.rolloverEnabled
-            unit = creditEntitlementCartResponse.unit
-            expiresAfterDays = creditEntitlementCartResponse.expiresAfterDays
-            lowBalanceThresholdPercent = creditEntitlementCartResponse.lowBalanceThresholdPercent
-            maxRolloverCount = creditEntitlementCartResponse.maxRolloverCount
-            overageLimit = creditEntitlementCartResponse.overageLimit
-            rolloverPercentage = creditEntitlementCartResponse.rolloverPercentage
-            rolloverTimeframeCount = creditEntitlementCartResponse.rolloverTimeframeCount
-            rolloverTimeframeInterval = creditEntitlementCartResponse.rolloverTimeframeInterval
-            additionalProperties = creditEntitlementCartResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(creditEntitlementCartResponse: CreditEntitlementCartResponse) =
+            apply {
+                creditEntitlementId = creditEntitlementCartResponse.creditEntitlementId
+                creditEntitlementName = creditEntitlementCartResponse.creditEntitlementName
+                creditsAmount = creditEntitlementCartResponse.creditsAmount
+                overageBalance = creditEntitlementCartResponse.overageBalance
+                overageBehavior = creditEntitlementCartResponse.overageBehavior
+                overageEnabled = creditEntitlementCartResponse.overageEnabled
+                productId = creditEntitlementCartResponse.productId
+                remainingBalance = creditEntitlementCartResponse.remainingBalance
+                rolloverEnabled = creditEntitlementCartResponse.rolloverEnabled
+                unit = creditEntitlementCartResponse.unit
+                expiresAfterDays = creditEntitlementCartResponse.expiresAfterDays
+                lowBalanceThresholdPercent = creditEntitlementCartResponse.lowBalanceThresholdPercent
+                maxRolloverCount = creditEntitlementCartResponse.maxRolloverCount
+                overageLimit = creditEntitlementCartResponse.overageLimit
+                rolloverPercentage = creditEntitlementCartResponse.rolloverPercentage
+                rolloverTimeframeCount = creditEntitlementCartResponse.rolloverTimeframeCount
+                rolloverTimeframeInterval = creditEntitlementCartResponse.rolloverTimeframeInterval
+                additionalProperties = creditEntitlementCartResponse.additionalProperties.toMutableMap()
+            }
 
-        fun creditEntitlementId(creditEntitlementId: String) =
-            creditEntitlementId(JsonField.of(creditEntitlementId))
+        fun creditEntitlementId(creditEntitlementId: String) = creditEntitlementId(JsonField.of(creditEntitlementId))
 
         /**
          * Sets [Builder.creditEntitlementId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.creditEntitlementId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun creditEntitlementId(creditEntitlementId: JsonField<String>) = apply {
-            this.creditEntitlementId = creditEntitlementId
-        }
+        fun creditEntitlementId(creditEntitlementId: JsonField<String>) =
+            apply {
+                this.creditEntitlementId = creditEntitlementId
+            }
 
-        fun creditEntitlementName(creditEntitlementName: String) =
-            creditEntitlementName(JsonField.of(creditEntitlementName))
+        fun creditEntitlementName(creditEntitlementName: String) = creditEntitlementName(JsonField.of(creditEntitlementName))
 
         /**
          * Sets [Builder.creditEntitlementName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditEntitlementName] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.creditEntitlementName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun creditEntitlementName(creditEntitlementName: JsonField<String>) = apply {
-            this.creditEntitlementName = creditEntitlementName
-        }
+        fun creditEntitlementName(creditEntitlementName: JsonField<String>) =
+            apply {
+                this.creditEntitlementName = creditEntitlementName
+            }
 
         fun creditsAmount(creditsAmount: String) = creditsAmount(JsonField.of(creditsAmount))
 
         /**
          * Sets [Builder.creditsAmount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditsAmount] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.creditsAmount] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun creditsAmount(creditsAmount: JsonField<String>) = apply {
-            this.creditsAmount = creditsAmount
-        }
+        fun creditsAmount(creditsAmount: JsonField<String>) =
+            apply {
+                this.creditsAmount = creditsAmount
+            }
 
         /** Customer's current overage balance for this entitlement */
         fun overageBalance(overageBalance: String) = overageBalance(JsonField.of(overageBalance))
@@ -517,90 +434,89 @@ private constructor(
         /**
          * Sets [Builder.overageBalance] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.overageBalance] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.overageBalance] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun overageBalance(overageBalance: JsonField<String>) = apply {
-            this.overageBalance = overageBalance
-        }
+        fun overageBalance(overageBalance: JsonField<String>) =
+            apply {
+                this.overageBalance = overageBalance
+            }
 
         /**
          * Controls how overage is handled at the end of a billing cycle.
          *
-         * |Preset                    |Charge at billing|Credits reduce overage|Preserve overage at reset|
-         * |--------------------------|:---------------:|:--------------------:|:-----------------------:|
-         * |`forgive_at_reset`        |       No        |          No          |           No            |
-         * |`invoice_at_billing`      |       Yes       |          No          |           No            |
-         * |`carry_deficit`           |       No        |          No          |           Yes           |
-         * |`carry_deficit_auto_repay`|       No        |         Yes          |           Yes           |
+         * | Preset                  | Charge at billing | Credits reduce overage | Preserve overage at reset |
+         * |-------------------------|:-----------------:|:---------------------:|:-------------------------:|
+         * | `forgive_at_reset`      | No                | No                    | No                        |
+         * | `invoice_at_billing`    | Yes               | No                    | No                        |
+         * | `carry_deficit`         | No                | No                    | Yes                       |
+         * | `carry_deficit_auto_repay` | No             | Yes                   | Yes                       |
          */
-        fun overageBehavior(overageBehavior: CbbOverageBehavior) =
-            overageBehavior(JsonField.of(overageBehavior))
+        fun overageBehavior(overageBehavior: CbbOverageBehavior) = overageBehavior(JsonField.of(overageBehavior))
 
         /**
          * Sets [Builder.overageBehavior] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.overageBehavior] with a well-typed [CbbOverageBehavior]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.overageBehavior] with a well-typed [CbbOverageBehavior] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun overageBehavior(overageBehavior: JsonField<CbbOverageBehavior>) = apply {
-            this.overageBehavior = overageBehavior
-        }
+        fun overageBehavior(overageBehavior: JsonField<CbbOverageBehavior>) =
+            apply {
+                this.overageBehavior = overageBehavior
+            }
 
         fun overageEnabled(overageEnabled: Boolean) = overageEnabled(JsonField.of(overageEnabled))
 
         /**
          * Sets [Builder.overageEnabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.overageEnabled] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.overageEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun overageEnabled(overageEnabled: JsonField<Boolean>) = apply {
-            this.overageEnabled = overageEnabled
-        }
+        fun overageEnabled(overageEnabled: JsonField<Boolean>) =
+            apply {
+                this.overageEnabled = overageEnabled
+            }
 
         fun productId(productId: String) = productId(JsonField.of(productId))
 
         /**
          * Sets [Builder.productId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+        fun productId(productId: JsonField<String>) =
+            apply {
+                this.productId = productId
+            }
 
         /** Customer's current remaining credit balance for this entitlement */
-        fun remainingBalance(remainingBalance: String) =
-            remainingBalance(JsonField.of(remainingBalance))
+        fun remainingBalance(remainingBalance: String) = remainingBalance(JsonField.of(remainingBalance))
 
         /**
          * Sets [Builder.remainingBalance] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.remainingBalance] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.remainingBalance] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun remainingBalance(remainingBalance: JsonField<String>) = apply {
-            this.remainingBalance = remainingBalance
-        }
+        fun remainingBalance(remainingBalance: JsonField<String>) =
+            apply {
+                this.remainingBalance = remainingBalance
+            }
 
-        fun rolloverEnabled(rolloverEnabled: Boolean) =
-            rolloverEnabled(JsonField.of(rolloverEnabled))
+        fun rolloverEnabled(rolloverEnabled: Boolean) = rolloverEnabled(JsonField.of(rolloverEnabled))
 
         /**
          * Sets [Builder.rolloverEnabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.rolloverEnabled] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.rolloverEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun rolloverEnabled(rolloverEnabled: JsonField<Boolean>) = apply {
-            this.rolloverEnabled = rolloverEnabled
-        }
+        fun rolloverEnabled(rolloverEnabled: JsonField<Boolean>) =
+            apply {
+                this.rolloverEnabled = rolloverEnabled
+            }
 
         /** Unit label for the credit entitlement (e.g., "API Calls", "Tokens") */
         fun unit(unit: String) = unit(JsonField.of(unit))
@@ -608,13 +524,15 @@ private constructor(
         /**
          * Sets [Builder.unit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.unit] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.unit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun unit(unit: JsonField<String>) = apply { this.unit = unit }
+        fun unit(unit: JsonField<String>) =
+            apply {
+                this.unit = unit
+            }
 
-        fun expiresAfterDays(expiresAfterDays: Int?) =
-            expiresAfterDays(JsonField.ofNullable(expiresAfterDays))
+        fun expiresAfterDays(expiresAfterDays: Int?) = expiresAfterDays(JsonField.ofNullable(expiresAfterDays))
 
         /**
          * Alias for [Builder.expiresAfterDays].
@@ -624,51 +542,43 @@ private constructor(
         fun expiresAfterDays(expiresAfterDays: Int) = expiresAfterDays(expiresAfterDays as Int?)
 
         /** Alias for calling [Builder.expiresAfterDays] with `expiresAfterDays.orElse(null)`. */
-        fun expiresAfterDays(expiresAfterDays: Optional<Int>) =
-            expiresAfterDays(expiresAfterDays.getOrNull())
+        fun expiresAfterDays(expiresAfterDays: Optional<Int>) = expiresAfterDays(expiresAfterDays.getOrNull())
 
         /**
          * Sets [Builder.expiresAfterDays] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.expiresAfterDays] with a well-typed [Int] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.expiresAfterDays] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun expiresAfterDays(expiresAfterDays: JsonField<Int>) = apply {
-            this.expiresAfterDays = expiresAfterDays
-        }
+        fun expiresAfterDays(expiresAfterDays: JsonField<Int>) =
+            apply {
+                this.expiresAfterDays = expiresAfterDays
+            }
 
-        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int?) =
-            lowBalanceThresholdPercent(JsonField.ofNullable(lowBalanceThresholdPercent))
+        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int?) = lowBalanceThresholdPercent(JsonField.ofNullable(lowBalanceThresholdPercent))
 
         /**
          * Alias for [Builder.lowBalanceThresholdPercent].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int) =
-            lowBalanceThresholdPercent(lowBalanceThresholdPercent as Int?)
+        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Int) = lowBalanceThresholdPercent(lowBalanceThresholdPercent as Int?)
 
-        /**
-         * Alias for calling [Builder.lowBalanceThresholdPercent] with
-         * `lowBalanceThresholdPercent.orElse(null)`.
-         */
-        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Optional<Int>) =
-            lowBalanceThresholdPercent(lowBalanceThresholdPercent.getOrNull())
+        /** Alias for calling [Builder.lowBalanceThresholdPercent] with `lowBalanceThresholdPercent.orElse(null)`. */
+        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: Optional<Int>) = lowBalanceThresholdPercent(lowBalanceThresholdPercent.getOrNull())
 
         /**
          * Sets [Builder.lowBalanceThresholdPercent] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.lowBalanceThresholdPercent] with a well-typed [Int]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.lowBalanceThresholdPercent] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: JsonField<Int>) = apply {
-            this.lowBalanceThresholdPercent = lowBalanceThresholdPercent
-        }
+        fun lowBalanceThresholdPercent(lowBalanceThresholdPercent: JsonField<Int>) =
+            apply {
+                this.lowBalanceThresholdPercent = lowBalanceThresholdPercent
+            }
 
-        fun maxRolloverCount(maxRolloverCount: Int?) =
-            maxRolloverCount(JsonField.ofNullable(maxRolloverCount))
+        fun maxRolloverCount(maxRolloverCount: Int?) = maxRolloverCount(JsonField.ofNullable(maxRolloverCount))
 
         /**
          * Alias for [Builder.maxRolloverCount].
@@ -678,19 +588,18 @@ private constructor(
         fun maxRolloverCount(maxRolloverCount: Int) = maxRolloverCount(maxRolloverCount as Int?)
 
         /** Alias for calling [Builder.maxRolloverCount] with `maxRolloverCount.orElse(null)`. */
-        fun maxRolloverCount(maxRolloverCount: Optional<Int>) =
-            maxRolloverCount(maxRolloverCount.getOrNull())
+        fun maxRolloverCount(maxRolloverCount: Optional<Int>) = maxRolloverCount(maxRolloverCount.getOrNull())
 
         /**
          * Sets [Builder.maxRolloverCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.maxRolloverCount] with a well-typed [Int] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.maxRolloverCount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun maxRolloverCount(maxRolloverCount: JsonField<Int>) = apply {
-            this.maxRolloverCount = maxRolloverCount
-        }
+        fun maxRolloverCount(maxRolloverCount: JsonField<Int>) =
+            apply {
+                this.maxRolloverCount = maxRolloverCount
+            }
 
         fun overageLimit(overageLimit: String?) = overageLimit(JsonField.ofNullable(overageLimit))
 
@@ -700,110 +609,101 @@ private constructor(
         /**
          * Sets [Builder.overageLimit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.overageLimit] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.overageLimit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun overageLimit(overageLimit: JsonField<String>) = apply {
-            this.overageLimit = overageLimit
-        }
+        fun overageLimit(overageLimit: JsonField<String>) =
+            apply {
+                this.overageLimit = overageLimit
+            }
 
-        fun rolloverPercentage(rolloverPercentage: Int?) =
-            rolloverPercentage(JsonField.ofNullable(rolloverPercentage))
+        fun rolloverPercentage(rolloverPercentage: Int?) = rolloverPercentage(JsonField.ofNullable(rolloverPercentage))
 
         /**
          * Alias for [Builder.rolloverPercentage].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun rolloverPercentage(rolloverPercentage: Int) =
-            rolloverPercentage(rolloverPercentage as Int?)
+        fun rolloverPercentage(rolloverPercentage: Int) = rolloverPercentage(rolloverPercentage as Int?)
 
-        /**
-         * Alias for calling [Builder.rolloverPercentage] with `rolloverPercentage.orElse(null)`.
-         */
-        fun rolloverPercentage(rolloverPercentage: Optional<Int>) =
-            rolloverPercentage(rolloverPercentage.getOrNull())
+        /** Alias for calling [Builder.rolloverPercentage] with `rolloverPercentage.orElse(null)`. */
+        fun rolloverPercentage(rolloverPercentage: Optional<Int>) = rolloverPercentage(rolloverPercentage.getOrNull())
 
         /**
          * Sets [Builder.rolloverPercentage] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.rolloverPercentage] with a well-typed [Int] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.rolloverPercentage] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun rolloverPercentage(rolloverPercentage: JsonField<Int>) = apply {
-            this.rolloverPercentage = rolloverPercentage
-        }
+        fun rolloverPercentage(rolloverPercentage: JsonField<Int>) =
+            apply {
+                this.rolloverPercentage = rolloverPercentage
+            }
 
-        fun rolloverTimeframeCount(rolloverTimeframeCount: Int?) =
-            rolloverTimeframeCount(JsonField.ofNullable(rolloverTimeframeCount))
+        fun rolloverTimeframeCount(rolloverTimeframeCount: Int?) = rolloverTimeframeCount(JsonField.ofNullable(rolloverTimeframeCount))
 
         /**
          * Alias for [Builder.rolloverTimeframeCount].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun rolloverTimeframeCount(rolloverTimeframeCount: Int) =
-            rolloverTimeframeCount(rolloverTimeframeCount as Int?)
+        fun rolloverTimeframeCount(rolloverTimeframeCount: Int) = rolloverTimeframeCount(rolloverTimeframeCount as Int?)
 
-        /**
-         * Alias for calling [Builder.rolloverTimeframeCount] with
-         * `rolloverTimeframeCount.orElse(null)`.
-         */
-        fun rolloverTimeframeCount(rolloverTimeframeCount: Optional<Int>) =
-            rolloverTimeframeCount(rolloverTimeframeCount.getOrNull())
+        /** Alias for calling [Builder.rolloverTimeframeCount] with `rolloverTimeframeCount.orElse(null)`. */
+        fun rolloverTimeframeCount(rolloverTimeframeCount: Optional<Int>) = rolloverTimeframeCount(rolloverTimeframeCount.getOrNull())
 
         /**
          * Sets [Builder.rolloverTimeframeCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.rolloverTimeframeCount] with a well-typed [Int] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.rolloverTimeframeCount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun rolloverTimeframeCount(rolloverTimeframeCount: JsonField<Int>) = apply {
-            this.rolloverTimeframeCount = rolloverTimeframeCount
-        }
+        fun rolloverTimeframeCount(rolloverTimeframeCount: JsonField<Int>) =
+            apply {
+                this.rolloverTimeframeCount = rolloverTimeframeCount
+            }
 
-        fun rolloverTimeframeInterval(rolloverTimeframeInterval: TimeInterval?) =
-            rolloverTimeframeInterval(JsonField.ofNullable(rolloverTimeframeInterval))
+        fun rolloverTimeframeInterval(rolloverTimeframeInterval: TimeInterval?) = rolloverTimeframeInterval(JsonField.ofNullable(rolloverTimeframeInterval))
 
-        /**
-         * Alias for calling [Builder.rolloverTimeframeInterval] with
-         * `rolloverTimeframeInterval.orElse(null)`.
-         */
-        fun rolloverTimeframeInterval(rolloverTimeframeInterval: Optional<TimeInterval>) =
-            rolloverTimeframeInterval(rolloverTimeframeInterval.getOrNull())
+        /** Alias for calling [Builder.rolloverTimeframeInterval] with `rolloverTimeframeInterval.orElse(null)`. */
+        fun rolloverTimeframeInterval(rolloverTimeframeInterval: Optional<TimeInterval>) = rolloverTimeframeInterval(rolloverTimeframeInterval.getOrNull())
 
         /**
          * Sets [Builder.rolloverTimeframeInterval] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.rolloverTimeframeInterval] with a well-typed
-         * [TimeInterval] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.rolloverTimeframeInterval] with a well-typed [TimeInterval] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun rolloverTimeframeInterval(rolloverTimeframeInterval: JsonField<TimeInterval>) = apply {
-            this.rolloverTimeframeInterval = rolloverTimeframeInterval
-        }
+        fun rolloverTimeframeInterval(rolloverTimeframeInterval: JsonField<TimeInterval>) =
+            apply {
+                this.rolloverTimeframeInterval = rolloverTimeframeInterval
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CreditEntitlementCartResponse].
@@ -811,6 +711,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .creditEntitlementId()
          * .creditEntitlementName()
@@ -828,24 +729,44 @@ private constructor(
          */
         fun build(): CreditEntitlementCartResponse =
             CreditEntitlementCartResponse(
-                checkRequired("creditEntitlementId", creditEntitlementId),
-                checkRequired("creditEntitlementName", creditEntitlementName),
-                checkRequired("creditsAmount", creditsAmount),
-                checkRequired("overageBalance", overageBalance),
-                checkRequired("overageBehavior", overageBehavior),
-                checkRequired("overageEnabled", overageEnabled),
-                checkRequired("productId", productId),
-                checkRequired("remainingBalance", remainingBalance),
-                checkRequired("rolloverEnabled", rolloverEnabled),
-                checkRequired("unit", unit),
-                expiresAfterDays,
-                lowBalanceThresholdPercent,
-                maxRolloverCount,
-                overageLimit,
-                rolloverPercentage,
-                rolloverTimeframeCount,
-                rolloverTimeframeInterval,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "creditEntitlementId", creditEntitlementId
+              ),
+              checkRequired(
+                "creditEntitlementName", creditEntitlementName
+              ),
+              checkRequired(
+                "creditsAmount", creditsAmount
+              ),
+              checkRequired(
+                "overageBalance", overageBalance
+              ),
+              checkRequired(
+                "overageBehavior", overageBehavior
+              ),
+              checkRequired(
+                "overageEnabled", overageEnabled
+              ),
+              checkRequired(
+                "productId", productId
+              ),
+              checkRequired(
+                "remainingBalance", remainingBalance
+              ),
+              checkRequired(
+                "rolloverEnabled", rolloverEnabled
+              ),
+              checkRequired(
+                "unit", unit
+              ),
+              expiresAfterDays,
+              lowBalanceThresholdPercent,
+              maxRolloverCount,
+              overageLimit,
+              rolloverPercentage,
+              rolloverTimeframeCount,
+              rolloverTimeframeInterval,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -859,30 +780,31 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CreditEntitlementCartResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CreditEntitlementCartResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        creditEntitlementId()
-        creditEntitlementName()
-        creditsAmount()
-        overageBalance()
-        overageBehavior().validate()
-        overageEnabled()
-        productId()
-        remainingBalance()
-        rolloverEnabled()
-        unit()
-        expiresAfterDays()
-        lowBalanceThresholdPercent()
-        maxRolloverCount()
-        overageLimit()
-        rolloverPercentage()
-        rolloverTimeframeCount()
-        rolloverTimeframeInterval().ifPresent { it.validate() }
-        validated = true
-    }
+            creditEntitlementId()
+            creditEntitlementName()
+            creditsAmount()
+            overageBalance()
+            overageBehavior().validate()
+            overageEnabled()
+            productId()
+            remainingBalance()
+            rolloverEnabled()
+            unit()
+            expiresAfterDays()
+            lowBalanceThresholdPercent()
+            maxRolloverCount()
+            overageLimit()
+            rolloverPercentage()
+            rolloverTimeframeCount()
+            rolloverTimeframeInterval().ifPresent { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -898,76 +820,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
-            (if (creditEntitlementName.asKnown().isPresent) 1 else 0) +
-            (if (creditsAmount.asKnown().isPresent) 1 else 0) +
-            (if (overageBalance.asKnown().isPresent) 1 else 0) +
-            (overageBehavior.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (overageEnabled.asKnown().isPresent) 1 else 0) +
-            (if (productId.asKnown().isPresent) 1 else 0) +
-            (if (remainingBalance.asKnown().isPresent) 1 else 0) +
-            (if (rolloverEnabled.asKnown().isPresent) 1 else 0) +
-            (if (unit.asKnown().isPresent) 1 else 0) +
-            (if (expiresAfterDays.asKnown().isPresent) 1 else 0) +
-            (if (lowBalanceThresholdPercent.asKnown().isPresent) 1 else 0) +
-            (if (maxRolloverCount.asKnown().isPresent) 1 else 0) +
-            (if (overageLimit.asKnown().isPresent) 1 else 0) +
-            (if (rolloverPercentage.asKnown().isPresent) 1 else 0) +
-            (if (rolloverTimeframeCount.asKnown().isPresent) 1 else 0) +
-            (rolloverTimeframeInterval.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (creditEntitlementId.asKnown().isPresent) 1 else 0) + (if (creditEntitlementName.asKnown().isPresent) 1 else 0) + (if (creditsAmount.asKnown().isPresent) 1 else 0) + (if (overageBalance.asKnown().isPresent) 1 else 0) + (overageBehavior.asKnown().getOrNull()?.validity() ?: 0) + (if (overageEnabled.asKnown().isPresent) 1 else 0) + (if (productId.asKnown().isPresent) 1 else 0) + (if (remainingBalance.asKnown().isPresent) 1 else 0) + (if (rolloverEnabled.asKnown().isPresent) 1 else 0) + (if (unit.asKnown().isPresent) 1 else 0) + (if (expiresAfterDays.asKnown().isPresent) 1 else 0) + (if (lowBalanceThresholdPercent.asKnown().isPresent) 1 else 0) + (if (maxRolloverCount.asKnown().isPresent) 1 else 0) + (if (overageLimit.asKnown().isPresent) 1 else 0) + (if (rolloverPercentage.asKnown().isPresent) 1 else 0) + (if (rolloverTimeframeCount.asKnown().isPresent) 1 else 0) + (rolloverTimeframeInterval.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CreditEntitlementCartResponse &&
-            creditEntitlementId == other.creditEntitlementId &&
-            creditEntitlementName == other.creditEntitlementName &&
-            creditsAmount == other.creditsAmount &&
-            overageBalance == other.overageBalance &&
-            overageBehavior == other.overageBehavior &&
-            overageEnabled == other.overageEnabled &&
-            productId == other.productId &&
-            remainingBalance == other.remainingBalance &&
-            rolloverEnabled == other.rolloverEnabled &&
-            unit == other.unit &&
-            expiresAfterDays == other.expiresAfterDays &&
-            lowBalanceThresholdPercent == other.lowBalanceThresholdPercent &&
-            maxRolloverCount == other.maxRolloverCount &&
-            overageLimit == other.overageLimit &&
-            rolloverPercentage == other.rolloverPercentage &&
-            rolloverTimeframeCount == other.rolloverTimeframeCount &&
-            rolloverTimeframeInterval == other.rolloverTimeframeInterval &&
-            additionalProperties == other.additionalProperties
+      return other is CreditEntitlementCartResponse && creditEntitlementId == other.creditEntitlementId && creditEntitlementName == other.creditEntitlementName && creditsAmount == other.creditsAmount && overageBalance == other.overageBalance && overageBehavior == other.overageBehavior && overageEnabled == other.overageEnabled && productId == other.productId && remainingBalance == other.remainingBalance && rolloverEnabled == other.rolloverEnabled && unit == other.unit && expiresAfterDays == other.expiresAfterDays && lowBalanceThresholdPercent == other.lowBalanceThresholdPercent && maxRolloverCount == other.maxRolloverCount && overageLimit == other.overageLimit && rolloverPercentage == other.rolloverPercentage && rolloverTimeframeCount == other.rolloverTimeframeCount && rolloverTimeframeInterval == other.rolloverTimeframeInterval && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            creditEntitlementId,
-            creditEntitlementName,
-            creditsAmount,
-            overageBalance,
-            overageBehavior,
-            overageEnabled,
-            productId,
-            remainingBalance,
-            rolloverEnabled,
-            unit,
-            expiresAfterDays,
-            lowBalanceThresholdPercent,
-            maxRolloverCount,
-            overageLimit,
-            rolloverPercentage,
-            rolloverTimeframeCount,
-            rolloverTimeframeInterval,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(creditEntitlementId, creditEntitlementName, creditsAmount, overageBalance, overageBehavior, overageEnabled, productId, remainingBalance, rolloverEnabled, unit, expiresAfterDays, lowBalanceThresholdPercent, maxRolloverCount, overageLimit, rolloverPercentage, rolloverTimeframeCount, rolloverTimeframeInterval, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CreditEntitlementCartResponse{creditEntitlementId=$creditEntitlementId, creditEntitlementName=$creditEntitlementName, creditsAmount=$creditsAmount, overageBalance=$overageBalance, overageBehavior=$overageBehavior, overageEnabled=$overageEnabled, productId=$productId, remainingBalance=$remainingBalance, rolloverEnabled=$rolloverEnabled, unit=$unit, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageLimit=$overageLimit, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
+    override fun toString() = "CreditEntitlementCartResponse{creditEntitlementId=$creditEntitlementId, creditEntitlementName=$creditEntitlementName, creditsAmount=$creditsAmount, overageBalance=$overageBalance, overageBehavior=$overageBehavior, overageEnabled=$overageEnabled, productId=$productId, remainingBalance=$remainingBalance, rolloverEnabled=$rolloverEnabled, unit=$unit, expiresAfterDays=$expiresAfterDays, lowBalanceThresholdPercent=$lowBalanceThresholdPercent, maxRolloverCount=$maxRolloverCount, overageLimit=$overageLimit, rolloverPercentage=$rolloverPercentage, rolloverTimeframeCount=$rolloverTimeframeCount, rolloverTimeframeInterval=$rolloverTimeframeInterval, additionalProperties=$additionalProperties}"
 }

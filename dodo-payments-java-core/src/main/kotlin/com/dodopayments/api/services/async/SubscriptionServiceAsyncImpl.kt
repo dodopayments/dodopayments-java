@@ -24,6 +24,7 @@ import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateResponse
+import com.dodopayments.api.models.subscriptions.SubscriptionListPage
 import com.dodopayments.api.models.subscriptions.SubscriptionListPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionListPageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionListParams
@@ -32,495 +33,411 @@ import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanRe
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPage
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
+import com.dodopayments.api.services.async.SubscriptionServiceAsync
+import com.dodopayments.api.services.async.SubscriptionServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class SubscriptionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    SubscriptionServiceAsync {
+class SubscriptionServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: SubscriptionServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : SubscriptionServiceAsync {
+
+    private val withRawResponse: SubscriptionServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): SubscriptionServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync =
-        SubscriptionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync = SubscriptionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     @Deprecated("deprecated")
-    override fun create(
-        params: SubscriptionCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionCreateResponse> =
+    override fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionCreateResponse> =
         // post /subscriptions
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    override fun retrieve(
-        params: SubscriptionRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
+    override fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions): CompletableFuture<Subscription> =
         // get /subscriptions/{subscription_id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
-    override fun update(
-        params: SubscriptionUpdateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Subscription> =
+    override fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions): CompletableFuture<Subscription> =
         // patch /subscriptions/{subscription_id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
-    override fun list(
-        params: SubscriptionListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionListPageAsync> =
+    override fun list(params: SubscriptionListParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionListPageAsync> =
         // get /subscriptions
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
-    override fun cancelChangePlan(
-        params: SubscriptionCancelChangePlanParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    override fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions): CompletableFuture<Void?> =
         // delete /subscriptions/{subscription_id}/change-plan/scheduled
         withRawResponse().cancelChangePlan(params, requestOptions).thenAccept {}
 
-    override fun changePlan(
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    override fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions): CompletableFuture<Void?> =
         // post /subscriptions/{subscription_id}/change-plan
         withRawResponse().changePlan(params, requestOptions).thenAccept {}
 
-    override fun charge(
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionChargeResponse> =
+    override fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionChargeResponse> =
         // post /subscriptions/{subscription_id}/charge
         withRawResponse().charge(params, requestOptions).thenApply { it.parse() }
 
-    override fun previewChangePlan(
-        params: SubscriptionPreviewChangePlanParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
+    override fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionPreviewChangePlanResponse> =
         // post /subscriptions/{subscription_id}/change-plan/preview
         withRawResponse().previewChangePlan(params, requestOptions).thenApply { it.parse() }
 
-    override fun retrieveCreditUsage(
-        params: SubscriptionRetrieveCreditUsageParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
+    override fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionRetrieveCreditUsageResponse> =
         // get /subscriptions/{subscription_id}/credit-usage
         withRawResponse().retrieveCreditUsage(params, requestOptions).thenApply { it.parse() }
 
-    override fun retrieveUsageHistory(
-        params: SubscriptionRetrieveUsageHistoryParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
+    override fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionRetrieveUsageHistoryPageAsync> =
         // get /subscriptions/{subscription_id}/usage-history
         withRawResponse().retrieveUsageHistory(params, requestOptions).thenApply { it.parse() }
 
-    override fun updatePaymentMethod(
-        params: SubscriptionUpdatePaymentMethodParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
+    override fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions): CompletableFuture<SubscriptionUpdatePaymentMethodResponse> =
         // post /subscriptions/{subscription_id}/update-payment-method
         withRawResponse().updatePaymentMethod(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        SubscriptionServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : SubscriptionServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): SubscriptionServiceAsync.WithRawResponse =
-            SubscriptionServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val createHandler: Handler<SubscriptionCreateResponse> =
-            jsonHandler<SubscriptionCreateResponse>(clientOptions.jsonMapper)
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync.WithRawResponse = SubscriptionServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<SubscriptionCreateResponse> = jsonHandler<SubscriptionCreateResponse>(clientOptions.jsonMapper)
 
         @Deprecated("deprecated")
-        override fun create(
-            params: SubscriptionCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val retrieveHandler: Handler<Subscription> =
-            jsonHandler<Subscription>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Subscription> = jsonHandler<Subscription>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: SubscriptionRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Subscription>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val updateHandler: Handler<Subscription> =
-            jsonHandler<Subscription>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Subscription> = jsonHandler<Subscription>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: SubscriptionUpdateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Subscription>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Subscription>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val listHandler: Handler<SubscriptionListPageResponse> =
-            jsonHandler<SubscriptionListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<SubscriptionListPageResponse> = jsonHandler<SubscriptionListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: SubscriptionListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                            .let {
-                                SubscriptionListPageAsync.builder()
-                                    .service(SubscriptionServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
-                    }
-                }
+        override fun list(params: SubscriptionListParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionListPageAsync>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  SubscriptionListPageAsync.builder()
+                      .service(SubscriptionServiceAsyncImpl(clientOptions))
+                      .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          } }
         }
 
         private val cancelChangePlanHandler: Handler<Void?> = emptyHandler()
 
-        override fun cancelChangePlan(
-            params: SubscriptionCancelChangePlanParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "subscriptions",
-                        params._pathParam(0),
-                        "change-plan",
-                        "scheduled",
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { cancelChangePlanHandler.handle(it) }
-                    }
-                }
+        override fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions): CompletableFuture<HttpResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "change-plan", "scheduled")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  cancelChangePlanHandler.handle(it)
+              }
+          } }
         }
 
         private val changePlanHandler: Handler<Void?> = emptyHandler()
 
-        override fun changePlan(
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0), "change-plan")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { changePlanHandler.handle(it) }
-                    }
-                }
+        override fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions): CompletableFuture<HttpResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "change-plan")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  changePlanHandler.handle(it)
+              }
+          } }
         }
 
-        private val chargeHandler: Handler<SubscriptionChargeResponse> =
-            jsonHandler<SubscriptionChargeResponse>(clientOptions.jsonMapper)
+        private val chargeHandler: Handler<SubscriptionChargeResponse> = jsonHandler<SubscriptionChargeResponse>(clientOptions.jsonMapper)
 
-        override fun charge(
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0), "charge")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { chargeHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionChargeResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "charge")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  chargeHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val previewChangePlanHandler: Handler<SubscriptionPreviewChangePlanResponse> =
-            jsonHandler<SubscriptionPreviewChangePlanResponse>(clientOptions.jsonMapper)
+        private val previewChangePlanHandler: Handler<SubscriptionPreviewChangePlanResponse> = jsonHandler<SubscriptionPreviewChangePlanResponse>(clientOptions.jsonMapper)
 
-        override fun previewChangePlan(
-            params: SubscriptionPreviewChangePlanParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "subscriptions",
-                        params._pathParam(0),
-                        "change-plan",
-                        "preview",
-                    )
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { previewChangePlanHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionPreviewChangePlanResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "change-plan", "preview")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  previewChangePlanHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val retrieveCreditUsageHandler: Handler<SubscriptionRetrieveCreditUsageResponse> =
-            jsonHandler<SubscriptionRetrieveCreditUsageResponse>(clientOptions.jsonMapper)
+        private val retrieveCreditUsageHandler: Handler<SubscriptionRetrieveCreditUsageResponse> = jsonHandler<SubscriptionRetrieveCreditUsageResponse>(clientOptions.jsonMapper)
 
-        override fun retrieveCreditUsage(
-            params: SubscriptionRetrieveCreditUsageParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0), "credit-usage")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveCreditUsageHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "credit-usage")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveCreditUsageHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val retrieveUsageHistoryHandler:
-            Handler<SubscriptionRetrieveUsageHistoryPageResponse> =
-            jsonHandler<SubscriptionRetrieveUsageHistoryPageResponse>(clientOptions.jsonMapper)
+        private val retrieveUsageHistoryHandler: Handler<SubscriptionRetrieveUsageHistoryPageResponse> = jsonHandler<SubscriptionRetrieveUsageHistoryPageResponse>(clientOptions.jsonMapper)
 
-        override fun retrieveUsageHistory(
-            params: SubscriptionRetrieveUsageHistoryParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0), "usage-history")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveUsageHistoryHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                            .let {
-                                SubscriptionRetrieveUsageHistoryPageAsync.builder()
-                                    .service(SubscriptionServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
-                    }
-                }
+        override fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionRetrieveUsageHistoryPageAsync>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "usage-history")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveUsageHistoryHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  SubscriptionRetrieveUsageHistoryPageAsync.builder()
+                      .service(SubscriptionServiceAsyncImpl(clientOptions))
+                      .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          } }
         }
 
-        private val updatePaymentMethodHandler: Handler<SubscriptionUpdatePaymentMethodResponse> =
-            jsonHandler<SubscriptionUpdatePaymentMethodResponse>(clientOptions.jsonMapper)
+        private val updatePaymentMethodHandler: Handler<SubscriptionUpdatePaymentMethodResponse> = jsonHandler<SubscriptionUpdatePaymentMethodResponse>(clientOptions.jsonMapper)
 
-        override fun updatePaymentMethod(
-            params: SubscriptionUpdatePaymentMethodParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("subscriptionId", params.subscriptionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("subscriptions", params._pathParam(0), "update-payment-method")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updatePaymentMethodHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("subscriptionId", params.subscriptionId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("subscriptions", params._pathParam(0), "update-payment-method")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  updatePaymentMethodHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }

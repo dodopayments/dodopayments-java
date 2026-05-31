@@ -5,20 +5,24 @@ package com.dodopayments.api.models.licensekeyinstances
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPageResponse
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.services.async.LicenseKeyInstanceServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see LicenseKeyInstanceServiceAsync.list */
-class LicenseKeyInstanceListPageAsync
-private constructor(
+class LicenseKeyInstanceListPageAsync private constructor(
     private val service: LicenseKeyInstanceServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: LicenseKeyInstanceListParams,
     private val response: LicenseKeyInstanceListPageResponse,
+
 ) : PageAsync<LicenseKeyInstance> {
 
     /**
@@ -26,21 +30,23 @@ private constructor(
      *
      * @see LicenseKeyInstanceListPageResponse.items
      */
-    override fun items(): List<LicenseKeyInstance> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<LicenseKeyInstance> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): LicenseKeyInstanceListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
-    override fun nextPage(): CompletableFuture<LicenseKeyInstanceListPageAsync> =
-        service.list(nextPageParams())
+    override fun nextPage(): CompletableFuture<LicenseKeyInstanceListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<LicenseKeyInstance> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): LicenseKeyInstanceListParams = params
@@ -53,10 +59,10 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [LicenseKeyInstanceListPageAsync].
+         * Returns a mutable builder for constructing an instance of [LicenseKeyInstanceListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -64,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [LicenseKeyInstanceListPageAsync]. */
@@ -84,19 +91,27 @@ private constructor(
                 response = licenseKeyInstanceListPageAsync.response
             }
 
-        fun service(service: LicenseKeyInstanceServiceAsync) = apply { this.service = service }
+        fun service(service: LicenseKeyInstanceServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: LicenseKeyInstanceListParams) = apply { this.params = params }
+        fun params(params: LicenseKeyInstanceListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: LicenseKeyInstanceListPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: LicenseKeyInstanceListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [LicenseKeyInstanceListPageAsync].
@@ -104,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -115,27 +131,30 @@ private constructor(
          */
         fun build(): LicenseKeyInstanceListPageAsync =
             LicenseKeyInstanceListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is LicenseKeyInstanceListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is LicenseKeyInstanceListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "LicenseKeyInstanceListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "LicenseKeyInstanceListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }
