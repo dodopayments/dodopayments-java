@@ -7,16 +7,20 @@ import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
-class RefundStatus @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+class RefundStatus @JsonCreator private constructor(
+    private val value: JsonField<String>,
+
+) : Enum {
 
     /**
      * Returns this class instance's raw value.
      *
-     * This is usually only useful if this instance was deserialized from data that doesn't match
-     * any known member, and you want to know that value. For example, if the SDK is on an older
-     * version than the API, then the API may respond with new members that the SDK is unaware of.
+     * This is usually only useful if this instance was deserialized from data that doesn't match any known
+     * member, and you want to know that value. For example, if the SDK is on an older version than the
+     * API, then the API may respond with new members that the SDK is unaware of.
      */
-    @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+    @com.fasterxml.jackson.annotation.JsonValue
+    fun _value(): JsonField<String> = value
 
     companion object {
 
@@ -43,9 +47,11 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
      * An enum containing [RefundStatus]'s known values, as well as an [_UNKNOWN] member.
      *
      * An instance of [RefundStatus] can contain an unknown value in a couple of cases:
-     * - It was deserialized from data that doesn't match any known member. For example, if the SDK
-     *   is on an older version than the API, then the API may respond with new members that the SDK
-     *   is unaware of.
+     *
+     * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+     *   an older version than the API, then the API may respond with new members that the SDK is unaware
+     *   of.
+     *
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
@@ -58,11 +64,11 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
     }
 
     /**
-     * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if
-     * the class was instantiated with an unknown value.
+     * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+     * class was instantiated with an unknown value.
      *
-     * Use the [known] method instead if you're certain the value is always known or if you want to
-     * throw for the unknown case.
+     * Use the [known] method instead if you're certain the value is always known or if you want to throw
+     * for the unknown case.
      */
     fun value(): Value =
         when (this) {
@@ -76,11 +82,10 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
     /**
      * Returns an enum member corresponding to this class instance's value.
      *
-     * Use the [value] method instead if you're uncertain the value is always known and don't want
-     * to throw for the unknown case.
+     * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+     * for the unknown case.
      *
-     * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-     *   member.
+     * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
      */
     fun known(): Known =
         when (this) {
@@ -94,16 +99,13 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
     /**
      * Returns this class instance's primitive wire representation.
      *
-     * This differs from the [toString] method because that method is primarily for debugging and
-     * generally doesn't throw.
+     * This differs from the [toString] method because that method is primarily for debugging and generally
+     * doesn't throw.
      *
-     * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-     *   expected primitive type.
+     * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+     *   primitive type.
      */
-    fun asString(): String =
-        _value().asString().orElseThrow {
-            DodoPaymentsInvalidDataException("Value is not a String")
-        }
+    fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
     private var validated: Boolean = false
 
@@ -115,14 +117,15 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): RefundStatus = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): RefundStatus =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        known()
-        validated = true
-    }
+            known()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -137,14 +140,15 @@ class RefundStatus @JsonCreator private constructor(private val value: JsonField
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+    @JvmSynthetic
+    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is RefundStatus && value == other.value
+      return other is RefundStatus && value == other.value
     }
 
     override fun hashCode() = value.hashCode()

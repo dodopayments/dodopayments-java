@@ -5,17 +5,21 @@ package com.dodopayments.api.models.products.shortlinks
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.products.shortlinks.ShortLinkListPageResponse
+import com.dodopayments.api.models.products.shortlinks.ShortLinkListParams
+import com.dodopayments.api.models.products.shortlinks.ShortLinkListResponse
 import com.dodopayments.api.services.blocking.products.ShortLinkService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see ShortLinkService.list */
-class ShortLinkListPage
-private constructor(
+class ShortLinkListPage private constructor(
     private val service: ShortLinkService,
     private val params: ShortLinkListParams,
     private val response: ShortLinkListPageResponse,
+
 ) : Page<ShortLinkListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see ShortLinkListPageResponse.items
      */
-    override fun items(): List<ShortLinkListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<ShortLinkListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): ShortLinkListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): ShortLinkListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ShortLinkListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ShortLinkListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: ShortLinkListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(shortLinkListPage: ShortLinkListPage) = apply {
-            service = shortLinkListPage.service
-            params = shortLinkListPage.params
-            response = shortLinkListPage.response
-        }
+        internal fun from(shortLinkListPage: ShortLinkListPage) =
+            apply {
+                service = shortLinkListPage.service
+                params = shortLinkListPage.params
+                response = shortLinkListPage.response
+            }
 
-        fun service(service: ShortLinkService) = apply { this.service = service }
+        fun service(service: ShortLinkService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: ShortLinkListParams) = apply { this.params = params }
+        fun params(params: ShortLinkListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: ShortLinkListPageResponse) = apply { this.response = response }
+        fun response(response: ShortLinkListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [ShortLinkListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): ShortLinkListPage =
             ShortLinkListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ShortLinkListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is ShortLinkListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "ShortLinkListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "ShortLinkListPage{service=$service, params=$params, response=$response}"
 }

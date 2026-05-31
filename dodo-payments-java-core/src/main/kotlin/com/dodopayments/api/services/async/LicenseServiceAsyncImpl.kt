@@ -21,139 +21,120 @@ import com.dodopayments.api.models.licenses.LicenseActivateResponse
 import com.dodopayments.api.models.licenses.LicenseDeactivateParams
 import com.dodopayments.api.models.licenses.LicenseValidateParams
 import com.dodopayments.api.models.licenses.LicenseValidateResponse
+import com.dodopayments.api.services.async.LicenseServiceAsync
+import com.dodopayments.api.services.async.LicenseServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-class LicenseServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    LicenseServiceAsync {
+class LicenseServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: LicenseServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : LicenseServiceAsync {
+
+    private val withRawResponse: LicenseServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): LicenseServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseServiceAsync =
-        LicenseServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseServiceAsync = LicenseServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun activate(
-        params: LicenseActivateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseActivateResponse> =
+    override fun activate(params: LicenseActivateParams, requestOptions: RequestOptions): CompletableFuture<LicenseActivateResponse> =
         // post /licenses/activate
         withRawResponse().activate(params, requestOptions).thenApply { it.parse() }
 
-    override fun deactivate(
-        params: LicenseDeactivateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    override fun deactivate(params: LicenseDeactivateParams, requestOptions: RequestOptions): CompletableFuture<Void?> =
         // post /licenses/deactivate
         withRawResponse().deactivate(params, requestOptions).thenAccept {}
 
-    override fun validate(
-        params: LicenseValidateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseValidateResponse> =
+    override fun validate(params: LicenseValidateParams, requestOptions: RequestOptions): CompletableFuture<LicenseValidateResponse> =
         // post /licenses/validate
         withRawResponse().validate(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        LicenseServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : LicenseServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LicenseServiceAsync.WithRawResponse =
-            LicenseServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseServiceAsync.WithRawResponse = LicenseServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val activateHandler: Handler<LicenseActivateResponse> = jsonHandler<LicenseActivateResponse>(clientOptions.jsonMapper)
+
+        override fun activate(params: LicenseActivateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseActivateResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("licenses", "activate")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
             )
-
-        private val activateHandler: Handler<LicenseActivateResponse> =
-            jsonHandler<LicenseActivateResponse>(clientOptions.jsonMapper)
-
-        override fun activate(
-            params: LicenseActivateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseActivateResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("licenses", "activate")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { activateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  activateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
         private val deactivateHandler: Handler<Void?> = emptyHandler()
 
-        override fun deactivate(
-            params: LicenseDeactivateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("licenses", "deactivate")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { deactivateHandler.handle(it) }
-                    }
-                }
+        override fun deactivate(params: LicenseDeactivateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponse> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("licenses", "deactivate")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  deactivateHandler.handle(it)
+              }
+          } }
         }
 
-        private val validateHandler: Handler<LicenseValidateResponse> =
-            jsonHandler<LicenseValidateResponse>(clientOptions.jsonMapper)
+        private val validateHandler: Handler<LicenseValidateResponse> = jsonHandler<LicenseValidateResponse>(clientOptions.jsonMapper)
 
-        override fun validate(
-            params: LicenseValidateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseValidateResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("licenses", "validate")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { validateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun validate(params: LicenseValidateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseValidateResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("licenses", "validate")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  validateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }

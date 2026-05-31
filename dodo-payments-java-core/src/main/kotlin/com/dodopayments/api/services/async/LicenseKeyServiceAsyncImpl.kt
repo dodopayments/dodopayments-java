@@ -18,208 +18,180 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyCreateParams
+import com.dodopayments.api.models.licensekeys.LicenseKeyListPage
 import com.dodopayments.api.models.licensekeys.LicenseKeyListPageAsync
 import com.dodopayments.api.models.licensekeys.LicenseKeyListPageResponse
 import com.dodopayments.api.models.licensekeys.LicenseKeyListParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyRetrieveParams
 import com.dodopayments.api.models.licensekeys.LicenseKeyUpdateParams
+import com.dodopayments.api.services.async.LicenseKeyServiceAsync
+import com.dodopayments.api.services.async.LicenseKeyServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class LicenseKeyServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    LicenseKeyServiceAsync {
+class LicenseKeyServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: LicenseKeyServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : LicenseKeyServiceAsync {
+
+    private val withRawResponse: LicenseKeyServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): LicenseKeyServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync =
-        LicenseKeyServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync = LicenseKeyServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: LicenseKeyCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseKey> =
+    override fun create(params: LicenseKeyCreateParams, requestOptions: RequestOptions): CompletableFuture<LicenseKey> =
         // post /license_keys
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     @Deprecated("deprecated")
-    override fun retrieve(
-        params: LicenseKeyRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseKey> =
+    override fun retrieve(params: LicenseKeyRetrieveParams, requestOptions: RequestOptions): CompletableFuture<LicenseKey> =
         // get /license_keys/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
     @Deprecated("deprecated")
-    override fun update(
-        params: LicenseKeyUpdateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseKey> =
+    override fun update(params: LicenseKeyUpdateParams, requestOptions: RequestOptions): CompletableFuture<LicenseKey> =
         // patch /license_keys/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     @Deprecated("deprecated")
-    override fun list(
-        params: LicenseKeyListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<LicenseKeyListPageAsync> =
+    override fun list(params: LicenseKeyListParams, requestOptions: RequestOptions): CompletableFuture<LicenseKeyListPageAsync> =
         // get /license_keys
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        LicenseKeyServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : LicenseKeyServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LicenseKeyServiceAsync.WithRawResponse =
-            LicenseKeyServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyServiceAsync.WithRawResponse = LicenseKeyServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<LicenseKey> = jsonHandler<LicenseKey>(clientOptions.jsonMapper)
+
+        override fun create(params: LicenseKeyCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKey>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_keys")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<LicenseKey> =
-            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: LicenseKeyCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_keys")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val retrieveHandler: Handler<LicenseKey> =
-            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<LicenseKey> = jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
         @Deprecated("deprecated")
-        override fun retrieve(
-            params: LicenseKeyRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_keys", params._pathParam(0))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun retrieve(params: LicenseKeyRetrieveParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKey>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_keys", params._pathParam(0))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val updateHandler: Handler<LicenseKey> =
-            jsonHandler<LicenseKey>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<LicenseKey> = jsonHandler<LicenseKey>(clientOptions.jsonMapper)
 
         @Deprecated("deprecated")
-        override fun update(
-            params: LicenseKeyUpdateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKey>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_keys", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { updateHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun update(params: LicenseKeyUpdateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKey>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_keys", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val listHandler: Handler<LicenseKeyListPageResponse> =
-            jsonHandler<LicenseKeyListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<LicenseKeyListPageResponse> = jsonHandler<LicenseKeyListPageResponse>(clientOptions.jsonMapper)
 
         @Deprecated("deprecated")
-        override fun list(
-            params: LicenseKeyListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_keys")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                            .let {
-                                LicenseKeyListPageAsync.builder()
-                                    .service(LicenseKeyServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
-                    }
-                }
+        override fun list(params: LicenseKeyListParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<LicenseKeyListPageAsync>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_keys")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  LicenseKeyListPageAsync.builder()
+                      .service(LicenseKeyServiceAsyncImpl(clientOptions))
+                      .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          } }
         }
     }
 }

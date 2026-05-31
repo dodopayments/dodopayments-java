@@ -5,17 +5,21 @@ package com.dodopayments.api.models.customers
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.customers.Customer
+import com.dodopayments.api.models.customers.CustomerListPageResponse
+import com.dodopayments.api.models.customers.CustomerListParams
 import com.dodopayments.api.services.blocking.CustomerService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see CustomerService.list */
-class CustomerListPage
-private constructor(
+class CustomerListPage private constructor(
     private val service: CustomerService,
     private val params: CustomerListParams,
     private val response: CustomerListPageResponse,
+
 ) : Page<Customer> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see CustomerListPageResponse.items
      */
-    override fun items(): List<Customer> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Customer> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): CustomerListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): CustomerListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CustomerListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: CustomerListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(customerListPage: CustomerListPage) = apply {
-            service = customerListPage.service
-            params = customerListPage.params
-            response = customerListPage.response
-        }
+        internal fun from(customerListPage: CustomerListPage) =
+            apply {
+                service = customerListPage.service
+                params = customerListPage.params
+                response = customerListPage.response
+            }
 
-        fun service(service: CustomerService) = apply { this.service = service }
+        fun service(service: CustomerService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: CustomerListParams) = apply { this.params = params }
+        fun params(params: CustomerListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: CustomerListPageResponse) = apply { this.response = response }
+        fun response(response: CustomerListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [CustomerListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): CustomerListPage =
             CustomerListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is CustomerListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "CustomerListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "CustomerListPage{service=$service, params=$params, response=$response}"
 }

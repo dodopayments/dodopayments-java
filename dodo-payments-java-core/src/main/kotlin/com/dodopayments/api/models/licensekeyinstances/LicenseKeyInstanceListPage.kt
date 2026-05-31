@@ -5,17 +5,21 @@ package com.dodopayments.api.models.licensekeyinstances
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstance
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPageResponse
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.services.blocking.LicenseKeyInstanceService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see LicenseKeyInstanceService.list */
-class LicenseKeyInstanceListPage
-private constructor(
+class LicenseKeyInstanceListPage private constructor(
     private val service: LicenseKeyInstanceService,
     private val params: LicenseKeyInstanceListParams,
     private val response: LicenseKeyInstanceListPageResponse,
+
 ) : Page<LicenseKeyInstance> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see LicenseKeyInstanceListPageResponse.items
      */
-    override fun items(): List<LicenseKeyInstance> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<LicenseKeyInstance> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): LicenseKeyInstanceListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): LicenseKeyInstanceListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [LicenseKeyInstanceListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [LicenseKeyInstanceListPage]. */
@@ -68,21 +75,29 @@ private constructor(
         private var response: LicenseKeyInstanceListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(licenseKeyInstanceListPage: LicenseKeyInstanceListPage) = apply {
-            service = licenseKeyInstanceListPage.service
-            params = licenseKeyInstanceListPage.params
-            response = licenseKeyInstanceListPage.response
-        }
+        internal fun from(licenseKeyInstanceListPage: LicenseKeyInstanceListPage) =
+            apply {
+                service = licenseKeyInstanceListPage.service
+                params = licenseKeyInstanceListPage.params
+                response = licenseKeyInstanceListPage.response
+            }
 
-        fun service(service: LicenseKeyInstanceService) = apply { this.service = service }
+        fun service(service: LicenseKeyInstanceService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: LicenseKeyInstanceListParams) = apply { this.params = params }
+        fun params(params: LicenseKeyInstanceListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: LicenseKeyInstanceListPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: LicenseKeyInstanceListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [LicenseKeyInstanceListPage].
@@ -90,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -100,25 +116,27 @@ private constructor(
          */
         fun build(): LicenseKeyInstanceListPage =
             LicenseKeyInstanceListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is LicenseKeyInstanceListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is LicenseKeyInstanceListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "LicenseKeyInstanceListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "LicenseKeyInstanceListPage{service=$service, params=$params, response=$response}"
 }

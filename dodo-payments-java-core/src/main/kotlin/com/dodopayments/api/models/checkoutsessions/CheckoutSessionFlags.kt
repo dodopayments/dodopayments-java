@@ -15,9 +15,7 @@ import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 
-class CheckoutSessionFlags
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CheckoutSessionFlags @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val allowCurrencySelection: JsonField<Boolean>,
     private val allowCustomerEditingBusinessName: JsonField<Boolean>,
     private val allowCustomerEditingCity: JsonField<Boolean>,
@@ -35,76 +33,45 @@ private constructor(
     private val redirectImmediately: JsonField<Boolean>,
     private val requirePhoneNumber: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("allow_currency_selection")
-        @ExcludeMissing
-        allowCurrencySelection: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_business_name")
-        @ExcludeMissing
-        allowCustomerEditingBusinessName: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_city")
-        @ExcludeMissing
-        allowCustomerEditingCity: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_country")
-        @ExcludeMissing
-        allowCustomerEditingCountry: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_email")
-        @ExcludeMissing
-        allowCustomerEditingEmail: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_name")
-        @ExcludeMissing
-        allowCustomerEditingName: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_state")
-        @ExcludeMissing
-        allowCustomerEditingState: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_street")
-        @ExcludeMissing
-        allowCustomerEditingStreet: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_tax_id")
-        @ExcludeMissing
-        allowCustomerEditingTaxId: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_customer_editing_zipcode")
-        @ExcludeMissing
-        allowCustomerEditingZipcode: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_discount_code")
-        @ExcludeMissing
-        allowDiscountCode: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_phone_number_collection")
-        @ExcludeMissing
-        allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("allow_tax_id")
-        @ExcludeMissing
-        allowTaxId: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("always_create_new_customer")
-        @ExcludeMissing
-        alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("redirect_immediately")
-        @ExcludeMissing
-        redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("require_phone_number")
-        @ExcludeMissing
-        requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_currency_selection") @ExcludeMissing allowCurrencySelection: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_business_name") @ExcludeMissing allowCustomerEditingBusinessName: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_city") @ExcludeMissing allowCustomerEditingCity: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_country") @ExcludeMissing allowCustomerEditingCountry: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_email") @ExcludeMissing allowCustomerEditingEmail: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_name") @ExcludeMissing allowCustomerEditingName: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_state") @ExcludeMissing allowCustomerEditingState: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_street") @ExcludeMissing allowCustomerEditingStreet: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_tax_id") @ExcludeMissing allowCustomerEditingTaxId: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_customer_editing_zipcode") @ExcludeMissing allowCustomerEditingZipcode: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_discount_code") @ExcludeMissing allowDiscountCode: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_phone_number_collection") @ExcludeMissing allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_tax_id") @ExcludeMissing allowTaxId: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("always_create_new_customer") @ExcludeMissing alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("redirect_immediately") @ExcludeMissing redirectImmediately: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("require_phone_number") @ExcludeMissing requirePhoneNumber: JsonField<Boolean> = JsonMissing.of()
     ) : this(
-        allowCurrencySelection,
-        allowCustomerEditingBusinessName,
-        allowCustomerEditingCity,
-        allowCustomerEditingCountry,
-        allowCustomerEditingEmail,
-        allowCustomerEditingName,
-        allowCustomerEditingState,
-        allowCustomerEditingStreet,
-        allowCustomerEditingTaxId,
-        allowCustomerEditingZipcode,
-        allowDiscountCode,
-        allowPhoneNumberCollection,
-        allowTaxId,
-        alwaysCreateNewCustomer,
-        redirectImmediately,
-        requirePhoneNumber,
-        mutableMapOf(),
+      allowCurrencySelection,
+      allowCustomerEditingBusinessName,
+      allowCustomerEditingCity,
+      allowCustomerEditingCountry,
+      allowCustomerEditingEmail,
+      allowCustomerEditingName,
+      allowCustomerEditingState,
+      allowCustomerEditingStreet,
+      allowCustomerEditingTaxId,
+      allowCustomerEditingZipcode,
+      allowDiscountCode,
+      allowPhoneNumberCollection,
+      allowTaxId,
+      alwaysCreateNewCustomer,
+      redirectImmediately,
+      requirePhoneNumber,
+      mutableMapOf(),
     )
 
     /**
@@ -112,154 +79,107 @@ private constructor(
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun allowCurrencySelection(): Optional<Boolean> =
-        allowCurrencySelection.getOptional("allow_currency_selection")
+    fun allowCurrencySelection(): Optional<Boolean> = allowCurrencySelection.getOptional("allow_currency_selection")
 
     /**
-     * If true, the customer can supply or edit the business name associated with the tax id during
-     * checkout. Works independently of `allow_customer_editing_tax_id` — either flag (or
-     * `allow_tax_id`) is sufficient to let the customer override the session's business name.
+     * If true, the customer can supply or edit the business name associated
+     * with the tax id during checkout. Works independently of
+     * `allow_customer_editing_tax_id` — either flag (or `allow_tax_id`) is
+     * sufficient to let the customer override the session's business name.
      * Typically set together with `allow_customer_editing_tax_id`.
      *
      * Default is false
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun allowCustomerEditingBusinessName(): Optional<Boolean> =
-        allowCustomerEditingBusinessName.getOptional("allow_customer_editing_business_name")
+    fun allowCustomerEditingBusinessName(): Optional<Boolean> = allowCustomerEditingBusinessName.getOptional("allow_customer_editing_business_name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingCity(): Optional<Boolean> =
-        allowCustomerEditingCity.getOptional("allow_customer_editing_city")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingCity(): Optional<Boolean> = allowCustomerEditingCity.getOptional("allow_customer_editing_city")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingCountry(): Optional<Boolean> =
-        allowCustomerEditingCountry.getOptional("allow_customer_editing_country")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingCountry(): Optional<Boolean> = allowCustomerEditingCountry.getOptional("allow_customer_editing_country")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingEmail(): Optional<Boolean> =
-        allowCustomerEditingEmail.getOptional("allow_customer_editing_email")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingEmail(): Optional<Boolean> = allowCustomerEditingEmail.getOptional("allow_customer_editing_email")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingName(): Optional<Boolean> =
-        allowCustomerEditingName.getOptional("allow_customer_editing_name")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingName(): Optional<Boolean> = allowCustomerEditingName.getOptional("allow_customer_editing_name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingState(): Optional<Boolean> =
-        allowCustomerEditingState.getOptional("allow_customer_editing_state")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingState(): Optional<Boolean> = allowCustomerEditingState.getOptional("allow_customer_editing_state")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingStreet(): Optional<Boolean> =
-        allowCustomerEditingStreet.getOptional("allow_customer_editing_street")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingStreet(): Optional<Boolean> = allowCustomerEditingStreet.getOptional("allow_customer_editing_street")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingTaxId(): Optional<Boolean> =
-        allowCustomerEditingTaxId.getOptional("allow_customer_editing_tax_id")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingTaxId(): Optional<Boolean> = allowCustomerEditingTaxId.getOptional("allow_customer_editing_tax_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun allowCustomerEditingZipcode(): Optional<Boolean> =
-        allowCustomerEditingZipcode.getOptional("allow_customer_editing_zipcode")
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+    fun allowCustomerEditingZipcode(): Optional<Boolean> = allowCustomerEditingZipcode.getOptional("allow_customer_editing_zipcode")
 
     /**
      * If the customer is allowed to apply discount code, set it to true.
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun allowDiscountCode(): Optional<Boolean> =
-        allowDiscountCode.getOptional("allow_discount_code")
+    fun allowDiscountCode(): Optional<Boolean> = allowDiscountCode.getOptional("allow_discount_code")
 
     /**
      * If phone number is collected from customer, set it to rue
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun allowPhoneNumberCollection(): Optional<Boolean> =
-        allowPhoneNumberCollection.getOptional("allow_phone_number_collection")
+    fun allowPhoneNumberCollection(): Optional<Boolean> = allowPhoneNumberCollection.getOptional("allow_phone_number_collection")
 
     /**
      * If the customer is allowed to add tax id, set it to true
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun allowTaxId(): Optional<Boolean> = allowTaxId.getOptional("allow_tax_id")
 
     /**
-     * Set to true if a new customer object should be created. By default email is used to find an
-     * existing customer to attach the session to
+     * Set to true if a new customer object should be created.
+     * By default email is used to find an existing customer to attach the session to
      *
      * Default is false
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun alwaysCreateNewCustomer(): Optional<Boolean> =
-        alwaysCreateNewCustomer.getOptional("always_create_new_customer")
+    fun alwaysCreateNewCustomer(): Optional<Boolean> = alwaysCreateNewCustomer.getOptional("always_create_new_customer")
 
     /**
      * If true, redirects the customer immediately after payment completion
      *
      * Default is false
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun redirectImmediately(): Optional<Boolean> =
-        redirectImmediately.getOptional("redirect_immediately")
+    fun redirectImmediately(): Optional<Boolean> = redirectImmediately.getOptional("redirect_immediately")
 
     /**
-     * If true, the customer must provide a phone number to complete checkout. Requires
-     * `allow_phone_number_collection` to also be true.
+     * If true, the customer must provide a phone number to complete checkout.
+     * Requires `allow_phone_number_collection` to also be true.
      *
      * Default is false
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun requirePhoneNumber(): Optional<Boolean> =
-        requirePhoneNumber.getOptional("require_phone_number")
+    fun requirePhoneNumber(): Optional<Boolean> = requirePhoneNumber.getOptional("require_phone_number")
 
     /**
      * Returns the raw JSON value of [allowCurrencySelection].
      *
-     * Unlike [allowCurrencySelection], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCurrencySelection], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_currency_selection")
     @ExcludeMissing
@@ -268,8 +188,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingBusinessName].
      *
-     * Unlike [allowCustomerEditingBusinessName], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingBusinessName], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_business_name")
     @ExcludeMissing
@@ -278,8 +197,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingCity].
      *
-     * Unlike [allowCustomerEditingCity], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingCity], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_city")
     @ExcludeMissing
@@ -288,8 +206,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingCountry].
      *
-     * Unlike [allowCustomerEditingCountry], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingCountry], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_country")
     @ExcludeMissing
@@ -298,8 +215,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingEmail].
      *
-     * Unlike [allowCustomerEditingEmail], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingEmail], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_email")
     @ExcludeMissing
@@ -308,8 +224,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingName].
      *
-     * Unlike [allowCustomerEditingName], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingName], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_name")
     @ExcludeMissing
@@ -318,8 +233,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingState].
      *
-     * Unlike [allowCustomerEditingState], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingState], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_state")
     @ExcludeMissing
@@ -328,8 +242,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingStreet].
      *
-     * Unlike [allowCustomerEditingStreet], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingStreet], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_street")
     @ExcludeMissing
@@ -338,8 +251,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingTaxId].
      *
-     * Unlike [allowCustomerEditingTaxId], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingTaxId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_tax_id")
     @ExcludeMissing
@@ -348,8 +260,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowCustomerEditingZipcode].
      *
-     * Unlike [allowCustomerEditingZipcode], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowCustomerEditingZipcode], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_customer_editing_zipcode")
     @ExcludeMissing
@@ -358,8 +269,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowDiscountCode].
      *
-     * Unlike [allowDiscountCode], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [allowDiscountCode], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_discount_code")
     @ExcludeMissing
@@ -368,8 +278,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [allowPhoneNumberCollection].
      *
-     * Unlike [allowPhoneNumberCollection], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [allowPhoneNumberCollection], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("allow_phone_number_collection")
     @ExcludeMissing
@@ -380,13 +289,14 @@ private constructor(
      *
      * Unlike [allowTaxId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("allow_tax_id") @ExcludeMissing fun _allowTaxId(): JsonField<Boolean> = allowTaxId
+    @JsonProperty("allow_tax_id")
+    @ExcludeMissing
+    fun _allowTaxId(): JsonField<Boolean> = allowTaxId
 
     /**
      * Returns the raw JSON value of [alwaysCreateNewCustomer].
      *
-     * Unlike [alwaysCreateNewCustomer], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [alwaysCreateNewCustomer], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("always_create_new_customer")
     @ExcludeMissing
@@ -395,8 +305,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [redirectImmediately].
      *
-     * Unlike [redirectImmediately], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [redirectImmediately], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("redirect_immediately")
     @ExcludeMissing
@@ -405,8 +314,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [requirePhoneNumber].
      *
-     * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [requirePhoneNumber], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("require_phone_number")
     @ExcludeMissing
@@ -414,20 +322,20 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [CheckoutSessionFlags]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CheckoutSessionFlags]. */
@@ -452,217 +360,206 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(checkoutSessionFlags: CheckoutSessionFlags) = apply {
-            allowCurrencySelection = checkoutSessionFlags.allowCurrencySelection
-            allowCustomerEditingBusinessName = checkoutSessionFlags.allowCustomerEditingBusinessName
-            allowCustomerEditingCity = checkoutSessionFlags.allowCustomerEditingCity
-            allowCustomerEditingCountry = checkoutSessionFlags.allowCustomerEditingCountry
-            allowCustomerEditingEmail = checkoutSessionFlags.allowCustomerEditingEmail
-            allowCustomerEditingName = checkoutSessionFlags.allowCustomerEditingName
-            allowCustomerEditingState = checkoutSessionFlags.allowCustomerEditingState
-            allowCustomerEditingStreet = checkoutSessionFlags.allowCustomerEditingStreet
-            allowCustomerEditingTaxId = checkoutSessionFlags.allowCustomerEditingTaxId
-            allowCustomerEditingZipcode = checkoutSessionFlags.allowCustomerEditingZipcode
-            allowDiscountCode = checkoutSessionFlags.allowDiscountCode
-            allowPhoneNumberCollection = checkoutSessionFlags.allowPhoneNumberCollection
-            allowTaxId = checkoutSessionFlags.allowTaxId
-            alwaysCreateNewCustomer = checkoutSessionFlags.alwaysCreateNewCustomer
-            redirectImmediately = checkoutSessionFlags.redirectImmediately
-            requirePhoneNumber = checkoutSessionFlags.requirePhoneNumber
-            additionalProperties = checkoutSessionFlags.additionalProperties.toMutableMap()
-        }
+        internal fun from(checkoutSessionFlags: CheckoutSessionFlags) =
+            apply {
+                allowCurrencySelection = checkoutSessionFlags.allowCurrencySelection
+                allowCustomerEditingBusinessName = checkoutSessionFlags.allowCustomerEditingBusinessName
+                allowCustomerEditingCity = checkoutSessionFlags.allowCustomerEditingCity
+                allowCustomerEditingCountry = checkoutSessionFlags.allowCustomerEditingCountry
+                allowCustomerEditingEmail = checkoutSessionFlags.allowCustomerEditingEmail
+                allowCustomerEditingName = checkoutSessionFlags.allowCustomerEditingName
+                allowCustomerEditingState = checkoutSessionFlags.allowCustomerEditingState
+                allowCustomerEditingStreet = checkoutSessionFlags.allowCustomerEditingStreet
+                allowCustomerEditingTaxId = checkoutSessionFlags.allowCustomerEditingTaxId
+                allowCustomerEditingZipcode = checkoutSessionFlags.allowCustomerEditingZipcode
+                allowDiscountCode = checkoutSessionFlags.allowDiscountCode
+                allowPhoneNumberCollection = checkoutSessionFlags.allowPhoneNumberCollection
+                allowTaxId = checkoutSessionFlags.allowTaxId
+                alwaysCreateNewCustomer = checkoutSessionFlags.alwaysCreateNewCustomer
+                redirectImmediately = checkoutSessionFlags.redirectImmediately
+                requirePhoneNumber = checkoutSessionFlags.requirePhoneNumber
+                additionalProperties = checkoutSessionFlags.additionalProperties.toMutableMap()
+            }
 
         /**
          * if customer is allowed to change currency, set it to true
          *
          * Default is true
          */
-        fun allowCurrencySelection(allowCurrencySelection: Boolean) =
-            allowCurrencySelection(JsonField.of(allowCurrencySelection))
+        fun allowCurrencySelection(allowCurrencySelection: Boolean) = allowCurrencySelection(JsonField.of(allowCurrencySelection))
 
         /**
          * Sets [Builder.allowCurrencySelection] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCurrencySelection] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCurrencySelection] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCurrencySelection(allowCurrencySelection: JsonField<Boolean>) = apply {
-            this.allowCurrencySelection = allowCurrencySelection
-        }
+        fun allowCurrencySelection(allowCurrencySelection: JsonField<Boolean>) =
+            apply {
+                this.allowCurrencySelection = allowCurrencySelection
+            }
 
         /**
-         * If true, the customer can supply or edit the business name associated with the tax id
-         * during checkout. Works independently of `allow_customer_editing_tax_id` — either flag (or
-         * `allow_tax_id`) is sufficient to let the customer override the session's business name.
+         * If true, the customer can supply or edit the business name associated
+         * with the tax id during checkout. Works independently of
+         * `allow_customer_editing_tax_id` — either flag (or `allow_tax_id`) is
+         * sufficient to let the customer override the session's business name.
          * Typically set together with `allow_customer_editing_tax_id`.
          *
          * Default is false
          */
-        fun allowCustomerEditingBusinessName(allowCustomerEditingBusinessName: Boolean) =
-            allowCustomerEditingBusinessName(JsonField.of(allowCustomerEditingBusinessName))
+        fun allowCustomerEditingBusinessName(allowCustomerEditingBusinessName: Boolean) = allowCustomerEditingBusinessName(JsonField.of(allowCustomerEditingBusinessName))
 
         /**
          * Sets [Builder.allowCustomerEditingBusinessName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingBusinessName] with a well-typed
-         * [Boolean] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.allowCustomerEditingBusinessName] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun allowCustomerEditingBusinessName(allowCustomerEditingBusinessName: JsonField<Boolean>) =
             apply {
                 this.allowCustomerEditingBusinessName = allowCustomerEditingBusinessName
             }
 
-        fun allowCustomerEditingCity(allowCustomerEditingCity: Boolean) =
-            allowCustomerEditingCity(JsonField.of(allowCustomerEditingCity))
+        fun allowCustomerEditingCity(allowCustomerEditingCity: Boolean) = allowCustomerEditingCity(JsonField.of(allowCustomerEditingCity))
 
         /**
          * Sets [Builder.allowCustomerEditingCity] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingCity] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingCity] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingCity(allowCustomerEditingCity: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingCity = allowCustomerEditingCity
-        }
+        fun allowCustomerEditingCity(allowCustomerEditingCity: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingCity = allowCustomerEditingCity
+            }
 
-        fun allowCustomerEditingCountry(allowCustomerEditingCountry: Boolean) =
-            allowCustomerEditingCountry(JsonField.of(allowCustomerEditingCountry))
+        fun allowCustomerEditingCountry(allowCustomerEditingCountry: Boolean) = allowCustomerEditingCountry(JsonField.of(allowCustomerEditingCountry))
 
         /**
          * Sets [Builder.allowCustomerEditingCountry] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingCountry] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingCountry] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingCountry(allowCustomerEditingCountry: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingCountry = allowCustomerEditingCountry
-        }
+        fun allowCustomerEditingCountry(allowCustomerEditingCountry: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingCountry = allowCustomerEditingCountry
+            }
 
-        fun allowCustomerEditingEmail(allowCustomerEditingEmail: Boolean) =
-            allowCustomerEditingEmail(JsonField.of(allowCustomerEditingEmail))
+        fun allowCustomerEditingEmail(allowCustomerEditingEmail: Boolean) = allowCustomerEditingEmail(JsonField.of(allowCustomerEditingEmail))
 
         /**
          * Sets [Builder.allowCustomerEditingEmail] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingEmail] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingEmail] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingEmail(allowCustomerEditingEmail: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingEmail = allowCustomerEditingEmail
-        }
+        fun allowCustomerEditingEmail(allowCustomerEditingEmail: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingEmail = allowCustomerEditingEmail
+            }
 
-        fun allowCustomerEditingName(allowCustomerEditingName: Boolean) =
-            allowCustomerEditingName(JsonField.of(allowCustomerEditingName))
+        fun allowCustomerEditingName(allowCustomerEditingName: Boolean) = allowCustomerEditingName(JsonField.of(allowCustomerEditingName))
 
         /**
          * Sets [Builder.allowCustomerEditingName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingName] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingName] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingName(allowCustomerEditingName: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingName = allowCustomerEditingName
-        }
+        fun allowCustomerEditingName(allowCustomerEditingName: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingName = allowCustomerEditingName
+            }
 
-        fun allowCustomerEditingState(allowCustomerEditingState: Boolean) =
-            allowCustomerEditingState(JsonField.of(allowCustomerEditingState))
+        fun allowCustomerEditingState(allowCustomerEditingState: Boolean) = allowCustomerEditingState(JsonField.of(allowCustomerEditingState))
 
         /**
          * Sets [Builder.allowCustomerEditingState] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingState] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingState] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingState(allowCustomerEditingState: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingState = allowCustomerEditingState
-        }
+        fun allowCustomerEditingState(allowCustomerEditingState: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingState = allowCustomerEditingState
+            }
 
-        fun allowCustomerEditingStreet(allowCustomerEditingStreet: Boolean) =
-            allowCustomerEditingStreet(JsonField.of(allowCustomerEditingStreet))
+        fun allowCustomerEditingStreet(allowCustomerEditingStreet: Boolean) = allowCustomerEditingStreet(JsonField.of(allowCustomerEditingStreet))
 
         /**
          * Sets [Builder.allowCustomerEditingStreet] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingStreet] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingStreet] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingStreet(allowCustomerEditingStreet: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingStreet = allowCustomerEditingStreet
-        }
+        fun allowCustomerEditingStreet(allowCustomerEditingStreet: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingStreet = allowCustomerEditingStreet
+            }
 
-        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: Boolean) =
-            allowCustomerEditingTaxId(JsonField.of(allowCustomerEditingTaxId))
+        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: Boolean) = allowCustomerEditingTaxId(JsonField.of(allowCustomerEditingTaxId))
 
         /**
          * Sets [Builder.allowCustomerEditingTaxId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingTaxId] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingTaxId] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingTaxId = allowCustomerEditingTaxId
-        }
+        fun allowCustomerEditingTaxId(allowCustomerEditingTaxId: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingTaxId = allowCustomerEditingTaxId
+            }
 
-        fun allowCustomerEditingZipcode(allowCustomerEditingZipcode: Boolean) =
-            allowCustomerEditingZipcode(JsonField.of(allowCustomerEditingZipcode))
+        fun allowCustomerEditingZipcode(allowCustomerEditingZipcode: Boolean) = allowCustomerEditingZipcode(JsonField.of(allowCustomerEditingZipcode))
 
         /**
          * Sets [Builder.allowCustomerEditingZipcode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowCustomerEditingZipcode] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowCustomerEditingZipcode] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowCustomerEditingZipcode(allowCustomerEditingZipcode: JsonField<Boolean>) = apply {
-            this.allowCustomerEditingZipcode = allowCustomerEditingZipcode
-        }
+        fun allowCustomerEditingZipcode(allowCustomerEditingZipcode: JsonField<Boolean>) =
+            apply {
+                this.allowCustomerEditingZipcode = allowCustomerEditingZipcode
+            }
 
         /**
          * If the customer is allowed to apply discount code, set it to true.
          *
          * Default is true
          */
-        fun allowDiscountCode(allowDiscountCode: Boolean) =
-            allowDiscountCode(JsonField.of(allowDiscountCode))
+        fun allowDiscountCode(allowDiscountCode: Boolean) = allowDiscountCode(JsonField.of(allowDiscountCode))
 
         /**
          * Sets [Builder.allowDiscountCode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowDiscountCode] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.allowDiscountCode] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun allowDiscountCode(allowDiscountCode: JsonField<Boolean>) = apply {
-            this.allowDiscountCode = allowDiscountCode
-        }
+        fun allowDiscountCode(allowDiscountCode: JsonField<Boolean>) =
+            apply {
+                this.allowDiscountCode = allowDiscountCode
+            }
 
         /**
          * If phone number is collected from customer, set it to rue
          *
          * Default is true
          */
-        fun allowPhoneNumberCollection(allowPhoneNumberCollection: Boolean) =
-            allowPhoneNumberCollection(JsonField.of(allowPhoneNumberCollection))
+        fun allowPhoneNumberCollection(allowPhoneNumberCollection: Boolean) = allowPhoneNumberCollection(JsonField.of(allowPhoneNumberCollection))
 
         /**
          * Sets [Builder.allowPhoneNumberCollection] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowPhoneNumberCollection] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.allowPhoneNumberCollection] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowPhoneNumberCollection(allowPhoneNumberCollection: JsonField<Boolean>) = apply {
-            this.allowPhoneNumberCollection = allowPhoneNumberCollection
-        }
+        fun allowPhoneNumberCollection(allowPhoneNumberCollection: JsonField<Boolean>) =
+            apply {
+                this.allowPhoneNumberCollection = allowPhoneNumberCollection
+            }
 
         /**
          * If the customer is allowed to add tax id, set it to true
@@ -674,89 +571,95 @@ private constructor(
         /**
          * Sets [Builder.allowTaxId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.allowTaxId] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.allowTaxId] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun allowTaxId(allowTaxId: JsonField<Boolean>) = apply { this.allowTaxId = allowTaxId }
+        fun allowTaxId(allowTaxId: JsonField<Boolean>) =
+            apply {
+                this.allowTaxId = allowTaxId
+            }
 
         /**
-         * Set to true if a new customer object should be created. By default email is used to find
-         * an existing customer to attach the session to
+         * Set to true if a new customer object should be created.
+         * By default email is used to find an existing customer to attach the session to
          *
          * Default is false
          */
-        fun alwaysCreateNewCustomer(alwaysCreateNewCustomer: Boolean) =
-            alwaysCreateNewCustomer(JsonField.of(alwaysCreateNewCustomer))
+        fun alwaysCreateNewCustomer(alwaysCreateNewCustomer: Boolean) = alwaysCreateNewCustomer(JsonField.of(alwaysCreateNewCustomer))
 
         /**
          * Sets [Builder.alwaysCreateNewCustomer] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.alwaysCreateNewCustomer] with a well-typed [Boolean]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.alwaysCreateNewCustomer] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun alwaysCreateNewCustomer(alwaysCreateNewCustomer: JsonField<Boolean>) = apply {
-            this.alwaysCreateNewCustomer = alwaysCreateNewCustomer
-        }
+        fun alwaysCreateNewCustomer(alwaysCreateNewCustomer: JsonField<Boolean>) =
+            apply {
+                this.alwaysCreateNewCustomer = alwaysCreateNewCustomer
+            }
 
         /**
          * If true, redirects the customer immediately after payment completion
          *
          * Default is false
          */
-        fun redirectImmediately(redirectImmediately: Boolean) =
-            redirectImmediately(JsonField.of(redirectImmediately))
+        fun redirectImmediately(redirectImmediately: Boolean) = redirectImmediately(JsonField.of(redirectImmediately))
 
         /**
          * Sets [Builder.redirectImmediately] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.redirectImmediately] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.redirectImmediately] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun redirectImmediately(redirectImmediately: JsonField<Boolean>) = apply {
-            this.redirectImmediately = redirectImmediately
-        }
+        fun redirectImmediately(redirectImmediately: JsonField<Boolean>) =
+            apply {
+                this.redirectImmediately = redirectImmediately
+            }
 
         /**
-         * If true, the customer must provide a phone number to complete checkout. Requires
-         * `allow_phone_number_collection` to also be true.
+         * If true, the customer must provide a phone number to complete checkout.
+         * Requires `allow_phone_number_collection` to also be true.
          *
          * Default is false
          */
-        fun requirePhoneNumber(requirePhoneNumber: Boolean) =
-            requirePhoneNumber(JsonField.of(requirePhoneNumber))
+        fun requirePhoneNumber(requirePhoneNumber: Boolean) = requirePhoneNumber(JsonField.of(requirePhoneNumber))
 
         /**
          * Sets [Builder.requirePhoneNumber] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.requirePhoneNumber] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) = apply {
-            this.requirePhoneNumber = requirePhoneNumber
-        }
+        fun requirePhoneNumber(requirePhoneNumber: JsonField<Boolean>) =
+            apply {
+                this.requirePhoneNumber = requirePhoneNumber
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CheckoutSessionFlags].
@@ -765,23 +668,23 @@ private constructor(
          */
         fun build(): CheckoutSessionFlags =
             CheckoutSessionFlags(
-                allowCurrencySelection,
-                allowCustomerEditingBusinessName,
-                allowCustomerEditingCity,
-                allowCustomerEditingCountry,
-                allowCustomerEditingEmail,
-                allowCustomerEditingName,
-                allowCustomerEditingState,
-                allowCustomerEditingStreet,
-                allowCustomerEditingTaxId,
-                allowCustomerEditingZipcode,
-                allowDiscountCode,
-                allowPhoneNumberCollection,
-                allowTaxId,
-                alwaysCreateNewCustomer,
-                redirectImmediately,
-                requirePhoneNumber,
-                additionalProperties.toMutableMap(),
+              allowCurrencySelection,
+              allowCustomerEditingBusinessName,
+              allowCustomerEditingCity,
+              allowCustomerEditingCountry,
+              allowCustomerEditingEmail,
+              allowCustomerEditingName,
+              allowCustomerEditingState,
+              allowCustomerEditingStreet,
+              allowCustomerEditingTaxId,
+              allowCustomerEditingZipcode,
+              allowDiscountCode,
+              allowPhoneNumberCollection,
+              allowTaxId,
+              alwaysCreateNewCustomer,
+              redirectImmediately,
+              requirePhoneNumber,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -795,29 +698,30 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CheckoutSessionFlags = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CheckoutSessionFlags =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        allowCurrencySelection()
-        allowCustomerEditingBusinessName()
-        allowCustomerEditingCity()
-        allowCustomerEditingCountry()
-        allowCustomerEditingEmail()
-        allowCustomerEditingName()
-        allowCustomerEditingState()
-        allowCustomerEditingStreet()
-        allowCustomerEditingTaxId()
-        allowCustomerEditingZipcode()
-        allowDiscountCode()
-        allowPhoneNumberCollection()
-        allowTaxId()
-        alwaysCreateNewCustomer()
-        redirectImmediately()
-        requirePhoneNumber()
-        validated = true
-    }
+            allowCurrencySelection()
+            allowCustomerEditingBusinessName()
+            allowCustomerEditingCity()
+            allowCustomerEditingCountry()
+            allowCustomerEditingEmail()
+            allowCustomerEditingName()
+            allowCustomerEditingState()
+            allowCustomerEditingStreet()
+            allowCustomerEditingTaxId()
+            allowCustomerEditingZipcode()
+            allowDiscountCode()
+            allowPhoneNumberCollection()
+            allowTaxId()
+            alwaysCreateNewCustomer()
+            redirectImmediately()
+            requirePhoneNumber()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -833,73 +737,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (allowCurrencySelection.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingBusinessName.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingCity.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingCountry.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingEmail.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingName.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingState.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingStreet.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingTaxId.asKnown().isPresent) 1 else 0) +
-            (if (allowCustomerEditingZipcode.asKnown().isPresent) 1 else 0) +
-            (if (allowDiscountCode.asKnown().isPresent) 1 else 0) +
-            (if (allowPhoneNumberCollection.asKnown().isPresent) 1 else 0) +
-            (if (allowTaxId.asKnown().isPresent) 1 else 0) +
-            (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) +
-            (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
-            (if (requirePhoneNumber.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (allowCurrencySelection.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingBusinessName.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingCity.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingCountry.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingEmail.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingName.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingState.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingStreet.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingTaxId.asKnown().isPresent) 1 else 0) + (if (allowCustomerEditingZipcode.asKnown().isPresent) 1 else 0) + (if (allowDiscountCode.asKnown().isPresent) 1 else 0) + (if (allowPhoneNumberCollection.asKnown().isPresent) 1 else 0) + (if (allowTaxId.asKnown().isPresent) 1 else 0) + (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) + (if (redirectImmediately.asKnown().isPresent) 1 else 0) + (if (requirePhoneNumber.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CheckoutSessionFlags &&
-            allowCurrencySelection == other.allowCurrencySelection &&
-            allowCustomerEditingBusinessName == other.allowCustomerEditingBusinessName &&
-            allowCustomerEditingCity == other.allowCustomerEditingCity &&
-            allowCustomerEditingCountry == other.allowCustomerEditingCountry &&
-            allowCustomerEditingEmail == other.allowCustomerEditingEmail &&
-            allowCustomerEditingName == other.allowCustomerEditingName &&
-            allowCustomerEditingState == other.allowCustomerEditingState &&
-            allowCustomerEditingStreet == other.allowCustomerEditingStreet &&
-            allowCustomerEditingTaxId == other.allowCustomerEditingTaxId &&
-            allowCustomerEditingZipcode == other.allowCustomerEditingZipcode &&
-            allowDiscountCode == other.allowDiscountCode &&
-            allowPhoneNumberCollection == other.allowPhoneNumberCollection &&
-            allowTaxId == other.allowTaxId &&
-            alwaysCreateNewCustomer == other.alwaysCreateNewCustomer &&
-            redirectImmediately == other.redirectImmediately &&
-            requirePhoneNumber == other.requirePhoneNumber &&
-            additionalProperties == other.additionalProperties
+      return other is CheckoutSessionFlags && allowCurrencySelection == other.allowCurrencySelection && allowCustomerEditingBusinessName == other.allowCustomerEditingBusinessName && allowCustomerEditingCity == other.allowCustomerEditingCity && allowCustomerEditingCountry == other.allowCustomerEditingCountry && allowCustomerEditingEmail == other.allowCustomerEditingEmail && allowCustomerEditingName == other.allowCustomerEditingName && allowCustomerEditingState == other.allowCustomerEditingState && allowCustomerEditingStreet == other.allowCustomerEditingStreet && allowCustomerEditingTaxId == other.allowCustomerEditingTaxId && allowCustomerEditingZipcode == other.allowCustomerEditingZipcode && allowDiscountCode == other.allowDiscountCode && allowPhoneNumberCollection == other.allowPhoneNumberCollection && allowTaxId == other.allowTaxId && alwaysCreateNewCustomer == other.alwaysCreateNewCustomer && redirectImmediately == other.redirectImmediately && requirePhoneNumber == other.requirePhoneNumber && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            allowCurrencySelection,
-            allowCustomerEditingBusinessName,
-            allowCustomerEditingCity,
-            allowCustomerEditingCountry,
-            allowCustomerEditingEmail,
-            allowCustomerEditingName,
-            allowCustomerEditingState,
-            allowCustomerEditingStreet,
-            allowCustomerEditingTaxId,
-            allowCustomerEditingZipcode,
-            allowDiscountCode,
-            allowPhoneNumberCollection,
-            allowTaxId,
-            alwaysCreateNewCustomer,
-            redirectImmediately,
-            requirePhoneNumber,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(allowCurrencySelection, allowCustomerEditingBusinessName, allowCustomerEditingCity, allowCustomerEditingCountry, allowCustomerEditingEmail, allowCustomerEditingName, allowCustomerEditingState, allowCustomerEditingStreet, allowCustomerEditingTaxId, allowCustomerEditingZipcode, allowDiscountCode, allowPhoneNumberCollection, allowTaxId, alwaysCreateNewCustomer, redirectImmediately, requirePhoneNumber, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
+    override fun toString() = "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
 }

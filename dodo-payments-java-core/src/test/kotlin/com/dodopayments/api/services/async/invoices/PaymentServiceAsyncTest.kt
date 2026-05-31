@@ -4,6 +4,9 @@ package com.dodopayments.api.services.async.invoices
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.invoices.payments.PaymentRetrievePayoutParams
+import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.ok
@@ -22,49 +25,46 @@ internal class PaymentServiceAsyncTest {
 
     @Test
     fun retrieve(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.invoices().payments()
-        stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(wmRuntimeInfo.httpBaseUrl)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.invoices().payments()
+      stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val paymentFuture = paymentServiceAsync.retrieve("payment_id")
+      val paymentFuture = paymentServiceAsync.retrieve("payment_id")
 
-        val payment = paymentFuture.get()
-        assertThat(payment.body()).hasContent("abc")
+      val payment = paymentFuture.get()
+      assertThat(payment.body()).hasContent("abc")
     }
 
     @Test
     fun retrievePayout(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.invoices().payments()
-        stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(wmRuntimeInfo.httpBaseUrl)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.invoices().payments()
+      stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val responseFuture = paymentServiceAsync.retrievePayout("payout_id")
+      val responseFuture = paymentServiceAsync.retrievePayout("payout_id")
 
-        val response = responseFuture.get()
-        assertThat(response.body()).hasContent("abc")
+      val response = responseFuture.get()
+      assertThat(response.body()).hasContent("abc")
     }
 
     @Test
     fun retrieveRefund(wmRuntimeInfo: WireMockRuntimeInfo) {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentServiceAsync = client.invoices().payments()
-        stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(wmRuntimeInfo.httpBaseUrl)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentServiceAsync = client.invoices().payments()
+      stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val responseFuture = paymentServiceAsync.retrieveRefund("refund_id")
+      val responseFuture = paymentServiceAsync.retrieveRefund("refund_id")
 
-        val response = responseFuture.get()
-        assertThat(response.body()).hasContent("abc")
+      val response = responseFuture.get()
+      assertThat(response.body()).hasContent("abc")
     }
 }

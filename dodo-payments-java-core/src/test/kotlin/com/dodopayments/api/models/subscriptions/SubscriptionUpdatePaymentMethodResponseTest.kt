@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,39 +13,31 @@ internal class SubscriptionUpdatePaymentMethodResponseTest {
 
     @Test
     fun create() {
-        val subscriptionUpdatePaymentMethodResponse =
-            SubscriptionUpdatePaymentMethodResponse.builder()
-                .clientSecret("client_secret")
-                .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .paymentId("payment_id")
-                .paymentLink("payment_link")
-                .build()
+      val subscriptionUpdatePaymentMethodResponse = SubscriptionUpdatePaymentMethodResponse.builder()
+          .clientSecret("client_secret")
+          .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .paymentId("payment_id")
+          .paymentLink("payment_link")
+          .build()
 
-        assertThat(subscriptionUpdatePaymentMethodResponse.clientSecret()).contains("client_secret")
-        assertThat(subscriptionUpdatePaymentMethodResponse.expiresOn())
-            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(subscriptionUpdatePaymentMethodResponse.paymentId()).contains("payment_id")
-        assertThat(subscriptionUpdatePaymentMethodResponse.paymentLink()).contains("payment_link")
+      assertThat(subscriptionUpdatePaymentMethodResponse.clientSecret()).contains("client_secret")
+      assertThat(subscriptionUpdatePaymentMethodResponse.expiresOn()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(subscriptionUpdatePaymentMethodResponse.paymentId()).contains("payment_id")
+      assertThat(subscriptionUpdatePaymentMethodResponse.paymentLink()).contains("payment_link")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val subscriptionUpdatePaymentMethodResponse =
-            SubscriptionUpdatePaymentMethodResponse.builder()
-                .clientSecret("client_secret")
-                .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .paymentId("payment_id")
-                .paymentLink("payment_link")
-                .build()
+      val jsonMapper = jsonMapper()
+      val subscriptionUpdatePaymentMethodResponse = SubscriptionUpdatePaymentMethodResponse.builder()
+          .clientSecret("client_secret")
+          .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .paymentId("payment_id")
+          .paymentLink("payment_link")
+          .build()
 
-        val roundtrippedSubscriptionUpdatePaymentMethodResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(subscriptionUpdatePaymentMethodResponse),
-                jacksonTypeRef<SubscriptionUpdatePaymentMethodResponse>(),
-            )
+      val roundtrippedSubscriptionUpdatePaymentMethodResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(subscriptionUpdatePaymentMethodResponse), jacksonTypeRef<SubscriptionUpdatePaymentMethodResponse>())
 
-        assertThat(roundtrippedSubscriptionUpdatePaymentMethodResponse)
-            .isEqualTo(subscriptionUpdatePaymentMethodResponse)
+      assertThat(roundtrippedSubscriptionUpdatePaymentMethodResponse).isEqualTo(subscriptionUpdatePaymentMethodResponse)
     }
 }

@@ -8,6 +8,7 @@ import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.disputes.DisputeListParams
 import com.fasterxml.jackson.annotation.JsonCreator
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -15,8 +16,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class DisputeListParams
-private constructor(
+class DisputeListParams private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
     private val customerId: String?,
@@ -26,6 +26,7 @@ private constructor(
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** Get events after this created time */
@@ -59,10 +60,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): DisputeListParams = builder().build()
+        @JvmStatic
+        fun none(): DisputeListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [DisputeListParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DisputeListParams]. */
@@ -79,56 +82,69 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(disputeListParams: DisputeListParams) = apply {
-            createdAtGte = disputeListParams.createdAtGte
-            createdAtLte = disputeListParams.createdAtLte
-            customerId = disputeListParams.customerId
-            disputeStage = disputeListParams.disputeStage
-            disputeStatus = disputeListParams.disputeStatus
-            pageNumber = disputeListParams.pageNumber
-            pageSize = disputeListParams.pageSize
-            additionalHeaders = disputeListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = disputeListParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(disputeListParams: DisputeListParams) =
+            apply {
+                createdAtGte = disputeListParams.createdAtGte
+                createdAtLte = disputeListParams.createdAtLte
+                customerId = disputeListParams.customerId
+                disputeStage = disputeListParams.disputeStage
+                disputeStatus = disputeListParams.disputeStatus
+                pageNumber = disputeListParams.pageNumber
+                pageSize = disputeListParams.pageSize
+                additionalHeaders = disputeListParams.additionalHeaders.toBuilder()
+                additionalQueryParams = disputeListParams.additionalQueryParams.toBuilder()
+            }
 
         /** Get events after this created time */
-        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+        fun createdAtGte(createdAtGte: OffsetDateTime?) =
+            apply {
+                this.createdAtGte = createdAtGte
+            }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
-        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
-            createdAtGte(createdAtGte.getOrNull())
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) = createdAtGte(createdAtGte.getOrNull())
 
         /** Get events created before this time */
-        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+        fun createdAtLte(createdAtLte: OffsetDateTime?) =
+            apply {
+                this.createdAtLte = createdAtLte
+            }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
-        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
-            createdAtLte(createdAtLte.getOrNull())
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) = createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer_id */
-        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+        fun customerId(customerId: String?) =
+            apply {
+                this.customerId = customerId
+            }
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Filter by dispute stage */
-        fun disputeStage(disputeStage: DisputeStage?) = apply { this.disputeStage = disputeStage }
+        fun disputeStage(disputeStage: DisputeStage?) =
+            apply {
+                this.disputeStage = disputeStage
+            }
 
         /** Alias for calling [Builder.disputeStage] with `disputeStage.orElse(null)`. */
-        fun disputeStage(disputeStage: Optional<DisputeStage>) =
-            disputeStage(disputeStage.getOrNull())
+        fun disputeStage(disputeStage: Optional<DisputeStage>) = disputeStage(disputeStage.getOrNull())
 
         /** Filter by dispute status */
-        fun disputeStatus(disputeStatus: DisputeStatus?) = apply {
-            this.disputeStatus = disputeStatus
-        }
+        fun disputeStatus(disputeStatus: DisputeStatus?) =
+            apply {
+                this.disputeStatus = disputeStatus
+            }
 
         /** Alias for calling [Builder.disputeStatus] with `disputeStatus.orElse(null)`. */
-        fun disputeStatus(disputeStatus: Optional<DisputeStatus>) =
-            disputeStatus(disputeStatus.getOrNull())
+        fun disputeStatus(disputeStatus: Optional<DisputeStatus>) = disputeStatus(disputeStatus.getOrNull())
 
         /** Page number default is 0 */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -141,7 +157,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -153,103 +172,129 @@ private constructor(
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [DisputeListParams].
@@ -258,15 +303,15 @@ private constructor(
          */
         fun build(): DisputeListParams =
             DisputeListParams(
-                createdAtGte,
-                createdAtLte,
-                customerId,
-                disputeStage,
-                disputeStatus,
-                pageNumber,
-                pageSize,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              createdAtGte,
+              createdAtLte,
+              customerId,
+              disputeStage,
+              disputeStatus,
+              pageNumber,
+              pageSize,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -275,12 +320,8 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                createdAtGte?.let {
-                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
-                createdAtLte?.let {
-                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                createdAtGte?.let { put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                createdAtLte?.let { put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 customerId?.let { put("customer_id", it) }
                 disputeStage?.let { put("dispute_stage", it.toString()) }
                 disputeStatus?.let { put("dispute_status", it.toString()) }
@@ -291,18 +332,20 @@ private constructor(
             .build()
 
     /** Filter by dispute stage */
-    class DisputeStage @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class DisputeStage @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -326,27 +369,27 @@ private constructor(
          * An enum containing [DisputeStage]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [DisputeStage] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
             PRE_DISPUTE,
             DISPUTE,
             PRE_ARBITRATION,
-            /**
-             * An enum member indicating that [DisputeStage] was instantiated with an unknown value.
-             */
+            /** An enum member indicating that [DisputeStage] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -359,11 +402,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -376,36 +418,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): DisputeStage = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): DisputeStage =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -416,19 +455,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is DisputeStage && value == other.value
+          return other is DisputeStage && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -437,18 +476,20 @@ private constructor(
     }
 
     /** Filter by dispute status */
-    class DisputeStatus @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class DisputeStatus @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -484,9 +525,11 @@ private constructor(
          * An enum containing [DisputeStatus]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [DisputeStatus] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -497,19 +540,16 @@ private constructor(
             DISPUTE_CHALLENGED,
             DISPUTE_WON,
             DISPUTE_LOST,
-            /**
-             * An enum member indicating that [DisputeStatus] was instantiated with an unknown
-             * value.
-             */
+            /** An enum member indicating that [DisputeStatus] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -526,11 +566,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -547,36 +586,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): DisputeStatus = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): DisputeStatus =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -587,19 +623,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is DisputeStatus && value == other.value
+          return other is DisputeStatus && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -608,35 +644,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DisputeListParams &&
-            createdAtGte == other.createdAtGte &&
-            createdAtLte == other.createdAtLte &&
-            customerId == other.customerId &&
-            disputeStage == other.disputeStage &&
-            disputeStatus == other.disputeStatus &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is DisputeListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && customerId == other.customerId && disputeStage == other.disputeStage && disputeStatus == other.disputeStatus && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            createdAtGte,
-            createdAtLte,
-            customerId,
-            disputeStage,
-            disputeStatus,
-            pageNumber,
-            pageSize,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(createdAtGte, createdAtLte, customerId, disputeStage, disputeStatus, pageNumber, pageSize, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "DisputeListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "DisputeListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

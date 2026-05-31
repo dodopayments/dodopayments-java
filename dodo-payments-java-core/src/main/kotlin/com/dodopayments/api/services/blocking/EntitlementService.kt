@@ -13,6 +13,7 @@ import com.dodopayments.api.models.entitlements.EntitlementListPage
 import com.dodopayments.api.models.entitlements.EntitlementListParams
 import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
+import com.dodopayments.api.services.blocking.EntitlementService
 import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.dodopayments.api.services.blocking.entitlements.GrantService
 import com.google.errorprone.annotations.MustBeClosed
@@ -20,9 +21,7 @@ import java.util.function.Consumer
 
 interface EntitlementService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -37,120 +36,150 @@ interface EntitlementService {
     fun grants(): GrantService
 
     /** POST /entitlements */
-    fun create(params: EntitlementCreateParams): Entitlement = create(params, RequestOptions.none())
+    fun create(params: EntitlementCreateParams): Entitlement =
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: EntitlementCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Entitlement
+    fun create(params: EntitlementCreateParams, requestOptions: RequestOptions = RequestOptions.none()): Entitlement
 
     /** GET /entitlements/{id} */
-    fun retrieve(id: String): Entitlement = retrieve(id, EntitlementRetrieveParams.none())
+    fun retrieve(id: String): Entitlement =
+        retrieve(
+          id, EntitlementRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Entitlement = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    fun retrieve(id: String, params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): Entitlement =
+        retrieve(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-    ): Entitlement = retrieve(id, params, RequestOptions.none())
+    fun retrieve(id: String, params: EntitlementRetrieveParams = EntitlementRetrieveParams.none()): Entitlement =
+        retrieve(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: EntitlementRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Entitlement
+    fun retrieve(params: EntitlementRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): Entitlement
 
     /** @see retrieve */
     fun retrieve(params: EntitlementRetrieveParams): Entitlement =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): Entitlement =
-        retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
+        retrieve(
+          id,
+          EntitlementRetrieveParams.none(),
+          requestOptions,
+        )
 
     /** PATCH /entitlements/{id} */
-    fun update(id: String): Entitlement = update(id, EntitlementUpdateParams.none())
+    fun update(id: String): Entitlement =
+        update(
+          id, EntitlementUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        id: String,
-        params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Entitlement = update(params.toBuilder().id(id).build(), requestOptions)
+    fun update(id: String, params: EntitlementUpdateParams = EntitlementUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): Entitlement =
+        update(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(
-        id: String,
-        params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-    ): Entitlement = update(id, params, RequestOptions.none())
+    fun update(id: String, params: EntitlementUpdateParams = EntitlementUpdateParams.none()): Entitlement =
+        update(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        params: EntitlementUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Entitlement
+    fun update(params: EntitlementUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): Entitlement
 
     /** @see update */
-    fun update(params: EntitlementUpdateParams): Entitlement = update(params, RequestOptions.none())
+    fun update(params: EntitlementUpdateParams): Entitlement =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(id: String, requestOptions: RequestOptions): Entitlement =
-        update(id, EntitlementUpdateParams.none(), requestOptions)
+        update(
+          id,
+          EntitlementUpdateParams.none(),
+          requestOptions,
+        )
 
     /** GET /entitlements */
     fun list(): EntitlementListPage = list(EntitlementListParams.none())
 
     /** @see list */
-    fun list(
-        params: EntitlementListParams = EntitlementListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): EntitlementListPage
+    fun list(params: EntitlementListParams = EntitlementListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): EntitlementListPage
 
     /** @see list */
     fun list(params: EntitlementListParams = EntitlementListParams.none()): EntitlementListPage =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): EntitlementListPage =
-        list(EntitlementListParams.none(), requestOptions)
+        list(
+          EntitlementListParams.none(), requestOptions
+        )
 
     /** DELETE /entitlements/{id} (soft-delete) */
-    fun delete(id: String) = delete(id, EntitlementDeleteParams.none())
+    fun delete(id: String) =
+        delete(
+          id, EntitlementDeleteParams.none()
+        )
 
     /** @see delete */
-    fun delete(
-        id: String,
-        params: EntitlementDeleteParams = EntitlementDeleteParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().id(id).build(), requestOptions)
+    fun delete(id: String, params: EntitlementDeleteParams = EntitlementDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        delete(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see delete */
     fun delete(id: String, params: EntitlementDeleteParams = EntitlementDeleteParams.none()) =
-        delete(id, params, RequestOptions.none())
+        delete(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        params: EntitlementDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun delete(params: EntitlementDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see delete */
-    fun delete(params: EntitlementDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: EntitlementDeleteParams) =
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions) =
-        delete(id, EntitlementDeleteParams.none(), requestOptions)
+        delete(
+          id,
+          EntitlementDeleteParams.none(),
+          requestOptions,
+        )
 
-    /**
-     * A view of [EntitlementService] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [EntitlementService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -158,172 +187,178 @@ interface EntitlementService {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): EntitlementService.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService.WithRawResponse
 
         fun files(): FileService.WithRawResponse
 
         fun grants(): GrantService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /entitlements`, but is otherwise the same as
-         * [EntitlementService.create].
-         */
+        /** Returns a raw HTTP response for `post /entitlements`, but is otherwise the             same as [EntitlementService.create]. */
         @MustBeClosed
         fun create(params: EntitlementCreateParams): HttpResponseFor<Entitlement> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: EntitlementCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Entitlement>
+        fun create(params: EntitlementCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Entitlement>
 
-        /**
-         * Returns a raw HTTP response for `get /entitlements/{id}`, but is otherwise the same as
-         * [EntitlementService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /entitlements/{id}`, but is otherwise the             same as [EntitlementService.retrieve]. */
         @MustBeClosed
         fun retrieve(id: String): HttpResponseFor<Entitlement> =
-            retrieve(id, EntitlementRetrieveParams.none())
+            retrieve(
+              id, EntitlementRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Entitlement> =
-            retrieve(params.toBuilder().id(id).build(), requestOptions)
+        fun retrieve(id: String, params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Entitlement> =
+            retrieve(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: EntitlementRetrieveParams = EntitlementRetrieveParams.none(),
-        ): HttpResponseFor<Entitlement> = retrieve(id, params, RequestOptions.none())
+        fun retrieve(id: String, params: EntitlementRetrieveParams = EntitlementRetrieveParams.none()): HttpResponseFor<Entitlement> =
+            retrieve(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: EntitlementRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Entitlement>
+        fun retrieve(params: EntitlementRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Entitlement>
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: EntitlementRetrieveParams): HttpResponseFor<Entitlement> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Entitlement> =
-            retrieve(id, EntitlementRetrieveParams.none(), requestOptions)
+            retrieve(
+              id,
+              EntitlementRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /entitlements/{id}`, but is otherwise the same as
-         * [EntitlementService.update].
-         */
+        /** Returns a raw HTTP response for `patch /entitlements/{id}`, but is otherwise the             same as [EntitlementService.update]. */
         @MustBeClosed
         fun update(id: String): HttpResponseFor<Entitlement> =
-            update(id, EntitlementUpdateParams.none())
+            update(
+              id, EntitlementUpdateParams.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            id: String,
-            params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Entitlement> = update(params.toBuilder().id(id).build(), requestOptions)
+        fun update(id: String, params: EntitlementUpdateParams = EntitlementUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Entitlement> =
+            update(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            id: String,
-            params: EntitlementUpdateParams = EntitlementUpdateParams.none(),
-        ): HttpResponseFor<Entitlement> = update(id, params, RequestOptions.none())
+        fun update(id: String, params: EntitlementUpdateParams = EntitlementUpdateParams.none()): HttpResponseFor<Entitlement> =
+            update(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: EntitlementUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Entitlement>
+        fun update(params: EntitlementUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Entitlement>
 
         /** @see update */
         @MustBeClosed
         fun update(params: EntitlementUpdateParams): HttpResponseFor<Entitlement> =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
         fun update(id: String, requestOptions: RequestOptions): HttpResponseFor<Entitlement> =
-            update(id, EntitlementUpdateParams.none(), requestOptions)
+            update(
+              id,
+              EntitlementUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /entitlements`, but is otherwise the same as
-         * [EntitlementService.list].
-         */
+        /** Returns a raw HTTP response for `get /entitlements`, but is otherwise the             same as [EntitlementService.list]. */
         @MustBeClosed
         fun list(): HttpResponseFor<EntitlementListPage> = list(EntitlementListParams.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: EntitlementListParams = EntitlementListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<EntitlementListPage>
+        fun list(params: EntitlementListParams = EntitlementListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<EntitlementListPage>
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: EntitlementListParams = EntitlementListParams.none()
-        ): HttpResponseFor<EntitlementListPage> = list(params, RequestOptions.none())
+        fun list(params: EntitlementListParams = EntitlementListParams.none()): HttpResponseFor<EntitlementListPage> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<EntitlementListPage> =
-            list(EntitlementListParams.none(), requestOptions)
+            list(
+              EntitlementListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /entitlements/{id}`, but is otherwise the same as
-         * [EntitlementService.delete].
-         */
+        /** Returns a raw HTTP response for `delete /entitlements/{id}`, but is otherwise the             same as [EntitlementService.delete]. */
         @MustBeClosed
-        fun delete(id: String): HttpResponse = delete(id, EntitlementDeleteParams.none())
-
-        /** @see delete */
-        @MustBeClosed
-        fun delete(
-            id: String,
-            params: EntitlementDeleteParams = EntitlementDeleteParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+        fun delete(id: String): HttpResponse =
+            delete(
+              id, EntitlementDeleteParams.none()
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            id: String,
-            params: EntitlementDeleteParams = EntitlementDeleteParams.none(),
-        ): HttpResponse = delete(id, params, RequestOptions.none())
+        fun delete(id: String, params: EntitlementDeleteParams = EntitlementDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            delete(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: EntitlementDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun delete(id: String, params: EntitlementDeleteParams = EntitlementDeleteParams.none()): HttpResponse =
+            delete(
+              id,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(params: EntitlementDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see delete */
         @MustBeClosed
         fun delete(params: EntitlementDeleteParams): HttpResponse =
-            delete(params, RequestOptions.none())
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
         @MustBeClosed
         fun delete(id: String, requestOptions: RequestOptions): HttpResponse =
-            delete(id, EntitlementDeleteParams.none(), requestOptions)
+            delete(
+              id,
+              EntitlementDeleteParams.none(),
+              requestOptions,
+            )
     }
 }

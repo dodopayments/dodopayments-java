@@ -6,17 +6,20 @@ import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.models.payments.RefundListItem
+import com.dodopayments.api.models.refunds.RefundListPageResponse
+import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.services.blocking.RefundService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see RefundService.list */
-class RefundListPage
-private constructor(
+class RefundListPage private constructor(
     private val service: RefundService,
     private val params: RefundListParams,
     private val response: RefundListPageResponse,
+
 ) : Page<RefundListItem> {
 
     /**
@@ -24,14 +27,15 @@ private constructor(
      *
      * @see RefundListPageResponse.items
      */
-    override fun items(): List<RefundListItem> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<RefundListItem> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): RefundListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): RefundListPage = service.list(nextPageParams())
@@ -52,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [RefundListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [RefundListPage]. */
@@ -69,19 +75,29 @@ private constructor(
         private var response: RefundListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(refundListPage: RefundListPage) = apply {
-            service = refundListPage.service
-            params = refundListPage.params
-            response = refundListPage.response
-        }
+        internal fun from(refundListPage: RefundListPage) =
+            apply {
+                service = refundListPage.service
+                params = refundListPage.params
+                response = refundListPage.response
+            }
 
-        fun service(service: RefundService) = apply { this.service = service }
+        fun service(service: RefundService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: RefundListParams) = apply { this.params = params }
+        fun params(params: RefundListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: RefundListPageResponse) = apply { this.response = response }
+        fun response(response: RefundListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [RefundListPage].
@@ -89,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -99,21 +116,24 @@ private constructor(
          */
         fun build(): RefundListPage =
             RefundListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is RefundListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is RefundListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)

@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.licensekeyinstances
 
 import com.dodopayments.api.core.http.QueryParams
+import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,43 +11,39 @@ internal class LicenseKeyInstanceListParamsTest {
 
     @Test
     fun create() {
-        LicenseKeyInstanceListParams.builder()
-            .grantId("grant_id")
-            .licenseKeyId("license_key_id")
-            .pageNumber(0)
-            .pageSize(0)
-            .build()
+      LicenseKeyInstanceListParams.builder()
+          .grantId("grant_id")
+          .licenseKeyId("license_key_id")
+          .pageNumber(0)
+          .pageSize(0)
+          .build()
     }
 
     @Test
     fun queryParams() {
-        val params =
-            LicenseKeyInstanceListParams.builder()
-                .grantId("grant_id")
-                .licenseKeyId("license_key_id")
-                .pageNumber(0)
-                .pageSize(0)
-                .build()
+      val params = LicenseKeyInstanceListParams.builder()
+          .grantId("grant_id")
+          .licenseKeyId("license_key_id")
+          .pageNumber(0)
+          .pageSize(0)
+          .build()
 
-        val queryParams = params._queryParams()
+      val queryParams = params._queryParams()
 
-        assertThat(queryParams)
-            .isEqualTo(
-                QueryParams.builder()
-                    .put("grant_id", "grant_id")
-                    .put("license_key_id", "license_key_id")
-                    .put("page_number", "0")
-                    .put("page_size", "0")
-                    .build()
-            )
+      assertThat(queryParams).isEqualTo(QueryParams.builder()
+          .put("grant_id", "grant_id")
+          .put("license_key_id", "license_key_id")
+          .put("page_number", "0")
+          .put("page_size", "0")
+          .build())
     }
 
     @Test
     fun queryParamsWithoutOptionalFields() {
-        val params = LicenseKeyInstanceListParams.builder().build()
+      val params = LicenseKeyInstanceListParams.builder().build()
 
-        val queryParams = params._queryParams()
+      val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
+      assertThat(queryParams).isEqualTo(QueryParams.builder().build())
     }
 }

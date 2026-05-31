@@ -18,81 +18,64 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.customers.CustomerPortalSession
 import com.dodopayments.api.models.customers.customerportal.CustomerPortalCreateParams
+import com.dodopayments.api.services.async.customers.CustomerPortalServiceAsync
+import com.dodopayments.api.services.async.customers.CustomerPortalServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerPortalServiceAsyncImpl
-internal constructor(private val clientOptions: ClientOptions) : CustomerPortalServiceAsync {
+class CustomerPortalServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: CustomerPortalServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : CustomerPortalServiceAsync {
+
+    private val withRawResponse: CustomerPortalServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): CustomerPortalServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(
-        modifier: Consumer<ClientOptions.Builder>
-    ): CustomerPortalServiceAsync =
-        CustomerPortalServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalServiceAsync = CustomerPortalServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: CustomerPortalCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CustomerPortalSession> =
+    override fun create(params: CustomerPortalCreateParams, requestOptions: RequestOptions): CompletableFuture<CustomerPortalSession> =
         // post /customers/{customer_id}/customer-portal/session
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        CustomerPortalServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : CustomerPortalServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): CustomerPortalServiceAsync.WithRawResponse =
-            CustomerPortalServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CustomerPortalServiceAsync.WithRawResponse = CustomerPortalServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<CustomerPortalSession> = jsonHandler<CustomerPortalSession>(clientOptions.jsonMapper)
+
+        override fun create(params: CustomerPortalCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CustomerPortalSession>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "customer-portal", "session")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepareAsync(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<CustomerPortalSession> =
-            jsonHandler<CustomerPortalSession>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: CustomerPortalCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CustomerPortalSession>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "customers",
-                        params._pathParam(0),
-                        "customer-portal",
-                        "session",
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }

@@ -16,69 +16,60 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
+import com.dodopayments.api.services.async.MiscServiceAsync
+import com.dodopayments.api.services.async.MiscServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-class MiscServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    MiscServiceAsync {
+class MiscServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: MiscServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : MiscServiceAsync {
+
+    private val withRawResponse: MiscServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): MiscServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscServiceAsync =
-        MiscServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscServiceAsync = MiscServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun listSupportedCountries(
-        params: MiscListSupportedCountriesParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<List<CountryCode>> =
+    override fun listSupportedCountries(params: MiscListSupportedCountriesParams, requestOptions: RequestOptions): CompletableFuture<List<CountryCode>> =
         // get /checkout/supported_countries
         withRawResponse().listSupportedCountries(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        MiscServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : MiscServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): MiscServiceAsync.WithRawResponse =
-            MiscServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscServiceAsync.WithRawResponse = MiscServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val listSupportedCountriesHandler: Handler<List<CountryCode>> = jsonHandler<List<CountryCode>>(clientOptions.jsonMapper)
+
+        override fun listSupportedCountries(params: MiscListSupportedCountriesParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<List<CountryCode>>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("checkout", "supported_countries")
+            .build()
+            .prepareAsync(
+              clientOptions, params
             )
-
-        private val listSupportedCountriesHandler: Handler<List<CountryCode>> =
-            jsonHandler<List<CountryCode>>(clientOptions.jsonMapper)
-
-        override fun listSupportedCountries(
-            params: MiscListSupportedCountriesParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<CountryCode>>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("checkout", "supported_countries")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listSupportedCountriesHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
-                                }
-                            }
-                    }
-                }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  listSupportedCountriesHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          } }
         }
     }
 }

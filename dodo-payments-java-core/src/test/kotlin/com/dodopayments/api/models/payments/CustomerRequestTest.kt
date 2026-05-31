@@ -5,6 +5,9 @@ package com.dodopayments.api.models.payments
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.payments.AttachExistingCustomer
+import com.dodopayments.api.models.payments.CustomerRequest
+import com.dodopayments.api.models.payments.NewCustomer
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,79 +19,76 @@ internal class CustomerRequestTest {
 
     @Test
     fun ofAttachExistingCustomer() {
-        val attachExistingCustomer =
-            AttachExistingCustomer.builder().customerId("customer_id").build()
+      val attachExistingCustomer = AttachExistingCustomer.builder()
+          .customerId("customer_id")
+          .build()
 
-        val customerRequest = CustomerRequest.ofAttachExistingCustomer(attachExistingCustomer)
+      val customerRequest = CustomerRequest.ofAttachExistingCustomer(attachExistingCustomer)
 
-        assertThat(customerRequest.attachExistingCustomer()).contains(attachExistingCustomer)
-        assertThat(customerRequest.newCustomer()).isEmpty
+      assertThat(customerRequest.attachExistingCustomer()).contains(attachExistingCustomer)
+      assertThat(customerRequest.newCustomer()).isEmpty
     }
 
     @Test
     fun ofAttachExistingCustomerRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val customerRequest =
-            CustomerRequest.ofAttachExistingCustomer(
-                AttachExistingCustomer.builder().customerId("customer_id").build()
-            )
+      val jsonMapper = jsonMapper()
+      val customerRequest = CustomerRequest.ofAttachExistingCustomer(AttachExistingCustomer.builder()
+          .customerId("customer_id")
+          .build())
 
-        val roundtrippedCustomerRequest =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(customerRequest),
-                jacksonTypeRef<CustomerRequest>(),
-            )
+      val roundtrippedCustomerRequest = jsonMapper.readValue(jsonMapper.writeValueAsString(customerRequest), jacksonTypeRef<CustomerRequest>())
 
-        assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
+      assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
     }
 
     @Test
     fun ofNewCustomer() {
-        val newCustomer =
-            NewCustomer.builder().email("email").name("name").phoneNumber("phone_number").build()
+      val newCustomer = NewCustomer.builder()
+          .email("email")
+          .name("name")
+          .phoneNumber("phone_number")
+          .build()
 
-        val customerRequest = CustomerRequest.ofNewCustomer(newCustomer)
+      val customerRequest = CustomerRequest.ofNewCustomer(newCustomer)
 
-        assertThat(customerRequest.attachExistingCustomer()).isEmpty
-        assertThat(customerRequest.newCustomer()).contains(newCustomer)
+      assertThat(customerRequest.attachExistingCustomer()).isEmpty
+      assertThat(customerRequest.newCustomer()).contains(newCustomer)
     }
 
     @Test
     fun ofNewCustomerRoundtrip() {
-        val jsonMapper = jsonMapper()
-        val customerRequest =
-            CustomerRequest.ofNewCustomer(
-                NewCustomer.builder()
-                    .email("email")
-                    .name("name")
-                    .phoneNumber("phone_number")
-                    .build()
-            )
+      val jsonMapper = jsonMapper()
+      val customerRequest = CustomerRequest.ofNewCustomer(NewCustomer.builder()
+          .email("email")
+          .name("name")
+          .phoneNumber("phone_number")
+          .build())
 
-        val roundtrippedCustomerRequest =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(customerRequest),
-                jacksonTypeRef<CustomerRequest>(),
-            )
+      val roundtrippedCustomerRequest = jsonMapper.readValue(jsonMapper.writeValueAsString(customerRequest), jacksonTypeRef<CustomerRequest>())
 
-        assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
+      assertThat(roundtrippedCustomerRequest).isEqualTo(customerRequest)
     }
 
-    enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
+    enum class IncompatibleJsonShapeTestCase(
+        val value: JsonValue
+    ) {
         BOOLEAN(JsonValue.from(false)),
         STRING(JsonValue.from("invalid")),
         INTEGER(JsonValue.from(-1)),
         FLOAT(JsonValue.from(3.14)),
-        ARRAY(JsonValue.from(listOf("invalid", "array"))),
+        ARRAY(JsonValue.from(listOf(
+          "invalid", "array"
+        ))),
     }
 
     @ParameterizedTest
     @EnumSource
     fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
-        val customerRequest =
-            jsonMapper().convertValue(testCase.value, jacksonTypeRef<CustomerRequest>())
+      val customerRequest = jsonMapper().convertValue(testCase.value, jacksonTypeRef<CustomerRequest>())
 
-        val e = assertThrows<DodoPaymentsInvalidDataException> { customerRequest.validate() }
-        assertThat(e).hasMessageStartingWith("Unknown ")
+      val e = assertThrows<DodoPaymentsInvalidDataException> {
+        customerRequest.validate()
+      }
+      assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.licensekeys
 
+import com.dodopayments.api.models.licensekeys.LicenseKeyCreateParams
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -10,48 +11,46 @@ internal class LicenseKeyCreateParamsTest {
 
     @Test
     fun create() {
-        LicenseKeyCreateParams.builder()
-            .customerId("customer_id")
-            .key("key")
-            .productId("product_id")
-            .activationsLimit(0)
-            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-            .build()
+      LicenseKeyCreateParams.builder()
+          .customerId("customer_id")
+          .key("key")
+          .productId("product_id")
+          .activationsLimit(0)
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            LicenseKeyCreateParams.builder()
-                .customerId("customer_id")
-                .key("key")
-                .productId("product_id")
-                .activationsLimit(0)
-                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val params = LicenseKeyCreateParams.builder()
+          .customerId("customer_id")
+          .key("key")
+          .productId("product_id")
+          .activationsLimit(0)
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.customerId()).isEqualTo("customer_id")
-        assertThat(body.key()).isEqualTo("key")
-        assertThat(body.productId()).isEqualTo("product_id")
-        assertThat(body.activationsLimit()).contains(0)
-        assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(body.customerId()).isEqualTo("customer_id")
+      assertThat(body.key()).isEqualTo("key")
+      assertThat(body.productId()).isEqualTo("product_id")
+      assertThat(body.activationsLimit()).contains(0)
+      assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            LicenseKeyCreateParams.builder()
-                .customerId("customer_id")
-                .key("key")
-                .productId("product_id")
-                .build()
+      val params = LicenseKeyCreateParams.builder()
+          .customerId("customer_id")
+          .key("key")
+          .productId("product_id")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.customerId()).isEqualTo("customer_id")
-        assertThat(body.key()).isEqualTo("key")
-        assertThat(body.productId()).isEqualTo("product_id")
+      assertThat(body.customerId()).isEqualTo("customer_id")
+      assertThat(body.key()).isEqualTo("key")
+      assertThat(body.productId()).isEqualTo("product_id")
     }
 }

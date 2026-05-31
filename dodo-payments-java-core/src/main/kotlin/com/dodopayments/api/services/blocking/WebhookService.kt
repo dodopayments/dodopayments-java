@@ -20,15 +20,14 @@ import com.dodopayments.api.models.webhooks.WebhookRetrieveParams
 import com.dodopayments.api.models.webhooks.WebhookRetrieveSecretParams
 import com.dodopayments.api.models.webhooks.WebhookRetrieveSecretResponse
 import com.dodopayments.api.models.webhooks.WebhookUpdateParams
+import com.dodopayments.api.services.blocking.WebhookService
 import com.dodopayments.api.services.blocking.webhooks.HeaderService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface WebhookService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -41,149 +40,187 @@ interface WebhookService {
     fun headers(): HeaderService
 
     /** Create a new webhook */
-    fun create(params: WebhookCreateParams): WebhookDetails = create(params, RequestOptions.none())
+    fun create(params: WebhookCreateParams): WebhookDetails =
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: WebhookCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookDetails
+    fun create(params: WebhookCreateParams, requestOptions: RequestOptions = RequestOptions.none()): WebhookDetails
 
     /** Get a webhook by id */
     fun retrieve(webhookId: String): WebhookDetails =
-        retrieve(webhookId, WebhookRetrieveParams.none())
+        retrieve(
+          webhookId, WebhookRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        webhookId: String,
-        params: WebhookRetrieveParams = WebhookRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookDetails = retrieve(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun retrieve(webhookId: String, params: WebhookRetrieveParams = WebhookRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): WebhookDetails =
+        retrieve(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        webhookId: String,
-        params: WebhookRetrieveParams = WebhookRetrieveParams.none(),
-    ): WebhookDetails = retrieve(webhookId, params, RequestOptions.none())
+    fun retrieve(webhookId: String, params: WebhookRetrieveParams = WebhookRetrieveParams.none()): WebhookDetails =
+        retrieve(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: WebhookRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookDetails
+    fun retrieve(params: WebhookRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): WebhookDetails
 
     /** @see retrieve */
     fun retrieve(params: WebhookRetrieveParams): WebhookDetails =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(webhookId: String, requestOptions: RequestOptions): WebhookDetails =
-        retrieve(webhookId, WebhookRetrieveParams.none(), requestOptions)
+        retrieve(
+          webhookId,
+          WebhookRetrieveParams.none(),
+          requestOptions,
+        )
 
     /** Patch a webhook by id */
-    fun update(webhookId: String): WebhookDetails = update(webhookId, WebhookUpdateParams.none())
+    fun update(webhookId: String): WebhookDetails =
+        update(
+          webhookId, WebhookUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        webhookId: String,
-        params: WebhookUpdateParams = WebhookUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookDetails = update(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun update(webhookId: String, params: WebhookUpdateParams = WebhookUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): WebhookDetails =
+        update(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(
-        webhookId: String,
-        params: WebhookUpdateParams = WebhookUpdateParams.none(),
-    ): WebhookDetails = update(webhookId, params, RequestOptions.none())
+    fun update(webhookId: String, params: WebhookUpdateParams = WebhookUpdateParams.none()): WebhookDetails =
+        update(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        params: WebhookUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookDetails
+    fun update(params: WebhookUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): WebhookDetails
 
     /** @see update */
-    fun update(params: WebhookUpdateParams): WebhookDetails = update(params, RequestOptions.none())
+    fun update(params: WebhookUpdateParams): WebhookDetails =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(webhookId: String, requestOptions: RequestOptions): WebhookDetails =
-        update(webhookId, WebhookUpdateParams.none(), requestOptions)
+        update(
+          webhookId,
+          WebhookUpdateParams.none(),
+          requestOptions,
+        )
 
     /** List all webhooks */
     fun list(): WebhookListPage = list(WebhookListParams.none())
 
     /** @see list */
-    fun list(
-        params: WebhookListParams = WebhookListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookListPage
+    fun list(params: WebhookListParams = WebhookListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): WebhookListPage
 
     /** @see list */
     fun list(params: WebhookListParams = WebhookListParams.none()): WebhookListPage =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): WebhookListPage =
-        list(WebhookListParams.none(), requestOptions)
+        list(
+          WebhookListParams.none(), requestOptions
+        )
 
     /** Delete a webhook by id */
-    fun delete(webhookId: String) = delete(webhookId, WebhookDeleteParams.none())
+    fun delete(webhookId: String) =
+        delete(
+          webhookId, WebhookDeleteParams.none()
+        )
 
     /** @see delete */
-    fun delete(
-        webhookId: String,
-        params: WebhookDeleteParams = WebhookDeleteParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun delete(webhookId: String, params: WebhookDeleteParams = WebhookDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        delete(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
     fun delete(webhookId: String, params: WebhookDeleteParams = WebhookDeleteParams.none()) =
-        delete(webhookId, params, RequestOptions.none())
+        delete(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
     fun delete(params: WebhookDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see delete */
-    fun delete(params: WebhookDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: WebhookDeleteParams) =
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(webhookId: String, requestOptions: RequestOptions) =
-        delete(webhookId, WebhookDeleteParams.none(), requestOptions)
+        delete(
+          webhookId,
+          WebhookDeleteParams.none(),
+          requestOptions,
+        )
 
     /** Get webhook secret by id */
     fun retrieveSecret(webhookId: String): WebhookRetrieveSecretResponse =
-        retrieveSecret(webhookId, WebhookRetrieveSecretParams.none())
+        retrieveSecret(
+          webhookId, WebhookRetrieveSecretParams.none()
+        )
 
     /** @see retrieveSecret */
-    fun retrieveSecret(
-        webhookId: String,
-        params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookRetrieveSecretResponse =
-        retrieveSecret(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+    fun retrieveSecret(webhookId: String, params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(), requestOptions: RequestOptions = RequestOptions.none()): WebhookRetrieveSecretResponse =
+        retrieveSecret(
+          params.toBuilder()
+              .webhookId(webhookId)
+              .build(), requestOptions
+        )
 
     /** @see retrieveSecret */
-    fun retrieveSecret(
-        webhookId: String,
-        params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(),
-    ): WebhookRetrieveSecretResponse = retrieveSecret(webhookId, params, RequestOptions.none())
+    fun retrieveSecret(webhookId: String, params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none()): WebhookRetrieveSecretResponse =
+        retrieveSecret(
+          webhookId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieveSecret */
-    fun retrieveSecret(
-        params: WebhookRetrieveSecretParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): WebhookRetrieveSecretResponse
+    fun retrieveSecret(params: WebhookRetrieveSecretParams, requestOptions: RequestOptions = RequestOptions.none()): WebhookRetrieveSecretResponse
 
     /** @see retrieveSecret */
     fun retrieveSecret(params: WebhookRetrieveSecretParams): WebhookRetrieveSecretResponse =
-        retrieveSecret(params, RequestOptions.none())
+        retrieveSecret(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieveSecret */
-    fun retrieveSecret(
-        webhookId: String,
-        requestOptions: RequestOptions,
-    ): WebhookRetrieveSecretResponse =
-        retrieveSecret(webhookId, WebhookRetrieveSecretParams.none(), requestOptions)
+    fun retrieveSecret(webhookId: String, requestOptions: RequestOptions): WebhookRetrieveSecretResponse =
+        retrieveSecret(
+          webhookId,
+          WebhookRetrieveSecretParams.none(),
+          requestOptions,
+        )
 
     /**
      * Unwraps a webhook event from its JSON representation.
@@ -203,6 +240,7 @@ interface WebhookService {
      * Unwraps a webhook event from its JSON representation.
      *
      * @throws DodoPaymentsInvalidDataException if the body could not be parsed.
+     *
      * @throws DodoPaymentsWebhookException if the webhook signature could not be verified
      */
     fun unwrap(unwrapParams: UnwrapWebhookParams): UnwrapWebhookEvent
@@ -219,217 +257,217 @@ interface WebhookService {
 
         fun headers(): HeaderService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /webhooks`, but is otherwise the same as
-         * [WebhookService.create].
-         */
+        /** Returns a raw HTTP response for `post /webhooks`, but is otherwise the             same as [WebhookService.create]. */
         @MustBeClosed
         fun create(params: WebhookCreateParams): HttpResponseFor<WebhookDetails> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: WebhookCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookDetails>
+        fun create(params: WebhookCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookDetails>
 
-        /**
-         * Returns a raw HTTP response for `get /webhooks/{webhook_id}`, but is otherwise the same
-         * as [WebhookService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /webhooks/{webhook_id}`, but is otherwise the             same as [WebhookService.retrieve]. */
         @MustBeClosed
         fun retrieve(webhookId: String): HttpResponseFor<WebhookDetails> =
-            retrieve(webhookId, WebhookRetrieveParams.none())
+            retrieve(
+              webhookId, WebhookRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            params: WebhookRetrieveParams = WebhookRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookDetails> =
-            retrieve(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun retrieve(webhookId: String, params: WebhookRetrieveParams = WebhookRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookDetails> =
+            retrieve(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            params: WebhookRetrieveParams = WebhookRetrieveParams.none(),
-        ): HttpResponseFor<WebhookDetails> = retrieve(webhookId, params, RequestOptions.none())
+        fun retrieve(webhookId: String, params: WebhookRetrieveParams = WebhookRetrieveParams.none()): HttpResponseFor<WebhookDetails> =
+            retrieve(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: WebhookRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookDetails>
+        fun retrieve(params: WebhookRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookDetails>
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: WebhookRetrieveParams): HttpResponseFor<WebhookDetails> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            webhookId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<WebhookDetails> =
-            retrieve(webhookId, WebhookRetrieveParams.none(), requestOptions)
+        fun retrieve(webhookId: String, requestOptions: RequestOptions): HttpResponseFor<WebhookDetails> =
+            retrieve(
+              webhookId,
+              WebhookRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /webhooks/{webhook_id}`, but is otherwise the same
-         * as [WebhookService.update].
-         */
+        /** Returns a raw HTTP response for `patch /webhooks/{webhook_id}`, but is otherwise the             same as [WebhookService.update]. */
         @MustBeClosed
         fun update(webhookId: String): HttpResponseFor<WebhookDetails> =
-            update(webhookId, WebhookUpdateParams.none())
+            update(
+              webhookId, WebhookUpdateParams.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            webhookId: String,
-            params: WebhookUpdateParams = WebhookUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookDetails> =
-            update(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun update(webhookId: String, params: WebhookUpdateParams = WebhookUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookDetails> =
+            update(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            webhookId: String,
-            params: WebhookUpdateParams = WebhookUpdateParams.none(),
-        ): HttpResponseFor<WebhookDetails> = update(webhookId, params, RequestOptions.none())
+        fun update(webhookId: String, params: WebhookUpdateParams = WebhookUpdateParams.none()): HttpResponseFor<WebhookDetails> =
+            update(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: WebhookUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookDetails>
+        fun update(params: WebhookUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookDetails>
 
         /** @see update */
         @MustBeClosed
         fun update(params: WebhookUpdateParams): HttpResponseFor<WebhookDetails> =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            webhookId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<WebhookDetails> =
-            update(webhookId, WebhookUpdateParams.none(), requestOptions)
+        fun update(webhookId: String, requestOptions: RequestOptions): HttpResponseFor<WebhookDetails> =
+            update(
+              webhookId,
+              WebhookUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /webhooks`, but is otherwise the same as
-         * [WebhookService.list].
-         */
-        @MustBeClosed fun list(): HttpResponseFor<WebhookListPage> = list(WebhookListParams.none())
+        /** Returns a raw HTTP response for `get /webhooks`, but is otherwise the             same as [WebhookService.list]. */
+        @MustBeClosed
+        fun list(): HttpResponseFor<WebhookListPage> = list(WebhookListParams.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: WebhookListParams = WebhookListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookListPage>
+        fun list(params: WebhookListParams = WebhookListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookListPage>
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: WebhookListParams = WebhookListParams.none()
-        ): HttpResponseFor<WebhookListPage> = list(params, RequestOptions.none())
+        fun list(params: WebhookListParams = WebhookListParams.none()): HttpResponseFor<WebhookListPage> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<WebhookListPage> =
-            list(WebhookListParams.none(), requestOptions)
+            list(
+              WebhookListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /webhooks/{webhook_id}`, but is otherwise the
-         * same as [WebhookService.delete].
-         */
+        /** Returns a raw HTTP response for `delete /webhooks/{webhook_id}`, but is otherwise the             same as [WebhookService.delete]. */
         @MustBeClosed
-        fun delete(webhookId: String): HttpResponse = delete(webhookId, WebhookDeleteParams.none())
-
-        /** @see delete */
-        @MustBeClosed
-        fun delete(
-            webhookId: String,
-            params: WebhookDeleteParams = WebhookDeleteParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun delete(webhookId: String): HttpResponse =
+            delete(
+              webhookId, WebhookDeleteParams.none()
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            webhookId: String,
-            params: WebhookDeleteParams = WebhookDeleteParams.none(),
-        ): HttpResponse = delete(webhookId, params, RequestOptions.none())
+        fun delete(webhookId: String, params: WebhookDeleteParams = WebhookDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            delete(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: WebhookDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun delete(webhookId: String, params: WebhookDeleteParams = WebhookDeleteParams.none()): HttpResponse =
+            delete(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(params: WebhookDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see delete */
         @MustBeClosed
         fun delete(params: WebhookDeleteParams): HttpResponse =
-            delete(params, RequestOptions.none())
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
         @MustBeClosed
         fun delete(webhookId: String, requestOptions: RequestOptions): HttpResponse =
-            delete(webhookId, WebhookDeleteParams.none(), requestOptions)
+            delete(
+              webhookId,
+              WebhookDeleteParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /webhooks/{webhook_id}/secret`, but is otherwise the
-         * same as [WebhookService.retrieveSecret].
-         */
+        /** Returns a raw HTTP response for `get /webhooks/{webhook_id}/secret`, but is otherwise the             same as [WebhookService.retrieveSecret]. */
         @MustBeClosed
         fun retrieveSecret(webhookId: String): HttpResponseFor<WebhookRetrieveSecretResponse> =
-            retrieveSecret(webhookId, WebhookRetrieveSecretParams.none())
+            retrieveSecret(
+              webhookId, WebhookRetrieveSecretParams.none()
+            )
 
         /** @see retrieveSecret */
         @MustBeClosed
-        fun retrieveSecret(
-            webhookId: String,
-            params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookRetrieveSecretResponse> =
-            retrieveSecret(params.toBuilder().webhookId(webhookId).build(), requestOptions)
+        fun retrieveSecret(webhookId: String, params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookRetrieveSecretResponse> =
+            retrieveSecret(
+              params.toBuilder()
+                  .webhookId(webhookId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieveSecret */
         @MustBeClosed
-        fun retrieveSecret(
-            webhookId: String,
-            params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none(),
-        ): HttpResponseFor<WebhookRetrieveSecretResponse> =
-            retrieveSecret(webhookId, params, RequestOptions.none())
+        fun retrieveSecret(webhookId: String, params: WebhookRetrieveSecretParams = WebhookRetrieveSecretParams.none()): HttpResponseFor<WebhookRetrieveSecretResponse> =
+            retrieveSecret(
+              webhookId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieveSecret */
         @MustBeClosed
-        fun retrieveSecret(
-            params: WebhookRetrieveSecretParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WebhookRetrieveSecretResponse>
+        fun retrieveSecret(params: WebhookRetrieveSecretParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<WebhookRetrieveSecretResponse>
 
         /** @see retrieveSecret */
         @MustBeClosed
-        fun retrieveSecret(
-            params: WebhookRetrieveSecretParams
-        ): HttpResponseFor<WebhookRetrieveSecretResponse> =
-            retrieveSecret(params, RequestOptions.none())
+        fun retrieveSecret(params: WebhookRetrieveSecretParams): HttpResponseFor<WebhookRetrieveSecretResponse> =
+            retrieveSecret(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieveSecret */
         @MustBeClosed
-        fun retrieveSecret(
-            webhookId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<WebhookRetrieveSecretResponse> =
-            retrieveSecret(webhookId, WebhookRetrieveSecretParams.none(), requestOptions)
+        fun retrieveSecret(webhookId: String, requestOptions: RequestOptions): HttpResponseFor<WebhookRetrieveSecretResponse> =
+            retrieveSecret(
+              webhookId,
+              WebhookRetrieveSecretParams.none(),
+              requestOptions,
+            )
     }
 }

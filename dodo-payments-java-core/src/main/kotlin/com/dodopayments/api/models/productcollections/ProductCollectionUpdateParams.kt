@@ -21,12 +21,12 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class ProductCollectionUpdateParams
-private constructor(
+class ProductCollectionUpdateParams private constructor(
     private val id: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
@@ -34,40 +34,35 @@ private constructor(
     /**
      * Optional brand_id update
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun brandId(): Optional<String> = body.brandId()
 
     /**
      * Optional description update - pass null to remove, omit to keep unchanged
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun description(): Optional<String> = body.description()
 
     /**
      * Optional new order for groups (array of group UUIDs in desired order)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun groupOrder(): Optional<List<String>> = body.groupOrder()
 
     /**
      * Optional image update - pass null to remove, omit to keep unchanged
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun imageId(): Optional<String> = body.imageId()
 
     /**
      * Optional new name for the collection
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun name(): Optional<String> = body.name()
 
@@ -118,13 +113,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ProductCollectionUpdateParams = builder().build()
+        @JvmStatic
+        fun none(): ProductCollectionUpdateParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [ProductCollectionUpdateParams].
-         */
-        @JvmStatic fun builder() = Builder()
+        /** Returns a mutable builder for constructing an instance of [ProductCollectionUpdateParams]. */
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionUpdateParams]. */
@@ -136,14 +130,18 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(productCollectionUpdateParams: ProductCollectionUpdateParams) = apply {
-            id = productCollectionUpdateParams.id
-            body = productCollectionUpdateParams.body.toBuilder()
-            additionalHeaders = productCollectionUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = productCollectionUpdateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(productCollectionUpdateParams: ProductCollectionUpdateParams) =
+            apply {
+                id = productCollectionUpdateParams.id
+                body = productCollectionUpdateParams.body.toBuilder()
+                additionalHeaders = productCollectionUpdateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = productCollectionUpdateParams.additionalQueryParams.toBuilder()
+            }
 
-        fun id(id: String?) = apply { this.id = id }
+        fun id(id: String?) =
+            apply {
+                this.id = id
+            }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
@@ -151,8 +149,8 @@ private constructor(
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [brandId]
          * - [description]
          * - [groupOrder]
@@ -160,10 +158,16 @@ private constructor(
          * - [name]
          * - etc.
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
         /** Optional brand_id update */
-        fun brandId(brandId: String?) = apply { body.brandId(brandId) }
+        fun brandId(brandId: String?) =
+            apply {
+                body.brandId(brandId)
+            }
 
         /** Alias for calling [Builder.brandId] with `brandId.orElse(null)`. */
         fun brandId(brandId: Optional<String>) = brandId(brandId.getOrNull())
@@ -171,13 +175,19 @@ private constructor(
         /**
          * Sets [Builder.brandId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun brandId(brandId: JsonField<String>) = apply { body.brandId(brandId) }
+        fun brandId(brandId: JsonField<String>) =
+            apply {
+                body.brandId(brandId)
+            }
 
         /** Optional description update - pass null to remove, omit to keep unchanged */
-        fun description(description: String?) = apply { body.description(description) }
+        fun description(description: String?) =
+            apply {
+                body.description(description)
+            }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
         fun description(description: Optional<String>) = description(description.getOrNull())
@@ -185,14 +195,19 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { body.description(description) }
+        fun description(description: JsonField<String>) =
+            apply {
+                body.description(description)
+            }
 
         /** Optional new order for groups (array of group UUIDs in desired order) */
-        fun groupOrder(groupOrder: List<String>?) = apply { body.groupOrder(groupOrder) }
+        fun groupOrder(groupOrder: List<String>?) =
+            apply {
+                body.groupOrder(groupOrder)
+            }
 
         /** Alias for calling [Builder.groupOrder] with `groupOrder.orElse(null)`. */
         fun groupOrder(groupOrder: Optional<List<String>>) = groupOrder(groupOrder.getOrNull())
@@ -200,21 +215,29 @@ private constructor(
         /**
          * Sets [Builder.groupOrder] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.groupOrder] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.groupOrder] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun groupOrder(groupOrder: JsonField<List<String>>) = apply { body.groupOrder(groupOrder) }
+        fun groupOrder(groupOrder: JsonField<List<String>>) =
+            apply {
+                body.groupOrder(groupOrder)
+            }
 
         /**
          * Adds a single [String] to [Builder.groupOrder].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addGroupOrder(groupOrder: String) = apply { body.addGroupOrder(groupOrder) }
+        fun addGroupOrder(groupOrder: String) =
+            apply {
+                body.addGroupOrder(groupOrder)
+            }
 
         /** Optional image update - pass null to remove, omit to keep unchanged */
-        fun imageId(imageId: String?) = apply { body.imageId(imageId) }
+        fun imageId(imageId: String?) =
+            apply {
+                body.imageId(imageId)
+            }
 
         /** Alias for calling [Builder.imageId] with `imageId.orElse(null)`. */
         fun imageId(imageId: Optional<String>) = imageId(imageId.getOrNull())
@@ -222,13 +245,19 @@ private constructor(
         /**
          * Sets [Builder.imageId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.imageId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.imageId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun imageId(imageId: JsonField<String>) = apply { body.imageId(imageId) }
+        fun imageId(imageId: JsonField<String>) =
+            apply {
+                body.imageId(imageId)
+            }
 
         /** Optional new name for the collection */
-        fun name(name: String?) = apply { body.name(name) }
+        fun name(name: String?) =
+            apply {
+                body.name(name)
+            }
 
         /** Alias for calling [Builder.name] with `name.orElse(null)`. */
         fun name(name: Optional<String>) = name(name.getOrNull())
@@ -236,127 +265,164 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { body.name(name) }
+        fun name(name: JsonField<String>) =
+            apply {
+                body.name(name)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionUpdateParams].
@@ -365,10 +431,10 @@ private constructor(
          */
         fun build(): ProductCollectionUpdateParams =
             ProductCollectionUpdateParams(
-                id,
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              id,
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -384,67 +450,64 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val brandId: JsonField<String>,
         private val description: JsonField<String>,
         private val groupOrder: JsonField<List<String>>,
         private val imageId: JsonField<String>,
         private val name: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("description")
-            @ExcludeMissing
-            description: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("group_order")
-            @ExcludeMissing
-            groupOrder: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("group_order") @ExcludeMissing groupOrder: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("image_id") @ExcludeMissing imageId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(brandId, description, groupOrder, imageId, name, mutableMapOf())
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of()
+        ) : this(
+          brandId,
+          description,
+          groupOrder,
+          imageId,
+          name,
+          mutableMapOf(),
+        )
 
         /**
          * Optional brand_id update
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun brandId(): Optional<String> = brandId.getOptional("brand_id")
 
         /**
          * Optional description update - pass null to remove, omit to keep unchanged
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
          * Optional new order for groups (array of group UUIDs in desired order)
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun groupOrder(): Optional<List<String>> = groupOrder.getOptional("group_order")
 
         /**
          * Optional image update - pass null to remove, omit to keep unchanged
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun imageId(): Optional<String> = imageId.getOptional("image_id")
 
         /**
          * Optional new name for the collection
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun name(): Optional<String> = name.getOptional("name")
 
@@ -453,7 +516,9 @@ private constructor(
          *
          * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
+        @JsonProperty("brand_id")
+        @ExcludeMissing
+        fun _brandId(): JsonField<String> = brandId
 
         /**
          * Returns the raw JSON value of [description].
@@ -478,31 +543,35 @@ private constructor(
          *
          * Unlike [imageId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("image_id") @ExcludeMissing fun _imageId(): JsonField<String> = imageId
+        @JsonProperty("image_id")
+        @ExcludeMissing
+        fun _imageId(): JsonField<String> = imageId
 
         /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("name")
+        @ExcludeMissing
+        fun _name(): JsonField<String> = name
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -516,14 +585,15 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                brandId = body.brandId
-                description = body.description
-                groupOrder = body.groupOrder.map { it.toMutableList() }
-                imageId = body.imageId
-                name = body.name
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    brandId = body.brandId
+                    description = body.description
+                    groupOrder = body.groupOrder.map { it.toMutableList() }
+                    imageId = body.imageId
+                    name = body.name
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             /** Optional brand_id update */
             fun brandId(brandId: String?) = brandId(JsonField.ofNullable(brandId))
@@ -534,11 +604,13 @@ private constructor(
             /**
              * Sets [Builder.brandId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.brandId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.brandId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
+            fun brandId(brandId: JsonField<String>) =
+                apply {
+                    this.brandId = brandId
+                }
 
             /** Optional description update - pass null to remove, omit to keep unchanged */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -549,13 +621,13 @@ private constructor(
             /**
              * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun description(description: JsonField<String>) = apply {
-                this.description = description
-            }
+            fun description(description: JsonField<String>) =
+                apply {
+                    this.description = description
+                }
 
             /** Optional new order for groups (array of group UUIDs in desired order) */
             fun groupOrder(groupOrder: List<String>?) = groupOrder(JsonField.ofNullable(groupOrder))
@@ -566,25 +638,25 @@ private constructor(
             /**
              * Sets [Builder.groupOrder] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.groupOrder] with a well-typed `List<String>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.groupOrder] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun groupOrder(groupOrder: JsonField<List<String>>) = apply {
-                this.groupOrder = groupOrder.map { it.toMutableList() }
-            }
+            fun groupOrder(groupOrder: JsonField<List<String>>) =
+                apply {
+                    this.groupOrder = groupOrder.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [String] to [Builder.groupOrder].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addGroupOrder(groupOrder: String) = apply {
-                this.groupOrder =
-                    (this.groupOrder ?: JsonField.of(mutableListOf())).also {
+            fun addGroupOrder(groupOrder: String) =
+                apply {
+                    this.groupOrder = (this.groupOrder ?: JsonField.of(mutableListOf())).also {
                         checkKnown("groupOrder", it).add(groupOrder)
                     }
-            }
+                }
 
             /** Optional image update - pass null to remove, omit to keep unchanged */
             fun imageId(imageId: String?) = imageId(JsonField.ofNullable(imageId))
@@ -595,11 +667,13 @@ private constructor(
             /**
              * Sets [Builder.imageId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.imageId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.imageId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun imageId(imageId: JsonField<String>) = apply { this.imageId = imageId }
+            fun imageId(imageId: JsonField<String>) =
+                apply {
+                    this.imageId = imageId
+                }
 
             /** Optional new name for the collection */
             fun name(name: String?) = name(JsonField.ofNullable(name))
@@ -610,30 +684,39 @@ private constructor(
             /**
              * Sets [Builder.name] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun name(name: JsonField<String>) =
+                apply {
+                    this.name = name
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -642,38 +725,38 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    brandId,
-                    description,
-                    (groupOrder ?: JsonMissing.of()).map { it.toImmutable() },
-                    imageId,
-                    name,
-                    additionalProperties.toMutableMap(),
+                  brandId,
+                  description,
+                  (groupOrder?: JsonMissing.of()).map { it.toImmutable() },
+                  imageId,
+                  name,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            brandId()
-            description()
-            groupOrder()
-            imageId()
-            name()
-            validated = true
-        }
+                brandId()
+                description()
+                groupOrder()
+                imageId()
+                name()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -684,57 +767,37 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (brandId.asKnown().isPresent) 1 else 0) +
-                (if (description.asKnown().isPresent) 1 else 0) +
-                (groupOrder.asKnown().getOrNull()?.size ?: 0) +
-                (if (imageId.asKnown().isPresent) 1 else 0) +
-                (if (name.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (brandId.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (groupOrder.asKnown().getOrNull()?.size ?: 0) + (if (imageId.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                brandId == other.brandId &&
-                description == other.description &&
-                groupOrder == other.groupOrder &&
-                imageId == other.imageId &&
-                name == other.name &&
-                additionalProperties == other.additionalProperties
+          return other is Body && brandId == other.brandId && description == other.description && groupOrder == other.groupOrder && imageId == other.imageId && name == other.name && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(brandId, description, groupOrder, imageId, name, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(brandId, description, groupOrder, imageId, name, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{brandId=$brandId, description=$description, groupOrder=$groupOrder, imageId=$imageId, name=$name, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{brandId=$brandId, description=$description, groupOrder=$groupOrder, imageId=$imageId, name=$name, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionUpdateParams &&
-            id == other.id &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is ProductCollectionUpdateParams && id == other.id && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "ProductCollectionUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "ProductCollectionUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

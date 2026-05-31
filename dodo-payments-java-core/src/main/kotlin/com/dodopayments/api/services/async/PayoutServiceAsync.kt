@@ -7,15 +7,14 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.payouts.PayoutListPageAsync
 import com.dodopayments.api.models.payouts.PayoutListParams
+import com.dodopayments.api.services.async.PayoutServiceAsync
 import com.dodopayments.api.services.async.payouts.BreakupServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface PayoutServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -30,23 +29,21 @@ interface PayoutServiceAsync {
     fun list(): CompletableFuture<PayoutListPageAsync> = list(PayoutListParams.none())
 
     /** @see list */
-    fun list(
-        params: PayoutListParams = PayoutListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<PayoutListPageAsync>
+    fun list(params: PayoutListParams = PayoutListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<PayoutListPageAsync>
 
     /** @see list */
-    fun list(
-        params: PayoutListParams = PayoutListParams.none()
-    ): CompletableFuture<PayoutListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: PayoutListParams = PayoutListParams.none()): CompletableFuture<PayoutListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<PayoutListPageAsync> =
-        list(PayoutListParams.none(), requestOptions)
+        list(
+          PayoutListParams.none(), requestOptions
+        )
 
-    /**
-     * A view of [PayoutServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [PayoutServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -54,35 +51,26 @@ interface PayoutServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): PayoutServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync.WithRawResponse
 
         fun breakup(): BreakupServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /payouts`, but is otherwise the same as
-         * [PayoutServiceAsync.list].
-         */
-        fun list(): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
-            list(PayoutListParams.none())
+        /** Returns a raw HTTP response for `get /payouts`, but is otherwise the             same as [PayoutServiceAsync.list]. */
+        fun list(): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> = list(PayoutListParams.none())
 
         /** @see list */
-        fun list(
-            params: PayoutListParams = PayoutListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>>
+        fun list(params: PayoutListParams = PayoutListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<PayoutListPageAsync>>
 
         /** @see list */
-        fun list(
-            params: PayoutListParams = PayoutListParams.none()
-        ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: PayoutListParams = PayoutListParams.none()): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
-            list(PayoutListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> =
+            list(
+              PayoutListParams.none(), requestOptions
+            )
     }
 }

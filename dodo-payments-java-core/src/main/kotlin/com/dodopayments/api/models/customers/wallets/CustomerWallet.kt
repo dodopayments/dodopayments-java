@@ -18,60 +18,45 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerWallet
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomerWallet @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val balance: JsonField<Long>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<Currency>,
     private val customerId: JsonField<String>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("balance") @ExcludeMissing balance: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
-        @JsonProperty("customer_id")
-        @ExcludeMissing
-        customerId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("updated_at")
-        @ExcludeMissing
-        updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(balance, createdAt, currency, customerId, updatedAt, mutableMapOf())
+        @JsonProperty("customer_id") @ExcludeMissing customerId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
+    ) : this(
+      balance,
+      createdAt,
+      currency,
+      customerId,
+      updatedAt,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun balance(): Long = balance.getRequired("balance")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun currency(): Currency = currency.getRequired("currency")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun customerId(): String = customerId.getRequired("customer_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
@@ -79,7 +64,9 @@ private constructor(
      *
      * Unlike [balance], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("balance") @ExcludeMissing fun _balance(): JsonField<Long> = balance
+    @JsonProperty("balance")
+    @ExcludeMissing
+    fun _balance(): JsonField<Long> = balance
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -95,14 +82,18 @@ private constructor(
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+    @JsonProperty("currency")
+    @ExcludeMissing
+    fun _currency(): JsonField<Currency> = currency
 
     /**
      * Returns the raw JSON value of [customerId].
      *
      * Unlike [customerId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("customer_id") @ExcludeMissing fun _customerId(): JsonField<String> = customerId
+    @JsonProperty("customer_id")
+    @ExcludeMissing
+    fun _customerId(): JsonField<String> = customerId
 
     /**
      * Returns the raw JSON value of [updatedAt].
@@ -115,13 +106,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -131,6 +121,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CustomerWallet].
          *
          * The following fields are required:
+         *
          * ```java
          * .balance()
          * .createdAt()
@@ -139,7 +130,8 @@ private constructor(
          * .updatedAt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerWallet]. */
@@ -153,87 +145,106 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(customerWallet: CustomerWallet) = apply {
-            balance = customerWallet.balance
-            createdAt = customerWallet.createdAt
-            currency = customerWallet.currency
-            customerId = customerWallet.customerId
-            updatedAt = customerWallet.updatedAt
-            additionalProperties = customerWallet.additionalProperties.toMutableMap()
-        }
+        internal fun from(customerWallet: CustomerWallet) =
+            apply {
+                balance = customerWallet.balance
+                createdAt = customerWallet.createdAt
+                currency = customerWallet.currency
+                customerId = customerWallet.customerId
+                updatedAt = customerWallet.updatedAt
+                additionalProperties = customerWallet.additionalProperties.toMutableMap()
+            }
 
         fun balance(balance: Long) = balance(JsonField.of(balance))
 
         /**
          * Sets [Builder.balance] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.balance] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.balance] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun balance(balance: JsonField<Long>) = apply { this.balance = balance }
+        fun balance(balance: JsonField<Long>) =
+            apply {
+                this.balance = balance
+            }
 
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         fun currency(currency: Currency) = currency(JsonField.of(currency))
 
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [Currency] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+        fun currency(currency: JsonField<Currency>) =
+            apply {
+                this.currency = currency
+            }
 
         fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
         /**
          * Sets [Builder.customerId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customerId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.customerId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customerId(customerId: JsonField<String>) = apply { this.customerId = customerId }
+        fun customerId(customerId: JsonField<String>) =
+            apply {
+                this.customerId = customerId
+            }
 
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
          * Sets [Builder.updatedAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.updatedAt = updatedAt
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomerWallet].
@@ -241,6 +252,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .balance()
          * .createdAt()
@@ -253,12 +265,22 @@ private constructor(
          */
         fun build(): CustomerWallet =
             CustomerWallet(
-                checkRequired("balance", balance),
-                checkRequired("createdAt", createdAt),
-                checkRequired("currency", currency),
-                checkRequired("customerId", customerId),
-                checkRequired("updatedAt", updatedAt),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "balance", balance
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "currency", currency
+              ),
+              checkRequired(
+                "customerId", customerId
+              ),
+              checkRequired(
+                "updatedAt", updatedAt
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -272,18 +294,19 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomerWallet = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomerWallet =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        balance()
-        createdAt()
-        currency().validate()
-        customerId()
-        updatedAt()
-        validated = true
-    }
+            balance()
+            createdAt()
+            currency().validate()
+            customerId()
+            updatedAt()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -299,33 +322,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (balance.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (currency.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (customerId.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (balance.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (customerId.asKnown().isPresent) 1 else 0) + (if (updatedAt.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerWallet &&
-            balance == other.balance &&
-            createdAt == other.createdAt &&
-            currency == other.currency &&
-            customerId == other.customerId &&
-            updatedAt == other.updatedAt &&
-            additionalProperties == other.additionalProperties
+      return other is CustomerWallet && balance == other.balance && createdAt == other.createdAt && currency == other.currency && customerId == other.customerId && updatedAt == other.updatedAt && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(balance, createdAt, currency, customerId, updatedAt, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(balance, createdAt, currency, customerId, updatedAt, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomerWallet{balance=$balance, createdAt=$createdAt, currency=$currency, customerId=$customerId, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomerWallet{balance=$balance, createdAt=$createdAt, currency=$currency, customerId=$customerId, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

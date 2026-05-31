@@ -17,81 +17,73 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.payouts.breakup.BreakupRetrieveParams
 import com.dodopayments.api.models.payouts.breakup.BreakupRetrieveResponse
+import com.dodopayments.api.services.blocking.payouts.BreakupService
+import com.dodopayments.api.services.blocking.payouts.BreakupServiceImpl
 import com.dodopayments.api.services.blocking.payouts.breakup.DetailService
 import com.dodopayments.api.services.blocking.payouts.breakup.DetailServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class BreakupServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    BreakupService {
+class BreakupServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: BreakupService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : BreakupService {
+
+    private val withRawResponse: BreakupService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val details: DetailService by lazy { DetailServiceImpl(clientOptions) }
 
     override fun withRawResponse(): BreakupService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupService =
-        BreakupServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupService = BreakupServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun details(): DetailService = details
 
-    override fun retrieve(
-        params: BreakupRetrieveParams,
-        requestOptions: RequestOptions,
-    ): List<BreakupRetrieveResponse> =
+    override fun retrieve(params: BreakupRetrieveParams, requestOptions: RequestOptions): List<BreakupRetrieveResponse> =
         // get /payouts/{payout_id}/breakup
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        BreakupService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : BreakupService.WithRawResponse {
 
-        private val details: DetailService.WithRawResponse by lazy {
-            DetailServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): BreakupService.WithRawResponse =
-            BreakupServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val details: DetailService.WithRawResponse by lazy { DetailServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BreakupService.WithRawResponse = BreakupServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun details(): DetailService.WithRawResponse = details
 
-        private val retrieveHandler: Handler<List<BreakupRetrieveResponse>> =
-            jsonHandler<List<BreakupRetrieveResponse>>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<List<BreakupRetrieveResponse>> = jsonHandler<List<BreakupRetrieveResponse>>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: BreakupRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<BreakupRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("payoutId", params.payoutId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("payouts", params._pathParam(0), "breakup")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.forEach { it.validate() }
-                        }
-                    }
-            }
+        override fun retrieve(params: BreakupRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<List<BreakupRetrieveResponse>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("payoutId", params.payoutId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("payouts", params._pathParam(0), "breakup")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.forEach { it.validate() }
+                  }
+              }
+          }
         }
     }
 }

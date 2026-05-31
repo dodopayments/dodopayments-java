@@ -9,14 +9,13 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.entitlements.files.FileDeleteParams
 import com.dodopayments.api.models.entitlements.files.FileUploadParams
 import com.dodopayments.api.models.entitlements.files.FileUploadResponse
+import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface FileService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -28,47 +27,67 @@ interface FileService {
 
     /** Detach a previously-attached file from a `digital_files` entitlement. */
     fun delete(fileId: String, params: FileDeleteParams) =
-        delete(fileId, params, RequestOptions.none())
+        delete(
+          fileId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        fileId: String,
-        params: FileDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = delete(params.toBuilder().fileId(fileId).build(), requestOptions)
+    fun delete(fileId: String, params: FileDeleteParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        delete(
+          params.toBuilder()
+              .fileId(fileId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
-    fun delete(params: FileDeleteParams) = delete(params, RequestOptions.none())
+    fun delete(params: FileDeleteParams) =
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(params: FileDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** Attach a file to a `digital_files` entitlement. Per-file size cap: 500 MiB. */
-    fun upload(id: String): FileUploadResponse = upload(id, FileUploadParams.none())
+    fun upload(id: String): FileUploadResponse =
+        upload(
+          id, FileUploadParams.none()
+        )
 
     /** @see upload */
-    fun upload(
-        id: String,
-        params: FileUploadParams = FileUploadParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileUploadResponse = upload(params.toBuilder().id(id).build(), requestOptions)
+    fun upload(id: String, params: FileUploadParams = FileUploadParams.none(), requestOptions: RequestOptions = RequestOptions.none()): FileUploadResponse =
+        upload(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see upload */
     fun upload(id: String, params: FileUploadParams = FileUploadParams.none()): FileUploadResponse =
-        upload(id, params, RequestOptions.none())
+        upload(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see upload */
-    fun upload(
-        params: FileUploadParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileUploadResponse
+    fun upload(params: FileUploadParams, requestOptions: RequestOptions = RequestOptions.none()): FileUploadResponse
 
     /** @see upload */
-    fun upload(params: FileUploadParams): FileUploadResponse = upload(params, RequestOptions.none())
+    fun upload(params: FileUploadParams): FileUploadResponse =
+        upload(
+          params, RequestOptions.none()
+        )
 
     /** @see upload */
     fun upload(id: String, requestOptions: RequestOptions): FileUploadResponse =
-        upload(id, FileUploadParams.none(), requestOptions)
+        upload(
+          id,
+          FileUploadParams.none(),
+          requestOptions,
+        )
 
     /** A view of [FileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -80,74 +99,78 @@ interface FileService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `delete /entitlements/{id}/files/{file_id}`, but is
-         * otherwise the same as [FileService.delete].
-         */
+        /** Returns a raw HTTP response for `delete /entitlements/{id}/files/{file_id}`, but is otherwise the             same as [FileService.delete]. */
         @MustBeClosed
         fun delete(fileId: String, params: FileDeleteParams): HttpResponse =
-            delete(fileId, params, RequestOptions.none())
+            delete(
+              fileId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            fileId: String,
-            params: FileDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = delete(params.toBuilder().fileId(fileId).build(), requestOptions)
+        fun delete(fileId: String, params: FileDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            delete(
+              params.toBuilder()
+                  .fileId(fileId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: FileDeleteParams): HttpResponse = delete(params, RequestOptions.none())
+        fun delete(params: FileDeleteParams): HttpResponse =
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: FileDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun delete(params: FileDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
-        /**
-         * Returns a raw HTTP response for `post /entitlements/{id}/files`, but is otherwise the
-         * same as [FileService.upload].
-         */
+        /** Returns a raw HTTP response for `post /entitlements/{id}/files`, but is otherwise the             same as [FileService.upload]. */
         @MustBeClosed
         fun upload(id: String): HttpResponseFor<FileUploadResponse> =
-            upload(id, FileUploadParams.none())
+            upload(
+              id, FileUploadParams.none()
+            )
 
         /** @see upload */
         @MustBeClosed
-        fun upload(
-            id: String,
-            params: FileUploadParams = FileUploadParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileUploadResponse> =
-            upload(params.toBuilder().id(id).build(), requestOptions)
+        fun upload(id: String, params: FileUploadParams = FileUploadParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<FileUploadResponse> =
+            upload(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see upload */
         @MustBeClosed
-        fun upload(
-            id: String,
-            params: FileUploadParams = FileUploadParams.none(),
-        ): HttpResponseFor<FileUploadResponse> = upload(id, params, RequestOptions.none())
+        fun upload(id: String, params: FileUploadParams = FileUploadParams.none()): HttpResponseFor<FileUploadResponse> =
+            upload(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see upload */
         @MustBeClosed
-        fun upload(
-            params: FileUploadParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileUploadResponse>
+        fun upload(params: FileUploadParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<FileUploadResponse>
 
         /** @see upload */
         @MustBeClosed
         fun upload(params: FileUploadParams): HttpResponseFor<FileUploadResponse> =
-            upload(params, RequestOptions.none())
+            upload(
+              params, RequestOptions.none()
+            )
 
         /** @see upload */
         @MustBeClosed
-        fun upload(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<FileUploadResponse> = upload(id, FileUploadParams.none(), requestOptions)
+        fun upload(id: String, requestOptions: RequestOptions): HttpResponseFor<FileUploadResponse> =
+            upload(
+              id,
+              FileUploadParams.none(),
+              requestOptions,
+            )
     }
 }

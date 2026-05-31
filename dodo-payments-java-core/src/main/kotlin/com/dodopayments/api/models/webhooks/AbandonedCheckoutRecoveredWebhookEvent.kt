@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.webhooks.AbandonedCheckoutRecoveredWebhookEvent
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -19,49 +20,47 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class AbandonedCheckoutRecoveredWebhookEvent
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class AbandonedCheckoutRecoveredWebhookEvent @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val businessId: JsonField<String>,
     private val data: JsonField<Data>,
     private val timestamp: JsonField<OffsetDateTime>,
     private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
-        @JsonProperty("timestamp")
-        @ExcludeMissing
-        timestamp: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(businessId, data, timestamp, type, mutableMapOf())
+        @JsonProperty("timestamp") @ExcludeMissing timestamp: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of()
+    ) : this(
+      businessId,
+      data,
+      timestamp,
+      type,
+      mutableMapOf(),
+    )
 
     /**
      * The business identifier
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun businessId(): String = businessId.getRequired("business_id")
 
     /**
      * Webhook payload for abandoned_checkout.detected and abandoned_checkout.recovered events
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun data(): Data = data.getRequired("data")
 
     /**
      * The timestamp of when the event occurred
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun timestamp(): OffsetDateTime = timestamp.getRequired("timestamp")
 
@@ -76,21 +75,27 @@ private constructor(
      * However, this method can be useful for debugging and logging (e.g. if the server responded
      * with an unexpected value).
      */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+    @JsonProperty("type")
+    @ExcludeMissing
+    fun _type(): JsonValue = type
 
     /**
      * Returns the raw JSON value of [businessId].
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [data].
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Data> = data
+    @JsonProperty("data")
+    @ExcludeMissing
+    fun _data(): JsonField<Data> = data
 
     /**
      * Returns the raw JSON value of [timestamp].
@@ -103,30 +108,30 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [AbandonedCheckoutRecoveredWebhookEvent].
+         * Returns a mutable builder for constructing an instance of [AbandonedCheckoutRecoveredWebhookEvent].
          *
          * The following fields are required:
+         *
          * ```java
          * .businessId()
          * .data()
          * .timestamp()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AbandonedCheckoutRecoveredWebhookEvent]. */
@@ -139,16 +144,14 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            abandonedCheckoutRecoveredWebhookEvent: AbandonedCheckoutRecoveredWebhookEvent
-        ) = apply {
-            businessId = abandonedCheckoutRecoveredWebhookEvent.businessId
-            data = abandonedCheckoutRecoveredWebhookEvent.data
-            timestamp = abandonedCheckoutRecoveredWebhookEvent.timestamp
-            type = abandonedCheckoutRecoveredWebhookEvent.type
-            additionalProperties =
-                abandonedCheckoutRecoveredWebhookEvent.additionalProperties.toMutableMap()
-        }
+        internal fun from(abandonedCheckoutRecoveredWebhookEvent: AbandonedCheckoutRecoveredWebhookEvent) =
+            apply {
+                businessId = abandonedCheckoutRecoveredWebhookEvent.businessId
+                data = abandonedCheckoutRecoveredWebhookEvent.data
+                timestamp = abandonedCheckoutRecoveredWebhookEvent.timestamp
+                type = abandonedCheckoutRecoveredWebhookEvent.type
+                additionalProperties = abandonedCheckoutRecoveredWebhookEvent.additionalProperties.toMutableMap()
+            }
 
         /** The business identifier */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -156,24 +159,27 @@ private constructor(
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
-        /**
-         * Webhook payload for abandoned_checkout.detected and abandoned_checkout.recovered events
-         */
+        /** Webhook payload for abandoned_checkout.detected and abandoned_checkout.recovered events */
         fun data(data: Data) = data(JsonField.of(data))
 
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed [Data] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.data] with a well-typed [Data] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun data(data: JsonField<Data>) = apply { this.data = data }
+        fun data(data: JsonField<Data>) =
+            apply {
+                this.data = data
+            }
 
         /** The timestamp of when the event occurred */
         fun timestamp(timestamp: OffsetDateTime) = timestamp(JsonField.of(timestamp))
@@ -181,44 +187,54 @@ private constructor(
         /**
          * Sets [Builder.timestamp] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.timestamp] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.timestamp] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun timestamp(timestamp: JsonField<OffsetDateTime>) = apply { this.timestamp = timestamp }
+        fun timestamp(timestamp: JsonField<OffsetDateTime>) =
+            apply {
+                this.timestamp = timestamp
+            }
 
         /**
          * Sets the field to an arbitrary JSON value.
          *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
+         * It is usually unnecessary to call this method because the field defaults to the following:
          * ```java
          * JsonValue.from("abandoned_checkout.recovered")
          * ```
          *
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * This method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun type(type: JsonValue) = apply { this.type = type }
+        fun type(type: JsonValue) =
+            apply {
+                this.type = type
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [AbandonedCheckoutRecoveredWebhookEvent].
@@ -226,6 +242,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .businessId()
          * .data()
@@ -236,11 +253,17 @@ private constructor(
          */
         fun build(): AbandonedCheckoutRecoveredWebhookEvent =
             AbandonedCheckoutRecoveredWebhookEvent(
-                checkRequired("businessId", businessId),
-                checkRequired("data", data),
-                checkRequired("timestamp", timestamp),
-                type,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "data", data
+              ),
+              checkRequired(
+                "timestamp", timestamp
+              ),
+              type,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -254,21 +277,22 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): AbandonedCheckoutRecoveredWebhookEvent = apply {
-        if (validated) {
-            return@apply
-        }
-
-        businessId()
-        data().validate()
-        timestamp()
-        _type().let {
-            if (it != JsonValue.from("abandoned_checkout.recovered")) {
-                throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+    fun validate(): AbandonedCheckoutRecoveredWebhookEvent =
+        apply {
+            if (validated) {
+              return@apply
             }
+
+            businessId()
+            data().validate()
+            timestamp()
+            _type().let {
+                if (it != JsonValue.from("abandoned_checkout.recovered")) {
+                    throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                }
+            }
+            validated = true
         }
-        validated = true
-    }
 
     fun isValid(): Boolean =
         try {
@@ -285,15 +309,12 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (businessId.asKnown().isPresent) 1 else 0) +
-            (data.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (timestamp.asKnown().isPresent) 1 else 0) +
-            type.let { if (it == JsonValue.from("abandoned_checkout.recovered")) 1 else 0 }
+        (if (businessId.asKnown().isPresent) 1 else 0) + (data.asKnown().getOrNull()?.validity() ?: 0) + (if (timestamp.asKnown().isPresent) 1 else 0) + type.let {
+            if (it == JsonValue.from("abandoned_checkout.recovered")) 1 else 0
+        }
 
     /** Webhook payload for abandoned_checkout.detected and abandoned_checkout.recovered events */
-    class Data
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Data @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val abandonedAt: JsonField<OffsetDateTime>,
         private val abandonmentReason: JsonField<AbandonmentReason>,
         private val customerId: JsonField<String>,
@@ -301,73 +322,44 @@ private constructor(
         private val status: JsonField<Status>,
         private val recoveredPaymentId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("abandoned_at")
-            @ExcludeMissing
-            abandonedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("abandonment_reason")
-            @ExcludeMissing
-            abandonmentReason: JsonField<AbandonmentReason> = JsonMissing.of(),
-            @JsonProperty("customer_id")
-            @ExcludeMissing
-            customerId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("payment_id")
-            @ExcludeMissing
-            paymentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("abandoned_at") @ExcludeMissing abandonedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("abandonment_reason") @ExcludeMissing abandonmentReason: JsonField<AbandonmentReason> = JsonMissing.of(),
+            @JsonProperty("customer_id") @ExcludeMissing customerId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-            @JsonProperty("recovered_payment_id")
-            @ExcludeMissing
-            recoveredPaymentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("recovered_payment_id") @ExcludeMissing recoveredPaymentId: JsonField<String> = JsonMissing.of()
         ) : this(
-            abandonedAt,
-            abandonmentReason,
-            customerId,
-            paymentId,
-            status,
-            recoveredPaymentId,
-            mutableMapOf(),
+          abandonedAt,
+          abandonmentReason,
+          customerId,
+          paymentId,
+          status,
+          recoveredPaymentId,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun abandonedAt(): OffsetDateTime = abandonedAt.getRequired("abandoned_at")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun abandonmentReason(): AbandonmentReason =
-            abandonmentReason.getRequired("abandonment_reason")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
+        fun abandonmentReason(): AbandonmentReason = abandonmentReason.getRequired("abandonment_reason")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun customerId(): String = customerId.getRequired("customer_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun paymentId(): String = paymentId.getRequired("payment_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun status(): Status = status.getRequired("status")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun recoveredPaymentId(): Optional<String> =
-            recoveredPaymentId.getOptional("recovered_payment_id")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun recoveredPaymentId(): Optional<String> = recoveredPaymentId.getOptional("recovered_payment_id")
 
         /**
          * Returns the raw JSON value of [abandonedAt].
@@ -381,8 +373,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [abandonmentReason].
          *
-         * Unlike [abandonmentReason], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [abandonmentReason], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("abandonment_reason")
         @ExcludeMissing
@@ -402,20 +393,23 @@ private constructor(
          *
          * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+        @JsonProperty("payment_id")
+        @ExcludeMissing
+        fun _paymentId(): JsonField<String> = paymentId
 
         /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+        @JsonProperty("status")
+        @ExcludeMissing
+        fun _status(): JsonField<Status> = status
 
         /**
          * Returns the raw JSON value of [recoveredPaymentId].
          *
-         * Unlike [recoveredPaymentId], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [recoveredPaymentId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("recovered_payment_id")
         @ExcludeMissing
@@ -423,13 +417,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -439,6 +432,7 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Data].
              *
              * The following fields are required:
+             *
              * ```java
              * .abandonedAt()
              * .abandonmentReason()
@@ -447,7 +441,8 @@ private constructor(
              * .status()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Data]. */
@@ -462,115 +457,123 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(data: Data) = apply {
-                abandonedAt = data.abandonedAt
-                abandonmentReason = data.abandonmentReason
-                customerId = data.customerId
-                paymentId = data.paymentId
-                status = data.status
-                recoveredPaymentId = data.recoveredPaymentId
-                additionalProperties = data.additionalProperties.toMutableMap()
-            }
+            internal fun from(data: Data) =
+                apply {
+                    abandonedAt = data.abandonedAt
+                    abandonmentReason = data.abandonmentReason
+                    customerId = data.customerId
+                    paymentId = data.paymentId
+                    status = data.status
+                    recoveredPaymentId = data.recoveredPaymentId
+                    additionalProperties = data.additionalProperties.toMutableMap()
+                }
 
             fun abandonedAt(abandonedAt: OffsetDateTime) = abandonedAt(JsonField.of(abandonedAt))
 
             /**
              * Sets [Builder.abandonedAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.abandonedAt] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.abandonedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun abandonedAt(abandonedAt: JsonField<OffsetDateTime>) = apply {
-                this.abandonedAt = abandonedAt
-            }
+            fun abandonedAt(abandonedAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.abandonedAt = abandonedAt
+                }
 
-            fun abandonmentReason(abandonmentReason: AbandonmentReason) =
-                abandonmentReason(JsonField.of(abandonmentReason))
+            fun abandonmentReason(abandonmentReason: AbandonmentReason) = abandonmentReason(JsonField.of(abandonmentReason))
 
             /**
              * Sets [Builder.abandonmentReason] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.abandonmentReason] with a well-typed
-             * [AbandonmentReason] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
+             * You should usually call [Builder.abandonmentReason] with a well-typed [AbandonmentReason] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun abandonmentReason(abandonmentReason: JsonField<AbandonmentReason>) = apply {
-                this.abandonmentReason = abandonmentReason
-            }
+            fun abandonmentReason(abandonmentReason: JsonField<AbandonmentReason>) =
+                apply {
+                    this.abandonmentReason = abandonmentReason
+                }
 
             fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
             /**
              * Sets [Builder.customerId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.customerId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.customerId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun customerId(customerId: JsonField<String>) = apply { this.customerId = customerId }
+            fun customerId(customerId: JsonField<String>) =
+                apply {
+                    this.customerId = customerId
+                }
 
             fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
 
             /**
              * Sets [Builder.paymentId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+            fun paymentId(paymentId: JsonField<String>) =
+                apply {
+                    this.paymentId = paymentId
+                }
 
             fun status(status: Status) = status(JsonField.of(status))
 
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Status] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [Status] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Status>) = apply { this.status = status }
+            fun status(status: JsonField<Status>) =
+                apply {
+                    this.status = status
+                }
 
-            fun recoveredPaymentId(recoveredPaymentId: String?) =
-                recoveredPaymentId(JsonField.ofNullable(recoveredPaymentId))
+            fun recoveredPaymentId(recoveredPaymentId: String?) = recoveredPaymentId(JsonField.ofNullable(recoveredPaymentId))
 
-            /**
-             * Alias for calling [Builder.recoveredPaymentId] with
-             * `recoveredPaymentId.orElse(null)`.
-             */
-            fun recoveredPaymentId(recoveredPaymentId: Optional<String>) =
-                recoveredPaymentId(recoveredPaymentId.getOrNull())
+            /** Alias for calling [Builder.recoveredPaymentId] with `recoveredPaymentId.orElse(null)`. */
+            fun recoveredPaymentId(recoveredPaymentId: Optional<String>) = recoveredPaymentId(recoveredPaymentId.getOrNull())
 
             /**
              * Sets [Builder.recoveredPaymentId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.recoveredPaymentId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.recoveredPaymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun recoveredPaymentId(recoveredPaymentId: JsonField<String>) = apply {
-                this.recoveredPaymentId = recoveredPaymentId
-            }
+            fun recoveredPaymentId(recoveredPaymentId: JsonField<String>) =
+                apply {
+                    this.recoveredPaymentId = recoveredPaymentId
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Data].
@@ -578,6 +581,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .abandonedAt()
              * .abandonmentReason()
@@ -590,40 +594,50 @@ private constructor(
              */
             fun build(): Data =
                 Data(
-                    checkRequired("abandonedAt", abandonedAt),
-                    checkRequired("abandonmentReason", abandonmentReason),
-                    checkRequired("customerId", customerId),
-                    checkRequired("paymentId", paymentId),
-                    checkRequired("status", status),
-                    recoveredPaymentId,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "abandonedAt", abandonedAt
+                  ),
+                  checkRequired(
+                    "abandonmentReason", abandonmentReason
+                  ),
+                  checkRequired(
+                    "customerId", customerId
+                  ),
+                  checkRequired(
+                    "paymentId", paymentId
+                  ),
+                  checkRequired(
+                    "status", status
+                  ),
+                  recoveredPaymentId,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Data = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Data =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            abandonedAt()
-            abandonmentReason().validate()
-            customerId()
-            paymentId()
-            status().validate()
-            recoveredPaymentId()
-            validated = true
-        }
+                abandonedAt()
+                abandonmentReason().validate()
+                customerId()
+                paymentId()
+                status().validate()
+                recoveredPaymentId()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -634,33 +648,27 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (abandonedAt.asKnown().isPresent) 1 else 0) +
-                (abandonmentReason.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (customerId.asKnown().isPresent) 1 else 0) +
-                (if (paymentId.asKnown().isPresent) 1 else 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (recoveredPaymentId.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (abandonedAt.asKnown().isPresent) 1 else 0) + (abandonmentReason.asKnown().getOrNull()?.validity() ?: 0) + (if (customerId.asKnown().isPresent) 1 else 0) + (if (paymentId.asKnown().isPresent) 1 else 0) + (status.asKnown().getOrNull()?.validity() ?: 0) + (if (recoveredPaymentId.asKnown().isPresent) 1 else 0)
 
-        class AbandonmentReason
-        @JsonCreator
-        private constructor(private val value: JsonField<String>) : Enum {
+        class AbandonmentReason @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -678,31 +686,29 @@ private constructor(
             }
 
             /**
-             * An enum containing [AbandonmentReason]'s known values, as well as an [_UNKNOWN]
-             * member.
+             * An enum containing [AbandonmentReason]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [AbandonmentReason] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
                 PAYMENT_FAILED,
                 CHECKOUT_INCOMPLETE,
-                /**
-                 * An enum member indicating that [AbandonmentReason] was instantiated with an
-                 * unknown value.
-                 */
+                /** An enum member indicating that [AbandonmentReason] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -714,54 +720,48 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
                     PAYMENT_FAILED -> Known.PAYMENT_FAILED
                     CHECKOUT_INCOMPLETE -> Known.CHECKOUT_INCOMPLETE
-                    else ->
-                        throw DodoPaymentsInvalidDataException("Unknown AbandonmentReason: $value")
+                    else -> throw DodoPaymentsInvalidDataException("Unknown AbandonmentReason: $value")
                 }
 
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): AbandonmentReason = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): AbandonmentReason =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -772,19 +772,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is AbandonmentReason && value == other.value
+              return other is AbandonmentReason && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -792,17 +792,20 @@ private constructor(
             override fun toString() = value.toString()
         }
 
-        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Status @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -832,9 +835,11 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -843,18 +848,16 @@ private constructor(
                 RECOVERED,
                 EXHAUSTED,
                 OPTED_OUT,
-                /**
-                 * An enum member indicating that [Status] was instantiated with an unknown value.
-                 */
+                /** An enum member indicating that [Status] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -869,11 +872,10 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
@@ -888,37 +890,33 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Status = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Status =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -929,19 +927,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Status && value == other.value
+              return other is Status && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -950,57 +948,31 @@ private constructor(
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Data &&
-                abandonedAt == other.abandonedAt &&
-                abandonmentReason == other.abandonmentReason &&
-                customerId == other.customerId &&
-                paymentId == other.paymentId &&
-                status == other.status &&
-                recoveredPaymentId == other.recoveredPaymentId &&
-                additionalProperties == other.additionalProperties
+          return other is Data && abandonedAt == other.abandonedAt && abandonmentReason == other.abandonmentReason && customerId == other.customerId && paymentId == other.paymentId && status == other.status && recoveredPaymentId == other.recoveredPaymentId && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                abandonedAt,
-                abandonmentReason,
-                customerId,
-                paymentId,
-                status,
-                recoveredPaymentId,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(abandonedAt, abandonmentReason, customerId, paymentId, status, recoveredPaymentId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Data{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, customerId=$customerId, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
+        override fun toString() = "Data{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, customerId=$customerId, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AbandonedCheckoutRecoveredWebhookEvent &&
-            businessId == other.businessId &&
-            data == other.data &&
-            timestamp == other.timestamp &&
-            type == other.type &&
-            additionalProperties == other.additionalProperties
+      return other is AbandonedCheckoutRecoveredWebhookEvent && businessId == other.businessId && data == other.data && timestamp == other.timestamp && type == other.type && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(businessId, data, timestamp, type, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(businessId, data, timestamp, type, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "AbandonedCheckoutRecoveredWebhookEvent{businessId=$businessId, data=$data, timestamp=$timestamp, type=$type, additionalProperties=$additionalProperties}"
+    override fun toString() = "AbandonedCheckoutRecoveredWebhookEvent{businessId=$businessId, data=$data, timestamp=$timestamp, type=$type, additionalProperties=$additionalProperties}"
 }

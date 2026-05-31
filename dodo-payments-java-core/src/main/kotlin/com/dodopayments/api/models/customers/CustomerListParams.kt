@@ -11,8 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerListParams
-private constructor(
+class CustomerListParams private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
     private val email: String?,
@@ -21,6 +20,7 @@ private constructor(
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** Filter customers created on or after this timestamp */
@@ -51,10 +51,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): CustomerListParams = builder().build()
+        @JvmStatic
+        fun none(): CustomerListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [CustomerListParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerListParams]. */
@@ -70,45 +72,59 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(customerListParams: CustomerListParams) = apply {
-            createdAtGte = customerListParams.createdAtGte
-            createdAtLte = customerListParams.createdAtLte
-            email = customerListParams.email
-            name = customerListParams.name
-            pageNumber = customerListParams.pageNumber
-            pageSize = customerListParams.pageSize
-            additionalHeaders = customerListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = customerListParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(customerListParams: CustomerListParams) =
+            apply {
+                createdAtGte = customerListParams.createdAtGte
+                createdAtLte = customerListParams.createdAtLte
+                email = customerListParams.email
+                name = customerListParams.name
+                pageNumber = customerListParams.pageNumber
+                pageSize = customerListParams.pageSize
+                additionalHeaders = customerListParams.additionalHeaders.toBuilder()
+                additionalQueryParams = customerListParams.additionalQueryParams.toBuilder()
+            }
 
         /** Filter customers created on or after this timestamp */
-        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+        fun createdAtGte(createdAtGte: OffsetDateTime?) =
+            apply {
+                this.createdAtGte = createdAtGte
+            }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
-        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
-            createdAtGte(createdAtGte.getOrNull())
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) = createdAtGte(createdAtGte.getOrNull())
 
         /** Filter customers created on or before this timestamp */
-        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+        fun createdAtLte(createdAtLte: OffsetDateTime?) =
+            apply {
+                this.createdAtLte = createdAtLte
+            }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
-        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
-            createdAtLte(createdAtLte.getOrNull())
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) = createdAtLte(createdAtLte.getOrNull())
 
         /** Filter by customer email */
-        fun email(email: String?) = apply { this.email = email }
+        fun email(email: String?) =
+            apply {
+                this.email = email
+            }
 
         /** Alias for calling [Builder.email] with `email.orElse(null)`. */
         fun email(email: Optional<String>) = email(email.getOrNull())
 
         /** Filter by customer name (partial match, case-insensitive) */
-        fun name(name: String?) = apply { this.name = name }
+        fun name(name: String?) =
+            apply {
+                this.name = name
+            }
 
         /** Alias for calling [Builder.name] with `name.orElse(null)`. */
         fun name(name: Optional<String>) = name(name.getOrNull())
 
         /** Page number default is 0 */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -121,7 +137,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -133,103 +152,129 @@ private constructor(
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [CustomerListParams].
@@ -238,14 +283,14 @@ private constructor(
          */
         fun build(): CustomerListParams =
             CustomerListParams(
-                createdAtGte,
-                createdAtLte,
-                email,
-                name,
-                pageNumber,
-                pageSize,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              createdAtGte,
+              createdAtLte,
+              email,
+              name,
+              pageNumber,
+              pageSize,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -254,12 +299,8 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                createdAtGte?.let {
-                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
-                createdAtLte?.let {
-                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                createdAtGte?.let { put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                createdAtLte?.let { put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 email?.let { put("email", it) }
                 name?.let { put("name", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
@@ -269,33 +310,14 @@ private constructor(
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerListParams &&
-            createdAtGte == other.createdAtGte &&
-            createdAtLte == other.createdAtLte &&
-            email == other.email &&
-            name == other.name &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is CustomerListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && email == other.email && name == other.name && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            createdAtGte,
-            createdAtLte,
-            email,
-            name,
-            pageNumber,
-            pageSize,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(createdAtGte, createdAtLte, email, name, pageNumber, pageSize, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "CustomerListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, email=$email, name=$name, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "CustomerListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, email=$email, name=$name, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

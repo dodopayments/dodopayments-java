@@ -24,20 +24,21 @@ import com.dodopayments.api.models.brands.BrandRetrieveParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesParams
 import com.dodopayments.api.models.brands.BrandUpdateImagesResponse
 import com.dodopayments.api.models.brands.BrandUpdateParams
+import com.dodopayments.api.services.blocking.BrandService
+import com.dodopayments.api.services.blocking.BrandServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class BrandServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    BrandService {
+class BrandServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: BrandService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : BrandService {
+
+    private val withRawResponse: BrandService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): BrandService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandService =
-        BrandServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandService = BrandServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: BrandCreateParams, requestOptions: RequestOptions): Brand =
         // post /brands
@@ -55,168 +56,166 @@ class BrandServiceImpl internal constructor(private val clientOptions: ClientOpt
         // get /brands
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun updateImages(
-        params: BrandUpdateImagesParams,
-        requestOptions: RequestOptions,
-    ): BrandUpdateImagesResponse =
+    override fun updateImages(params: BrandUpdateImagesParams, requestOptions: RequestOptions): BrandUpdateImagesResponse =
         // put /brands/{id}/images
         withRawResponse().updateImages(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        BrandService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : BrandService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): BrandService.WithRawResponse =
-            BrandServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BrandService.WithRawResponse = BrandServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         private val createHandler: Handler<Brand> = jsonHandler<Brand>(clientOptions.jsonMapper)
 
-        override fun create(
-            params: BrandCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Brand> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("brands")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun create(params: BrandCreateParams, requestOptions: RequestOptions): HttpResponseFor<Brand> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("brands")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
         private val retrieveHandler: Handler<Brand> = jsonHandler<Brand>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: BrandRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Brand> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("brands", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: BrandRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<Brand> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("brands", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
         private val updateHandler: Handler<Brand> = jsonHandler<Brand>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: BrandUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Brand> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("brands", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun update(params: BrandUpdateParams, requestOptions: RequestOptions): HttpResponseFor<Brand> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("brands", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<BrandListResponse> =
-            jsonHandler<BrandListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<BrandListResponse> = jsonHandler<BrandListResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: BrandListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<BrandListResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("brands")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun list(params: BrandListParams, requestOptions: RequestOptions): HttpResponseFor<BrandListResponse> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("brands")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val updateImagesHandler: Handler<BrandUpdateImagesResponse> =
-            jsonHandler<BrandUpdateImagesResponse>(clientOptions.jsonMapper)
+        private val updateImagesHandler: Handler<BrandUpdateImagesResponse> = jsonHandler<BrandUpdateImagesResponse>(clientOptions.jsonMapper)
 
-        override fun updateImages(
-            params: BrandUpdateImagesParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<BrandUpdateImagesResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PUT)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("brands", params._pathParam(0), "images")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateImagesHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun updateImages(params: BrandUpdateImagesParams, requestOptions: RequestOptions): HttpResponseFor<BrandUpdateImagesResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PUT)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("brands", params._pathParam(0), "images")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateImagesHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

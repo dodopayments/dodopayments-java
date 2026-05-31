@@ -11,14 +11,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class PayoutListParams
-private constructor(
+class PayoutListParams private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** Get payouts created after this time (inclusive) */
@@ -43,10 +43,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): PayoutListParams = builder().build()
+        @JvmStatic
+        fun none(): PayoutListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [PayoutListParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [PayoutListParams]. */
@@ -60,31 +62,39 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(payoutListParams: PayoutListParams) = apply {
-            createdAtGte = payoutListParams.createdAtGte
-            createdAtLte = payoutListParams.createdAtLte
-            pageNumber = payoutListParams.pageNumber
-            pageSize = payoutListParams.pageSize
-            additionalHeaders = payoutListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = payoutListParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(payoutListParams: PayoutListParams) =
+            apply {
+                createdAtGte = payoutListParams.createdAtGte
+                createdAtLte = payoutListParams.createdAtLte
+                pageNumber = payoutListParams.pageNumber
+                pageSize = payoutListParams.pageSize
+                additionalHeaders = payoutListParams.additionalHeaders.toBuilder()
+                additionalQueryParams = payoutListParams.additionalQueryParams.toBuilder()
+            }
 
         /** Get payouts created after this time (inclusive) */
-        fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
+        fun createdAtGte(createdAtGte: OffsetDateTime?) =
+            apply {
+                this.createdAtGte = createdAtGte
+            }
 
         /** Alias for calling [Builder.createdAtGte] with `createdAtGte.orElse(null)`. */
-        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) =
-            createdAtGte(createdAtGte.getOrNull())
+        fun createdAtGte(createdAtGte: Optional<OffsetDateTime>) = createdAtGte(createdAtGte.getOrNull())
 
         /** Get payouts created before this time (inclusive) */
-        fun createdAtLte(createdAtLte: OffsetDateTime?) = apply { this.createdAtLte = createdAtLte }
+        fun createdAtLte(createdAtLte: OffsetDateTime?) =
+            apply {
+                this.createdAtLte = createdAtLte
+            }
 
         /** Alias for calling [Builder.createdAtLte] with `createdAtLte.orElse(null)`. */
-        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) =
-            createdAtLte(createdAtLte.getOrNull())
+        fun createdAtLte(createdAtLte: Optional<OffsetDateTime>) = createdAtLte(createdAtLte.getOrNull())
 
         /** Page number default is 0 */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -97,7 +107,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Page size default is 10 max is 100 */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -109,103 +122,129 @@ private constructor(
         /** Alias for calling [Builder.pageSize] with `pageSize.orElse(null)`. */
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [PayoutListParams].
@@ -214,12 +253,12 @@ private constructor(
          */
         fun build(): PayoutListParams =
             PayoutListParams(
-                createdAtGte,
-                createdAtLte,
-                pageNumber,
-                pageSize,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              createdAtGte,
+              createdAtLte,
+              pageNumber,
+              pageSize,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -228,12 +267,8 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                createdAtGte?.let {
-                    put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
-                createdAtLte?.let {
-                    put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
-                }
+                createdAtGte?.let { put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                createdAtLte?.let { put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -241,29 +276,14 @@ private constructor(
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is PayoutListParams &&
-            createdAtGte == other.createdAtGte &&
-            createdAtLte == other.createdAtLte &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is PayoutListParams && createdAtGte == other.createdAtGte && createdAtLte == other.createdAtLte && pageNumber == other.pageNumber && pageSize == other.pageSize && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            createdAtGte,
-            createdAtLte,
-            pageNumber,
-            pageSize,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(createdAtGte, createdAtLte, pageNumber, pageSize, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "PayoutListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "PayoutListParams{createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

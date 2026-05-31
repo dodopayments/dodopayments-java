@@ -11,6 +11,12 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.misc.TaxCategory
+import com.dodopayments.api.models.products.CreditEntitlementMappingResponse
+import com.dodopayments.api.models.products.DigitalProductDelivery
+import com.dodopayments.api.models.products.LicenseKeyDuration
+import com.dodopayments.api.models.products.Price
+import com.dodopayments.api.models.products.Product
+import com.dodopayments.api.models.products.ProductEntitlementSummary
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -21,9 +27,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class Product
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class Product @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -46,136 +50,99 @@ private constructor(
     private val name: JsonField<String>,
     private val productCollectionId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("credit_entitlements")
-        @ExcludeMissing
-        creditEntitlements: JsonField<List<CreditEntitlementMappingResponse>> = JsonMissing.of(),
-        @JsonProperty("entitlements")
-        @ExcludeMissing
-        entitlements: JsonField<List<ProductEntitlementSummary>> = JsonMissing.of(),
-        @JsonProperty("is_recurring")
-        @ExcludeMissing
-        isRecurring: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("license_key_enabled")
-        @ExcludeMissing
-        licenseKeyEnabled: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("credit_entitlements") @ExcludeMissing creditEntitlements: JsonField<List<CreditEntitlementMappingResponse>> = JsonMissing.of(),
+        @JsonProperty("entitlements") @ExcludeMissing entitlements: JsonField<List<ProductEntitlementSummary>> = JsonMissing.of(),
+        @JsonProperty("is_recurring") @ExcludeMissing isRecurring: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("license_key_enabled") @ExcludeMissing licenseKeyEnabled: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("price") @ExcludeMissing price: JsonField<Price> = JsonMissing.of(),
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("tax_category")
-        @ExcludeMissing
-        taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
-        @JsonProperty("updated_at")
-        @ExcludeMissing
-        updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("tax_category") @ExcludeMissing taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
+        @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("addons") @ExcludeMissing addons: JsonField<List<String>> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("digital_product_delivery")
-        @ExcludeMissing
-        digitalProductDelivery: JsonField<DigitalProductDelivery> = JsonMissing.of(),
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("digital_product_delivery") @ExcludeMissing digitalProductDelivery: JsonField<DigitalProductDelivery> = JsonMissing.of(),
         @JsonProperty("image") @ExcludeMissing image: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("license_key_activation_message")
-        @ExcludeMissing
-        licenseKeyActivationMessage: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("license_key_activations_limit")
-        @ExcludeMissing
-        licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("license_key_duration")
-        @ExcludeMissing
-        licenseKeyDuration: JsonField<LicenseKeyDuration> = JsonMissing.of(),
+        @JsonProperty("license_key_activation_message") @ExcludeMissing licenseKeyActivationMessage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("license_key_activations_limit") @ExcludeMissing licenseKeyActivationsLimit: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("license_key_duration") @ExcludeMissing licenseKeyDuration: JsonField<LicenseKeyDuration> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("product_collection_id")
-        @ExcludeMissing
-        productCollectionId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("product_collection_id") @ExcludeMissing productCollectionId: JsonField<String> = JsonMissing.of()
     ) : this(
-        brandId,
-        businessId,
-        createdAt,
-        creditEntitlements,
-        entitlements,
-        isRecurring,
-        licenseKeyEnabled,
-        metadata,
-        price,
-        productId,
-        taxCategory,
-        updatedAt,
-        addons,
-        description,
-        digitalProductDelivery,
-        image,
-        licenseKeyActivationMessage,
-        licenseKeyActivationsLimit,
-        licenseKeyDuration,
-        name,
-        productCollectionId,
-        mutableMapOf(),
+      brandId,
+      businessId,
+      createdAt,
+      creditEntitlements,
+      entitlements,
+      isRecurring,
+      licenseKeyEnabled,
+      metadata,
+      price,
+      productId,
+      taxCategory,
+      updatedAt,
+      addons,
+      description,
+      digitalProductDelivery,
+      image,
+      licenseKeyActivationMessage,
+      licenseKeyActivationsLimit,
+      licenseKeyDuration,
+      name,
+      productCollectionId,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun brandId(): String = brandId.getRequired("brand_id")
 
     /**
      * Unique identifier for the business to which the product belongs.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun businessId(): String = businessId.getRequired("business_id")
 
     /**
      * Timestamp when the product was created.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
      * Attached credit entitlements with settings
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun creditEntitlements(): List<CreditEntitlementMappingResponse> =
-        creditEntitlements.getRequired("credit_entitlements")
+    fun creditEntitlements(): List<CreditEntitlementMappingResponse> = creditEntitlements.getRequired("credit_entitlements")
 
     /**
      * Attached entitlements (integration-based access grants)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun entitlements(): List<ProductEntitlementSummary> = entitlements.getRequired("entitlements")
 
     /**
      * Indicates if the product is recurring (e.g., subscriptions).
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun isRecurring(): Boolean = isRecurring.getRequired("is_recurring")
 
     /**
      * Indicates whether the product requires a license key.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
     fun licenseKeyEnabled(): Boolean = licenseKeyEnabled.getRequired("license_key_enabled")
@@ -183,136 +150,121 @@ private constructor(
     /**
      * Additional custom data associated with the product
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
 
     /**
      * Pricing information for the product.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun price(): Price = price.getRequired("price")
 
     /**
      * Unique identifier for the product.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun productId(): String = productId.getRequired("product_id")
 
     /**
      * Tax category associated with the product.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun taxCategory(): TaxCategory = taxCategory.getRequired("tax_category")
 
     /**
      * Timestamp when the product was last updated.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
     /**
      * Available Addons for subscription products
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun addons(): Optional<List<String>> = addons.getOptional("addons")
 
     /**
      * Description of the product, optional.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
-     * Digital-product-delivery payload, present on grants for `digital_files` entitlements. Each
-     * file carries a short-lived presigned download URL.
+     * Digital-product-delivery payload, present on grants for `digital_files`
+     * entitlements. Each file carries a short-lived presigned download URL.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun digitalProductDelivery(): Optional<DigitalProductDelivery> =
-        digitalProductDelivery.getOptional("digital_product_delivery")
+    fun digitalProductDelivery(): Optional<DigitalProductDelivery> = digitalProductDelivery.getOptional("digital_product_delivery")
 
     /**
      * URL of the product image, optional.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun image(): Optional<String> = image.getOptional("image")
 
     /**
      * Message sent upon license key activation, if applicable.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-    fun licenseKeyActivationMessage(): Optional<String> =
-        licenseKeyActivationMessage.getOptional("license_key_activation_message")
+    fun licenseKeyActivationMessage(): Optional<String> = licenseKeyActivationMessage.getOptional("license_key_activation_message")
 
     /**
      * Limit on the number of activations for the license key, if enabled.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-    fun licenseKeyActivationsLimit(): Optional<Int> =
-        licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
+    fun licenseKeyActivationsLimit(): Optional<Int> = licenseKeyActivationsLimit.getOptional("license_key_activations_limit")
 
     /**
      * Duration of the license key validity, if enabled.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun licenseKeyDuration(): Optional<LicenseKeyDuration> =
-        licenseKeyDuration.getOptional("license_key_duration")
+    fun licenseKeyDuration(): Optional<LicenseKeyDuration> = licenseKeyDuration.getOptional("license_key_duration")
 
     /**
      * Name of the product, optional.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
 
     /**
      * The product collection ID this product belongs to, if any
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun productCollectionId(): Optional<String> =
-        productCollectionId.getOptional("product_collection_id")
+    fun productCollectionId(): Optional<String> = productCollectionId.getOptional("product_collection_id")
 
     /**
      * Returns the raw JSON value of [brandId].
      *
      * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
+    @JsonProperty("brand_id")
+    @ExcludeMissing
+    fun _brandId(): JsonField<String> = brandId
 
     /**
      * Returns the raw JSON value of [businessId].
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -326,13 +278,11 @@ private constructor(
     /**
      * Returns the raw JSON value of [creditEntitlements].
      *
-     * Unlike [creditEntitlements], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [creditEntitlements], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("credit_entitlements")
     @ExcludeMissing
-    fun _creditEntitlements(): JsonField<List<CreditEntitlementMappingResponse>> =
-        creditEntitlements
+    fun _creditEntitlements(): JsonField<List<CreditEntitlementMappingResponse>> = creditEntitlements
 
     /**
      * Returns the raw JSON value of [entitlements].
@@ -355,8 +305,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [licenseKeyEnabled].
      *
-     * Unlike [licenseKeyEnabled], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [licenseKeyEnabled], this method doesn't throw if the JSON field has an unexpected type.
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
     @JsonProperty("license_key_enabled")
@@ -368,21 +317,27 @@ private constructor(
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+    @JsonProperty("metadata")
+    @ExcludeMissing
+    fun _metadata(): JsonField<Metadata> = metadata
 
     /**
      * Returns the raw JSON value of [price].
      *
      * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Price> = price
+    @JsonProperty("price")
+    @ExcludeMissing
+    fun _price(): JsonField<Price> = price
 
     /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+    @JsonProperty("product_id")
+    @ExcludeMissing
+    fun _productId(): JsonField<String> = productId
 
     /**
      * Returns the raw JSON value of [taxCategory].
@@ -407,20 +362,23 @@ private constructor(
      *
      * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<String>> = addons
+    @JsonProperty("addons")
+    @ExcludeMissing
+    fun _addons(): JsonField<List<String>> = addons
 
     /**
      * Returns the raw JSON value of [description].
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [digitalProductDelivery].
      *
-     * Unlike [digitalProductDelivery], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [digitalProductDelivery], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("digital_product_delivery")
     @ExcludeMissing
@@ -431,13 +389,14 @@ private constructor(
      *
      * Unlike [image], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("image") @ExcludeMissing fun _image(): JsonField<String> = image
+    @JsonProperty("image")
+    @ExcludeMissing
+    fun _image(): JsonField<String> = image
 
     /**
      * Returns the raw JSON value of [licenseKeyActivationMessage].
      *
-     * Unlike [licenseKeyActivationMessage], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [licenseKeyActivationMessage], this method doesn't throw if the JSON field has an unexpected type.
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
     @JsonProperty("license_key_activation_message")
@@ -447,8 +406,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [licenseKeyActivationsLimit].
      *
-     * Unlike [licenseKeyActivationsLimit], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [licenseKeyActivationsLimit], this method doesn't throw if the JSON field has an unexpected type.
      */
     @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
     @JsonProperty("license_key_activations_limit")
@@ -458,8 +416,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [licenseKeyDuration].
      *
-     * Unlike [licenseKeyDuration], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [licenseKeyDuration], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("license_key_duration")
     @ExcludeMissing
@@ -470,13 +427,14 @@ private constructor(
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [productCollectionId].
      *
-     * Unlike [productCollectionId], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [productCollectionId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("product_collection_id")
     @ExcludeMissing
@@ -484,13 +442,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -500,6 +457,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [Product].
          *
          * The following fields are required:
+         *
          * ```java
          * .brandId()
          * .businessId()
@@ -515,7 +473,8 @@ private constructor(
          * .updatedAt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [Product]. */
@@ -524,8 +483,7 @@ private constructor(
         private var brandId: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
-        private var creditEntitlements: JsonField<MutableList<CreditEntitlementMappingResponse>>? =
-            null
+        private var creditEntitlements: JsonField<MutableList<CreditEntitlementMappingResponse>>? = null
         private var entitlements: JsonField<MutableList<ProductEntitlementSummary>>? = null
         private var isRecurring: JsonField<Boolean>? = null
         private var licenseKeyEnabled: JsonField<Boolean>? = null
@@ -546,40 +504,44 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(product: Product) = apply {
-            brandId = product.brandId
-            businessId = product.businessId
-            createdAt = product.createdAt
-            creditEntitlements = product.creditEntitlements.map { it.toMutableList() }
-            entitlements = product.entitlements.map { it.toMutableList() }
-            isRecurring = product.isRecurring
-            licenseKeyEnabled = product.licenseKeyEnabled
-            metadata = product.metadata
-            price = product.price
-            productId = product.productId
-            taxCategory = product.taxCategory
-            updatedAt = product.updatedAt
-            addons = product.addons.map { it.toMutableList() }
-            description = product.description
-            digitalProductDelivery = product.digitalProductDelivery
-            image = product.image
-            licenseKeyActivationMessage = product.licenseKeyActivationMessage
-            licenseKeyActivationsLimit = product.licenseKeyActivationsLimit
-            licenseKeyDuration = product.licenseKeyDuration
-            name = product.name
-            productCollectionId = product.productCollectionId
-            additionalProperties = product.additionalProperties.toMutableMap()
-        }
+        internal fun from(product: Product) =
+            apply {
+                brandId = product.brandId
+                businessId = product.businessId
+                createdAt = product.createdAt
+                creditEntitlements = product.creditEntitlements.map { it.toMutableList() }
+                entitlements = product.entitlements.map { it.toMutableList() }
+                isRecurring = product.isRecurring
+                licenseKeyEnabled = product.licenseKeyEnabled
+                metadata = product.metadata
+                price = product.price
+                productId = product.productId
+                taxCategory = product.taxCategory
+                updatedAt = product.updatedAt
+                addons = product.addons.map { it.toMutableList() }
+                description = product.description
+                digitalProductDelivery = product.digitalProductDelivery
+                image = product.image
+                licenseKeyActivationMessage = product.licenseKeyActivationMessage
+                licenseKeyActivationsLimit = product.licenseKeyActivationsLimit
+                licenseKeyDuration = product.licenseKeyDuration
+                name = product.name
+                productCollectionId = product.productCollectionId
+                additionalProperties = product.additionalProperties.toMutableMap()
+            }
 
         fun brandId(brandId: String) = brandId(JsonField.of(brandId))
 
         /**
          * Sets [Builder.brandId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
+        fun brandId(brandId: JsonField<String>) =
+            apply {
+                this.brandId = brandId
+            }
 
         /** Unique identifier for the business to which the product belongs. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -587,11 +549,13 @@ private constructor(
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
         /** Timestamp when the product was created. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -599,65 +563,65 @@ private constructor(
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         /** Attached credit entitlements with settings */
-        fun creditEntitlements(creditEntitlements: List<CreditEntitlementMappingResponse>) =
-            creditEntitlements(JsonField.of(creditEntitlements))
+        fun creditEntitlements(creditEntitlements: List<CreditEntitlementMappingResponse>) = creditEntitlements(JsonField.of(creditEntitlements))
 
         /**
          * Sets [Builder.creditEntitlements] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.creditEntitlements] with a well-typed
-         * `List<CreditEntitlementMappingResponse>` value instead. This method is primarily for
-         * setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.creditEntitlements] with a well-typed `List<CreditEntitlementMappingResponse>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun creditEntitlements(
-            creditEntitlements: JsonField<List<CreditEntitlementMappingResponse>>
-        ) = apply { this.creditEntitlements = creditEntitlements.map { it.toMutableList() } }
+        fun creditEntitlements(creditEntitlements: JsonField<List<CreditEntitlementMappingResponse>>) =
+            apply {
+                this.creditEntitlements = creditEntitlements.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [CreditEntitlementMappingResponse] to [creditEntitlements].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addCreditEntitlement(creditEntitlement: CreditEntitlementMappingResponse) = apply {
-            creditEntitlements =
-                (creditEntitlements ?: JsonField.of(mutableListOf())).also {
+        fun addCreditEntitlement(creditEntitlement: CreditEntitlementMappingResponse) =
+            apply {
+                creditEntitlements = (creditEntitlements ?: JsonField.of(mutableListOf())).also {
                     checkKnown("creditEntitlements", it).add(creditEntitlement)
                 }
-        }
+            }
 
         /** Attached entitlements (integration-based access grants) */
-        fun entitlements(entitlements: List<ProductEntitlementSummary>) =
-            entitlements(JsonField.of(entitlements))
+        fun entitlements(entitlements: List<ProductEntitlementSummary>) = entitlements(JsonField.of(entitlements))
 
         /**
          * Sets [Builder.entitlements] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.entitlements] with a well-typed
-         * `List<ProductEntitlementSummary>` value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
+         * You should usually call [Builder.entitlements] with a well-typed `List<ProductEntitlementSummary>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun entitlements(entitlements: JsonField<List<ProductEntitlementSummary>>) = apply {
-            this.entitlements = entitlements.map { it.toMutableList() }
-        }
+        fun entitlements(entitlements: JsonField<List<ProductEntitlementSummary>>) =
+            apply {
+                this.entitlements = entitlements.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [ProductEntitlementSummary] to [entitlements].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addEntitlement(entitlement: ProductEntitlementSummary) = apply {
-            entitlements =
-                (entitlements ?: JsonField.of(mutableListOf())).also {
+        fun addEntitlement(entitlement: ProductEntitlementSummary) =
+            apply {
+                entitlements = (entitlements ?: JsonField.of(mutableListOf())).also {
                     checkKnown("entitlements", it).add(entitlement)
                 }
-        }
+            }
 
         /** Indicates if the product is recurring (e.g., subscriptions). */
         fun isRecurring(isRecurring: Boolean) = isRecurring(JsonField.of(isRecurring))
@@ -665,28 +629,29 @@ private constructor(
         /**
          * Sets [Builder.isRecurring] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isRecurring] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.isRecurring] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun isRecurring(isRecurring: JsonField<Boolean>) = apply { this.isRecurring = isRecurring }
+        fun isRecurring(isRecurring: JsonField<Boolean>) =
+            apply {
+                this.isRecurring = isRecurring
+            }
 
         /** Indicates whether the product requires a license key. */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyEnabled(licenseKeyEnabled: Boolean) =
-            licenseKeyEnabled(JsonField.of(licenseKeyEnabled))
+        fun licenseKeyEnabled(licenseKeyEnabled: Boolean) = licenseKeyEnabled(JsonField.of(licenseKeyEnabled))
 
         /**
          * Sets [Builder.licenseKeyEnabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyEnabled] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.licenseKeyEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyEnabled(licenseKeyEnabled: JsonField<Boolean>) = apply {
-            this.licenseKeyEnabled = licenseKeyEnabled
-        }
+        fun licenseKeyEnabled(licenseKeyEnabled: JsonField<Boolean>) =
+            apply {
+                this.licenseKeyEnabled = licenseKeyEnabled
+            }
 
         /** Additional custom data associated with the product */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -694,11 +659,13 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                this.metadata = metadata
+            }
 
         /** Pricing information for the product. */
         fun price(price: Price) = price(JsonField.of(price))
@@ -706,10 +673,13 @@ private constructor(
         /**
          * Sets [Builder.price] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.price] with a well-typed [Price] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.price] with a well-typed [Price] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun price(price: JsonField<Price>) = apply { this.price = price }
+        fun price(price: JsonField<Price>) =
+            apply {
+                this.price = price
+            }
 
         /** Alias for calling [price] with `Price.ofOneTime(oneTime)`. */
         fun price(oneTime: Price.OneTimePrice) = price(Price.ofOneTime(oneTime))
@@ -726,11 +696,13 @@ private constructor(
         /**
          * Sets [Builder.productId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+        fun productId(productId: JsonField<String>) =
+            apply {
+                this.productId = productId
+            }
 
         /** Tax category associated with the product. */
         fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
@@ -738,13 +710,13 @@ private constructor(
         /**
          * Sets [Builder.taxCategory] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun taxCategory(taxCategory: JsonField<TaxCategory>) = apply {
-            this.taxCategory = taxCategory
-        }
+        fun taxCategory(taxCategory: JsonField<TaxCategory>) =
+            apply {
+                this.taxCategory = taxCategory
+            }
 
         /** Timestamp when the product was last updated. */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
@@ -752,11 +724,13 @@ private constructor(
         /**
          * Sets [Builder.updatedAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.updatedAt = updatedAt
+            }
 
         /** Available Addons for subscription products */
         fun addons(addons: List<String>?) = addons(JsonField.ofNullable(addons))
@@ -767,25 +741,25 @@ private constructor(
         /**
          * Sets [Builder.addons] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.addons] with a well-typed `List<String>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.addons] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun addons(addons: JsonField<List<String>>) = apply {
-            this.addons = addons.map { it.toMutableList() }
-        }
+        fun addons(addons: JsonField<List<String>>) =
+            apply {
+                this.addons = addons.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [String] to [addons].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAddon(addon: String) = apply {
-            addons =
-                (addons ?: JsonField.of(mutableListOf())).also {
+        fun addAddon(addon: String) =
+            apply {
+                addons = (addons ?: JsonField.of(mutableListOf())).also {
                     checkKnown("addons", it).add(addon)
                 }
-        }
+            }
 
         /** Description of the product, optional. */
         fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -796,32 +770,28 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
         /**
-         * Digital-product-delivery payload, present on grants for `digital_files` entitlements.
-         * Each file carries a short-lived presigned download URL.
+         * Digital-product-delivery payload, present on grants for `digital_files`
+         * entitlements. Each file carries a short-lived presigned download URL.
          */
-        fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) =
-            digitalProductDelivery(JsonField.ofNullable(digitalProductDelivery))
+        fun digitalProductDelivery(digitalProductDelivery: DigitalProductDelivery?) = digitalProductDelivery(JsonField.ofNullable(digitalProductDelivery))
 
-        /**
-         * Alias for calling [Builder.digitalProductDelivery] with
-         * `digitalProductDelivery.orElse(null)`.
-         */
-        fun digitalProductDelivery(digitalProductDelivery: Optional<DigitalProductDelivery>) =
-            digitalProductDelivery(digitalProductDelivery.getOrNull())
+        /** Alias for calling [Builder.digitalProductDelivery] with `digitalProductDelivery.orElse(null)`. */
+        fun digitalProductDelivery(digitalProductDelivery: Optional<DigitalProductDelivery>) = digitalProductDelivery(digitalProductDelivery.getOrNull())
 
         /**
          * Sets [Builder.digitalProductDelivery] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.digitalProductDelivery] with a well-typed
-         * [DigitalProductDelivery] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
+         * You should usually call [Builder.digitalProductDelivery] with a well-typed [DigitalProductDelivery] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun digitalProductDelivery(digitalProductDelivery: JsonField<DigitalProductDelivery>) =
             apply {
@@ -837,40 +807,37 @@ private constructor(
         /**
          * Sets [Builder.image] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.image] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.image] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun image(image: JsonField<String>) = apply { this.image = image }
+        fun image(image: JsonField<String>) =
+            apply {
+                this.image = image
+            }
 
         /** Message sent upon license key activation, if applicable. */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationMessage(licenseKeyActivationMessage: String?) =
-            licenseKeyActivationMessage(JsonField.ofNullable(licenseKeyActivationMessage))
+        fun licenseKeyActivationMessage(licenseKeyActivationMessage: String?) = licenseKeyActivationMessage(JsonField.ofNullable(licenseKeyActivationMessage))
 
-        /**
-         * Alias for calling [Builder.licenseKeyActivationMessage] with
-         * `licenseKeyActivationMessage.orElse(null)`.
-         */
+        /** Alias for calling [Builder.licenseKeyActivationMessage] with `licenseKeyActivationMessage.orElse(null)`. */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationMessage(licenseKeyActivationMessage: Optional<String>) =
-            licenseKeyActivationMessage(licenseKeyActivationMessage.getOrNull())
+        fun licenseKeyActivationMessage(licenseKeyActivationMessage: Optional<String>) = licenseKeyActivationMessage(licenseKeyActivationMessage.getOrNull())
 
         /**
          * Sets [Builder.licenseKeyActivationMessage] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyActivationMessage] with a well-typed [String]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.licenseKeyActivationMessage] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationMessage(licenseKeyActivationMessage: JsonField<String>) = apply {
-            this.licenseKeyActivationMessage = licenseKeyActivationMessage
-        }
+        fun licenseKeyActivationMessage(licenseKeyActivationMessage: JsonField<String>) =
+            apply {
+                this.licenseKeyActivationMessage = licenseKeyActivationMessage
+            }
 
         /** Limit on the number of activations for the license key, if enabled. */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int?) =
-            licenseKeyActivationsLimit(JsonField.ofNullable(licenseKeyActivationsLimit))
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int?) = licenseKeyActivationsLimit(JsonField.ofNullable(licenseKeyActivationsLimit))
 
         /**
          * Alias for [Builder.licenseKeyActivationsLimit].
@@ -878,49 +845,40 @@ private constructor(
          * This unboxed primitive overload exists for backwards compatibility.
          */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int) =
-            licenseKeyActivationsLimit(licenseKeyActivationsLimit as Int?)
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Int) = licenseKeyActivationsLimit(licenseKeyActivationsLimit as Int?)
 
-        /**
-         * Alias for calling [Builder.licenseKeyActivationsLimit] with
-         * `licenseKeyActivationsLimit.orElse(null)`.
-         */
+        /** Alias for calling [Builder.licenseKeyActivationsLimit] with `licenseKeyActivationsLimit.orElse(null)`. */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Optional<Int>) =
-            licenseKeyActivationsLimit(licenseKeyActivationsLimit.getOrNull())
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: Optional<Int>) = licenseKeyActivationsLimit(licenseKeyActivationsLimit.getOrNull())
 
         /**
          * Sets [Builder.licenseKeyActivationsLimit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyActivationsLimit] with a well-typed [Int]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.licenseKeyActivationsLimit] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         @Deprecated("Use the dedicated entitlements API to configure license-key delivery.")
-        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: JsonField<Int>) = apply {
-            this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
-        }
+        fun licenseKeyActivationsLimit(licenseKeyActivationsLimit: JsonField<Int>) =
+            apply {
+                this.licenseKeyActivationsLimit = licenseKeyActivationsLimit
+            }
 
         /** Duration of the license key validity, if enabled. */
-        fun licenseKeyDuration(licenseKeyDuration: LicenseKeyDuration?) =
-            licenseKeyDuration(JsonField.ofNullable(licenseKeyDuration))
+        fun licenseKeyDuration(licenseKeyDuration: LicenseKeyDuration?) = licenseKeyDuration(JsonField.ofNullable(licenseKeyDuration))
 
-        /**
-         * Alias for calling [Builder.licenseKeyDuration] with `licenseKeyDuration.orElse(null)`.
-         */
-        fun licenseKeyDuration(licenseKeyDuration: Optional<LicenseKeyDuration>) =
-            licenseKeyDuration(licenseKeyDuration.getOrNull())
+        /** Alias for calling [Builder.licenseKeyDuration] with `licenseKeyDuration.orElse(null)`. */
+        fun licenseKeyDuration(licenseKeyDuration: Optional<LicenseKeyDuration>) = licenseKeyDuration(licenseKeyDuration.getOrNull())
 
         /**
          * Sets [Builder.licenseKeyDuration] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyDuration] with a well-typed
-         * [LicenseKeyDuration] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.licenseKeyDuration] with a well-typed [LicenseKeyDuration] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun licenseKeyDuration(licenseKeyDuration: JsonField<LicenseKeyDuration>) = apply {
-            this.licenseKeyDuration = licenseKeyDuration
-        }
+        fun licenseKeyDuration(licenseKeyDuration: JsonField<LicenseKeyDuration>) =
+            apply {
+                this.licenseKeyDuration = licenseKeyDuration
+            }
 
         /** Name of the product, optional. */
         fun name(name: String?) = name(JsonField.ofNullable(name))
@@ -931,50 +889,56 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         /** The product collection ID this product belongs to, if any */
-        fun productCollectionId(productCollectionId: String?) =
-            productCollectionId(JsonField.ofNullable(productCollectionId))
+        fun productCollectionId(productCollectionId: String?) = productCollectionId(JsonField.ofNullable(productCollectionId))
 
-        /**
-         * Alias for calling [Builder.productCollectionId] with `productCollectionId.orElse(null)`.
-         */
-        fun productCollectionId(productCollectionId: Optional<String>) =
-            productCollectionId(productCollectionId.getOrNull())
+        /** Alias for calling [Builder.productCollectionId] with `productCollectionId.orElse(null)`. */
+        fun productCollectionId(productCollectionId: Optional<String>) = productCollectionId(productCollectionId.getOrNull())
 
         /**
          * Sets [Builder.productCollectionId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productCollectionId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.productCollectionId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun productCollectionId(productCollectionId: JsonField<String>) = apply {
-            this.productCollectionId = productCollectionId
-        }
+        fun productCollectionId(productCollectionId: JsonField<String>) =
+            apply {
+                this.productCollectionId = productCollectionId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [Product].
@@ -982,6 +946,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .brandId()
          * .businessId()
@@ -1001,28 +966,52 @@ private constructor(
          */
         fun build(): Product =
             Product(
-                checkRequired("brandId", brandId),
-                checkRequired("businessId", businessId),
-                checkRequired("createdAt", createdAt),
-                checkRequired("creditEntitlements", creditEntitlements).map { it.toImmutable() },
-                checkRequired("entitlements", entitlements).map { it.toImmutable() },
-                checkRequired("isRecurring", isRecurring),
-                checkRequired("licenseKeyEnabled", licenseKeyEnabled),
-                checkRequired("metadata", metadata),
-                checkRequired("price", price),
-                checkRequired("productId", productId),
-                checkRequired("taxCategory", taxCategory),
-                checkRequired("updatedAt", updatedAt),
-                (addons ?: JsonMissing.of()).map { it.toImmutable() },
-                description,
-                digitalProductDelivery,
-                image,
-                licenseKeyActivationMessage,
-                licenseKeyActivationsLimit,
-                licenseKeyDuration,
-                name,
-                productCollectionId,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "brandId", brandId
+              ),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "creditEntitlements", creditEntitlements
+              ).map { it.toImmutable() },
+              checkRequired(
+                "entitlements", entitlements
+              ).map { it.toImmutable() },
+              checkRequired(
+                "isRecurring", isRecurring
+              ),
+              checkRequired(
+                "licenseKeyEnabled", licenseKeyEnabled
+              ),
+              checkRequired(
+                "metadata", metadata
+              ),
+              checkRequired(
+                "price", price
+              ),
+              checkRequired(
+                "productId", productId
+              ),
+              checkRequired(
+                "taxCategory", taxCategory
+              ),
+              checkRequired(
+                "updatedAt", updatedAt
+              ),
+              (addons?: JsonMissing.of()).map { it.toImmutable() },
+              description,
+              digitalProductDelivery,
+              image,
+              licenseKeyActivationMessage,
+              licenseKeyActivationsLimit,
+              licenseKeyDuration,
+              name,
+              productCollectionId,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -1036,34 +1025,35 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): Product = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): Product =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        brandId()
-        businessId()
-        createdAt()
-        creditEntitlements().forEach { it.validate() }
-        entitlements().forEach { it.validate() }
-        isRecurring()
-        licenseKeyEnabled()
-        metadata().validate()
-        price().validate()
-        productId()
-        taxCategory().validate()
-        updatedAt()
-        addons()
-        description()
-        digitalProductDelivery().ifPresent { it.validate() }
-        image()
-        licenseKeyActivationMessage()
-        licenseKeyActivationsLimit()
-        licenseKeyDuration().ifPresent { it.validate() }
-        name()
-        productCollectionId()
-        validated = true
-    }
+            brandId()
+            businessId()
+            createdAt()
+            creditEntitlements().forEach { it.validate() }
+            entitlements().forEach { it.validate() }
+            isRecurring()
+            licenseKeyEnabled()
+            metadata().validate()
+            price().validate()
+            productId()
+            taxCategory().validate()
+            updatedAt()
+            addons()
+            description()
+            digitalProductDelivery().ifPresent { it.validate() }
+            image()
+            licenseKeyActivationMessage()
+            licenseKeyActivationsLimit()
+            licenseKeyDuration().ifPresent { it.validate() }
+            name()
+            productCollectionId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -1079,35 +1069,12 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (brandId.asKnown().isPresent) 1 else 0) +
-            (if (businessId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (creditEntitlements.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (entitlements.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (isRecurring.asKnown().isPresent) 1 else 0) +
-            (if (licenseKeyEnabled.asKnown().isPresent) 1 else 0) +
-            (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (price.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (productId.asKnown().isPresent) 1 else 0) +
-            (taxCategory.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0) +
-            (addons.asKnown().getOrNull()?.size ?: 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (digitalProductDelivery.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (image.asKnown().isPresent) 1 else 0) +
-            (if (licenseKeyActivationMessage.asKnown().isPresent) 1 else 0) +
-            (if (licenseKeyActivationsLimit.asKnown().isPresent) 1 else 0) +
-            (licenseKeyDuration.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (productCollectionId.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (brandId.asKnown().isPresent) 1 else 0) + (if (businessId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (creditEntitlements.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (entitlements.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (isRecurring.asKnown().isPresent) 1 else 0) + (if (licenseKeyEnabled.asKnown().isPresent) 1 else 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (price.asKnown().getOrNull()?.validity() ?: 0) + (if (productId.asKnown().isPresent) 1 else 0) + (taxCategory.asKnown().getOrNull()?.validity() ?: 0) + (if (updatedAt.asKnown().isPresent) 1 else 0) + (addons.asKnown().getOrNull()?.size ?: 0) + (if (description.asKnown().isPresent) 1 else 0) + (digitalProductDelivery.asKnown().getOrNull()?.validity() ?: 0) + (if (image.asKnown().isPresent) 1 else 0) + (if (licenseKeyActivationMessage.asKnown().isPresent) 1 else 0) + (if (licenseKeyActivationsLimit.asKnown().isPresent) 1 else 0) + (licenseKeyDuration.asKnown().getOrNull()?.validity() ?: 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (productCollectionId.asKnown().isPresent) 1 else 0)
 
     /** Additional custom data associated with the product */
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -1119,7 +1086,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -1128,28 +1096,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -1162,21 +1138,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1187,21 +1163,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -1212,64 +1186,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is Product &&
-            brandId == other.brandId &&
-            businessId == other.businessId &&
-            createdAt == other.createdAt &&
-            creditEntitlements == other.creditEntitlements &&
-            entitlements == other.entitlements &&
-            isRecurring == other.isRecurring &&
-            licenseKeyEnabled == other.licenseKeyEnabled &&
-            metadata == other.metadata &&
-            price == other.price &&
-            productId == other.productId &&
-            taxCategory == other.taxCategory &&
-            updatedAt == other.updatedAt &&
-            addons == other.addons &&
-            description == other.description &&
-            digitalProductDelivery == other.digitalProductDelivery &&
-            image == other.image &&
-            licenseKeyActivationMessage == other.licenseKeyActivationMessage &&
-            licenseKeyActivationsLimit == other.licenseKeyActivationsLimit &&
-            licenseKeyDuration == other.licenseKeyDuration &&
-            name == other.name &&
-            productCollectionId == other.productCollectionId &&
-            additionalProperties == other.additionalProperties
+      return other is Product && brandId == other.brandId && businessId == other.businessId && createdAt == other.createdAt && creditEntitlements == other.creditEntitlements && entitlements == other.entitlements && isRecurring == other.isRecurring && licenseKeyEnabled == other.licenseKeyEnabled && metadata == other.metadata && price == other.price && productId == other.productId && taxCategory == other.taxCategory && updatedAt == other.updatedAt && addons == other.addons && description == other.description && digitalProductDelivery == other.digitalProductDelivery && image == other.image && licenseKeyActivationMessage == other.licenseKeyActivationMessage && licenseKeyActivationsLimit == other.licenseKeyActivationsLimit && licenseKeyDuration == other.licenseKeyDuration && name == other.name && productCollectionId == other.productCollectionId && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            brandId,
-            businessId,
-            createdAt,
-            creditEntitlements,
-            entitlements,
-            isRecurring,
-            licenseKeyEnabled,
-            metadata,
-            price,
-            productId,
-            taxCategory,
-            updatedAt,
-            addons,
-            description,
-            digitalProductDelivery,
-            image,
-            licenseKeyActivationMessage,
-            licenseKeyActivationsLimit,
-            licenseKeyDuration,
-            name,
-            productCollectionId,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(brandId, businessId, createdAt, creditEntitlements, entitlements, isRecurring, licenseKeyEnabled, metadata, price, productId, taxCategory, updatedAt, addons, description, digitalProductDelivery, image, licenseKeyActivationMessage, licenseKeyActivationsLimit, licenseKeyDuration, name, productCollectionId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "Product{brandId=$brandId, businessId=$businessId, createdAt=$createdAt, creditEntitlements=$creditEntitlements, entitlements=$entitlements, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, metadata=$metadata, price=$price, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, addons=$addons, description=$description, digitalProductDelivery=$digitalProductDelivery, image=$image, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, name=$name, productCollectionId=$productCollectionId, additionalProperties=$additionalProperties}"
+    override fun toString() = "Product{brandId=$brandId, businessId=$businessId, createdAt=$createdAt, creditEntitlements=$creditEntitlements, entitlements=$entitlements, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, metadata=$metadata, price=$price, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, addons=$addons, description=$description, digitalProductDelivery=$digitalProductDelivery, image=$image, licenseKeyActivationMessage=$licenseKeyActivationMessage, licenseKeyActivationsLimit=$licenseKeyActivationsLimit, licenseKeyDuration=$licenseKeyDuration, name=$name, productCollectionId=$productCollectionId, additionalProperties=$additionalProperties}"
 }

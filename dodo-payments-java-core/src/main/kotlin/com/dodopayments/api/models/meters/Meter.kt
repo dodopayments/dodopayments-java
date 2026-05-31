@@ -8,6 +8,8 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.meters.MeterAggregation
+import com.dodopayments.api.models.meters.MeterFilter
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -18,9 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class Meter
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class Meter @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val aggregation: JsonField<MeterAggregation>,
     private val businessId: JsonField<String>,
@@ -32,108 +32,69 @@ private constructor(
     private val description: JsonField<String>,
     private val filter: JsonField<MeterFilter>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("aggregation")
-        @ExcludeMissing
-        aggregation: JsonField<MeterAggregation> = JsonMissing.of(),
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("aggregation") @ExcludeMissing aggregation: JsonField<MeterAggregation> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("event_name") @ExcludeMissing eventName: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("measurement_unit")
-        @ExcludeMissing
-        measurementUnit: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("measurement_unit") @ExcludeMissing measurementUnit: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("updated_at")
-        @ExcludeMissing
-        updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("filter") @ExcludeMissing filter: JsonField<MeterFilter> = JsonMissing.of(),
+        @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("filter") @ExcludeMissing filter: JsonField<MeterFilter> = JsonMissing.of()
     ) : this(
-        id,
-        aggregation,
-        businessId,
-        createdAt,
-        eventName,
-        measurementUnit,
-        name,
-        updatedAt,
-        description,
-        filter,
-        mutableMapOf(),
+      id,
+      aggregation,
+      businessId,
+      createdAt,
+      eventName,
+      measurementUnit,
+      name,
+      updatedAt,
+      description,
+      filter,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun id(): String = id.getRequired("id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun aggregation(): MeterAggregation = aggregation.getRequired("aggregation")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun businessId(): String = businessId.getRequired("business_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun eventName(): String = eventName.getRequired("event_name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun measurementUnit(): String = measurementUnit.getRequired("measurement_unit")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun name(): String = name.getRequired("name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * A filter structure that combines multiple conditions with logical conjunctions (AND/OR).
      *
-     * Supports up to 3 levels of nesting to create complex filter expressions. Each filter has a
-     * conjunction (and/or) and clauses that can be either direct conditions or nested filters.
+     * Supports up to 3 levels of nesting to create complex filter expressions.
+     * Each filter has a conjunction (and/or) and clauses that can be either direct conditions or nested filters.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun filter(): Optional<MeterFilter> = filter.getOptional("filter")
 
@@ -142,7 +103,9 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [aggregation].
@@ -158,7 +121,9 @@ private constructor(
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -174,7 +139,9 @@ private constructor(
      *
      * Unlike [eventName], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("event_name") @ExcludeMissing fun _eventName(): JsonField<String> = eventName
+    @JsonProperty("event_name")
+    @ExcludeMissing
+    fun _eventName(): JsonField<String> = eventName
 
     /**
      * Returns the raw JSON value of [measurementUnit].
@@ -190,7 +157,9 @@ private constructor(
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [updatedAt].
@@ -206,24 +175,27 @@ private constructor(
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [filter].
      *
      * Unlike [filter], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("filter") @ExcludeMissing fun _filter(): JsonField<MeterFilter> = filter
+    @JsonProperty("filter")
+    @ExcludeMissing
+    fun _filter(): JsonField<MeterFilter> = filter
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -233,6 +205,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [Meter].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .aggregation()
@@ -244,7 +217,8 @@ private constructor(
          * .updatedAt()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [Meter]. */
@@ -263,110 +237,124 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(meter: Meter) = apply {
-            id = meter.id
-            aggregation = meter.aggregation
-            businessId = meter.businessId
-            createdAt = meter.createdAt
-            eventName = meter.eventName
-            measurementUnit = meter.measurementUnit
-            name = meter.name
-            updatedAt = meter.updatedAt
-            description = meter.description
-            filter = meter.filter
-            additionalProperties = meter.additionalProperties.toMutableMap()
-        }
+        internal fun from(meter: Meter) =
+            apply {
+                id = meter.id
+                aggregation = meter.aggregation
+                businessId = meter.businessId
+                createdAt = meter.createdAt
+                eventName = meter.eventName
+                measurementUnit = meter.measurementUnit
+                name = meter.name
+                updatedAt = meter.updatedAt
+                description = meter.description
+                filter = meter.filter
+                additionalProperties = meter.additionalProperties.toMutableMap()
+            }
 
         fun id(id: String) = id(JsonField.of(id))
 
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         fun aggregation(aggregation: MeterAggregation) = aggregation(JsonField.of(aggregation))
 
         /**
          * Sets [Builder.aggregation] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.aggregation] with a well-typed [MeterAggregation] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.aggregation] with a well-typed [MeterAggregation] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun aggregation(aggregation: JsonField<MeterAggregation>) = apply {
-            this.aggregation = aggregation
-        }
+        fun aggregation(aggregation: JsonField<MeterAggregation>) =
+            apply {
+                this.aggregation = aggregation
+            }
 
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
 
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         fun eventName(eventName: String) = eventName(JsonField.of(eventName))
 
         /**
          * Sets [Builder.eventName] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.eventName] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.eventName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun eventName(eventName: JsonField<String>) = apply { this.eventName = eventName }
+        fun eventName(eventName: JsonField<String>) =
+            apply {
+                this.eventName = eventName
+            }
 
-        fun measurementUnit(measurementUnit: String) =
-            measurementUnit(JsonField.of(measurementUnit))
+        fun measurementUnit(measurementUnit: String) = measurementUnit(JsonField.of(measurementUnit))
 
         /**
          * Sets [Builder.measurementUnit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.measurementUnit] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.measurementUnit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun measurementUnit(measurementUnit: JsonField<String>) = apply {
-            this.measurementUnit = measurementUnit
-        }
+        fun measurementUnit(measurementUnit: JsonField<String>) =
+            apply {
+                this.measurementUnit = measurementUnit
+            }
 
         fun name(name: String) = name(JsonField.of(name))
 
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
         /**
          * Sets [Builder.updatedAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
+        fun updatedAt(updatedAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.updatedAt = updatedAt
+            }
 
         fun description(description: String?) = description(JsonField.ofNullable(description))
 
@@ -376,18 +364,19 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
         /**
          * A filter structure that combines multiple conditions with logical conjunctions (AND/OR).
          *
-         * Supports up to 3 levels of nesting to create complex filter expressions. Each filter has
-         * a conjunction (and/or) and clauses that can be either direct conditions or nested
-         * filters.
+         * Supports up to 3 levels of nesting to create complex filter expressions.
+         * Each filter has a conjunction (and/or) and clauses that can be either direct conditions or nested filters.
          */
         fun filter(filter: MeterFilter?) = filter(JsonField.ofNullable(filter))
 
@@ -397,30 +386,39 @@ private constructor(
         /**
          * Sets [Builder.filter] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.filter] with a well-typed [MeterFilter] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.filter] with a well-typed [MeterFilter] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun filter(filter: JsonField<MeterFilter>) = apply { this.filter = filter }
+        fun filter(filter: JsonField<MeterFilter>) =
+            apply {
+                this.filter = filter
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [Meter].
@@ -428,6 +426,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .aggregation()
@@ -443,17 +442,33 @@ private constructor(
          */
         fun build(): Meter =
             Meter(
-                checkRequired("id", id),
-                checkRequired("aggregation", aggregation),
-                checkRequired("businessId", businessId),
-                checkRequired("createdAt", createdAt),
-                checkRequired("eventName", eventName),
-                checkRequired("measurementUnit", measurementUnit),
-                checkRequired("name", name),
-                checkRequired("updatedAt", updatedAt),
-                description,
-                filter,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "aggregation", aggregation
+              ),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "eventName", eventName
+              ),
+              checkRequired(
+                "measurementUnit", measurementUnit
+              ),
+              checkRequired(
+                "name", name
+              ),
+              checkRequired(
+                "updatedAt", updatedAt
+              ),
+              description,
+              filter,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -467,23 +482,24 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): Meter = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): Meter =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        aggregation().validate()
-        businessId()
-        createdAt()
-        eventName()
-        measurementUnit()
-        name()
-        updatedAt()
-        description()
-        filter().ifPresent { it.validate() }
-        validated = true
-    }
+            id()
+            aggregation().validate()
+            businessId()
+            createdAt()
+            eventName()
+            measurementUnit()
+            name()
+            updatedAt()
+            description()
+            filter().ifPresent { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -499,55 +515,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (aggregation.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (businessId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (if (eventName.asKnown().isPresent) 1 else 0) +
-            (if (measurementUnit.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (filter.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (aggregation.asKnown().getOrNull()?.validity() ?: 0) + (if (businessId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (if (eventName.asKnown().isPresent) 1 else 0) + (if (measurementUnit.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (updatedAt.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (filter.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is Meter &&
-            id == other.id &&
-            aggregation == other.aggregation &&
-            businessId == other.businessId &&
-            createdAt == other.createdAt &&
-            eventName == other.eventName &&
-            measurementUnit == other.measurementUnit &&
-            name == other.name &&
-            updatedAt == other.updatedAt &&
-            description == other.description &&
-            filter == other.filter &&
-            additionalProperties == other.additionalProperties
+      return other is Meter && id == other.id && aggregation == other.aggregation && businessId == other.businessId && createdAt == other.createdAt && eventName == other.eventName && measurementUnit == other.measurementUnit && name == other.name && updatedAt == other.updatedAt && description == other.description && filter == other.filter && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            aggregation,
-            businessId,
-            createdAt,
-            eventName,
-            measurementUnit,
-            name,
-            updatedAt,
-            description,
-            filter,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, aggregation, businessId, createdAt, eventName, measurementUnit, name, updatedAt, description, filter, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "Meter{id=$id, aggregation=$aggregation, businessId=$businessId, createdAt=$createdAt, eventName=$eventName, measurementUnit=$measurementUnit, name=$name, updatedAt=$updatedAt, description=$description, filter=$filter, additionalProperties=$additionalProperties}"
+    override fun toString() = "Meter{id=$id, aggregation=$aggregation, businessId=$businessId, createdAt=$createdAt, eventName=$eventName, measurementUnit=$measurementUnit, name=$name, updatedAt=$updatedAt, description=$description, filter=$filter, additionalProperties=$additionalProperties}"
 }

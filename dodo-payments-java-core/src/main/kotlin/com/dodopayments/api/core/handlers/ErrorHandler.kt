@@ -6,6 +6,7 @@ package com.dodopayments.api.core.handlers
 
 import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.core.handlers.jsonHandler
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.errors.BadRequestException
@@ -33,7 +34,9 @@ internal fun errorBodyHandler(jsonMapper: JsonMapper): Handler<JsonValue> {
 }
 
 @JvmSynthetic
-internal fun errorHandler(errorBodyHandler: Handler<JsonValue>): Handler<HttpResponse> =
+internal fun errorHandler(
+    errorBodyHandler: Handler<JsonValue>
+): Handler<HttpResponse> =
     object : Handler<HttpResponse> {
         override fun handle(response: HttpResponse): HttpResponse =
             when (val statusCode = response.statusCode()) {

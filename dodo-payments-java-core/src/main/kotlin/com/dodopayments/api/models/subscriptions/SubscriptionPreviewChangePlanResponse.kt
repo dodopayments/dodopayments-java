@@ -15,6 +15,8 @@ import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
+import com.dodopayments.api.models.subscriptions.Subscription
+import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanResponse
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -32,35 +34,30 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class SubscriptionPreviewChangePlanResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class SubscriptionPreviewChangePlanResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val immediateCharge: JsonField<ImmediateCharge>,
     private val newPlan: JsonField<Subscription>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("immediate_charge")
-        @ExcludeMissing
-        immediateCharge: JsonField<ImmediateCharge> = JsonMissing.of(),
-        @JsonProperty("new_plan")
-        @ExcludeMissing
-        newPlan: JsonField<Subscription> = JsonMissing.of(),
-    ) : this(immediateCharge, newPlan, mutableMapOf())
+        @JsonProperty("immediate_charge") @ExcludeMissing immediateCharge: JsonField<ImmediateCharge> = JsonMissing.of(),
+        @JsonProperty("new_plan") @ExcludeMissing newPlan: JsonField<Subscription> = JsonMissing.of()
+    ) : this(
+      immediateCharge,
+      newPlan,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun immediateCharge(): ImmediateCharge = immediateCharge.getRequired("immediate_charge")
 
     /**
      * Response struct representing subscription details
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun newPlan(): Subscription = newPlan.getRequired("new_plan")
 
@@ -78,33 +75,35 @@ private constructor(
      *
      * Unlike [newPlan], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("new_plan") @ExcludeMissing fun _newPlan(): JsonField<Subscription> = newPlan
+    @JsonProperty("new_plan")
+    @ExcludeMissing
+    fun _newPlan(): JsonField<Subscription> = newPlan
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [SubscriptionPreviewChangePlanResponse].
+         * Returns a mutable builder for constructing an instance of [SubscriptionPreviewChangePlanResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .immediateCharge()
          * .newPlan()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionPreviewChangePlanResponse]. */
@@ -115,28 +114,25 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            subscriptionPreviewChangePlanResponse: SubscriptionPreviewChangePlanResponse
-        ) = apply {
-            immediateCharge = subscriptionPreviewChangePlanResponse.immediateCharge
-            newPlan = subscriptionPreviewChangePlanResponse.newPlan
-            additionalProperties =
-                subscriptionPreviewChangePlanResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(subscriptionPreviewChangePlanResponse: SubscriptionPreviewChangePlanResponse) =
+            apply {
+                immediateCharge = subscriptionPreviewChangePlanResponse.immediateCharge
+                newPlan = subscriptionPreviewChangePlanResponse.newPlan
+                additionalProperties = subscriptionPreviewChangePlanResponse.additionalProperties.toMutableMap()
+            }
 
-        fun immediateCharge(immediateCharge: ImmediateCharge) =
-            immediateCharge(JsonField.of(immediateCharge))
+        fun immediateCharge(immediateCharge: ImmediateCharge) = immediateCharge(JsonField.of(immediateCharge))
 
         /**
          * Sets [Builder.immediateCharge] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.immediateCharge] with a well-typed [ImmediateCharge]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.immediateCharge] with a well-typed [ImmediateCharge] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun immediateCharge(immediateCharge: JsonField<ImmediateCharge>) = apply {
-            this.immediateCharge = immediateCharge
-        }
+        fun immediateCharge(immediateCharge: JsonField<ImmediateCharge>) =
+            apply {
+                this.immediateCharge = immediateCharge
+            }
 
         /** Response struct representing subscription details */
         fun newPlan(newPlan: Subscription) = newPlan(JsonField.of(newPlan))
@@ -144,30 +140,39 @@ private constructor(
         /**
          * Sets [Builder.newPlan] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.newPlan] with a well-typed [Subscription] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.newPlan] with a well-typed [Subscription] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun newPlan(newPlan: JsonField<Subscription>) = apply { this.newPlan = newPlan }
+        fun newPlan(newPlan: JsonField<Subscription>) =
+            apply {
+                this.newPlan = newPlan
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionPreviewChangePlanResponse].
@@ -175,6 +180,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .immediateCharge()
          * .newPlan()
@@ -184,9 +190,13 @@ private constructor(
          */
         fun build(): SubscriptionPreviewChangePlanResponse =
             SubscriptionPreviewChangePlanResponse(
-                checkRequired("immediateCharge", immediateCharge),
-                checkRequired("newPlan", newPlan),
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "immediateCharge", immediateCharge
+              ),
+              checkRequired(
+                "newPlan", newPlan
+              ),
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -200,15 +210,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SubscriptionPreviewChangePlanResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): SubscriptionPreviewChangePlanResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        immediateCharge().validate()
-        newPlan().validate()
-        validated = true
-    }
+            immediateCharge().validate()
+            newPlan().validate()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -224,48 +235,39 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (immediateCharge.asKnown().getOrNull()?.validity() ?: 0) +
-            (newPlan.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (immediateCharge.asKnown().getOrNull()?.validity() ?: 0) + (newPlan.asKnown().getOrNull()?.validity() ?: 0)
 
-    class ImmediateCharge
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class ImmediateCharge @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val effectiveAt: JsonField<OffsetDateTime>,
         private val lineItems: JsonField<List<LineItem>>,
         private val summary: JsonField<Summary>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("effective_at")
-            @ExcludeMissing
-            effectiveAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("line_items")
-            @ExcludeMissing
-            lineItems: JsonField<List<LineItem>> = JsonMissing.of(),
-            @JsonProperty("summary") @ExcludeMissing summary: JsonField<Summary> = JsonMissing.of(),
-        ) : this(effectiveAt, lineItems, summary, mutableMapOf())
+            @JsonProperty("effective_at") @ExcludeMissing effectiveAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("line_items") @ExcludeMissing lineItems: JsonField<List<LineItem>> = JsonMissing.of(),
+            @JsonProperty("summary") @ExcludeMissing summary: JsonField<Summary> = JsonMissing.of()
+        ) : this(
+          effectiveAt,
+          lineItems,
+          summary,
+          mutableMapOf(),
+        )
 
         /**
          * When the plan change will be effective
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun effectiveAt(): OffsetDateTime = effectiveAt.getRequired("effective_at")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun lineItems(): List<LineItem> = lineItems.getRequired("line_items")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun summary(): Summary = summary.getRequired("summary")
 
         /**
@@ -291,17 +293,18 @@ private constructor(
          *
          * Unlike [summary], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("summary") @ExcludeMissing fun _summary(): JsonField<Summary> = summary
+        @JsonProperty("summary")
+        @ExcludeMissing
+        fun _summary(): JsonField<Summary> = summary
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -311,13 +314,15 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [ImmediateCharge].
              *
              * The following fields are required:
+             *
              * ```java
              * .effectiveAt()
              * .lineItems()
              * .summary()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [ImmediateCharge]. */
@@ -329,12 +334,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(immediateCharge: ImmediateCharge) = apply {
-                effectiveAt = immediateCharge.effectiveAt
-                lineItems = immediateCharge.lineItems.map { it.toMutableList() }
-                summary = immediateCharge.summary
-                additionalProperties = immediateCharge.additionalProperties.toMutableMap()
-            }
+            internal fun from(immediateCharge: ImmediateCharge) =
+                apply {
+                    effectiveAt = immediateCharge.effectiveAt
+                    lineItems = immediateCharge.lineItems.map { it.toMutableList() }
+                    summary = immediateCharge.summary
+                    additionalProperties = immediateCharge.additionalProperties.toMutableMap()
+                }
 
             /** When the plan change will be effective */
             fun effectiveAt(effectiveAt: OffsetDateTime) = effectiveAt(JsonField.of(effectiveAt))
@@ -342,42 +348,41 @@ private constructor(
             /**
              * Sets [Builder.effectiveAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.effectiveAt] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.effectiveAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun effectiveAt(effectiveAt: JsonField<OffsetDateTime>) = apply {
-                this.effectiveAt = effectiveAt
-            }
+            fun effectiveAt(effectiveAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.effectiveAt = effectiveAt
+                }
 
             fun lineItems(lineItems: List<LineItem>) = lineItems(JsonField.of(lineItems))
 
             /**
              * Sets [Builder.lineItems] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.lineItems] with a well-typed `List<LineItem>` value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.lineItems] with a well-typed `List<LineItem>` value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun lineItems(lineItems: JsonField<List<LineItem>>) = apply {
-                this.lineItems = lineItems.map { it.toMutableList() }
-            }
+            fun lineItems(lineItems: JsonField<List<LineItem>>) =
+                apply {
+                    this.lineItems = lineItems.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [LineItem] to [lineItems].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addLineItem(lineItem: LineItem) = apply {
-                lineItems =
-                    (lineItems ?: JsonField.of(mutableListOf())).also {
+            fun addLineItem(lineItem: LineItem) =
+                apply {
+                    lineItems = (lineItems ?: JsonField.of(mutableListOf())).also {
                         checkKnown("lineItems", it).add(lineItem)
                     }
-            }
+                }
 
             /** Alias for calling [addLineItem] with `LineItem.ofSubscription(subscription)`. */
-            fun addLineItem(subscription: LineItem.Subscription) =
-                addLineItem(LineItem.ofSubscription(subscription))
+            fun addLineItem(subscription: LineItem.Subscription) = addLineItem(LineItem.ofSubscription(subscription))
 
             /** Alias for calling [addLineItem] with `LineItem.ofAddon(addon)`. */
             fun addLineItem(addon: LineItem.Addon) = addLineItem(LineItem.ofAddon(addon))
@@ -390,30 +395,39 @@ private constructor(
             /**
              * Sets [Builder.summary] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.summary] with a well-typed [Summary] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.summary] with a well-typed [Summary] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun summary(summary: JsonField<Summary>) = apply { this.summary = summary }
+            fun summary(summary: JsonField<Summary>) =
+                apply {
+                    this.summary = summary
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [ImmediateCharge].
@@ -421,6 +435,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .effectiveAt()
              * .lineItems()
@@ -431,34 +446,40 @@ private constructor(
              */
             fun build(): ImmediateCharge =
                 ImmediateCharge(
-                    checkRequired("effectiveAt", effectiveAt),
-                    checkRequired("lineItems", lineItems).map { it.toImmutable() },
-                    checkRequired("summary", summary),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "effectiveAt", effectiveAt
+                  ),
+                  checkRequired(
+                    "lineItems", lineItems
+                  ).map { it.toImmutable() },
+                  checkRequired(
+                    "summary", summary
+                  ),
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): ImmediateCharge = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): ImmediateCharge =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            effectiveAt()
-            lineItems().forEach { it.validate() }
-            summary().validate()
-            validated = true
-        }
+                effectiveAt()
+                lineItems().forEach { it.validate() }
+                summary().validate()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -469,25 +490,21 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (effectiveAt.asKnown().isPresent) 1 else 0) +
-                (lineItems.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (summary.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (if (effectiveAt.asKnown().isPresent) 1 else 0) + (lineItems.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (summary.asKnown().getOrNull()?.validity() ?: 0)
 
         @JsonDeserialize(using = LineItem.Deserializer::class)
         @JsonSerialize(using = LineItem.Serializer::class)
-        class LineItem
-        private constructor(
+        class LineItem private constructor(
             private val subscription: Subscription? = null,
             private val addon: Addon? = null,
             private val meter: Meter? = null,
             private val _json: JsonValue? = null,
+
         ) {
 
             fun subscription(): Optional<Subscription> = Optional.ofNullable(subscription)
@@ -511,12 +528,12 @@ private constructor(
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             /**
-             * Maps this instance's current variant to a value of type [T] using the given
-             * [visitor].
+             * Maps this instance's current variant to a value of type [T] using the given [visitor].
              *
-             * Note that this method is _not_ forwards compatible with new variants from the API,
-             * unless [visitor] overrides [Visitor.unknown]. To handle variants not known to this
-             * version of the SDK gracefully, consider overriding [Visitor.unknown]:
+             * Note that this method is _not_ forwards compatible with new variants from the API, unless
+             * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the SDK
+             * gracefully, consider overriding [Visitor.unknown]:
+             *
              * ```java
              * import com.dodopayments.api.core.JsonValue;
              * import java.util.Optional;
@@ -551,37 +568,34 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): LineItem = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): LineItem =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                accept(
-                    object : Visitor<Unit> {
+                    accept(object : Visitor<Unit> {
                         override fun visitSubscription(subscription: Subscription) {
-                            subscription.validate()
+                          subscription.validate()
                         }
 
                         override fun visitAddon(addon: Addon) {
-                            addon.validate()
+                          addon.validate()
                         }
 
                         override fun visitMeter(meter: Meter) {
-                            meter.validate()
+                          meter.validate()
                         }
-                    }
-                )
-                validated = true
-            }
+                    })
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -592,35 +606,28 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                accept(
-                    object : Visitor<Int> {
-                        override fun visitSubscription(subscription: Subscription) =
-                            subscription.validity()
+                accept(object : Visitor<Int> {
+                    override fun visitSubscription(subscription: Subscription) = subscription.validity()
 
-                        override fun visitAddon(addon: Addon) = addon.validity()
+                    override fun visitAddon(addon: Addon) = addon.validity()
 
-                        override fun visitMeter(meter: Meter) = meter.validity()
+                    override fun visitMeter(meter: Meter) = meter.validity()
 
-                        override fun unknown(json: JsonValue?) = 0
-                    }
-                )
+                    override fun unknown(json: JsonValue?) = 0
+                })
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is LineItem &&
-                    subscription == other.subscription &&
-                    addon == other.addon &&
-                    meter == other.meter
+              return other is LineItem && subscription == other.subscription && addon == other.addon && meter == other.meter
             }
 
             override fun hashCode(): Int = Objects.hash(subscription, addon, meter)
@@ -637,18 +644,16 @@ private constructor(
             companion object {
 
                 @JvmStatic
-                fun ofSubscription(subscription: Subscription) =
-                    LineItem(subscription = subscription)
+                fun ofSubscription(subscription: Subscription) = LineItem(subscription = subscription)
 
-                @JvmStatic fun ofAddon(addon: Addon) = LineItem(addon = addon)
+                @JvmStatic
+                fun ofAddon(addon: Addon) = LineItem(addon = addon)
 
-                @JvmStatic fun ofMeter(meter: Meter) = LineItem(meter = meter)
+                @JvmStatic
+                fun ofMeter(meter: Meter) = LineItem(meter = meter)
             }
 
-            /**
-             * An interface that defines how to map each variant of [LineItem] to a value of type
-             * [T].
-             */
+            /** An interface that defines how to map each variant of [LineItem] to a value of type [T]. */
             interface Visitor<out T> {
 
                 fun visitSubscription(subscription: Subscription): T
@@ -660,66 +665,62 @@ private constructor(
                 /**
                  * Maps an unknown variant of [LineItem] to a value of type [T].
                  *
-                 * An instance of [LineItem] can contain an unknown variant if it was deserialized
-                 * from data that doesn't match any known variant. For example, if the SDK is on an
-                 * older version than the API, then the API may respond with new variants that the
-                 * SDK is unaware of.
+                 * An instance of [LineItem] can contain an unknown variant if it was deserialized from data
+                 * that doesn't match any known variant. For example, if the SDK is on an older version than the
+                 * API, then the API may respond with new variants that the SDK is unaware of.
                  *
                  * @throws DodoPaymentsInvalidDataException in the default implementation.
                  */
                 fun unknown(json: JsonValue?): T {
-                    throw DodoPaymentsInvalidDataException("Unknown LineItem: $json")
+                  throw DodoPaymentsInvalidDataException("Unknown LineItem: $json")
                 }
             }
 
             internal class Deserializer : BaseDeserializer<LineItem>(LineItem::class) {
 
                 override fun ObjectCodec.deserialize(node: JsonNode): LineItem {
-                    val json = JsonValue.fromJsonNode(node)
-                    val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+                  val json = JsonValue.fromJsonNode(node)
+                  val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                    when (type) {
-                        "subscription" -> {
-                            return tryDeserialize(node, jacksonTypeRef<Subscription>())?.let {
-                                LineItem(subscription = it, _json = json)
-                            } ?: LineItem(_json = json)
-                        }
-                        "addon" -> {
-                            return tryDeserialize(node, jacksonTypeRef<Addon>())?.let {
-                                LineItem(addon = it, _json = json)
-                            } ?: LineItem(_json = json)
-                        }
-                        "meter" -> {
-                            return tryDeserialize(node, jacksonTypeRef<Meter>())?.let {
-                                LineItem(meter = it, _json = json)
-                            } ?: LineItem(_json = json)
-                        }
-                    }
+                  when (type) {
+                      "subscription" -> {
+                          return tryDeserialize(node, jacksonTypeRef<Subscription>())
+                              ?.let {
+                                  LineItem(subscription = it, _json = json)
+                              } ?: LineItem(_json = json)
+                      }
+                      "addon" -> {
+                          return tryDeserialize(node, jacksonTypeRef<Addon>())
+                              ?.let {
+                                  LineItem(addon = it, _json = json)
+                              } ?: LineItem(_json = json)
+                      }
+                      "meter" -> {
+                          return tryDeserialize(node, jacksonTypeRef<Meter>())
+                              ?.let {
+                                  LineItem(meter = it, _json = json)
+                              } ?: LineItem(_json = json)
+                      }
+                  }
 
-                    return LineItem(_json = json)
+                  return LineItem(_json = json)
                 }
             }
 
             internal class Serializer : BaseSerializer<LineItem>(LineItem::class) {
 
-                override fun serialize(
-                    value: LineItem,
-                    generator: JsonGenerator,
-                    provider: SerializerProvider,
-                ) {
-                    when {
-                        value.subscription != null -> generator.writeObject(value.subscription)
-                        value.addon != null -> generator.writeObject(value.addon)
-                        value.meter != null -> generator.writeObject(value.meter)
-                        value._json != null -> generator.writeObject(value._json)
-                        else -> throw IllegalStateException("Invalid LineItem")
-                    }
+                override fun serialize(value: LineItem, generator: JsonGenerator, provider: SerializerProvider) {
+                  when {
+                      value.subscription != null -> generator.writeObject(value.subscription)
+                      value.addon != null -> generator.writeObject(value.addon)
+                      value.meter != null -> generator.writeObject(value.meter)
+                      value._json != null -> generator.writeObject(value._json)
+                      else -> throw IllegalStateException("Invalid LineItem")
+                  }
                 }
             }
 
-            class Subscription
-            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-            private constructor(
+            class Subscription @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
                 private val id: JsonField<String>,
                 private val currency: JsonField<Currency>,
                 private val productId: JsonField<String>,
@@ -733,96 +734,55 @@ private constructor(
                 private val tax: JsonField<Int>,
                 private val taxRate: JsonField<Float>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
+
             ) {
 
                 @JsonCreator
                 private constructor(
                     @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("currency")
-                    @ExcludeMissing
-                    currency: JsonField<Currency> = JsonMissing.of(),
-                    @JsonProperty("product_id")
-                    @ExcludeMissing
-                    productId: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("proration_factor")
-                    @ExcludeMissing
-                    prorationFactor: JsonField<Double> = JsonMissing.of(),
-                    @JsonProperty("quantity")
-                    @ExcludeMissing
-                    quantity: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("tax_inclusive")
-                    @ExcludeMissing
-                    taxInclusive: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
+                    @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("proration_factor") @ExcludeMissing prorationFactor: JsonField<Double> = JsonMissing.of(),
+                    @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("tax_inclusive") @ExcludeMissing taxInclusive: JsonField<Boolean> = JsonMissing.of(),
                     @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-                    @JsonProperty("unit_price")
-                    @ExcludeMissing
-                    unitPrice: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("description")
-                    @ExcludeMissing
-                    description: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("name")
-                    @ExcludeMissing
-                    name: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("unit_price") @ExcludeMissing unitPrice: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
                     @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("tax_rate")
-                    @ExcludeMissing
-                    taxRate: JsonField<Float> = JsonMissing.of(),
+                    @JsonProperty("tax_rate") @ExcludeMissing taxRate: JsonField<Float> = JsonMissing.of()
                 ) : this(
-                    id,
-                    currency,
-                    productId,
-                    prorationFactor,
-                    quantity,
-                    taxInclusive,
-                    type,
-                    unitPrice,
-                    description,
-                    name,
-                    tax,
-                    taxRate,
-                    mutableMapOf(),
+                  id,
+                  currency,
+                  productId,
+                  prorationFactor,
+                  quantity,
+                  taxInclusive,
+                  type,
+                  unitPrice,
+                  description,
+                  name,
+                  tax,
+                  taxRate,
+                  mutableMapOf(),
                 )
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun id(): String = id.getRequired("id")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun currency(): Currency = currency.getRequired("currency")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun productId(): String = productId.getRequired("product_id")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun prorationFactor(): Double = prorationFactor.getRequired("proration_factor")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun quantity(): Int = quantity.getRequired("quantity")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun taxInclusive(): Boolean = taxInclusive.getRequired("tax_inclusive")
 
                 /**
@@ -831,40 +791,26 @@ private constructor(
                  * JsonValue.from("subscription")
                  * ```
                  *
-                 * However, this method can be useful for debugging and logging (e.g. if the server
-                 * responded with an unexpected value).
+                 * However, this method can be useful for debugging and logging (e.g. if the server responded
+                 * with an unexpected value).
                  */
-                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+                @JsonProperty("type")
+                @ExcludeMissing
+                fun _type(): JsonValue = type
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun unitPrice(): Int = unitPrice.getRequired("unit_price")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun description(): Optional<String> = description.getOptional("description")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun name(): Optional<String> = name.getOptional("name")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun tax(): Optional<Int> = tax.getOptional("tax")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun taxRate(): Optional<Float> = taxRate.getOptional("tax_rate")
 
                 /**
@@ -872,13 +818,14 @@ private constructor(
                  *
                  * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+                @JsonProperty("id")
+                @ExcludeMissing
+                fun _id(): JsonField<String> = id
 
                 /**
                  * Returns the raw JSON value of [currency].
                  *
-                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("currency")
                 @ExcludeMissing
@@ -887,8 +834,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [productId].
                  *
-                 * Unlike [productId], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("product_id")
                 @ExcludeMissing
@@ -897,8 +843,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [prorationFactor].
                  *
-                 * Unlike [prorationFactor], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [prorationFactor], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("proration_factor")
                 @ExcludeMissing
@@ -907,16 +852,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [quantity].
                  *
-                 * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
+                @JsonProperty("quantity")
+                @ExcludeMissing
+                fun _quantity(): JsonField<Int> = quantity
 
                 /**
                  * Returns the raw JSON value of [taxInclusive].
                  *
-                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("tax_inclusive")
                 @ExcludeMissing
@@ -925,8 +870,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [unitPrice].
                  *
-                 * Unlike [unitPrice], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [unitPrice], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("unit_price")
                 @ExcludeMissing
@@ -935,8 +879,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [description].
                  *
-                 * Unlike [description], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("description")
                 @ExcludeMissing
@@ -945,35 +888,38 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [name].
                  *
-                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+                @JsonProperty("name")
+                @ExcludeMissing
+                fun _name(): JsonField<String> = name
 
                 /**
                  * Returns the raw JSON value of [tax].
                  *
                  * Unlike [tax], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax") @ExcludeMissing fun _tax(): JsonField<Int> = tax
+                @JsonProperty("tax")
+                @ExcludeMissing
+                fun _tax(): JsonField<Int> = tax
 
                 /**
                  * Returns the raw JSON value of [taxRate].
                  *
-                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax_rate") @ExcludeMissing fun _taxRate(): JsonField<Float> = taxRate
+                @JsonProperty("tax_rate")
+                @ExcludeMissing
+                fun _taxRate(): JsonField<Float> = taxRate
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
-                    additionalProperties.put(key, value)
+                  additionalProperties.put(key, value)
                 }
 
                 @JsonAnyGetter
                 @ExcludeMissing
-                fun _additionalProperties(): Map<String, JsonValue> =
-                    Collections.unmodifiableMap(additionalProperties)
+                fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
                 fun toBuilder() = Builder().from(this)
 
@@ -983,6 +929,7 @@ private constructor(
                      * Returns a mutable builder for constructing an instance of [Subscription].
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .currency()
@@ -993,7 +940,8 @@ private constructor(
                      * .unitPrice()
                      * ```
                      */
-                    @JvmStatic fun builder() = Builder()
+                    @JvmStatic
+                    fun builder() = Builder()
                 }
 
                 /** A builder for [Subscription]. */
@@ -1014,138 +962,144 @@ private constructor(
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(subscription: Subscription) = apply {
-                        id = subscription.id
-                        currency = subscription.currency
-                        productId = subscription.productId
-                        prorationFactor = subscription.prorationFactor
-                        quantity = subscription.quantity
-                        taxInclusive = subscription.taxInclusive
-                        type = subscription.type
-                        unitPrice = subscription.unitPrice
-                        description = subscription.description
-                        name = subscription.name
-                        tax = subscription.tax
-                        taxRate = subscription.taxRate
-                        additionalProperties = subscription.additionalProperties.toMutableMap()
-                    }
+                    internal fun from(subscription: Subscription) =
+                        apply {
+                            id = subscription.id
+                            currency = subscription.currency
+                            productId = subscription.productId
+                            prorationFactor = subscription.prorationFactor
+                            quantity = subscription.quantity
+                            taxInclusive = subscription.taxInclusive
+                            type = subscription.type
+                            unitPrice = subscription.unitPrice
+                            description = subscription.description
+                            name = subscription.name
+                            tax = subscription.tax
+                            taxRate = subscription.taxRate
+                            additionalProperties = subscription.additionalProperties.toMutableMap()
+                        }
 
                     fun id(id: String) = id(JsonField.of(id))
 
                     /**
                      * Sets [Builder.id] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.id] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun id(id: JsonField<String>) = apply { this.id = id }
+                    fun id(id: JsonField<String>) =
+                        apply {
+                            this.id = id
+                        }
 
                     fun currency(currency: Currency) = currency(JsonField.of(currency))
 
                     /**
                      * Sets [Builder.currency] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.currency] with a well-typed [Currency] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+                    fun currency(currency: JsonField<Currency>) =
+                        apply {
+                            this.currency = currency
+                        }
 
                     fun productId(productId: String) = productId(JsonField.of(productId))
 
                     /**
                      * Sets [Builder.productId] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.productId] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun productId(productId: JsonField<String>) = apply {
-                        this.productId = productId
-                    }
+                    fun productId(productId: JsonField<String>) =
+                        apply {
+                            this.productId = productId
+                        }
 
-                    fun prorationFactor(prorationFactor: Double) =
-                        prorationFactor(JsonField.of(prorationFactor))
+                    fun prorationFactor(prorationFactor: Double) = prorationFactor(JsonField.of(prorationFactor))
 
                     /**
                      * Sets [Builder.prorationFactor] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.prorationFactor] with a well-typed [Double]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.prorationFactor] with a well-typed [Double] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun prorationFactor(prorationFactor: JsonField<Double>) = apply {
-                        this.prorationFactor = prorationFactor
-                    }
+                    fun prorationFactor(prorationFactor: JsonField<Double>) =
+                        apply {
+                            this.prorationFactor = prorationFactor
+                        }
 
                     fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
                     /**
                      * Sets [Builder.quantity] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.quantity] with a well-typed [Int] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+                    fun quantity(quantity: JsonField<Int>) =
+                        apply {
+                            this.quantity = quantity
+                        }
 
-                    fun taxInclusive(taxInclusive: Boolean) =
-                        taxInclusive(JsonField.of(taxInclusive))
+                    fun taxInclusive(taxInclusive: Boolean) = taxInclusive(JsonField.of(taxInclusive))
 
                     /**
                      * Sets [Builder.taxInclusive] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxInclusive(taxInclusive: JsonField<Boolean>) = apply {
-                        this.taxInclusive = taxInclusive
-                    }
+                    fun taxInclusive(taxInclusive: JsonField<Boolean>) =
+                        apply {
+                            this.taxInclusive = taxInclusive
+                        }
 
                     /**
                      * Sets the field to an arbitrary JSON value.
                      *
-                     * It is usually unnecessary to call this method because the field defaults to
-                     * the following:
+                     * It is usually unnecessary to call this method because the field defaults to the following:
                      * ```java
                      * JsonValue.from("subscription")
                      * ```
                      *
-                     * This method is primarily for setting the field to an undocumented or not yet
-                     * supported value.
+                     * This method is primarily for setting the field to an undocumented or not yet supported value.
                      */
-                    fun type(type: JsonValue) = apply { this.type = type }
+                    fun type(type: JsonValue) =
+                        apply {
+                            this.type = type
+                        }
 
                     fun unitPrice(unitPrice: Int) = unitPrice(JsonField.of(unitPrice))
 
                     /**
                      * Sets [Builder.unitPrice] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.unitPrice] with a well-typed [Int] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.unitPrice] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun unitPrice(unitPrice: JsonField<Int>) = apply { this.unitPrice = unitPrice }
+                    fun unitPrice(unitPrice: JsonField<Int>) =
+                        apply {
+                            this.unitPrice = unitPrice
+                        }
 
-                    fun description(description: String?) =
-                        description(JsonField.ofNullable(description))
+                    fun description(description: String?) = description(JsonField.ofNullable(description))
 
                     /** Alias for calling [Builder.description] with `description.orElse(null)`. */
-                    fun description(description: Optional<String>) =
-                        description(description.getOrNull())
+                    fun description(description: Optional<String>) = description(description.getOrNull())
 
                     /**
                      * Sets [Builder.description] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.description] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun description(description: JsonField<String>) = apply {
-                        this.description = description
-                    }
+                    fun description(description: JsonField<String>) =
+                        apply {
+                            this.description = description
+                        }
 
                     fun name(name: String?) = name(JsonField.ofNullable(name))
 
@@ -1155,11 +1109,13 @@ private constructor(
                     /**
                      * Sets [Builder.name] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.name] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun name(name: JsonField<String>) = apply { this.name = name }
+                    fun name(name: JsonField<String>) =
+                        apply {
+                            this.name = name
+                        }
 
                     fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
@@ -1176,11 +1132,13 @@ private constructor(
                     /**
                      * Sets [Builder.tax] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.tax] with a well-typed [Int] value instead.
-                     * This method is primarily for setting the field to an undocumented or not yet
+                     * You should usually call [Builder.tax] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
                      * supported value.
                      */
-                    fun tax(tax: JsonField<Int>) = apply { this.tax = tax }
+                    fun tax(tax: JsonField<Int>) =
+                        apply {
+                            this.tax = tax
+                        }
 
                     fun taxRate(taxRate: Float?) = taxRate(JsonField.ofNullable(taxRate))
 
@@ -1197,33 +1155,39 @@ private constructor(
                     /**
                      * Sets [Builder.taxRate] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxRate] with a well-typed [Float] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.taxRate] with a well-typed [Float] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxRate(taxRate: JsonField<Float>) = apply { this.taxRate = taxRate }
+                    fun taxRate(taxRate: JsonField<Float>) =
+                        apply {
+                            this.taxRate = taxRate
+                        }
 
-                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.clear()
-                        putAllAdditionalProperties(additionalProperties)
-                    }
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.clear()
+                            putAllAdditionalProperties(additionalProperties)
+                        }
 
-                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                        additionalProperties.put(key, value)
-                    }
+                    fun putAdditionalProperty(key: String, value: JsonValue) =
+                        apply {
+                            additionalProperties.put(key, value)
+                        }
 
                     fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                         apply {
                             this.additionalProperties.putAll(additionalProperties)
                         }
 
-                    fun removeAdditionalProperty(key: String) = apply {
-                        additionalProperties.remove(key)
-                    }
+                    fun removeAdditionalProperty(key: String) =
+                        apply {
+                            additionalProperties.remove(key)
+                        }
 
-                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                        keys.forEach(::removeAdditionalProperty)
-                    }
+                    fun removeAllAdditionalProperties(keys: Set<String>) =
+                        apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
 
                     /**
                      * Returns an immutable instance of [Subscription].
@@ -1231,6 +1195,7 @@ private constructor(
                      * Further updates to this [Builder] will not mutate the returned instance.
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .currency()
@@ -1245,59 +1210,70 @@ private constructor(
                      */
                     fun build(): Subscription =
                         Subscription(
-                            checkRequired("id", id),
-                            checkRequired("currency", currency),
-                            checkRequired("productId", productId),
-                            checkRequired("prorationFactor", prorationFactor),
-                            checkRequired("quantity", quantity),
-                            checkRequired("taxInclusive", taxInclusive),
-                            type,
-                            checkRequired("unitPrice", unitPrice),
-                            description,
-                            name,
-                            tax,
-                            taxRate,
-                            additionalProperties.toMutableMap(),
+                          checkRequired(
+                            "id", id
+                          ),
+                          checkRequired(
+                            "currency", currency
+                          ),
+                          checkRequired(
+                            "productId", productId
+                          ),
+                          checkRequired(
+                            "prorationFactor", prorationFactor
+                          ),
+                          checkRequired(
+                            "quantity", quantity
+                          ),
+                          checkRequired(
+                            "taxInclusive", taxInclusive
+                          ),
+                          type,
+                          checkRequired(
+                            "unitPrice", unitPrice
+                          ),
+                          description,
+                          name,
+                          tax,
+                          taxRate,
+                          additionalProperties.toMutableMap(),
                         )
                 }
 
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types
-                 * recursively.
+                 * Validates that the types of all values in this object match their expected types recursively.
                  *
-                 * This method is _not_ forwards compatible with new types from the API for existing
-                 * fields.
+                 * This method is _not_ forwards compatible with new types from the API for existing fields.
                  *
-                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-                 *   match its expected type.
+                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+                 *   expected type.
                  */
-                fun validate(): Subscription = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    id()
-                    currency().validate()
-                    productId()
-                    prorationFactor()
-                    quantity()
-                    taxInclusive()
-                    _type().let {
-                        if (it != JsonValue.from("subscription")) {
-                            throw DodoPaymentsInvalidDataException(
-                                "'type' is invalid, received $it"
-                            )
+                fun validate(): Subscription =
+                    apply {
+                        if (validated) {
+                          return@apply
                         }
+
+                        id()
+                        currency().validate()
+                        productId()
+                        prorationFactor()
+                        quantity()
+                        taxInclusive()
+                        _type().let {
+                            if (it != JsonValue.from("subscription")) {
+                                throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                            }
+                        }
+                        unitPrice()
+                        description()
+                        name()
+                        tax()
+                        taxRate()
+                        validated = true
                     }
-                    unitPrice()
-                    description()
-                    name()
-                    tax()
-                    taxRate()
-                    validated = true
-                }
 
                 fun isValid(): Boolean =
                     try {
@@ -1308,74 +1284,32 @@ private constructor(
                     }
 
                 /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
+                 * Returns a score indicating how many valid values are contained in this object recursively.
                  *
                  * Used for best match union deserialization.
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    (if (id.asKnown().isPresent) 1 else 0) +
-                        (currency.asKnown().getOrNull()?.validity() ?: 0) +
-                        (if (productId.asKnown().isPresent) 1 else 0) +
-                        (if (prorationFactor.asKnown().isPresent) 1 else 0) +
-                        (if (quantity.asKnown().isPresent) 1 else 0) +
-                        (if (taxInclusive.asKnown().isPresent) 1 else 0) +
-                        type.let { if (it == JsonValue.from("subscription")) 1 else 0 } +
-                        (if (unitPrice.asKnown().isPresent) 1 else 0) +
-                        (if (description.asKnown().isPresent) 1 else 0) +
-                        (if (name.asKnown().isPresent) 1 else 0) +
-                        (if (tax.asKnown().isPresent) 1 else 0) +
-                        (if (taxRate.asKnown().isPresent) 1 else 0)
+                    (if (id.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (productId.asKnown().isPresent) 1 else 0) + (if (prorationFactor.asKnown().isPresent) 1 else 0) + (if (quantity.asKnown().isPresent) 1 else 0) + (if (taxInclusive.asKnown().isPresent) 1 else 0) + type.let {
+                        if (it == JsonValue.from("subscription")) 1 else 0
+                    } + (if (unitPrice.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (tax.asKnown().isPresent) 1 else 0) + (if (taxRate.asKnown().isPresent) 1 else 0)
 
                 override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
+                  if (this === other) {
+                      return true
+                  }
 
-                    return other is Subscription &&
-                        id == other.id &&
-                        currency == other.currency &&
-                        productId == other.productId &&
-                        prorationFactor == other.prorationFactor &&
-                        quantity == other.quantity &&
-                        taxInclusive == other.taxInclusive &&
-                        type == other.type &&
-                        unitPrice == other.unitPrice &&
-                        description == other.description &&
-                        name == other.name &&
-                        tax == other.tax &&
-                        taxRate == other.taxRate &&
-                        additionalProperties == other.additionalProperties
+                  return other is Subscription && id == other.id && currency == other.currency && productId == other.productId && prorationFactor == other.prorationFactor && quantity == other.quantity && taxInclusive == other.taxInclusive && type == other.type && unitPrice == other.unitPrice && description == other.description && name == other.name && tax == other.tax && taxRate == other.taxRate && additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy {
-                    Objects.hash(
-                        id,
-                        currency,
-                        productId,
-                        prorationFactor,
-                        quantity,
-                        taxInclusive,
-                        type,
-                        unitPrice,
-                        description,
-                        name,
-                        tax,
-                        taxRate,
-                        additionalProperties,
-                    )
-                }
+                private val hashCode: Int by lazy { Objects.hash(id, currency, productId, prorationFactor, quantity, taxInclusive, type, unitPrice, description, name, tax, taxRate, additionalProperties) }
 
                 override fun hashCode(): Int = hashCode
 
-                override fun toString() =
-                    "Subscription{id=$id, currency=$currency, productId=$productId, prorationFactor=$prorationFactor, quantity=$quantity, taxInclusive=$taxInclusive, type=$type, unitPrice=$unitPrice, description=$description, name=$name, tax=$tax, taxRate=$taxRate, additionalProperties=$additionalProperties}"
+                override fun toString() = "Subscription{id=$id, currency=$currency, productId=$productId, prorationFactor=$prorationFactor, quantity=$quantity, taxInclusive=$taxInclusive, type=$type, unitPrice=$unitPrice, description=$description, name=$name, tax=$tax, taxRate=$taxRate, additionalProperties=$additionalProperties}"
             }
 
-            class Addon
-            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-            private constructor(
+            class Addon @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
                 private val id: JsonField<String>,
                 private val currency: JsonField<Currency>,
                 private val name: JsonField<String>,
@@ -1389,113 +1323,65 @@ private constructor(
                 private val description: JsonField<String>,
                 private val tax: JsonField<Int>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
+
             ) {
 
                 @JsonCreator
                 private constructor(
                     @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("currency")
-                    @ExcludeMissing
-                    currency: JsonField<Currency> = JsonMissing.of(),
-                    @JsonProperty("name")
-                    @ExcludeMissing
-                    name: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("proration_factor")
-                    @ExcludeMissing
-                    prorationFactor: JsonField<Double> = JsonMissing.of(),
-                    @JsonProperty("quantity")
-                    @ExcludeMissing
-                    quantity: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("tax_category")
-                    @ExcludeMissing
-                    taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
-                    @JsonProperty("tax_inclusive")
-                    @ExcludeMissing
-                    taxInclusive: JsonField<Boolean> = JsonMissing.of(),
-                    @JsonProperty("tax_rate")
-                    @ExcludeMissing
-                    taxRate: JsonField<Float> = JsonMissing.of(),
+                    @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
+                    @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("proration_factor") @ExcludeMissing prorationFactor: JsonField<Double> = JsonMissing.of(),
+                    @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("tax_category") @ExcludeMissing taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
+                    @JsonProperty("tax_inclusive") @ExcludeMissing taxInclusive: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("tax_rate") @ExcludeMissing taxRate: JsonField<Float> = JsonMissing.of(),
                     @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-                    @JsonProperty("unit_price")
-                    @ExcludeMissing
-                    unitPrice: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("description")
-                    @ExcludeMissing
-                    description: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("unit_price") @ExcludeMissing unitPrice: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of()
                 ) : this(
-                    id,
-                    currency,
-                    name,
-                    prorationFactor,
-                    quantity,
-                    taxCategory,
-                    taxInclusive,
-                    taxRate,
-                    type,
-                    unitPrice,
-                    description,
-                    tax,
-                    mutableMapOf(),
+                  id,
+                  currency,
+                  name,
+                  prorationFactor,
+                  quantity,
+                  taxCategory,
+                  taxInclusive,
+                  taxRate,
+                  type,
+                  unitPrice,
+                  description,
+                  tax,
+                  mutableMapOf(),
                 )
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun id(): String = id.getRequired("id")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun currency(): Currency = currency.getRequired("currency")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun name(): String = name.getRequired("name")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun prorationFactor(): Double = prorationFactor.getRequired("proration_factor")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun quantity(): Int = quantity.getRequired("quantity")
 
                 /**
-                 * Represents the different categories of taxation applicable to various products
-                 * and services.
+                 * Represents the different categories of taxation applicable to various products and services.
                  *
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
                  */
                 fun taxCategory(): TaxCategory = taxCategory.getRequired("tax_category")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun taxInclusive(): Boolean = taxInclusive.getRequired("tax_inclusive")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun taxRate(): Float = taxRate.getRequired("tax_rate")
 
                 /**
@@ -1504,28 +1390,20 @@ private constructor(
                  * JsonValue.from("addon")
                  * ```
                  *
-                 * However, this method can be useful for debugging and logging (e.g. if the server
-                 * responded with an unexpected value).
+                 * However, this method can be useful for debugging and logging (e.g. if the server responded
+                 * with an unexpected value).
                  */
-                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+                @JsonProperty("type")
+                @ExcludeMissing
+                fun _type(): JsonValue = type
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun unitPrice(): Int = unitPrice.getRequired("unit_price")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun description(): Optional<String> = description.getOptional("description")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun tax(): Optional<Int> = tax.getOptional("tax")
 
                 /**
@@ -1533,13 +1411,14 @@ private constructor(
                  *
                  * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+                @JsonProperty("id")
+                @ExcludeMissing
+                fun _id(): JsonField<String> = id
 
                 /**
                  * Returns the raw JSON value of [currency].
                  *
-                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("currency")
                 @ExcludeMissing
@@ -1548,16 +1427,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [name].
                  *
-                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+                @JsonProperty("name")
+                @ExcludeMissing
+                fun _name(): JsonField<String> = name
 
                 /**
                  * Returns the raw JSON value of [prorationFactor].
                  *
-                 * Unlike [prorationFactor], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [prorationFactor], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("proration_factor")
                 @ExcludeMissing
@@ -1566,16 +1445,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [quantity].
                  *
-                 * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
+                @JsonProperty("quantity")
+                @ExcludeMissing
+                fun _quantity(): JsonField<Int> = quantity
 
                 /**
                  * Returns the raw JSON value of [taxCategory].
                  *
-                 * Unlike [taxCategory], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [taxCategory], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("tax_category")
                 @ExcludeMissing
@@ -1584,8 +1463,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [taxInclusive].
                  *
-                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("tax_inclusive")
                 @ExcludeMissing
@@ -1594,16 +1472,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [taxRate].
                  *
-                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax_rate") @ExcludeMissing fun _taxRate(): JsonField<Float> = taxRate
+                @JsonProperty("tax_rate")
+                @ExcludeMissing
+                fun _taxRate(): JsonField<Float> = taxRate
 
                 /**
                  * Returns the raw JSON value of [unitPrice].
                  *
-                 * Unlike [unitPrice], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [unitPrice], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("unit_price")
                 @ExcludeMissing
@@ -1612,8 +1490,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [description].
                  *
-                 * Unlike [description], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("description")
                 @ExcludeMissing
@@ -1624,17 +1501,18 @@ private constructor(
                  *
                  * Unlike [tax], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax") @ExcludeMissing fun _tax(): JsonField<Int> = tax
+                @JsonProperty("tax")
+                @ExcludeMissing
+                fun _tax(): JsonField<Int> = tax
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
-                    additionalProperties.put(key, value)
+                  additionalProperties.put(key, value)
                 }
 
                 @JsonAnyGetter
                 @ExcludeMissing
-                fun _additionalProperties(): Map<String, JsonValue> =
-                    Collections.unmodifiableMap(additionalProperties)
+                fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
                 fun toBuilder() = Builder().from(this)
 
@@ -1644,6 +1522,7 @@ private constructor(
                      * Returns a mutable builder for constructing an instance of [Addon].
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .currency()
@@ -1656,7 +1535,8 @@ private constructor(
                      * .unitPrice()
                      * ```
                      */
-                    @JvmStatic fun builder() = Builder()
+                    @JvmStatic
+                    fun builder() = Builder()
                 }
 
                 /** A builder for [Addon]. */
@@ -1677,165 +1557,171 @@ private constructor(
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(addon: Addon) = apply {
-                        id = addon.id
-                        currency = addon.currency
-                        name = addon.name
-                        prorationFactor = addon.prorationFactor
-                        quantity = addon.quantity
-                        taxCategory = addon.taxCategory
-                        taxInclusive = addon.taxInclusive
-                        taxRate = addon.taxRate
-                        type = addon.type
-                        unitPrice = addon.unitPrice
-                        description = addon.description
-                        tax = addon.tax
-                        additionalProperties = addon.additionalProperties.toMutableMap()
-                    }
+                    internal fun from(addon: Addon) =
+                        apply {
+                            id = addon.id
+                            currency = addon.currency
+                            name = addon.name
+                            prorationFactor = addon.prorationFactor
+                            quantity = addon.quantity
+                            taxCategory = addon.taxCategory
+                            taxInclusive = addon.taxInclusive
+                            taxRate = addon.taxRate
+                            type = addon.type
+                            unitPrice = addon.unitPrice
+                            description = addon.description
+                            tax = addon.tax
+                            additionalProperties = addon.additionalProperties.toMutableMap()
+                        }
 
                     fun id(id: String) = id(JsonField.of(id))
 
                     /**
                      * Sets [Builder.id] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.id] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun id(id: JsonField<String>) = apply { this.id = id }
+                    fun id(id: JsonField<String>) =
+                        apply {
+                            this.id = id
+                        }
 
                     fun currency(currency: Currency) = currency(JsonField.of(currency))
 
                     /**
                      * Sets [Builder.currency] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.currency] with a well-typed [Currency] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+                    fun currency(currency: JsonField<Currency>) =
+                        apply {
+                            this.currency = currency
+                        }
 
                     fun name(name: String) = name(JsonField.of(name))
 
                     /**
                      * Sets [Builder.name] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.name] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun name(name: JsonField<String>) = apply { this.name = name }
+                    fun name(name: JsonField<String>) =
+                        apply {
+                            this.name = name
+                        }
 
-                    fun prorationFactor(prorationFactor: Double) =
-                        prorationFactor(JsonField.of(prorationFactor))
+                    fun prorationFactor(prorationFactor: Double) = prorationFactor(JsonField.of(prorationFactor))
 
                     /**
                      * Sets [Builder.prorationFactor] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.prorationFactor] with a well-typed [Double]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.prorationFactor] with a well-typed [Double] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun prorationFactor(prorationFactor: JsonField<Double>) = apply {
-                        this.prorationFactor = prorationFactor
-                    }
+                    fun prorationFactor(prorationFactor: JsonField<Double>) =
+                        apply {
+                            this.prorationFactor = prorationFactor
+                        }
 
                     fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
 
                     /**
                      * Sets [Builder.quantity] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.quantity] with a well-typed [Int] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+                    fun quantity(quantity: JsonField<Int>) =
+                        apply {
+                            this.quantity = quantity
+                        }
 
-                    /**
-                     * Represents the different categories of taxation applicable to various
-                     * products and services.
-                     */
-                    fun taxCategory(taxCategory: TaxCategory) =
-                        taxCategory(JsonField.of(taxCategory))
+                    /** Represents the different categories of taxation applicable to various products and services. */
+                    fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
 
                     /**
                      * Sets [Builder.taxCategory] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxCategory(taxCategory: JsonField<TaxCategory>) = apply {
-                        this.taxCategory = taxCategory
-                    }
+                    fun taxCategory(taxCategory: JsonField<TaxCategory>) =
+                        apply {
+                            this.taxCategory = taxCategory
+                        }
 
-                    fun taxInclusive(taxInclusive: Boolean) =
-                        taxInclusive(JsonField.of(taxInclusive))
+                    fun taxInclusive(taxInclusive: Boolean) = taxInclusive(JsonField.of(taxInclusive))
 
                     /**
                      * Sets [Builder.taxInclusive] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxInclusive(taxInclusive: JsonField<Boolean>) = apply {
-                        this.taxInclusive = taxInclusive
-                    }
+                    fun taxInclusive(taxInclusive: JsonField<Boolean>) =
+                        apply {
+                            this.taxInclusive = taxInclusive
+                        }
 
                     fun taxRate(taxRate: Float) = taxRate(JsonField.of(taxRate))
 
                     /**
                      * Sets [Builder.taxRate] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxRate] with a well-typed [Float] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.taxRate] with a well-typed [Float] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxRate(taxRate: JsonField<Float>) = apply { this.taxRate = taxRate }
+                    fun taxRate(taxRate: JsonField<Float>) =
+                        apply {
+                            this.taxRate = taxRate
+                        }
 
                     /**
                      * Sets the field to an arbitrary JSON value.
                      *
-                     * It is usually unnecessary to call this method because the field defaults to
-                     * the following:
+                     * It is usually unnecessary to call this method because the field defaults to the following:
                      * ```java
                      * JsonValue.from("addon")
                      * ```
                      *
-                     * This method is primarily for setting the field to an undocumented or not yet
-                     * supported value.
+                     * This method is primarily for setting the field to an undocumented or not yet supported value.
                      */
-                    fun type(type: JsonValue) = apply { this.type = type }
+                    fun type(type: JsonValue) =
+                        apply {
+                            this.type = type
+                        }
 
                     fun unitPrice(unitPrice: Int) = unitPrice(JsonField.of(unitPrice))
 
                     /**
                      * Sets [Builder.unitPrice] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.unitPrice] with a well-typed [Int] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.unitPrice] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun unitPrice(unitPrice: JsonField<Int>) = apply { this.unitPrice = unitPrice }
+                    fun unitPrice(unitPrice: JsonField<Int>) =
+                        apply {
+                            this.unitPrice = unitPrice
+                        }
 
-                    fun description(description: String?) =
-                        description(JsonField.ofNullable(description))
+                    fun description(description: String?) = description(JsonField.ofNullable(description))
 
                     /** Alias for calling [Builder.description] with `description.orElse(null)`. */
-                    fun description(description: Optional<String>) =
-                        description(description.getOrNull())
+                    fun description(description: Optional<String>) = description(description.getOrNull())
 
                     /**
                      * Sets [Builder.description] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.description] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun description(description: JsonField<String>) = apply {
-                        this.description = description
-                    }
+                    fun description(description: JsonField<String>) =
+                        apply {
+                            this.description = description
+                        }
 
                     fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
@@ -1852,33 +1738,39 @@ private constructor(
                     /**
                      * Sets [Builder.tax] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.tax] with a well-typed [Int] value instead.
-                     * This method is primarily for setting the field to an undocumented or not yet
+                     * You should usually call [Builder.tax] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
                      * supported value.
                      */
-                    fun tax(tax: JsonField<Int>) = apply { this.tax = tax }
+                    fun tax(tax: JsonField<Int>) =
+                        apply {
+                            this.tax = tax
+                        }
 
-                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.clear()
-                        putAllAdditionalProperties(additionalProperties)
-                    }
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.clear()
+                            putAllAdditionalProperties(additionalProperties)
+                        }
 
-                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                        additionalProperties.put(key, value)
-                    }
+                    fun putAdditionalProperty(key: String, value: JsonValue) =
+                        apply {
+                            additionalProperties.put(key, value)
+                        }
 
                     fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                         apply {
                             this.additionalProperties.putAll(additionalProperties)
                         }
 
-                    fun removeAdditionalProperty(key: String) = apply {
-                        additionalProperties.remove(key)
-                    }
+                    fun removeAdditionalProperty(key: String) =
+                        apply {
+                            additionalProperties.remove(key)
+                        }
 
-                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                        keys.forEach(::removeAdditionalProperty)
-                    }
+                    fun removeAllAdditionalProperties(keys: Set<String>) =
+                        apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
 
                     /**
                      * Returns an immutable instance of [Addon].
@@ -1886,6 +1778,7 @@ private constructor(
                      * Further updates to this [Builder] will not mutate the returned instance.
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .currency()
@@ -1902,59 +1795,74 @@ private constructor(
                      */
                     fun build(): Addon =
                         Addon(
-                            checkRequired("id", id),
-                            checkRequired("currency", currency),
-                            checkRequired("name", name),
-                            checkRequired("prorationFactor", prorationFactor),
-                            checkRequired("quantity", quantity),
-                            checkRequired("taxCategory", taxCategory),
-                            checkRequired("taxInclusive", taxInclusive),
-                            checkRequired("taxRate", taxRate),
-                            type,
-                            checkRequired("unitPrice", unitPrice),
-                            description,
-                            tax,
-                            additionalProperties.toMutableMap(),
+                          checkRequired(
+                            "id", id
+                          ),
+                          checkRequired(
+                            "currency", currency
+                          ),
+                          checkRequired(
+                            "name", name
+                          ),
+                          checkRequired(
+                            "prorationFactor", prorationFactor
+                          ),
+                          checkRequired(
+                            "quantity", quantity
+                          ),
+                          checkRequired(
+                            "taxCategory", taxCategory
+                          ),
+                          checkRequired(
+                            "taxInclusive", taxInclusive
+                          ),
+                          checkRequired(
+                            "taxRate", taxRate
+                          ),
+                          type,
+                          checkRequired(
+                            "unitPrice", unitPrice
+                          ),
+                          description,
+                          tax,
+                          additionalProperties.toMutableMap(),
                         )
                 }
 
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types
-                 * recursively.
+                 * Validates that the types of all values in this object match their expected types recursively.
                  *
-                 * This method is _not_ forwards compatible with new types from the API for existing
-                 * fields.
+                 * This method is _not_ forwards compatible with new types from the API for existing fields.
                  *
-                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-                 *   match its expected type.
+                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+                 *   expected type.
                  */
-                fun validate(): Addon = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    id()
-                    currency().validate()
-                    name()
-                    prorationFactor()
-                    quantity()
-                    taxCategory().validate()
-                    taxInclusive()
-                    taxRate()
-                    _type().let {
-                        if (it != JsonValue.from("addon")) {
-                            throw DodoPaymentsInvalidDataException(
-                                "'type' is invalid, received $it"
-                            )
+                fun validate(): Addon =
+                    apply {
+                        if (validated) {
+                          return@apply
                         }
+
+                        id()
+                        currency().validate()
+                        name()
+                        prorationFactor()
+                        quantity()
+                        taxCategory().validate()
+                        taxInclusive()
+                        taxRate()
+                        _type().let {
+                            if (it != JsonValue.from("addon")) {
+                                throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                            }
+                        }
+                        unitPrice()
+                        description()
+                        tax()
+                        validated = true
                     }
-                    unitPrice()
-                    description()
-                    tax()
-                    validated = true
-                }
 
                 fun isValid(): Boolean =
                     try {
@@ -1965,74 +1873,32 @@ private constructor(
                     }
 
                 /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
+                 * Returns a score indicating how many valid values are contained in this object recursively.
                  *
                  * Used for best match union deserialization.
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    (if (id.asKnown().isPresent) 1 else 0) +
-                        (currency.asKnown().getOrNull()?.validity() ?: 0) +
-                        (if (name.asKnown().isPresent) 1 else 0) +
-                        (if (prorationFactor.asKnown().isPresent) 1 else 0) +
-                        (if (quantity.asKnown().isPresent) 1 else 0) +
-                        (taxCategory.asKnown().getOrNull()?.validity() ?: 0) +
-                        (if (taxInclusive.asKnown().isPresent) 1 else 0) +
-                        (if (taxRate.asKnown().isPresent) 1 else 0) +
-                        type.let { if (it == JsonValue.from("addon")) 1 else 0 } +
-                        (if (unitPrice.asKnown().isPresent) 1 else 0) +
-                        (if (description.asKnown().isPresent) 1 else 0) +
-                        (if (tax.asKnown().isPresent) 1 else 0)
+                    (if (id.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (prorationFactor.asKnown().isPresent) 1 else 0) + (if (quantity.asKnown().isPresent) 1 else 0) + (taxCategory.asKnown().getOrNull()?.validity() ?: 0) + (if (taxInclusive.asKnown().isPresent) 1 else 0) + (if (taxRate.asKnown().isPresent) 1 else 0) + type.let {
+                        if (it == JsonValue.from("addon")) 1 else 0
+                    } + (if (unitPrice.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (tax.asKnown().isPresent) 1 else 0)
 
                 override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
+                  if (this === other) {
+                      return true
+                  }
 
-                    return other is Addon &&
-                        id == other.id &&
-                        currency == other.currency &&
-                        name == other.name &&
-                        prorationFactor == other.prorationFactor &&
-                        quantity == other.quantity &&
-                        taxCategory == other.taxCategory &&
-                        taxInclusive == other.taxInclusive &&
-                        taxRate == other.taxRate &&
-                        type == other.type &&
-                        unitPrice == other.unitPrice &&
-                        description == other.description &&
-                        tax == other.tax &&
-                        additionalProperties == other.additionalProperties
+                  return other is Addon && id == other.id && currency == other.currency && name == other.name && prorationFactor == other.prorationFactor && quantity == other.quantity && taxCategory == other.taxCategory && taxInclusive == other.taxInclusive && taxRate == other.taxRate && type == other.type && unitPrice == other.unitPrice && description == other.description && tax == other.tax && additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy {
-                    Objects.hash(
-                        id,
-                        currency,
-                        name,
-                        prorationFactor,
-                        quantity,
-                        taxCategory,
-                        taxInclusive,
-                        taxRate,
-                        type,
-                        unitPrice,
-                        description,
-                        tax,
-                        additionalProperties,
-                    )
-                }
+                private val hashCode: Int by lazy { Objects.hash(id, currency, name, prorationFactor, quantity, taxCategory, taxInclusive, taxRate, type, unitPrice, description, tax, additionalProperties) }
 
                 override fun hashCode(): Int = hashCode
 
-                override fun toString() =
-                    "Addon{id=$id, currency=$currency, name=$name, prorationFactor=$prorationFactor, quantity=$quantity, taxCategory=$taxCategory, taxInclusive=$taxInclusive, taxRate=$taxRate, type=$type, unitPrice=$unitPrice, description=$description, tax=$tax, additionalProperties=$additionalProperties}"
+                override fun toString() = "Addon{id=$id, currency=$currency, name=$name, prorationFactor=$prorationFactor, quantity=$quantity, taxCategory=$taxCategory, taxInclusive=$taxInclusive, taxRate=$taxRate, type=$type, unitPrice=$unitPrice, description=$description, tax=$tax, additionalProperties=$additionalProperties}"
             }
 
-            class Meter
-            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-            private constructor(
+            class Meter @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
                 private val id: JsonField<String>,
                 private val chargeableUnits: JsonField<String>,
                 private val currency: JsonField<Currency>,
@@ -2047,121 +1913,66 @@ private constructor(
                 private val description: JsonField<String>,
                 private val tax: JsonField<Int>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
+
             ) {
 
                 @JsonCreator
                 private constructor(
                     @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("chargeable_units")
-                    @ExcludeMissing
-                    chargeableUnits: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("currency")
-                    @ExcludeMissing
-                    currency: JsonField<Currency> = JsonMissing.of(),
-                    @JsonProperty("free_threshold")
-                    @ExcludeMissing
-                    freeThreshold: JsonField<Long> = JsonMissing.of(),
-                    @JsonProperty("name")
-                    @ExcludeMissing
-                    name: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("price_per_unit")
-                    @ExcludeMissing
-                    pricePerUnit: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("subtotal")
-                    @ExcludeMissing
-                    subtotal: JsonField<Int> = JsonMissing.of(),
-                    @JsonProperty("tax_inclusive")
-                    @ExcludeMissing
-                    taxInclusive: JsonField<Boolean> = JsonMissing.of(),
-                    @JsonProperty("tax_rate")
-                    @ExcludeMissing
-                    taxRate: JsonField<Float> = JsonMissing.of(),
+                    @JsonProperty("chargeable_units") @ExcludeMissing chargeableUnits: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
+                    @JsonProperty("free_threshold") @ExcludeMissing freeThreshold: JsonField<Long> = JsonMissing.of(),
+                    @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("price_per_unit") @ExcludeMissing pricePerUnit: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("subtotal") @ExcludeMissing subtotal: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("tax_inclusive") @ExcludeMissing taxInclusive: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("tax_rate") @ExcludeMissing taxRate: JsonField<Float> = JsonMissing.of(),
                     @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-                    @JsonProperty("units_consumed")
-                    @ExcludeMissing
-                    unitsConsumed: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("description")
-                    @ExcludeMissing
-                    description: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of(),
+                    @JsonProperty("units_consumed") @ExcludeMissing unitsConsumed: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of()
                 ) : this(
-                    id,
-                    chargeableUnits,
-                    currency,
-                    freeThreshold,
-                    name,
-                    pricePerUnit,
-                    subtotal,
-                    taxInclusive,
-                    taxRate,
-                    type,
-                    unitsConsumed,
-                    description,
-                    tax,
-                    mutableMapOf(),
+                  id,
+                  chargeableUnits,
+                  currency,
+                  freeThreshold,
+                  name,
+                  pricePerUnit,
+                  subtotal,
+                  taxInclusive,
+                  taxRate,
+                  type,
+                  unitsConsumed,
+                  description,
+                  tax,
+                  mutableMapOf(),
                 )
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun id(): String = id.getRequired("id")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun chargeableUnits(): String = chargeableUnits.getRequired("chargeable_units")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun currency(): Currency = currency.getRequired("currency")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun freeThreshold(): Long = freeThreshold.getRequired("free_threshold")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun name(): String = name.getRequired("name")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun pricePerUnit(): String = pricePerUnit.getRequired("price_per_unit")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun subtotal(): Int = subtotal.getRequired("subtotal")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun taxInclusive(): Boolean = taxInclusive.getRequired("tax_inclusive")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun taxRate(): Float = taxRate.getRequired("tax_rate")
 
                 /**
@@ -2170,28 +1981,20 @@ private constructor(
                  * JsonValue.from("meter")
                  * ```
                  *
-                 * However, this method can be useful for debugging and logging (e.g. if the server
-                 * responded with an unexpected value).
+                 * However, this method can be useful for debugging and logging (e.g. if the server responded
+                 * with an unexpected value).
                  */
-                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+                @JsonProperty("type")
+                @ExcludeMissing
+                fun _type(): JsonValue = type
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   or is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
                 fun unitsConsumed(): String = unitsConsumed.getRequired("units_consumed")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun description(): Optional<String> = description.getOptional("description")
 
-                /**
-                 * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-                 *   (e.g. if the server responded with an unexpected value).
-                 */
+                /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
                 fun tax(): Optional<Int> = tax.getOptional("tax")
 
                 /**
@@ -2199,13 +2002,14 @@ private constructor(
                  *
                  * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+                @JsonProperty("id")
+                @ExcludeMissing
+                fun _id(): JsonField<String> = id
 
                 /**
                  * Returns the raw JSON value of [chargeableUnits].
                  *
-                 * Unlike [chargeableUnits], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [chargeableUnits], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("chargeable_units")
                 @ExcludeMissing
@@ -2214,8 +2018,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [currency].
                  *
-                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("currency")
                 @ExcludeMissing
@@ -2224,8 +2027,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [freeThreshold].
                  *
-                 * Unlike [freeThreshold], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [freeThreshold], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("free_threshold")
                 @ExcludeMissing
@@ -2234,16 +2036,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [name].
                  *
-                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+                @JsonProperty("name")
+                @ExcludeMissing
+                fun _name(): JsonField<String> = name
 
                 /**
                  * Returns the raw JSON value of [pricePerUnit].
                  *
-                 * Unlike [pricePerUnit], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [pricePerUnit], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("price_per_unit")
                 @ExcludeMissing
@@ -2252,16 +2054,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [subtotal].
                  *
-                 * Unlike [subtotal], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [subtotal], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("subtotal") @ExcludeMissing fun _subtotal(): JsonField<Int> = subtotal
+                @JsonProperty("subtotal")
+                @ExcludeMissing
+                fun _subtotal(): JsonField<Int> = subtotal
 
                 /**
                  * Returns the raw JSON value of [taxInclusive].
                  *
-                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("tax_inclusive")
                 @ExcludeMissing
@@ -2270,16 +2072,16 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [taxRate].
                  *
-                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected
-                 * type.
+                 * Unlike [taxRate], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax_rate") @ExcludeMissing fun _taxRate(): JsonField<Float> = taxRate
+                @JsonProperty("tax_rate")
+                @ExcludeMissing
+                fun _taxRate(): JsonField<Float> = taxRate
 
                 /**
                  * Returns the raw JSON value of [unitsConsumed].
                  *
-                 * Unlike [unitsConsumed], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [unitsConsumed], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("units_consumed")
                 @ExcludeMissing
@@ -2288,8 +2090,7 @@ private constructor(
                 /**
                  * Returns the raw JSON value of [description].
                  *
-                 * Unlike [description], this method doesn't throw if the JSON field has an
-                 * unexpected type.
+                 * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
                  */
                 @JsonProperty("description")
                 @ExcludeMissing
@@ -2300,17 +2101,18 @@ private constructor(
                  *
                  * Unlike [tax], this method doesn't throw if the JSON field has an unexpected type.
                  */
-                @JsonProperty("tax") @ExcludeMissing fun _tax(): JsonField<Int> = tax
+                @JsonProperty("tax")
+                @ExcludeMissing
+                fun _tax(): JsonField<Int> = tax
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
-                    additionalProperties.put(key, value)
+                  additionalProperties.put(key, value)
                 }
 
                 @JsonAnyGetter
                 @ExcludeMissing
-                fun _additionalProperties(): Map<String, JsonValue> =
-                    Collections.unmodifiableMap(additionalProperties)
+                fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
                 fun toBuilder() = Builder().from(this)
 
@@ -2320,6 +2122,7 @@ private constructor(
                      * Returns a mutable builder for constructing an instance of [Meter].
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .chargeableUnits()
@@ -2333,7 +2136,8 @@ private constructor(
                      * .unitsConsumed()
                      * ```
                      */
-                    @JvmStatic fun builder() = Builder()
+                    @JvmStatic
+                    fun builder() = Builder()
                 }
 
                 /** A builder for [Meter]. */
@@ -2355,179 +2159,184 @@ private constructor(
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(meter: Meter) = apply {
-                        id = meter.id
-                        chargeableUnits = meter.chargeableUnits
-                        currency = meter.currency
-                        freeThreshold = meter.freeThreshold
-                        name = meter.name
-                        pricePerUnit = meter.pricePerUnit
-                        subtotal = meter.subtotal
-                        taxInclusive = meter.taxInclusive
-                        taxRate = meter.taxRate
-                        type = meter.type
-                        unitsConsumed = meter.unitsConsumed
-                        description = meter.description
-                        tax = meter.tax
-                        additionalProperties = meter.additionalProperties.toMutableMap()
-                    }
+                    internal fun from(meter: Meter) =
+                        apply {
+                            id = meter.id
+                            chargeableUnits = meter.chargeableUnits
+                            currency = meter.currency
+                            freeThreshold = meter.freeThreshold
+                            name = meter.name
+                            pricePerUnit = meter.pricePerUnit
+                            subtotal = meter.subtotal
+                            taxInclusive = meter.taxInclusive
+                            taxRate = meter.taxRate
+                            type = meter.type
+                            unitsConsumed = meter.unitsConsumed
+                            description = meter.description
+                            tax = meter.tax
+                            additionalProperties = meter.additionalProperties.toMutableMap()
+                        }
 
                     fun id(id: String) = id(JsonField.of(id))
 
                     /**
                      * Sets [Builder.id] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.id] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun id(id: JsonField<String>) = apply { this.id = id }
+                    fun id(id: JsonField<String>) =
+                        apply {
+                            this.id = id
+                        }
 
-                    fun chargeableUnits(chargeableUnits: String) =
-                        chargeableUnits(JsonField.of(chargeableUnits))
+                    fun chargeableUnits(chargeableUnits: String) = chargeableUnits(JsonField.of(chargeableUnits))
 
                     /**
                      * Sets [Builder.chargeableUnits] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.chargeableUnits] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.chargeableUnits] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun chargeableUnits(chargeableUnits: JsonField<String>) = apply {
-                        this.chargeableUnits = chargeableUnits
-                    }
+                    fun chargeableUnits(chargeableUnits: JsonField<String>) =
+                        apply {
+                            this.chargeableUnits = chargeableUnits
+                        }
 
                     fun currency(currency: Currency) = currency(JsonField.of(currency))
 
                     /**
                      * Sets [Builder.currency] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.currency] with a well-typed [Currency] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+                    fun currency(currency: JsonField<Currency>) =
+                        apply {
+                            this.currency = currency
+                        }
 
-                    fun freeThreshold(freeThreshold: Long) =
-                        freeThreshold(JsonField.of(freeThreshold))
+                    fun freeThreshold(freeThreshold: Long) = freeThreshold(JsonField.of(freeThreshold))
 
                     /**
                      * Sets [Builder.freeThreshold] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.freeThreshold] with a well-typed [Long]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.freeThreshold] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun freeThreshold(freeThreshold: JsonField<Long>) = apply {
-                        this.freeThreshold = freeThreshold
-                    }
+                    fun freeThreshold(freeThreshold: JsonField<Long>) =
+                        apply {
+                            this.freeThreshold = freeThreshold
+                        }
 
                     fun name(name: String) = name(JsonField.of(name))
 
                     /**
                      * Sets [Builder.name] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.name] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun name(name: JsonField<String>) = apply { this.name = name }
+                    fun name(name: JsonField<String>) =
+                        apply {
+                            this.name = name
+                        }
 
-                    fun pricePerUnit(pricePerUnit: String) =
-                        pricePerUnit(JsonField.of(pricePerUnit))
+                    fun pricePerUnit(pricePerUnit: String) = pricePerUnit(JsonField.of(pricePerUnit))
 
                     /**
                      * Sets [Builder.pricePerUnit] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.pricePerUnit] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.pricePerUnit] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun pricePerUnit(pricePerUnit: JsonField<String>) = apply {
-                        this.pricePerUnit = pricePerUnit
-                    }
+                    fun pricePerUnit(pricePerUnit: JsonField<String>) =
+                        apply {
+                            this.pricePerUnit = pricePerUnit
+                        }
 
                     fun subtotal(subtotal: Int) = subtotal(JsonField.of(subtotal))
 
                     /**
                      * Sets [Builder.subtotal] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.subtotal] with a well-typed [Int] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.subtotal] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun subtotal(subtotal: JsonField<Int>) = apply { this.subtotal = subtotal }
+                    fun subtotal(subtotal: JsonField<Int>) =
+                        apply {
+                            this.subtotal = subtotal
+                        }
 
-                    fun taxInclusive(taxInclusive: Boolean) =
-                        taxInclusive(JsonField.of(taxInclusive))
+                    fun taxInclusive(taxInclusive: Boolean) = taxInclusive(JsonField.of(taxInclusive))
 
                     /**
                      * Sets [Builder.taxInclusive] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxInclusive(taxInclusive: JsonField<Boolean>) = apply {
-                        this.taxInclusive = taxInclusive
-                    }
+                    fun taxInclusive(taxInclusive: JsonField<Boolean>) =
+                        apply {
+                            this.taxInclusive = taxInclusive
+                        }
 
                     fun taxRate(taxRate: Float) = taxRate(JsonField.of(taxRate))
 
                     /**
                      * Sets [Builder.taxRate] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.taxRate] with a well-typed [Float] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.taxRate] with a well-typed [Float] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun taxRate(taxRate: JsonField<Float>) = apply { this.taxRate = taxRate }
+                    fun taxRate(taxRate: JsonField<Float>) =
+                        apply {
+                            this.taxRate = taxRate
+                        }
 
                     /**
                      * Sets the field to an arbitrary JSON value.
                      *
-                     * It is usually unnecessary to call this method because the field defaults to
-                     * the following:
+                     * It is usually unnecessary to call this method because the field defaults to the following:
                      * ```java
                      * JsonValue.from("meter")
                      * ```
                      *
-                     * This method is primarily for setting the field to an undocumented or not yet
-                     * supported value.
+                     * This method is primarily for setting the field to an undocumented or not yet supported value.
                      */
-                    fun type(type: JsonValue) = apply { this.type = type }
+                    fun type(type: JsonValue) =
+                        apply {
+                            this.type = type
+                        }
 
-                    fun unitsConsumed(unitsConsumed: String) =
-                        unitsConsumed(JsonField.of(unitsConsumed))
+                    fun unitsConsumed(unitsConsumed: String) = unitsConsumed(JsonField.of(unitsConsumed))
 
                     /**
                      * Sets [Builder.unitsConsumed] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.unitsConsumed] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.unitsConsumed] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun unitsConsumed(unitsConsumed: JsonField<String>) = apply {
-                        this.unitsConsumed = unitsConsumed
-                    }
+                    fun unitsConsumed(unitsConsumed: JsonField<String>) =
+                        apply {
+                            this.unitsConsumed = unitsConsumed
+                        }
 
-                    fun description(description: String?) =
-                        description(JsonField.ofNullable(description))
+                    fun description(description: String?) = description(JsonField.ofNullable(description))
 
                     /** Alias for calling [Builder.description] with `description.orElse(null)`. */
-                    fun description(description: Optional<String>) =
-                        description(description.getOrNull())
+                    fun description(description: Optional<String>) = description(description.getOrNull())
 
                     /**
                      * Sets [Builder.description] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.description] with a well-typed [String]
-                     * value instead. This method is primarily for setting the field to an
-                     * undocumented or not yet supported value.
+                     * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun description(description: JsonField<String>) = apply {
-                        this.description = description
-                    }
+                    fun description(description: JsonField<String>) =
+                        apply {
+                            this.description = description
+                        }
 
                     fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
@@ -2544,33 +2353,39 @@ private constructor(
                     /**
                      * Sets [Builder.tax] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.tax] with a well-typed [Int] value instead.
-                     * This method is primarily for setting the field to an undocumented or not yet
+                     * You should usually call [Builder.tax] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
                      * supported value.
                      */
-                    fun tax(tax: JsonField<Int>) = apply { this.tax = tax }
+                    fun tax(tax: JsonField<Int>) =
+                        apply {
+                            this.tax = tax
+                        }
 
-                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.clear()
-                        putAllAdditionalProperties(additionalProperties)
-                    }
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.clear()
+                            putAllAdditionalProperties(additionalProperties)
+                        }
 
-                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                        additionalProperties.put(key, value)
-                    }
+                    fun putAdditionalProperty(key: String, value: JsonValue) =
+                        apply {
+                            additionalProperties.put(key, value)
+                        }
 
                     fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                         apply {
                             this.additionalProperties.putAll(additionalProperties)
                         }
 
-                    fun removeAdditionalProperty(key: String) = apply {
-                        additionalProperties.remove(key)
-                    }
+                    fun removeAdditionalProperty(key: String) =
+                        apply {
+                            additionalProperties.remove(key)
+                        }
 
-                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                        keys.forEach(::removeAdditionalProperty)
-                    }
+                    fun removeAllAdditionalProperties(keys: Set<String>) =
+                        apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
 
                     /**
                      * Returns an immutable instance of [Meter].
@@ -2578,6 +2393,7 @@ private constructor(
                      * Further updates to this [Builder] will not mutate the returned instance.
                      *
                      * The following fields are required:
+                     *
                      * ```java
                      * .id()
                      * .chargeableUnits()
@@ -2595,61 +2411,78 @@ private constructor(
                      */
                     fun build(): Meter =
                         Meter(
-                            checkRequired("id", id),
-                            checkRequired("chargeableUnits", chargeableUnits),
-                            checkRequired("currency", currency),
-                            checkRequired("freeThreshold", freeThreshold),
-                            checkRequired("name", name),
-                            checkRequired("pricePerUnit", pricePerUnit),
-                            checkRequired("subtotal", subtotal),
-                            checkRequired("taxInclusive", taxInclusive),
-                            checkRequired("taxRate", taxRate),
-                            type,
-                            checkRequired("unitsConsumed", unitsConsumed),
-                            description,
-                            tax,
-                            additionalProperties.toMutableMap(),
+                          checkRequired(
+                            "id", id
+                          ),
+                          checkRequired(
+                            "chargeableUnits", chargeableUnits
+                          ),
+                          checkRequired(
+                            "currency", currency
+                          ),
+                          checkRequired(
+                            "freeThreshold", freeThreshold
+                          ),
+                          checkRequired(
+                            "name", name
+                          ),
+                          checkRequired(
+                            "pricePerUnit", pricePerUnit
+                          ),
+                          checkRequired(
+                            "subtotal", subtotal
+                          ),
+                          checkRequired(
+                            "taxInclusive", taxInclusive
+                          ),
+                          checkRequired(
+                            "taxRate", taxRate
+                          ),
+                          type,
+                          checkRequired(
+                            "unitsConsumed", unitsConsumed
+                          ),
+                          description,
+                          tax,
+                          additionalProperties.toMutableMap(),
                         )
                 }
 
                 private var validated: Boolean = false
 
                 /**
-                 * Validates that the types of all values in this object match their expected types
-                 * recursively.
+                 * Validates that the types of all values in this object match their expected types recursively.
                  *
-                 * This method is _not_ forwards compatible with new types from the API for existing
-                 * fields.
+                 * This method is _not_ forwards compatible with new types from the API for existing fields.
                  *
-                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-                 *   match its expected type.
+                 * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+                 *   expected type.
                  */
-                fun validate(): Meter = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    id()
-                    chargeableUnits()
-                    currency().validate()
-                    freeThreshold()
-                    name()
-                    pricePerUnit()
-                    subtotal()
-                    taxInclusive()
-                    taxRate()
-                    _type().let {
-                        if (it != JsonValue.from("meter")) {
-                            throw DodoPaymentsInvalidDataException(
-                                "'type' is invalid, received $it"
-                            )
+                fun validate(): Meter =
+                    apply {
+                        if (validated) {
+                          return@apply
                         }
+
+                        id()
+                        chargeableUnits()
+                        currency().validate()
+                        freeThreshold()
+                        name()
+                        pricePerUnit()
+                        subtotal()
+                        taxInclusive()
+                        taxRate()
+                        _type().let {
+                            if (it != JsonValue.from("meter")) {
+                                throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
+                            }
+                        }
+                        unitsConsumed()
+                        description()
+                        tax()
+                        validated = true
                     }
-                    unitsConsumed()
-                    description()
-                    tax()
-                    validated = true
-                }
 
                 fun isValid(): Boolean =
                     try {
@@ -2660,78 +2493,33 @@ private constructor(
                     }
 
                 /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
+                 * Returns a score indicating how many valid values are contained in this object recursively.
                  *
                  * Used for best match union deserialization.
                  */
                 @JvmSynthetic
                 internal fun validity(): Int =
-                    (if (id.asKnown().isPresent) 1 else 0) +
-                        (if (chargeableUnits.asKnown().isPresent) 1 else 0) +
-                        (currency.asKnown().getOrNull()?.validity() ?: 0) +
-                        (if (freeThreshold.asKnown().isPresent) 1 else 0) +
-                        (if (name.asKnown().isPresent) 1 else 0) +
-                        (if (pricePerUnit.asKnown().isPresent) 1 else 0) +
-                        (if (subtotal.asKnown().isPresent) 1 else 0) +
-                        (if (taxInclusive.asKnown().isPresent) 1 else 0) +
-                        (if (taxRate.asKnown().isPresent) 1 else 0) +
-                        type.let { if (it == JsonValue.from("meter")) 1 else 0 } +
-                        (if (unitsConsumed.asKnown().isPresent) 1 else 0) +
-                        (if (description.asKnown().isPresent) 1 else 0) +
-                        (if (tax.asKnown().isPresent) 1 else 0)
+                    (if (id.asKnown().isPresent) 1 else 0) + (if (chargeableUnits.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (freeThreshold.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (pricePerUnit.asKnown().isPresent) 1 else 0) + (if (subtotal.asKnown().isPresent) 1 else 0) + (if (taxInclusive.asKnown().isPresent) 1 else 0) + (if (taxRate.asKnown().isPresent) 1 else 0) + type.let {
+                        if (it == JsonValue.from("meter")) 1 else 0
+                    } + (if (unitsConsumed.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (tax.asKnown().isPresent) 1 else 0)
 
                 override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
+                  if (this === other) {
+                      return true
+                  }
 
-                    return other is Meter &&
-                        id == other.id &&
-                        chargeableUnits == other.chargeableUnits &&
-                        currency == other.currency &&
-                        freeThreshold == other.freeThreshold &&
-                        name == other.name &&
-                        pricePerUnit == other.pricePerUnit &&
-                        subtotal == other.subtotal &&
-                        taxInclusive == other.taxInclusive &&
-                        taxRate == other.taxRate &&
-                        type == other.type &&
-                        unitsConsumed == other.unitsConsumed &&
-                        description == other.description &&
-                        tax == other.tax &&
-                        additionalProperties == other.additionalProperties
+                  return other is Meter && id == other.id && chargeableUnits == other.chargeableUnits && currency == other.currency && freeThreshold == other.freeThreshold && name == other.name && pricePerUnit == other.pricePerUnit && subtotal == other.subtotal && taxInclusive == other.taxInclusive && taxRate == other.taxRate && type == other.type && unitsConsumed == other.unitsConsumed && description == other.description && tax == other.tax && additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy {
-                    Objects.hash(
-                        id,
-                        chargeableUnits,
-                        currency,
-                        freeThreshold,
-                        name,
-                        pricePerUnit,
-                        subtotal,
-                        taxInclusive,
-                        taxRate,
-                        type,
-                        unitsConsumed,
-                        description,
-                        tax,
-                        additionalProperties,
-                    )
-                }
+                private val hashCode: Int by lazy { Objects.hash(id, chargeableUnits, currency, freeThreshold, name, pricePerUnit, subtotal, taxInclusive, taxRate, type, unitsConsumed, description, tax, additionalProperties) }
 
                 override fun hashCode(): Int = hashCode
 
-                override fun toString() =
-                    "Meter{id=$id, chargeableUnits=$chargeableUnits, currency=$currency, freeThreshold=$freeThreshold, name=$name, pricePerUnit=$pricePerUnit, subtotal=$subtotal, taxInclusive=$taxInclusive, taxRate=$taxRate, type=$type, unitsConsumed=$unitsConsumed, description=$description, tax=$tax, additionalProperties=$additionalProperties}"
+                override fun toString() = "Meter{id=$id, chargeableUnits=$chargeableUnits, currency=$currency, freeThreshold=$freeThreshold, name=$name, pricePerUnit=$pricePerUnit, subtotal=$subtotal, taxInclusive=$taxInclusive, taxRate=$taxRate, type=$type, unitsConsumed=$unitsConsumed, description=$description, tax=$tax, additionalProperties=$additionalProperties}"
             }
         }
 
-        class Summary
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
+        class Summary @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
             private val currency: JsonField<Currency>,
             private val customerCredits: JsonField<Long>,
             private val settlementAmount: JsonField<Int>,
@@ -2740,93 +2528,54 @@ private constructor(
             private val settlementTax: JsonField<Int>,
             private val tax: JsonField<Int>,
             private val additionalProperties: MutableMap<String, JsonValue>,
+
         ) {
 
             @JsonCreator
             private constructor(
-                @JsonProperty("currency")
-                @ExcludeMissing
-                currency: JsonField<Currency> = JsonMissing.of(),
-                @JsonProperty("customer_credits")
-                @ExcludeMissing
-                customerCredits: JsonField<Long> = JsonMissing.of(),
-                @JsonProperty("settlement_amount")
-                @ExcludeMissing
-                settlementAmount: JsonField<Int> = JsonMissing.of(),
-                @JsonProperty("settlement_currency")
-                @ExcludeMissing
-                settlementCurrency: JsonField<Currency> = JsonMissing.of(),
-                @JsonProperty("total_amount")
-                @ExcludeMissing
-                totalAmount: JsonField<Int> = JsonMissing.of(),
-                @JsonProperty("settlement_tax")
-                @ExcludeMissing
-                settlementTax: JsonField<Int> = JsonMissing.of(),
-                @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
+                @JsonProperty("customer_credits") @ExcludeMissing customerCredits: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("settlement_amount") @ExcludeMissing settlementAmount: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("settlement_currency") @ExcludeMissing settlementCurrency: JsonField<Currency> = JsonMissing.of(),
+                @JsonProperty("total_amount") @ExcludeMissing totalAmount: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("settlement_tax") @ExcludeMissing settlementTax: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("tax") @ExcludeMissing tax: JsonField<Int> = JsonMissing.of()
             ) : this(
-                currency,
-                customerCredits,
-                settlementAmount,
-                settlementCurrency,
-                totalAmount,
-                settlementTax,
-                tax,
-                mutableMapOf(),
+              currency,
+              customerCredits,
+              settlementAmount,
+              settlementCurrency,
+              totalAmount,
+              settlementTax,
+              tax,
+              mutableMapOf(),
             )
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
             fun currency(): Currency = currency.getRequired("currency")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
             fun customerCredits(): Long = customerCredits.getRequired("customer_credits")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
             fun settlementAmount(): Int = settlementAmount.getRequired("settlement_amount")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun settlementCurrency(): Currency =
-                settlementCurrency.getRequired("settlement_currency")
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
+            fun settlementCurrency(): Currency = settlementCurrency.getRequired("settlement_currency")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
             fun totalAmount(): Int = totalAmount.getRequired("total_amount")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun settlementTax(): Optional<Int> = settlementTax.getOptional("settlement_tax")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun tax(): Optional<Int> = tax.getOptional("tax")
 
             /**
              * Returns the raw JSON value of [currency].
              *
-             * Unlike [currency], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("currency")
             @ExcludeMissing
@@ -2835,8 +2584,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [customerCredits].
              *
-             * Unlike [customerCredits], this method doesn't throw if the JSON field has an
-             * unexpected type.
+             * Unlike [customerCredits], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("customer_credits")
             @ExcludeMissing
@@ -2845,8 +2593,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [settlementAmount].
              *
-             * Unlike [settlementAmount], this method doesn't throw if the JSON field has an
-             * unexpected type.
+             * Unlike [settlementAmount], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("settlement_amount")
             @ExcludeMissing
@@ -2855,8 +2602,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [settlementCurrency].
              *
-             * Unlike [settlementCurrency], this method doesn't throw if the JSON field has an
-             * unexpected type.
+             * Unlike [settlementCurrency], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("settlement_currency")
             @ExcludeMissing
@@ -2865,8 +2611,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [totalAmount].
              *
-             * Unlike [totalAmount], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [totalAmount], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("total_amount")
             @ExcludeMissing
@@ -2875,8 +2620,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [settlementTax].
              *
-             * Unlike [settlementTax], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [settlementTax], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("settlement_tax")
             @ExcludeMissing
@@ -2887,17 +2631,18 @@ private constructor(
              *
              * Unlike [tax], this method doesn't throw if the JSON field has an unexpected type.
              */
-            @JsonProperty("tax") @ExcludeMissing fun _tax(): JsonField<Int> = tax
+            @JsonProperty("tax")
+            @ExcludeMissing
+            fun _tax(): JsonField<Int> = tax
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
+              additionalProperties.put(key, value)
             }
 
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
+            fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -2907,6 +2652,7 @@ private constructor(
                  * Returns a mutable builder for constructing an instance of [Summary].
                  *
                  * The following fields are required:
+                 *
                  * ```java
                  * .currency()
                  * .customerCredits()
@@ -2915,7 +2661,8 @@ private constructor(
                  * .totalAmount()
                  * ```
                  */
-                @JvmStatic fun builder() = Builder()
+                @JvmStatic
+                fun builder() = Builder()
             }
 
             /** A builder for [Summary]. */
@@ -2931,85 +2678,84 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(summary: Summary) = apply {
-                    currency = summary.currency
-                    customerCredits = summary.customerCredits
-                    settlementAmount = summary.settlementAmount
-                    settlementCurrency = summary.settlementCurrency
-                    totalAmount = summary.totalAmount
-                    settlementTax = summary.settlementTax
-                    tax = summary.tax
-                    additionalProperties = summary.additionalProperties.toMutableMap()
-                }
+                internal fun from(summary: Summary) =
+                    apply {
+                        currency = summary.currency
+                        customerCredits = summary.customerCredits
+                        settlementAmount = summary.settlementAmount
+                        settlementCurrency = summary.settlementCurrency
+                        totalAmount = summary.totalAmount
+                        settlementTax = summary.settlementTax
+                        tax = summary.tax
+                        additionalProperties = summary.additionalProperties.toMutableMap()
+                    }
 
                 fun currency(currency: Currency) = currency(JsonField.of(currency))
 
                 /**
                  * Sets [Builder.currency] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.currency] with a well-typed [Currency] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+                fun currency(currency: JsonField<Currency>) =
+                    apply {
+                        this.currency = currency
+                    }
 
-                fun customerCredits(customerCredits: Long) =
-                    customerCredits(JsonField.of(customerCredits))
+                fun customerCredits(customerCredits: Long) = customerCredits(JsonField.of(customerCredits))
 
                 /**
                  * Sets [Builder.customerCredits] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.customerCredits] with a well-typed [Long] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.customerCredits] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun customerCredits(customerCredits: JsonField<Long>) = apply {
-                    this.customerCredits = customerCredits
-                }
+                fun customerCredits(customerCredits: JsonField<Long>) =
+                    apply {
+                        this.customerCredits = customerCredits
+                    }
 
-                fun settlementAmount(settlementAmount: Int) =
-                    settlementAmount(JsonField.of(settlementAmount))
+                fun settlementAmount(settlementAmount: Int) = settlementAmount(JsonField.of(settlementAmount))
 
                 /**
                  * Sets [Builder.settlementAmount] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.settlementAmount] with a well-typed [Int] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.settlementAmount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun settlementAmount(settlementAmount: JsonField<Int>) = apply {
-                    this.settlementAmount = settlementAmount
-                }
+                fun settlementAmount(settlementAmount: JsonField<Int>) =
+                    apply {
+                        this.settlementAmount = settlementAmount
+                    }
 
-                fun settlementCurrency(settlementCurrency: Currency) =
-                    settlementCurrency(JsonField.of(settlementCurrency))
+                fun settlementCurrency(settlementCurrency: Currency) = settlementCurrency(JsonField.of(settlementCurrency))
 
                 /**
                  * Sets [Builder.settlementCurrency] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.settlementCurrency] with a well-typed [Currency]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.settlementCurrency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun settlementCurrency(settlementCurrency: JsonField<Currency>) = apply {
-                    this.settlementCurrency = settlementCurrency
-                }
+                fun settlementCurrency(settlementCurrency: JsonField<Currency>) =
+                    apply {
+                        this.settlementCurrency = settlementCurrency
+                    }
 
                 fun totalAmount(totalAmount: Int) = totalAmount(JsonField.of(totalAmount))
 
                 /**
                  * Sets [Builder.totalAmount] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.totalAmount] with a well-typed [Int] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.totalAmount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun totalAmount(totalAmount: JsonField<Int>) = apply {
-                    this.totalAmount = totalAmount
-                }
+                fun totalAmount(totalAmount: JsonField<Int>) =
+                    apply {
+                        this.totalAmount = totalAmount
+                    }
 
-                fun settlementTax(settlementTax: Int?) =
-                    settlementTax(JsonField.ofNullable(settlementTax))
+                fun settlementTax(settlementTax: Int?) = settlementTax(JsonField.ofNullable(settlementTax))
 
                 /**
                  * Alias for [Builder.settlementTax].
@@ -3019,19 +2765,18 @@ private constructor(
                 fun settlementTax(settlementTax: Int) = settlementTax(settlementTax as Int?)
 
                 /** Alias for calling [Builder.settlementTax] with `settlementTax.orElse(null)`. */
-                fun settlementTax(settlementTax: Optional<Int>) =
-                    settlementTax(settlementTax.getOrNull())
+                fun settlementTax(settlementTax: Optional<Int>) = settlementTax(settlementTax.getOrNull())
 
                 /**
                  * Sets [Builder.settlementTax] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.settlementTax] with a well-typed [Int] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.settlementTax] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun settlementTax(settlementTax: JsonField<Int>) = apply {
-                    this.settlementTax = settlementTax
-                }
+                fun settlementTax(settlementTax: JsonField<Int>) =
+                    apply {
+                        this.settlementTax = settlementTax
+                    }
 
                 fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
@@ -3048,33 +2793,39 @@ private constructor(
                 /**
                  * Sets [Builder.tax] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.tax] with a well-typed [Int] value instead. This
-                 * method is primarily for setting the field to an undocumented or not yet supported
-                 * value.
+                 * You should usually call [Builder.tax] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun tax(tax: JsonField<Int>) = apply { this.tax = tax }
+                fun tax(tax: JsonField<Int>) =
+                    apply {
+                        this.tax = tax
+                    }
 
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
 
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
+                fun putAdditionalProperty(key: String, value: JsonValue) =
+                    apply {
+                        additionalProperties.put(key, value)
+                    }
 
                 fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                     apply {
                         this.additionalProperties.putAll(additionalProperties)
                     }
 
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
+                fun removeAdditionalProperty(key: String) =
+                    apply {
+                        additionalProperties.remove(key)
+                    }
 
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
+                fun removeAllAdditionalProperties(keys: Set<String>) =
+                    apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
 
                 /**
                  * Returns an immutable instance of [Summary].
@@ -3082,6 +2833,7 @@ private constructor(
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
                  * The following fields are required:
+                 *
                  * ```java
                  * .currency()
                  * .customerCredits()
@@ -3094,43 +2846,52 @@ private constructor(
                  */
                 fun build(): Summary =
                     Summary(
-                        checkRequired("currency", currency),
-                        checkRequired("customerCredits", customerCredits),
-                        checkRequired("settlementAmount", settlementAmount),
-                        checkRequired("settlementCurrency", settlementCurrency),
-                        checkRequired("totalAmount", totalAmount),
-                        settlementTax,
-                        tax,
-                        additionalProperties.toMutableMap(),
+                      checkRequired(
+                        "currency", currency
+                      ),
+                      checkRequired(
+                        "customerCredits", customerCredits
+                      ),
+                      checkRequired(
+                        "settlementAmount", settlementAmount
+                      ),
+                      checkRequired(
+                        "settlementCurrency", settlementCurrency
+                      ),
+                      checkRequired(
+                        "totalAmount", totalAmount
+                      ),
+                      settlementTax,
+                      tax,
+                      additionalProperties.toMutableMap(),
                     )
             }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Summary = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Summary =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                currency().validate()
-                customerCredits()
-                settlementAmount()
-                settlementCurrency().validate()
-                totalAmount()
-                settlementTax()
-                tax()
-                validated = true
-            }
+                    currency().validate()
+                    customerCredits()
+                    settlementAmount()
+                    settlementCurrency().validate()
+                    totalAmount()
+                    settlementTax()
+                    tax()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -3141,95 +2902,54 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
             @JvmSynthetic
-            internal fun validity(): Int =
-                (currency.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (customerCredits.asKnown().isPresent) 1 else 0) +
-                    (if (settlementAmount.asKnown().isPresent) 1 else 0) +
-                    (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (totalAmount.asKnown().isPresent) 1 else 0) +
-                    (if (settlementTax.asKnown().isPresent) 1 else 0) +
-                    (if (tax.asKnown().isPresent) 1 else 0)
+            internal fun validity(): Int = (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (customerCredits.asKnown().isPresent) 1 else 0) + (if (settlementAmount.asKnown().isPresent) 1 else 0) + (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) + (if (totalAmount.asKnown().isPresent) 1 else 0) + (if (settlementTax.asKnown().isPresent) 1 else 0) + (if (tax.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Summary &&
-                    currency == other.currency &&
-                    customerCredits == other.customerCredits &&
-                    settlementAmount == other.settlementAmount &&
-                    settlementCurrency == other.settlementCurrency &&
-                    totalAmount == other.totalAmount &&
-                    settlementTax == other.settlementTax &&
-                    tax == other.tax &&
-                    additionalProperties == other.additionalProperties
+              return other is Summary && currency == other.currency && customerCredits == other.customerCredits && settlementAmount == other.settlementAmount && settlementCurrency == other.settlementCurrency && totalAmount == other.totalAmount && settlementTax == other.settlementTax && tax == other.tax && additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy {
-                Objects.hash(
-                    currency,
-                    customerCredits,
-                    settlementAmount,
-                    settlementCurrency,
-                    totalAmount,
-                    settlementTax,
-                    tax,
-                    additionalProperties,
-                )
-            }
+            private val hashCode: Int by lazy { Objects.hash(currency, customerCredits, settlementAmount, settlementCurrency, totalAmount, settlementTax, tax, additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
-            override fun toString() =
-                "Summary{currency=$currency, customerCredits=$customerCredits, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, settlementTax=$settlementTax, tax=$tax, additionalProperties=$additionalProperties}"
+            override fun toString() = "Summary{currency=$currency, customerCredits=$customerCredits, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, settlementTax=$settlementTax, tax=$tax, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is ImmediateCharge &&
-                effectiveAt == other.effectiveAt &&
-                lineItems == other.lineItems &&
-                summary == other.summary &&
-                additionalProperties == other.additionalProperties
+          return other is ImmediateCharge && effectiveAt == other.effectiveAt && lineItems == other.lineItems && summary == other.summary && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(effectiveAt, lineItems, summary, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(effectiveAt, lineItems, summary, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "ImmediateCharge{effectiveAt=$effectiveAt, lineItems=$lineItems, summary=$summary, additionalProperties=$additionalProperties}"
+        override fun toString() = "ImmediateCharge{effectiveAt=$effectiveAt, lineItems=$lineItems, summary=$summary, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionPreviewChangePlanResponse &&
-            immediateCharge == other.immediateCharge &&
-            newPlan == other.newPlan &&
-            additionalProperties == other.additionalProperties
+      return other is SubscriptionPreviewChangePlanResponse && immediateCharge == other.immediateCharge && newPlan == other.newPlan && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(immediateCharge, newPlan, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(immediateCharge, newPlan, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "SubscriptionPreviewChangePlanResponse{immediateCharge=$immediateCharge, newPlan=$newPlan, additionalProperties=$additionalProperties}"
+    override fun toString() = "SubscriptionPreviewChangePlanResponse{immediateCharge=$immediateCharge, newPlan=$newPlan, additionalProperties=$additionalProperties}"
 }

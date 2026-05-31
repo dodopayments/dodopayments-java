@@ -22,148 +22,137 @@ import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListPag
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceListParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceRetrieveParams
 import com.dodopayments.api.models.licensekeyinstances.LicenseKeyInstanceUpdateParams
+import com.dodopayments.api.services.blocking.LicenseKeyInstanceService
+import com.dodopayments.api.services.blocking.LicenseKeyInstanceServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class LicenseKeyInstanceServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    LicenseKeyInstanceService {
+class LicenseKeyInstanceServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: LicenseKeyInstanceService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : LicenseKeyInstanceService {
+
+    private val withRawResponse: LicenseKeyInstanceService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): LicenseKeyInstanceService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceService =
-        LicenseKeyInstanceServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceService = LicenseKeyInstanceServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieve(
-        params: LicenseKeyInstanceRetrieveParams,
-        requestOptions: RequestOptions,
-    ): LicenseKeyInstance =
+    override fun retrieve(params: LicenseKeyInstanceRetrieveParams, requestOptions: RequestOptions): LicenseKeyInstance =
         // get /license_key_instances/{id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun update(
-        params: LicenseKeyInstanceUpdateParams,
-        requestOptions: RequestOptions,
-    ): LicenseKeyInstance =
+    override fun update(params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions): LicenseKeyInstance =
         // patch /license_key_instances/{id}
         withRawResponse().update(params, requestOptions).parse()
 
-    override fun list(
-        params: LicenseKeyInstanceListParams,
-        requestOptions: RequestOptions,
-    ): LicenseKeyInstanceListPage =
+    override fun list(params: LicenseKeyInstanceListParams, requestOptions: RequestOptions): LicenseKeyInstanceListPage =
         // get /license_key_instances
         withRawResponse().list(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        LicenseKeyInstanceService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : LicenseKeyInstanceService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): LicenseKeyInstanceService.WithRawResponse =
-            LicenseKeyInstanceServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): LicenseKeyInstanceService.WithRawResponse = LicenseKeyInstanceServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val retrieveHandler: Handler<LicenseKeyInstance> = jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper)
+
+        override fun retrieve(params: LicenseKeyInstanceRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<LicenseKeyInstance> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_key_instances", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val retrieveHandler: Handler<LicenseKeyInstance> =
-            jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper)
-
-        override fun retrieve(
-            params: LicenseKeyInstanceRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<LicenseKeyInstance> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_key_instances", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val updateHandler: Handler<LicenseKeyInstance> =
-            jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<LicenseKeyInstance> = jsonHandler<LicenseKeyInstance>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: LicenseKeyInstanceUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<LicenseKeyInstance> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_key_instances", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun update(params: LicenseKeyInstanceUpdateParams, requestOptions: RequestOptions): HttpResponseFor<LicenseKeyInstance> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_key_instances", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<LicenseKeyInstanceListPageResponse> =
-            jsonHandler<LicenseKeyInstanceListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<LicenseKeyInstanceListPageResponse> = jsonHandler<LicenseKeyInstanceListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: LicenseKeyInstanceListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<LicenseKeyInstanceListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("license_key_instances")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        LicenseKeyInstanceListPage.builder()
-                            .service(LicenseKeyInstanceServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: LicenseKeyInstanceListParams, requestOptions: RequestOptions): HttpResponseFor<LicenseKeyInstanceListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("license_key_instances")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  LicenseKeyInstanceListPage.builder()
+                      .service(LicenseKeyInstanceServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
     }
 }

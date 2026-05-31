@@ -6,6 +6,8 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.refunds.RefundCreateParams
+import com.dodopayments.api.models.refunds.RefundListParams
+import com.dodopayments.api.models.refunds.RefundRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -14,61 +16,51 @@ internal class RefundServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val refundService = client.refunds()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val refundService = client.refunds()
 
-        val refund =
-            refundService.create(
-                RefundCreateParams.builder()
-                    .paymentId("payment_id")
-                    .addItem(
-                        RefundCreateParams.Item.builder()
-                            .itemId("item_id")
-                            .amount(0)
-                            .taxInclusive(true)
-                            .build()
-                    )
-                    .metadata(
-                        RefundCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .reason("reason")
-                    .build()
-            )
+      val refund = refundService.create(RefundCreateParams.builder()
+          .paymentId("payment_id")
+          .addItem(RefundCreateParams.Item.builder()
+              .itemId("item_id")
+              .amount(0)
+              .taxInclusive(true)
+              .build())
+          .metadata(RefundCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .reason("reason")
+          .build())
 
-        refund.validate()
+      refund.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val refundService = client.refunds()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val refundService = client.refunds()
 
-        val refund = refundService.retrieve("refund_id")
+      val refund = refundService.retrieve("refund_id")
 
-        refund.validate()
+      refund.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val refundService = client.refunds()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val refundService = client.refunds()
 
-        val page = refundService.list()
+      val page = refundService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 }

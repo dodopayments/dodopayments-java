@@ -9,14 +9,13 @@ import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.GrantListPageAsync
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
+import com.dodopayments.api.services.async.entitlements.GrantServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface GrantServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -27,60 +26,71 @@ interface GrantServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantServiceAsync
 
     /** GET /entitlements/{id}/grants (public API) */
-    fun list(id: String): CompletableFuture<GrantListPageAsync> = list(id, GrantListParams.none())
+    fun list(id: String): CompletableFuture<GrantListPageAsync> =
+        list(
+          id, GrantListParams.none()
+        )
 
     /** @see list */
-    fun list(
-        id: String,
-        params: GrantListParams = GrantListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GrantListPageAsync> =
-        list(params.toBuilder().id(id).build(), requestOptions)
+    fun list(id: String, params: GrantListParams = GrantListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<GrantListPageAsync> =
+        list(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see list */
-    fun list(
-        id: String,
-        params: GrantListParams = GrantListParams.none(),
-    ): CompletableFuture<GrantListPageAsync> = list(id, params, RequestOptions.none())
+    fun list(id: String, params: GrantListParams = GrantListParams.none()): CompletableFuture<GrantListPageAsync> =
+        list(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see list */
-    fun list(
-        params: GrantListParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GrantListPageAsync>
+    fun list(params: GrantListParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<GrantListPageAsync>
 
     /** @see list */
     fun list(params: GrantListParams): CompletableFuture<GrantListPageAsync> =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(id: String, requestOptions: RequestOptions): CompletableFuture<GrantListPageAsync> =
-        list(id, GrantListParams.none(), requestOptions)
+        list(
+          id,
+          GrantListParams.none(),
+          requestOptions,
+        )
 
     /**
-     * Revoke a single grant. Idempotent: re-revoking an already-revoked grant returns the grant in
-     * its current state.
+     * Revoke a single grant. Idempotent: re-revoking an already-revoked
+     * grant returns the grant in its current state.
      */
     fun revoke(grantId: String, params: GrantRevokeParams): CompletableFuture<EntitlementGrant> =
-        revoke(grantId, params, RequestOptions.none())
+        revoke(
+          grantId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see revoke */
-    fun revoke(
-        grantId: String,
-        params: GrantRevokeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementGrant> =
-        revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
+    fun revoke(grantId: String, params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<EntitlementGrant> =
+        revoke(
+          params.toBuilder()
+              .grantId(grantId)
+              .build(), requestOptions
+        )
 
     /** @see revoke */
     fun revoke(params: GrantRevokeParams): CompletableFuture<EntitlementGrant> =
-        revoke(params, RequestOptions.none())
+        revoke(
+          params, RequestOptions.none()
+        )
 
     /** @see revoke */
-    fun revoke(
-        params: GrantRevokeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<EntitlementGrant>
+    fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<EntitlementGrant>
 
     /** A view of [GrantServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -90,77 +100,70 @@ interface GrantServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): GrantServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /entitlements/{id}/grants`, but is otherwise the
-         * same as [GrantServiceAsync.list].
-         */
+        /** Returns a raw HTTP response for `get /entitlements/{id}/grants`, but is otherwise the             same as [GrantServiceAsync.list]. */
         fun list(id: String): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
-            list(id, GrantListParams.none())
+            list(
+              id, GrantListParams.none()
+            )
 
         /** @see list */
-        fun list(
-            id: String,
-            params: GrantListParams = GrantListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
-            list(params.toBuilder().id(id).build(), requestOptions)
+        fun list(id: String, params: GrantListParams = GrantListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
+            list(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see list */
-        fun list(
-            id: String,
-            params: GrantListParams = GrantListParams.none(),
-        ): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
-            list(id, params, RequestOptions.none())
+        fun list(id: String, params: GrantListParams = GrantListParams.none()): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
+            list(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see list */
-        fun list(
-            params: GrantListParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GrantListPageAsync>>
+        fun list(params: GrantListParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<GrantListPageAsync>>
 
         /** @see list */
         fun list(params: GrantListParams): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
-            list(params, RequestOptions.none())
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
-            list(id, GrantListParams.none(), requestOptions)
+        fun list(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<GrantListPageAsync>> =
+            list(
+              id,
+              GrantListParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /entitlements/{id}/grants/{grant_id}`, but is
-         * otherwise the same as [GrantServiceAsync.revoke].
-         */
-        fun revoke(
-            grantId: String,
-            params: GrantRevokeParams,
-        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
-            revoke(grantId, params, RequestOptions.none())
-
-        /** @see revoke */
-        fun revoke(
-            grantId: String,
-            params: GrantRevokeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
-            revoke(params.toBuilder().grantId(grantId).build(), requestOptions)
+        /** Returns a raw HTTP response for `delete /entitlements/{id}/grants/{grant_id}`, but is otherwise the             same as [GrantServiceAsync.revoke]. */
+        fun revoke(grantId: String, params: GrantRevokeParams): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
+            revoke(
+              grantId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see revoke */
-        fun revoke(
-            params: GrantRevokeParams
-        ): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
-            revoke(params, RequestOptions.none())
+        fun revoke(grantId: String, params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
+            revoke(
+              params.toBuilder()
+                  .grantId(grantId)
+                  .build(), requestOptions
+            )
 
         /** @see revoke */
-        fun revoke(
-            params: GrantRevokeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<EntitlementGrant>>
+        fun revoke(params: GrantRevokeParams): CompletableFuture<HttpResponseFor<EntitlementGrant>> =
+            revoke(
+              params, RequestOptions.none()
+            )
+
+        /** @see revoke */
+        fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<EntitlementGrant>>
     }
 }

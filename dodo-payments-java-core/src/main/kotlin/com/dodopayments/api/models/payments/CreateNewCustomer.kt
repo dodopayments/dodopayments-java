@@ -17,54 +17,45 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CreateNewCustomer
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CreateNewCustomer @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val email: JsonField<String>,
     private val name: JsonField<String>,
     private val createNewCustomer: JsonField<Boolean>,
     private val phoneNumber: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("create_new_customer")
-        @ExcludeMissing
-        createNewCustomer: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("phone_number")
-        @ExcludeMissing
-        phoneNumber: JsonField<String> = JsonMissing.of(),
-    ) : this(email, name, createNewCustomer, phoneNumber, mutableMapOf())
+        @JsonProperty("create_new_customer") @ExcludeMissing createNewCustomer: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("phone_number") @ExcludeMissing phoneNumber: JsonField<String> = JsonMissing.of()
+    ) : this(
+      email,
+      name,
+      createNewCustomer,
+      phoneNumber,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun email(): String = email.getRequired("email")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun name(): String = name.getRequired("name")
 
     /**
      * When false, the most recently created customer object with the given email is used if exists.
-     * When true, a new customer object is always created False by default
+     * When true, a new customer object is always created
+     * False by default
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun createNewCustomer(): Optional<Boolean> =
-        createNewCustomer.getOptional("create_new_customer")
+    fun createNewCustomer(): Optional<Boolean> = createNewCustomer.getOptional("create_new_customer")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun phoneNumber(): Optional<String> = phoneNumber.getOptional("phone_number")
 
     /**
@@ -72,20 +63,23 @@ private constructor(
      *
      * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+    @JsonProperty("email")
+    @ExcludeMissing
+    fun _email(): JsonField<String> = email
 
     /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [createNewCustomer].
      *
-     * Unlike [createNewCustomer], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [createNewCustomer], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("create_new_customer")
     @ExcludeMissing
@@ -102,13 +96,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -118,12 +111,14 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CreateNewCustomer].
          *
          * The following fields are required:
+         *
          * ```java
          * .email()
          * .name()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CreateNewCustomer]. */
@@ -136,51 +131,58 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(createNewCustomer: CreateNewCustomer) = apply {
-            email = createNewCustomer.email
-            name = createNewCustomer.name
-            this.createNewCustomer = createNewCustomer.createNewCustomer
-            phoneNumber = createNewCustomer.phoneNumber
-            additionalProperties = createNewCustomer.additionalProperties.toMutableMap()
-        }
+        internal fun from(createNewCustomer: CreateNewCustomer) =
+            apply {
+                email = createNewCustomer.email
+                name = createNewCustomer.name
+                this.createNewCustomer = createNewCustomer.createNewCustomer
+                phoneNumber = createNewCustomer.phoneNumber
+                additionalProperties = createNewCustomer.additionalProperties.toMutableMap()
+            }
 
         fun email(email: String) = email(JsonField.of(email))
 
         /**
          * Sets [Builder.email] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.email] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.email] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun email(email: JsonField<String>) = apply { this.email = email }
+        fun email(email: JsonField<String>) =
+            apply {
+                this.email = email
+            }
 
         fun name(name: String) = name(JsonField.of(name))
 
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         /**
-         * When false, the most recently created customer object with the given email is used if
-         * exists. When true, a new customer object is always created False by default
+         * When false, the most recently created customer object with the given email is used if exists.
+         * When true, a new customer object is always created
+         * False by default
          */
-        fun createNewCustomer(createNewCustomer: Boolean) =
-            createNewCustomer(JsonField.of(createNewCustomer))
+        fun createNewCustomer(createNewCustomer: Boolean) = createNewCustomer(JsonField.of(createNewCustomer))
 
         /**
          * Sets [Builder.createNewCustomer] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createNewCustomer] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createNewCustomer] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createNewCustomer(createNewCustomer: JsonField<Boolean>) = apply {
-            this.createNewCustomer = createNewCustomer
-        }
+        fun createNewCustomer(createNewCustomer: JsonField<Boolean>) =
+            apply {
+                this.createNewCustomer = createNewCustomer
+            }
 
         fun phoneNumber(phoneNumber: String?) = phoneNumber(JsonField.ofNullable(phoneNumber))
 
@@ -190,30 +192,39 @@ private constructor(
         /**
          * Sets [Builder.phoneNumber] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.phoneNumber] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.phoneNumber] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun phoneNumber(phoneNumber: JsonField<String>) = apply { this.phoneNumber = phoneNumber }
+        fun phoneNumber(phoneNumber: JsonField<String>) =
+            apply {
+                this.phoneNumber = phoneNumber
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CreateNewCustomer].
@@ -221,6 +232,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .email()
          * .name()
@@ -230,11 +242,15 @@ private constructor(
          */
         fun build(): CreateNewCustomer =
             CreateNewCustomer(
-                checkRequired("email", email),
-                checkRequired("name", name),
-                createNewCustomer,
-                phoneNumber,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "email", email
+              ),
+              checkRequired(
+                "name", name
+              ),
+              createNewCustomer,
+              phoneNumber,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -248,17 +264,18 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CreateNewCustomer = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CreateNewCustomer =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        email()
-        name()
-        createNewCustomer()
-        phoneNumber()
-        validated = true
-    }
+            email()
+            name()
+            createNewCustomer()
+            phoneNumber()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -274,31 +291,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (email.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (createNewCustomer.asKnown().isPresent) 1 else 0) +
-            (if (phoneNumber.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (email.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (createNewCustomer.asKnown().isPresent) 1 else 0) + (if (phoneNumber.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CreateNewCustomer &&
-            email == other.email &&
-            name == other.name &&
-            createNewCustomer == other.createNewCustomer &&
-            phoneNumber == other.phoneNumber &&
-            additionalProperties == other.additionalProperties
+      return other is CreateNewCustomer && email == other.email && name == other.name && createNewCustomer == other.createNewCustomer && phoneNumber == other.phoneNumber && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(email, name, createNewCustomer, phoneNumber, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(email, name, createNewCustomer, phoneNumber, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CreateNewCustomer{email=$email, name=$name, createNewCustomer=$createNewCustomer, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
+    override fun toString() = "CreateNewCustomer{email=$email, name=$name, createNewCustomer=$createNewCustomer, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
 }

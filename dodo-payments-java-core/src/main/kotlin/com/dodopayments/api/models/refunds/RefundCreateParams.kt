@@ -13,6 +13,7 @@ import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.refunds.RefundCreateParams
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -22,42 +23,38 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class RefundCreateParams
-private constructor(
+class RefundCreateParams private constructor(
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /**
      * The unique identifier of the payment to be refunded.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = body.paymentId()
 
     /**
      * Partially Refund an Individual Item
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun items(): Optional<List<Item>> = body.items()
 
     /**
      * Additional metadata associated with the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
      * The reason for the refund, if any. Maximum length is 3000 characters. Optional.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun reason(): Optional<String> = body.reason()
 
@@ -105,11 +102,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [RefundCreateParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .paymentId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [RefundCreateParams]. */
@@ -120,38 +119,50 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(refundCreateParams: RefundCreateParams) = apply {
-            body = refundCreateParams.body.toBuilder()
-            additionalHeaders = refundCreateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = refundCreateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(refundCreateParams: RefundCreateParams) =
+            apply {
+                body = refundCreateParams.body.toBuilder()
+                additionalHeaders = refundCreateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = refundCreateParams.additionalQueryParams.toBuilder()
+            }
 
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [paymentId]
          * - [items]
          * - [metadata]
          * - [reason]
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
         /** The unique identifier of the payment to be refunded. */
-        fun paymentId(paymentId: String) = apply { body.paymentId(paymentId) }
+        fun paymentId(paymentId: String) =
+            apply {
+                body.paymentId(paymentId)
+            }
 
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { body.paymentId(paymentId) }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                body.paymentId(paymentId)
+            }
 
         /** Partially Refund an Individual Item */
-        fun items(items: List<Item>?) = apply { body.items(items) }
+        fun items(items: List<Item>?) =
+            apply {
+                body.items(items)
+            }
 
         /** Alias for calling [Builder.items] with `items.orElse(null)`. */
         fun items(items: Optional<List<Item>>) = items(items.getOrNull())
@@ -159,33 +170,46 @@ private constructor(
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<Item>>) = apply { body.items(items) }
+        fun items(items: JsonField<List<Item>>) =
+            apply {
+                body.items(items)
+            }
 
         /**
          * Adds a single [Item] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: Item) = apply { body.addItem(item) }
+        fun addItem(item: Item) =
+            apply {
+                body.addItem(item)
+            }
 
         /** Additional metadata associated with the refund. */
-        fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
+        fun metadata(metadata: Metadata) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /** The reason for the refund, if any. Maximum length is 3000 characters. Optional. */
-        fun reason(reason: String?) = apply { body.reason(reason) }
+        fun reason(reason: String?) =
+            apply {
+                body.reason(reason)
+            }
 
         /** Alias for calling [Builder.reason] with `reason.orElse(null)`. */
         fun reason(reason: Optional<String>) = reason(reason.getOrNull())
@@ -193,127 +217,164 @@ private constructor(
         /**
          * Sets [Builder.reason] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.reason] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.reason] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun reason(reason: JsonField<String>) = apply { body.reason(reason) }
+        fun reason(reason: JsonField<String>) =
+            apply {
+                body.reason(reason)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [RefundCreateParams].
@@ -321,6 +382,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .paymentId()
          * ```
@@ -329,9 +391,9 @@ private constructor(
          */
         fun build(): RefundCreateParams =
             RefundCreateParams(
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -341,57 +403,54 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val paymentId: JsonField<String>,
         private val items: JsonField<List<Item>>,
         private val metadata: JsonField<Metadata>,
         private val reason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("payment_id")
-            @ExcludeMissing
-            paymentId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of(),
-            @JsonProperty("metadata")
-            @ExcludeMissing
-            metadata: JsonField<Metadata> = JsonMissing.of(),
-            @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
-        ) : this(paymentId, items, metadata, reason, mutableMapOf())
+            @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of()
+        ) : this(
+          paymentId,
+          items,
+          metadata,
+          reason,
+          mutableMapOf(),
+        )
 
         /**
          * The unique identifier of the payment to be refunded.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun paymentId(): String = paymentId.getRequired("payment_id")
 
         /**
          * Partially Refund an Individual Item
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun items(): Optional<List<Item>> = items.getOptional("items")
 
         /**
          * Additional metadata associated with the refund.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
         /**
          * The reason for the refund, if any. Maximum length is 3000 characters. Optional.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun reason(): Optional<String> = reason.getOptional("reason")
 
@@ -400,38 +459,45 @@ private constructor(
          *
          * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+        @JsonProperty("payment_id")
+        @ExcludeMissing
+        fun _paymentId(): JsonField<String> = paymentId
 
         /**
          * Returns the raw JSON value of [items].
          *
          * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+        @JsonProperty("items")
+        @ExcludeMissing
+        fun _items(): JsonField<List<Item>> = items
 
         /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+        @JsonProperty("metadata")
+        @ExcludeMissing
+        fun _metadata(): JsonField<Metadata> = metadata
 
         /**
          * Returns the raw JSON value of [reason].
          *
          * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<String> = reason
+        @JsonProperty("reason")
+        @ExcludeMissing
+        fun _reason(): JsonField<String> = reason
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -441,11 +507,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Body].
              *
              * The following fields are required:
+             *
              * ```java
              * .paymentId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -458,13 +526,14 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                paymentId = body.paymentId
-                items = body.items.map { it.toMutableList() }
-                metadata = body.metadata
-                reason = body.reason
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    paymentId = body.paymentId
+                    items = body.items.map { it.toMutableList() }
+                    metadata = body.metadata
+                    reason = body.reason
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             /** The unique identifier of the payment to be refunded. */
             fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
@@ -472,11 +541,13 @@ private constructor(
             /**
              * Sets [Builder.paymentId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+            fun paymentId(paymentId: JsonField<String>) =
+                apply {
+                    this.paymentId = paymentId
+                }
 
             /** Partially Refund an Individual Item */
             fun items(items: List<Item>?) = items(JsonField.ofNullable(items))
@@ -487,25 +558,25 @@ private constructor(
             /**
              * Sets [Builder.items] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.items] with a well-typed `List<Item>` value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.items] with a well-typed `List<Item>` value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun items(items: JsonField<List<Item>>) = apply {
-                this.items = items.map { it.toMutableList() }
-            }
+            fun items(items: JsonField<List<Item>>) =
+                apply {
+                    this.items = items.map { it.toMutableList() }
+                }
 
             /**
              * Adds a single [Item] to [items].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addItem(item: Item) = apply {
-                items =
-                    (items ?: JsonField.of(mutableListOf())).also {
+            fun addItem(item: Item) =
+                apply {
+                    items = (items ?: JsonField.of(mutableListOf())).also {
                         checkKnown("items", it).add(item)
                     }
-            }
+                }
 
             /** Additional metadata associated with the refund. */
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -513,11 +584,13 @@ private constructor(
             /**
              * Sets [Builder.metadata] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.metadata] with a well-typed [Metadata] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+            fun metadata(metadata: JsonField<Metadata>) =
+                apply {
+                    this.metadata = metadata
+                }
 
             /** The reason for the refund, if any. Maximum length is 3000 characters. Optional. */
             fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
@@ -528,30 +601,39 @@ private constructor(
             /**
              * Sets [Builder.reason] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.reason] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.reason] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun reason(reason: JsonField<String>) = apply { this.reason = reason }
+            fun reason(reason: JsonField<String>) =
+                apply {
+                    this.reason = reason
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -559,6 +641,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .paymentId()
              * ```
@@ -567,36 +650,38 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("paymentId", paymentId),
-                    (items ?: JsonMissing.of()).map { it.toImmutable() },
-                    metadata,
-                    reason,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "paymentId", paymentId
+                  ),
+                  (items?: JsonMissing.of()).map { it.toImmutable() },
+                  metadata,
+                  reason,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            paymentId()
-            items().ifPresent { it.forEach { it.validate() } }
-            metadata().ifPresent { it.validate() }
-            reason()
-            validated = true
-        }
+                paymentId()
+                items().ifPresent { it.forEach { it.validate() } }
+                metadata().ifPresent { it.validate() }
+                reason()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -607,80 +692,66 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (paymentId.asKnown().isPresent) 1 else 0) +
-                (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (reason.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (paymentId.asKnown().isPresent) 1 else 0) + (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (if (reason.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                paymentId == other.paymentId &&
-                items == other.items &&
-                metadata == other.metadata &&
-                reason == other.reason &&
-                additionalProperties == other.additionalProperties
+          return other is Body && paymentId == other.paymentId && items == other.items && metadata == other.metadata && reason == other.reason && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(paymentId, items, metadata, reason, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(paymentId, items, metadata, reason, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{paymentId=$paymentId, items=$items, metadata=$metadata, reason=$reason, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{paymentId=$paymentId, items=$items, metadata=$metadata, reason=$reason, additionalProperties=$additionalProperties}"
     }
 
-    class Item
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Item @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val itemId: JsonField<String>,
         private val amount: JsonField<Int>,
         private val taxInclusive: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("item_id") @ExcludeMissing itemId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("amount") @ExcludeMissing amount: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("tax_inclusive")
-            @ExcludeMissing
-            taxInclusive: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(itemId, amount, taxInclusive, mutableMapOf())
+            @JsonProperty("tax_inclusive") @ExcludeMissing taxInclusive: JsonField<Boolean> = JsonMissing.of()
+        ) : this(
+          itemId,
+          amount,
+          taxInclusive,
+          mutableMapOf(),
+        )
 
         /**
          * The id of the item (i.e. `product_id` or `addon_id`)
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun itemId(): String = itemId.getRequired("item_id")
 
         /**
          * The amount to refund. if None the whole item is refunded
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun amount(): Optional<Int> = amount.getOptional("amount")
 
         /**
          * Specify if tax is inclusive of the refund. Default true.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun taxInclusive(): Optional<Boolean> = taxInclusive.getOptional("tax_inclusive")
 
@@ -689,20 +760,23 @@ private constructor(
          *
          * Unlike [itemId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("item_id") @ExcludeMissing fun _itemId(): JsonField<String> = itemId
+        @JsonProperty("item_id")
+        @ExcludeMissing
+        fun _itemId(): JsonField<String> = itemId
 
         /**
          * Returns the raw JSON value of [amount].
          *
          * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Int> = amount
+        @JsonProperty("amount")
+        @ExcludeMissing
+        fun _amount(): JsonField<Int> = amount
 
         /**
          * Returns the raw JSON value of [taxInclusive].
          *
-         * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tax_inclusive")
         @ExcludeMissing
@@ -710,13 +784,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -726,11 +799,13 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Item].
              *
              * The following fields are required:
+             *
              * ```java
              * .itemId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Item]. */
@@ -742,12 +817,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(item: Item) = apply {
-                itemId = item.itemId
-                amount = item.amount
-                taxInclusive = item.taxInclusive
-                additionalProperties = item.additionalProperties.toMutableMap()
-            }
+            internal fun from(item: Item) =
+                apply {
+                    itemId = item.itemId
+                    amount = item.amount
+                    taxInclusive = item.taxInclusive
+                    additionalProperties = item.additionalProperties.toMutableMap()
+                }
 
             /** The id of the item (i.e. `product_id` or `addon_id`) */
             fun itemId(itemId: String) = itemId(JsonField.of(itemId))
@@ -755,11 +831,13 @@ private constructor(
             /**
              * Sets [Builder.itemId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.itemId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.itemId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun itemId(itemId: JsonField<String>) = apply { this.itemId = itemId }
+            fun itemId(itemId: JsonField<String>) =
+                apply {
+                    this.itemId = itemId
+                }
 
             /** The amount to refund. if None the whole item is refunded */
             fun amount(amount: Int?) = amount(JsonField.ofNullable(amount))
@@ -777,11 +855,13 @@ private constructor(
             /**
              * Sets [Builder.amount] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.amount] with a well-typed [Int] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.amount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
+            fun amount(amount: JsonField<Int>) =
+                apply {
+                    this.amount = amount
+                }
 
             /** Specify if tax is inclusive of the refund. Default true. */
             fun taxInclusive(taxInclusive: Boolean) = taxInclusive(JsonField.of(taxInclusive))
@@ -789,32 +869,39 @@ private constructor(
             /**
              * Sets [Builder.taxInclusive] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun taxInclusive(taxInclusive: JsonField<Boolean>) = apply {
-                this.taxInclusive = taxInclusive
-            }
+            fun taxInclusive(taxInclusive: JsonField<Boolean>) =
+                apply {
+                    this.taxInclusive = taxInclusive
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Item].
@@ -822,6 +909,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .itemId()
              * ```
@@ -830,34 +918,36 @@ private constructor(
              */
             fun build(): Item =
                 Item(
-                    checkRequired("itemId", itemId),
-                    amount,
-                    taxInclusive,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "itemId", itemId
+                  ),
+                  amount,
+                  taxInclusive,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Item = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Item =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            itemId()
-            amount()
-            taxInclusive()
-            validated = true
-        }
+                itemId()
+                amount()
+                taxInclusive()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -868,45 +958,32 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (itemId.asKnown().isPresent) 1 else 0) +
-                (if (amount.asKnown().isPresent) 1 else 0) +
-                (if (taxInclusive.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (itemId.asKnown().isPresent) 1 else 0) + (if (amount.asKnown().isPresent) 1 else 0) + (if (taxInclusive.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Item &&
-                itemId == other.itemId &&
-                amount == other.amount &&
-                taxInclusive == other.taxInclusive &&
-                additionalProperties == other.additionalProperties
+          return other is Item && itemId == other.itemId && amount == other.amount && taxInclusive == other.taxInclusive && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(itemId, amount, taxInclusive, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(itemId, amount, taxInclusive, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Item{itemId=$itemId, amount=$amount, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
+        override fun toString() = "Item{itemId=$itemId, amount=$amount, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
     }
 
     /** Additional metadata associated with the refund. */
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -918,7 +995,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -927,28 +1005,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -961,21 +1047,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -986,21 +1072,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -1011,18 +1095,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is RefundCreateParams &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is RefundCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "RefundCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "RefundCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

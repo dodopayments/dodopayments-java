@@ -6,20 +6,23 @@ import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.models.payments.RefundListItem
+import com.dodopayments.api.models.refunds.RefundListPageResponse
+import com.dodopayments.api.models.refunds.RefundListParams
 import com.dodopayments.api.services.async.RefundServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see RefundServiceAsync.list */
-class RefundListPageAsync
-private constructor(
+class RefundListPageAsync private constructor(
     private val service: RefundServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: RefundListParams,
     private val response: RefundListPageResponse,
+
 ) : PageAsync<RefundListItem> {
 
     /**
@@ -27,20 +30,23 @@ private constructor(
      *
      * @see RefundListPageResponse.items
      */
-    override fun items(): List<RefundListItem> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<RefundListItem> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): RefundListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): CompletableFuture<RefundListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<RefundListItem> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): RefundListParams = params
@@ -56,6 +62,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [RefundListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -63,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [RefundListPageAsync]. */
@@ -75,24 +83,35 @@ private constructor(
         private var response: RefundListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(refundListPageAsync: RefundListPageAsync) = apply {
-            service = refundListPageAsync.service
-            streamHandlerExecutor = refundListPageAsync.streamHandlerExecutor
-            params = refundListPageAsync.params
-            response = refundListPageAsync.response
-        }
+        internal fun from(refundListPageAsync: RefundListPageAsync) =
+            apply {
+                service = refundListPageAsync.service
+                streamHandlerExecutor = refundListPageAsync.streamHandlerExecutor
+                params = refundListPageAsync.params
+                response = refundListPageAsync.response
+            }
 
-        fun service(service: RefundServiceAsync) = apply { this.service = service }
+        fun service(service: RefundServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: RefundListParams) = apply { this.params = params }
+        fun params(params: RefundListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: RefundListPageResponse) = apply { this.response = response }
+        fun response(response: RefundListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [RefundListPageAsync].
@@ -100,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -111,27 +131,30 @@ private constructor(
          */
         fun build(): RefundListPageAsync =
             RefundListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is RefundListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is RefundListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "RefundListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "RefundListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

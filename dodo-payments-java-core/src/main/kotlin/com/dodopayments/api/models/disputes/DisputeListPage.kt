@@ -5,17 +5,21 @@ package com.dodopayments.api.models.disputes
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.disputes.DisputeListPageResponse
+import com.dodopayments.api.models.disputes.DisputeListParams
+import com.dodopayments.api.models.disputes.DisputeListResponse
 import com.dodopayments.api.services.blocking.DisputeService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see DisputeService.list */
-class DisputeListPage
-private constructor(
+class DisputeListPage private constructor(
     private val service: DisputeService,
     private val params: DisputeListParams,
     private val response: DisputeListPageResponse,
+
 ) : Page<DisputeListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see DisputeListPageResponse.items
      */
-    override fun items(): List<DisputeListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<DisputeListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): DisputeListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): DisputeListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DisputeListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DisputeListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: DisputeListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(disputeListPage: DisputeListPage) = apply {
-            service = disputeListPage.service
-            params = disputeListPage.params
-            response = disputeListPage.response
-        }
+        internal fun from(disputeListPage: DisputeListPage) =
+            apply {
+                service = disputeListPage.service
+                params = disputeListPage.params
+                response = disputeListPage.response
+            }
 
-        fun service(service: DisputeService) = apply { this.service = service }
+        fun service(service: DisputeService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: DisputeListParams) = apply { this.params = params }
+        fun params(params: DisputeListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: DisputeListPageResponse) = apply { this.response = response }
+        fun response(response: DisputeListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [DisputeListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): DisputeListPage =
             DisputeListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DisputeListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is DisputeListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "DisputeListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "DisputeListPage{service=$service, params=$params, response=$response}"
 }

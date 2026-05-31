@@ -4,6 +4,8 @@ package com.dodopayments.api.models.webhooks
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.webhooks.WebhookDetails
+import com.dodopayments.api.models.webhooks.WebhookListPageResponse
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,86 +14,67 @@ internal class WebhookListPageResponseTest {
 
     @Test
     fun create() {
-        val webhookListPageResponse =
-            WebhookListPageResponse.builder()
-                .addData(
-                    WebhookDetails.builder()
-                        .id("id")
-                        .createdAt("created_at")
-                        .description("description")
-                        .metadata(
-                            WebhookDetails.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .updatedAt("updated_at")
-                        .url("url")
-                        .disabled(true)
-                        .addFilterType("string")
-                        .rateLimit(0)
-                        .build()
-                )
-                .done(true)
-                .iterator("iterator")
-                .prevIterator("prev_iterator")
-                .build()
+      val webhookListPageResponse = WebhookListPageResponse.builder()
+          .addData(WebhookDetails.builder()
+              .id("id")
+              .createdAt("created_at")
+              .description("description")
+              .metadata(WebhookDetails.Metadata.builder()
+                  .putAdditionalProperty("foo", JsonValue.from("string"))
+                  .build())
+              .updatedAt("updated_at")
+              .url("url")
+              .disabled(true)
+              .addFilterType("string")
+              .rateLimit(0)
+              .build())
+          .done(true)
+          .iterator("iterator")
+          .prevIterator("prev_iterator")
+          .build()
 
-        assertThat(webhookListPageResponse.data())
-            .containsExactly(
-                WebhookDetails.builder()
-                    .id("id")
-                    .createdAt("created_at")
-                    .description("description")
-                    .metadata(
-                        WebhookDetails.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .updatedAt("updated_at")
-                    .url("url")
-                    .disabled(true)
-                    .addFilterType("string")
-                    .rateLimit(0)
-                    .build()
-            )
-        assertThat(webhookListPageResponse.done()).isEqualTo(true)
-        assertThat(webhookListPageResponse.iterator()).contains("iterator")
-        assertThat(webhookListPageResponse.prevIterator()).contains("prev_iterator")
+      assertThat(webhookListPageResponse.data()).containsExactly(WebhookDetails.builder()
+          .id("id")
+          .createdAt("created_at")
+          .description("description")
+          .metadata(WebhookDetails.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .updatedAt("updated_at")
+          .url("url")
+          .disabled(true)
+          .addFilterType("string")
+          .rateLimit(0)
+          .build())
+      assertThat(webhookListPageResponse.done()).isEqualTo(true)
+      assertThat(webhookListPageResponse.iterator()).contains("iterator")
+      assertThat(webhookListPageResponse.prevIterator()).contains("prev_iterator")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val webhookListPageResponse =
-            WebhookListPageResponse.builder()
-                .addData(
-                    WebhookDetails.builder()
-                        .id("id")
-                        .createdAt("created_at")
-                        .description("description")
-                        .metadata(
-                            WebhookDetails.Metadata.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("string"))
-                                .build()
-                        )
-                        .updatedAt("updated_at")
-                        .url("url")
-                        .disabled(true)
-                        .addFilterType("string")
-                        .rateLimit(0)
-                        .build()
-                )
-                .done(true)
-                .iterator("iterator")
-                .prevIterator("prev_iterator")
-                .build()
+      val jsonMapper = jsonMapper()
+      val webhookListPageResponse = WebhookListPageResponse.builder()
+          .addData(WebhookDetails.builder()
+              .id("id")
+              .createdAt("created_at")
+              .description("description")
+              .metadata(WebhookDetails.Metadata.builder()
+                  .putAdditionalProperty("foo", JsonValue.from("string"))
+                  .build())
+              .updatedAt("updated_at")
+              .url("url")
+              .disabled(true)
+              .addFilterType("string")
+              .rateLimit(0)
+              .build())
+          .done(true)
+          .iterator("iterator")
+          .prevIterator("prev_iterator")
+          .build()
 
-        val roundtrippedWebhookListPageResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(webhookListPageResponse),
-                jacksonTypeRef<WebhookListPageResponse>(),
-            )
+      val roundtrippedWebhookListPageResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(webhookListPageResponse), jacksonTypeRef<WebhookListPageResponse>())
 
-        assertThat(roundtrippedWebhookListPageResponse).isEqualTo(webhookListPageResponse)
+      assertThat(roundtrippedWebhookListPageResponse).isEqualTo(webhookListPageResponse)
     }
 }

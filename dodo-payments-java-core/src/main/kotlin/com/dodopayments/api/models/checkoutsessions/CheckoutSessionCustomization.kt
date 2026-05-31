@@ -8,6 +8,8 @@ import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.checkoutsessions.CheckoutSessionCustomization
+import com.dodopayments.api.models.checkoutsessions.ThemeConfig
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -17,39 +19,36 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CheckoutSessionCustomization
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CheckoutSessionCustomization @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val forceLanguage: JsonField<String>,
     private val showOnDemandTag: JsonField<Boolean>,
     private val showOrderDetails: JsonField<Boolean>,
     private val theme: JsonField<Theme>,
     private val themeConfig: JsonField<ThemeConfig>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("force_language")
-        @ExcludeMissing
-        forceLanguage: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("show_on_demand_tag")
-        @ExcludeMissing
-        showOnDemandTag: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("show_order_details")
-        @ExcludeMissing
-        showOrderDetails: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("force_language") @ExcludeMissing forceLanguage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("show_on_demand_tag") @ExcludeMissing showOnDemandTag: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("show_order_details") @ExcludeMissing showOrderDetails: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("theme") @ExcludeMissing theme: JsonField<Theme> = JsonMissing.of(),
-        @JsonProperty("theme_config")
-        @ExcludeMissing
-        themeConfig: JsonField<ThemeConfig> = JsonMissing.of(),
-    ) : this(forceLanguage, showOnDemandTag, showOrderDetails, theme, themeConfig, mutableMapOf())
+        @JsonProperty("theme_config") @ExcludeMissing themeConfig: JsonField<ThemeConfig> = JsonMissing.of()
+    ) : this(
+      forceLanguage,
+      showOnDemandTag,
+      showOrderDetails,
+      theme,
+      themeConfig,
+      mutableMapOf(),
+    )
 
     /**
      * Force the checkout interface to render in a specific language (e.g. `en`, `es`)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun forceLanguage(): Optional<String> = forceLanguage.getOptional("force_language")
 
@@ -58,8 +57,7 @@ private constructor(
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun showOnDemandTag(): Optional<Boolean> = showOnDemandTag.getOptional("show_on_demand_tag")
 
@@ -68,8 +66,7 @@ private constructor(
      *
      * Default is true
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun showOrderDetails(): Optional<Boolean> = showOrderDetails.getOptional("show_order_details")
 
@@ -78,16 +75,14 @@ private constructor(
      *
      * If not provided, uses the business-configured theme from business_themes table.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun theme(): Optional<Theme> = theme.getOptional("theme")
 
     /**
      * Optional custom theme configuration with colors for light and dark modes
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun themeConfig(): Optional<ThemeConfig> = themeConfig.getOptional("theme_config")
 
@@ -112,8 +107,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [showOrderDetails].
      *
-     * Unlike [showOrderDetails], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [showOrderDetails], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("show_order_details")
     @ExcludeMissing
@@ -124,7 +118,9 @@ private constructor(
      *
      * Unlike [theme], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("theme") @ExcludeMissing fun _theme(): JsonField<Theme> = theme
+    @JsonProperty("theme")
+    @ExcludeMissing
+    fun _theme(): JsonField<Theme> = theme
 
     /**
      * Returns the raw JSON value of [themeConfig].
@@ -137,22 +133,20 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [CheckoutSessionCustomization].
-         */
-        @JvmStatic fun builder() = Builder()
+        /** Returns a mutable builder for constructing an instance of [CheckoutSessionCustomization]. */
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CheckoutSessionCustomization]. */
@@ -166,71 +160,68 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(checkoutSessionCustomization: CheckoutSessionCustomization) = apply {
-            forceLanguage = checkoutSessionCustomization.forceLanguage
-            showOnDemandTag = checkoutSessionCustomization.showOnDemandTag
-            showOrderDetails = checkoutSessionCustomization.showOrderDetails
-            theme = checkoutSessionCustomization.theme
-            themeConfig = checkoutSessionCustomization.themeConfig
-            additionalProperties = checkoutSessionCustomization.additionalProperties.toMutableMap()
-        }
+        internal fun from(checkoutSessionCustomization: CheckoutSessionCustomization) =
+            apply {
+                forceLanguage = checkoutSessionCustomization.forceLanguage
+                showOnDemandTag = checkoutSessionCustomization.showOnDemandTag
+                showOrderDetails = checkoutSessionCustomization.showOrderDetails
+                theme = checkoutSessionCustomization.theme
+                themeConfig = checkoutSessionCustomization.themeConfig
+                additionalProperties = checkoutSessionCustomization.additionalProperties.toMutableMap()
+            }
 
         /** Force the checkout interface to render in a specific language (e.g. `en`, `es`) */
-        fun forceLanguage(forceLanguage: String?) =
-            forceLanguage(JsonField.ofNullable(forceLanguage))
+        fun forceLanguage(forceLanguage: String?) = forceLanguage(JsonField.ofNullable(forceLanguage))
 
         /** Alias for calling [Builder.forceLanguage] with `forceLanguage.orElse(null)`. */
-        fun forceLanguage(forceLanguage: Optional<String>) =
-            forceLanguage(forceLanguage.getOrNull())
+        fun forceLanguage(forceLanguage: Optional<String>) = forceLanguage(forceLanguage.getOrNull())
 
         /**
          * Sets [Builder.forceLanguage] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.forceLanguage] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.forceLanguage] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun forceLanguage(forceLanguage: JsonField<String>) = apply {
-            this.forceLanguage = forceLanguage
-        }
+        fun forceLanguage(forceLanguage: JsonField<String>) =
+            apply {
+                this.forceLanguage = forceLanguage
+            }
 
         /**
          * Show on demand tag
          *
          * Default is true
          */
-        fun showOnDemandTag(showOnDemandTag: Boolean) =
-            showOnDemandTag(JsonField.of(showOnDemandTag))
+        fun showOnDemandTag(showOnDemandTag: Boolean) = showOnDemandTag(JsonField.of(showOnDemandTag))
 
         /**
          * Sets [Builder.showOnDemandTag] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.showOnDemandTag] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.showOnDemandTag] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun showOnDemandTag(showOnDemandTag: JsonField<Boolean>) = apply {
-            this.showOnDemandTag = showOnDemandTag
-        }
+        fun showOnDemandTag(showOnDemandTag: JsonField<Boolean>) =
+            apply {
+                this.showOnDemandTag = showOnDemandTag
+            }
 
         /**
          * Show order details by default
          *
          * Default is true
          */
-        fun showOrderDetails(showOrderDetails: Boolean) =
-            showOrderDetails(JsonField.of(showOrderDetails))
+        fun showOrderDetails(showOrderDetails: Boolean) = showOrderDetails(JsonField.of(showOrderDetails))
 
         /**
          * Sets [Builder.showOrderDetails] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.showOrderDetails] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.showOrderDetails] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun showOrderDetails(showOrderDetails: JsonField<Boolean>) = apply {
-            this.showOrderDetails = showOrderDetails
-        }
+        fun showOrderDetails(showOrderDetails: JsonField<Boolean>) =
+            apply {
+                this.showOrderDetails = showOrderDetails
+            }
 
         /**
          * Theme of the page (determines which mode - light/dark/system - to use)
@@ -245,10 +236,13 @@ private constructor(
         /**
          * Sets [Builder.theme] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.theme] with a well-typed [Theme] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.theme] with a well-typed [Theme] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun theme(theme: JsonField<Theme>) = apply { this.theme = theme }
+        fun theme(theme: JsonField<Theme>) =
+            apply {
+                this.theme = theme
+            }
 
         /** Optional custom theme configuration with colors for light and dark modes */
         fun themeConfig(themeConfig: ThemeConfig?) = themeConfig(JsonField.ofNullable(themeConfig))
@@ -259,32 +253,39 @@ private constructor(
         /**
          * Sets [Builder.themeConfig] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.themeConfig] with a well-typed [ThemeConfig] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.themeConfig] with a well-typed [ThemeConfig] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun themeConfig(themeConfig: JsonField<ThemeConfig>) = apply {
-            this.themeConfig = themeConfig
-        }
+        fun themeConfig(themeConfig: JsonField<ThemeConfig>) =
+            apply {
+                this.themeConfig = themeConfig
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CheckoutSessionCustomization].
@@ -293,12 +294,12 @@ private constructor(
          */
         fun build(): CheckoutSessionCustomization =
             CheckoutSessionCustomization(
-                forceLanguage,
-                showOnDemandTag,
-                showOrderDetails,
-                theme,
-                themeConfig,
-                additionalProperties.toMutableMap(),
+              forceLanguage,
+              showOnDemandTag,
+              showOrderDetails,
+              theme,
+              themeConfig,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -312,18 +313,19 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CheckoutSessionCustomization = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CheckoutSessionCustomization =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        forceLanguage()
-        showOnDemandTag()
-        showOrderDetails()
-        theme().ifPresent { it.validate() }
-        themeConfig().ifPresent { it.validate() }
-        validated = true
-    }
+            forceLanguage()
+            showOnDemandTag()
+            showOrderDetails()
+            theme().ifPresent { it.validate() }
+            themeConfig().ifPresent { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -339,29 +341,27 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (forceLanguage.asKnown().isPresent) 1 else 0) +
-            (if (showOnDemandTag.asKnown().isPresent) 1 else 0) +
-            (if (showOrderDetails.asKnown().isPresent) 1 else 0) +
-            (theme.asKnown().getOrNull()?.validity() ?: 0) +
-            (themeConfig.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (forceLanguage.asKnown().isPresent) 1 else 0) + (if (showOnDemandTag.asKnown().isPresent) 1 else 0) + (if (showOrderDetails.asKnown().isPresent) 1 else 0) + (theme.asKnown().getOrNull()?.validity() ?: 0) + (themeConfig.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
      * Theme of the page (determines which mode - light/dark/system - to use)
      *
      * If not provided, uses the business-configured theme from business_themes table.
      */
-    class Theme @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Theme @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -385,9 +385,11 @@ private constructor(
          * An enum containing [Theme]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Theme] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -399,11 +401,11 @@ private constructor(
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -416,11 +418,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -433,36 +434,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Theme = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Theme =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -473,19 +471,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Theme && value == other.value
+          return other is Theme && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -494,32 +492,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CheckoutSessionCustomization &&
-            forceLanguage == other.forceLanguage &&
-            showOnDemandTag == other.showOnDemandTag &&
-            showOrderDetails == other.showOrderDetails &&
-            theme == other.theme &&
-            themeConfig == other.themeConfig &&
-            additionalProperties == other.additionalProperties
+      return other is CheckoutSessionCustomization && forceLanguage == other.forceLanguage && showOnDemandTag == other.showOnDemandTag && showOrderDetails == other.showOrderDetails && theme == other.theme && themeConfig == other.themeConfig && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            forceLanguage,
-            showOnDemandTag,
-            showOrderDetails,
-            theme,
-            themeConfig,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(forceLanguage, showOnDemandTag, showOrderDetails, theme, themeConfig, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CheckoutSessionCustomization{forceLanguage=$forceLanguage, showOnDemandTag=$showOnDemandTag, showOrderDetails=$showOrderDetails, theme=$theme, themeConfig=$themeConfig, additionalProperties=$additionalProperties}"
+    override fun toString() = "CheckoutSessionCustomization{forceLanguage=$forceLanguage, showOnDemandTag=$showOnDemandTag, showOrderDetails=$showOrderDetails, theme=$theme, themeConfig=$themeConfig, additionalProperties=$additionalProperties}"
 }

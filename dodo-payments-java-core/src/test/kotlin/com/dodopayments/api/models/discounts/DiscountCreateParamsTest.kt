@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.discounts
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.discounts.DiscountCreateParams
+import com.dodopayments.api.models.discounts.DiscountType
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -12,70 +14,65 @@ internal class DiscountCreateParamsTest {
 
     @Test
     fun create() {
-        DiscountCreateParams.builder()
-            .amount(0)
-            .type(DiscountType.PERCENTAGE)
-            .code("code")
-            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-            .metadata(
-                DiscountCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-            .name("name")
-            .preserveOnPlanChange(true)
-            .addRestrictedTo("string")
-            .subscriptionCycles(0)
-            .usageLimit(0)
-            .build()
+      DiscountCreateParams.builder()
+          .amount(0)
+          .type(DiscountType.PERCENTAGE)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .usageLimit(0)
+          .build()
     }
 
     @Test
     fun body() {
-        val params =
-            DiscountCreateParams.builder()
-                .amount(0)
-                .type(DiscountType.PERCENTAGE)
-                .code("code")
-                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .metadata(
-                    DiscountCreateParams.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .name("name")
-                .preserveOnPlanChange(true)
-                .addRestrictedTo("string")
-                .subscriptionCycles(0)
-                .usageLimit(0)
-                .build()
+      val params = DiscountCreateParams.builder()
+          .amount(0)
+          .type(DiscountType.PERCENTAGE)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .usageLimit(0)
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(0)
-        assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
-        assertThat(body.code()).contains("code")
-        assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(body.metadata())
-            .contains(
-                DiscountCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(body.name()).contains("name")
-        assertThat(body.preserveOnPlanChange()).contains(true)
-        assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
-        assertThat(body.subscriptionCycles()).contains(0)
-        assertThat(body.usageLimit()).contains(0)
+      assertThat(body.amount()).isEqualTo(0)
+      assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
+      assertThat(body.code()).contains("code")
+      assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(body.metadata()).contains(DiscountCreateParams.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(body.name()).contains("name")
+      assertThat(body.preserveOnPlanChange()).contains(true)
+      assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
+      assertThat(body.subscriptionCycles()).contains(0)
+      assertThat(body.usageLimit()).contains(0)
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = DiscountCreateParams.builder().amount(0).type(DiscountType.PERCENTAGE).build()
+      val params = DiscountCreateParams.builder()
+          .amount(0)
+          .type(DiscountType.PERCENTAGE)
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.amount()).isEqualTo(0)
-        assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
+      assertThat(body.amount()).isEqualTo(0)
+      assertThat(body.type()).isEqualTo(DiscountType.PERCENTAGE)
     }
 }

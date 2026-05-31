@@ -5,17 +5,21 @@ package com.dodopayments.api.models.discounts
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.discounts.Discount
+import com.dodopayments.api.models.discounts.DiscountListPageResponse
+import com.dodopayments.api.models.discounts.DiscountListParams
 import com.dodopayments.api.services.blocking.DiscountService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see DiscountService.list */
-class DiscountListPage
-private constructor(
+class DiscountListPage private constructor(
     private val service: DiscountService,
     private val params: DiscountListParams,
     private val response: DiscountListPageResponse,
+
 ) : Page<Discount> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see DiscountListPageResponse.items
      */
-    override fun items(): List<Discount> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Discount> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): DiscountListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): DiscountListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DiscountListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DiscountListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: DiscountListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(discountListPage: DiscountListPage) = apply {
-            service = discountListPage.service
-            params = discountListPage.params
-            response = discountListPage.response
-        }
+        internal fun from(discountListPage: DiscountListPage) =
+            apply {
+                service = discountListPage.service
+                params = discountListPage.params
+                response = discountListPage.response
+            }
 
-        fun service(service: DiscountService) = apply { this.service = service }
+        fun service(service: DiscountService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: DiscountListParams) = apply { this.params = params }
+        fun params(params: DiscountListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: DiscountListPageResponse) = apply { this.response = response }
+        fun response(response: DiscountListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [DiscountListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): DiscountListPage =
             DiscountListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DiscountListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is DiscountListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "DiscountListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "DiscountListPage{service=$service, params=$params, response=$response}"
 }

@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.brands
 
+import com.dodopayments.api.models.brands.BrandUpdateParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,53 +10,56 @@ internal class BrandUpdateParamsTest {
 
     @Test
     fun create() {
-        BrandUpdateParams.builder()
-            .id("id")
-            .description("description")
-            .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-            .name("name")
-            .statementDescriptor("statement_descriptor")
-            .supportEmail("support_email")
-            .url("url")
-            .build()
+      BrandUpdateParams.builder()
+          .id("id")
+          .description("description")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .name("name")
+          .statementDescriptor("statement_descriptor")
+          .supportEmail("support_email")
+          .url("url")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = BrandUpdateParams.builder().id("id").build()
+      val params = BrandUpdateParams.builder()
+          .id("id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
     fun body() {
-        val params =
-            BrandUpdateParams.builder()
-                .id("id")
-                .description("description")
-                .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .name("name")
-                .statementDescriptor("statement_descriptor")
-                .supportEmail("support_email")
-                .url("url")
-                .build()
+      val params = BrandUpdateParams.builder()
+          .id("id")
+          .description("description")
+          .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .name("name")
+          .statementDescriptor("statement_descriptor")
+          .supportEmail("support_email")
+          .url("url")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.description()).contains("description")
-        assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-        assertThat(body.name()).contains("name")
-        assertThat(body.statementDescriptor()).contains("statement_descriptor")
-        assertThat(body.supportEmail()).contains("support_email")
-        assertThat(body.url()).contains("url")
+      assertThat(body.description()).contains("description")
+      assertThat(body.imageId()).contains("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+      assertThat(body.name()).contains("name")
+      assertThat(body.statementDescriptor()).contains("statement_descriptor")
+      assertThat(body.supportEmail()).contains("support_email")
+      assertThat(body.url()).contains("url")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = BrandUpdateParams.builder().id("id").build()
+      val params = BrandUpdateParams.builder()
+          .id("id")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
     }
 }

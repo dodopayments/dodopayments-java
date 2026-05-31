@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.meters
 
+import com.dodopayments.api.models.meters.MeterUnarchiveParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,15 +10,19 @@ internal class MeterUnarchiveParamsTest {
 
     @Test
     fun create() {
-        MeterUnarchiveParams.builder().id("id").build()
+      MeterUnarchiveParams.builder()
+          .id("id")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = MeterUnarchiveParams.builder().id("id").build()
+      val params = MeterUnarchiveParams.builder()
+          .id("id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

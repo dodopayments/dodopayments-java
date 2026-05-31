@@ -11,6 +11,8 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.subscriptions.AttachAddon
+import com.dodopayments.api.models.subscriptions.UpdateSubscriptionPlanReq
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -20,9 +22,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class UpdateSubscriptionPlanReq
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class UpdateSubscriptionPlanReq @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val productId: JsonField<String>,
     private val prorationBillingMode: JsonField<ProrationBillingMode>,
     private val quantity: JsonField<Int>,
@@ -34,108 +34,88 @@ private constructor(
     private val metadata: JsonField<Metadata>,
     private val onPaymentFailure: JsonField<OnPaymentFailure>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("proration_billing_mode")
-        @ExcludeMissing
-        prorationBillingMode: JsonField<ProrationBillingMode> = JsonMissing.of(),
+        @JsonProperty("proration_billing_mode") @ExcludeMissing prorationBillingMode: JsonField<ProrationBillingMode> = JsonMissing.of(),
         @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("adaptive_currency_fees_inclusive")
-        @ExcludeMissing
-        adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("addons")
-        @ExcludeMissing
-        addons: JsonField<List<AttachAddon>> = JsonMissing.of(),
-        @JsonProperty("discount_code")
-        @ExcludeMissing
-        discountCode: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("discount_codes")
-        @ExcludeMissing
-        discountCodes: JsonField<List<String>> = JsonMissing.of(),
-        @JsonProperty("effective_at")
-        @ExcludeMissing
-        effectiveAt: JsonField<EffectiveAt> = JsonMissing.of(),
+        @JsonProperty("adaptive_currency_fees_inclusive") @ExcludeMissing adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("addons") @ExcludeMissing addons: JsonField<List<AttachAddon>> = JsonMissing.of(),
+        @JsonProperty("discount_code") @ExcludeMissing discountCode: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("discount_codes") @ExcludeMissing discountCodes: JsonField<List<String>> = JsonMissing.of(),
+        @JsonProperty("effective_at") @ExcludeMissing effectiveAt: JsonField<EffectiveAt> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
-        @JsonProperty("on_payment_failure")
-        @ExcludeMissing
-        onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of(),
+        @JsonProperty("on_payment_failure") @ExcludeMissing onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
     ) : this(
-        productId,
-        prorationBillingMode,
-        quantity,
-        adaptiveCurrencyFeesInclusive,
-        addons,
-        discountCode,
-        discountCodes,
-        effectiveAt,
-        metadata,
-        onPaymentFailure,
-        mutableMapOf(),
+      productId,
+      prorationBillingMode,
+      quantity,
+      adaptiveCurrencyFeesInclusive,
+      addons,
+      discountCode,
+      discountCodes,
+      effectiveAt,
+      metadata,
+      onPaymentFailure,
+      mutableMapOf(),
     )
 
     /**
      * Unique identifier of the product to subscribe to
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun productId(): String = productId.getRequired("product_id")
 
     /**
      * Proration Billing Mode
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun prorationBillingMode(): ProrationBillingMode =
-        prorationBillingMode.getRequired("proration_billing_mode")
+    fun prorationBillingMode(): ProrationBillingMode = prorationBillingMode.getRequired("proration_billing_mode")
 
     /**
      * Number of units to subscribe for. Must be at least 1.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun quantity(): Int = quantity.getRequired("quantity")
 
     /**
-     * Whether adaptive currency fees should be included in the price (true) or added on top
-     * (false). If not specified, uses the subscription's stored setting.
+     * Whether adaptive currency fees should be included in the price (true) or added on top (false).
+     * If not specified, uses the subscription's stored setting.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> =
-        adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
+    fun adaptiveCurrencyFeesInclusive(): Optional<Boolean> = adaptiveCurrencyFeesInclusive.getOptional("adaptive_currency_fees_inclusive")
 
     /**
-     * Addons for the new plan. Note : Leaving this empty would remove any existing addons
+     * Addons for the new plan.
+     * Note : Leaving this empty would remove any existing addons
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun addons(): Optional<List<AttachAddon>> = addons.getOptional("addons")
 
     /**
      * DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     @Deprecated("Use `discount_id` instead.")
     fun discountCode(): Optional<String> = discountCode.getOptional("discount_code")
 
     /**
-     * Stacked discount codes to apply to the new plan. Max 20. Cannot be used together with
-     * discount_code. If provided, replaces any existing discount codes. Empty array removes all
-     * discounts. If not provided (None), existing discounts with preserve_on_plan_change=true are
-     * preserved.
+     * Stacked discount codes to apply to the new plan. Max 20.
+     * Cannot be used together with discount_code.
+     * If provided, replaces any existing discount codes.
+     * Empty array removes all discounts.
+     * If not provided (None), existing discounts with preserve_on_plan_change=true are preserved.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun discountCodes(): Optional<List<String>> = discountCodes.getOptional("discount_codes")
 
@@ -144,16 +124,14 @@ private constructor(
      * - `immediately` (default): Apply the plan change right away
      * - `next_billing_date`: Schedule the change for the next billing date
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun effectiveAt(): Optional<EffectiveAt> = effectiveAt.getOptional("effective_at")
 
     /**
      * Metadata for the payment. If not passed, the metadata of the subscription will be taken
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
@@ -164,24 +142,23 @@ private constructor(
      *
      * If not specified, uses the business-level default setting.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
-    fun onPaymentFailure(): Optional<OnPaymentFailure> =
-        onPaymentFailure.getOptional("on_payment_failure")
+    fun onPaymentFailure(): Optional<OnPaymentFailure> = onPaymentFailure.getOptional("on_payment_failure")
 
     /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+    @JsonProperty("product_id")
+    @ExcludeMissing
+    fun _productId(): JsonField<String> = productId
 
     /**
      * Returns the raw JSON value of [prorationBillingMode].
      *
-     * Unlike [prorationBillingMode], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [prorationBillingMode], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("proration_billing_mode")
     @ExcludeMissing
@@ -192,13 +169,14 @@ private constructor(
      *
      * Unlike [quantity], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
+    @JsonProperty("quantity")
+    @ExcludeMissing
+    fun _quantity(): JsonField<Int> = quantity
 
     /**
      * Returns the raw JSON value of [adaptiveCurrencyFeesInclusive].
      *
-     * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has an
-     * unexpected type.
+     * Unlike [adaptiveCurrencyFeesInclusive], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("adaptive_currency_fees_inclusive")
     @ExcludeMissing
@@ -209,7 +187,9 @@ private constructor(
      *
      * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<AttachAddon>> = addons
+    @JsonProperty("addons")
+    @ExcludeMissing
+    fun _addons(): JsonField<List<AttachAddon>> = addons
 
     /**
      * Returns the raw JSON value of [discountCode].
@@ -244,13 +224,14 @@ private constructor(
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+    @JsonProperty("metadata")
+    @ExcludeMissing
+    fun _metadata(): JsonField<Metadata> = metadata
 
     /**
      * Returns the raw JSON value of [onPaymentFailure].
      *
-     * Unlike [onPaymentFailure], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [onPaymentFailure], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("on_payment_failure")
     @ExcludeMissing
@@ -258,13 +239,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -274,13 +254,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [UpdateSubscriptionPlanReq].
          *
          * The following fields are required:
+         *
          * ```java
          * .productId()
          * .prorationBillingMode()
          * .quantity()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UpdateSubscriptionPlanReq]. */
@@ -299,19 +281,20 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(updateSubscriptionPlanReq: UpdateSubscriptionPlanReq) = apply {
-            productId = updateSubscriptionPlanReq.productId
-            prorationBillingMode = updateSubscriptionPlanReq.prorationBillingMode
-            quantity = updateSubscriptionPlanReq.quantity
-            adaptiveCurrencyFeesInclusive = updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive
-            addons = updateSubscriptionPlanReq.addons.map { it.toMutableList() }
-            discountCode = updateSubscriptionPlanReq.discountCode
-            discountCodes = updateSubscriptionPlanReq.discountCodes.map { it.toMutableList() }
-            effectiveAt = updateSubscriptionPlanReq.effectiveAt
-            metadata = updateSubscriptionPlanReq.metadata
-            onPaymentFailure = updateSubscriptionPlanReq.onPaymentFailure
-            additionalProperties = updateSubscriptionPlanReq.additionalProperties.toMutableMap()
-        }
+        internal fun from(updateSubscriptionPlanReq: UpdateSubscriptionPlanReq) =
+            apply {
+                productId = updateSubscriptionPlanReq.productId
+                prorationBillingMode = updateSubscriptionPlanReq.prorationBillingMode
+                quantity = updateSubscriptionPlanReq.quantity
+                adaptiveCurrencyFeesInclusive = updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive
+                addons = updateSubscriptionPlanReq.addons.map { it.toMutableList() }
+                discountCode = updateSubscriptionPlanReq.discountCode
+                discountCodes = updateSubscriptionPlanReq.discountCodes.map { it.toMutableList() }
+                effectiveAt = updateSubscriptionPlanReq.effectiveAt
+                metadata = updateSubscriptionPlanReq.metadata
+                onPaymentFailure = updateSubscriptionPlanReq.onPaymentFailure
+                additionalProperties = updateSubscriptionPlanReq.additionalProperties.toMutableMap()
+            }
 
         /** Unique identifier of the product to subscribe to */
         fun productId(productId: String) = productId(JsonField.of(productId))
@@ -319,26 +302,27 @@ private constructor(
         /**
          * Sets [Builder.productId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+        fun productId(productId: JsonField<String>) =
+            apply {
+                this.productId = productId
+            }
 
         /** Proration Billing Mode */
-        fun prorationBillingMode(prorationBillingMode: ProrationBillingMode) =
-            prorationBillingMode(JsonField.of(prorationBillingMode))
+        fun prorationBillingMode(prorationBillingMode: ProrationBillingMode) = prorationBillingMode(JsonField.of(prorationBillingMode))
 
         /**
          * Sets [Builder.prorationBillingMode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.prorationBillingMode] with a well-typed
-         * [ProrationBillingMode] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
+         * You should usually call [Builder.prorationBillingMode] with a well-typed [ProrationBillingMode] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun prorationBillingMode(prorationBillingMode: JsonField<ProrationBillingMode>) = apply {
-            this.prorationBillingMode = prorationBillingMode
-        }
+        fun prorationBillingMode(prorationBillingMode: JsonField<ProrationBillingMode>) =
+            apply {
+                this.prorationBillingMode = prorationBillingMode
+            }
 
         /** Number of units to subscribe for. Must be at least 1. */
         fun quantity(quantity: Int) = quantity(JsonField.of(quantity))
@@ -346,46 +330,45 @@ private constructor(
         /**
          * Sets [Builder.quantity] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.quantity] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+        fun quantity(quantity: JsonField<Int>) =
+            apply {
+                this.quantity = quantity
+            }
 
         /**
-         * Whether adaptive currency fees should be included in the price (true) or added on top
-         * (false). If not specified, uses the subscription's stored setting.
+         * Whether adaptive currency fees should be included in the price (true) or added on top (false).
+         * If not specified, uses the subscription's stored setting.
          */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) =
-            adaptiveCurrencyFeesInclusive(JsonField.ofNullable(adaptiveCurrencyFeesInclusive))
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean?) = adaptiveCurrencyFeesInclusive(JsonField.ofNullable(adaptiveCurrencyFeesInclusive))
 
         /**
          * Alias for [Builder.adaptiveCurrencyFeesInclusive].
          *
          * This unboxed primitive overload exists for backwards compatibility.
          */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) =
-            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Boolean) = adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive as Boolean?)
 
-        /**
-         * Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with
-         * `adaptiveCurrencyFeesInclusive.orElse(null)`.
-         */
-        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) =
-            adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
+        /** Alias for calling [Builder.adaptiveCurrencyFeesInclusive] with `adaptiveCurrencyFeesInclusive.orElse(null)`. */
+        fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: Optional<Boolean>) = adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive.getOrNull())
 
         /**
          * Sets [Builder.adaptiveCurrencyFeesInclusive] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed
-         * [Boolean] value instead. This method is primarily for setting the field to an
-         * undocumented or not yet supported value.
+         * You should usually call [Builder.adaptiveCurrencyFeesInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         fun adaptiveCurrencyFeesInclusive(adaptiveCurrencyFeesInclusive: JsonField<Boolean>) =
             apply {
                 this.adaptiveCurrencyFeesInclusive = adaptiveCurrencyFeesInclusive
             }
 
-        /** Addons for the new plan. Note : Leaving this empty would remove any existing addons */
+        /**
+         * Addons for the new plan.
+         * Note : Leaving this empty would remove any existing addons
+         */
         fun addons(addons: List<AttachAddon>?) = addons(JsonField.ofNullable(addons))
 
         /** Alias for calling [Builder.addons] with `addons.orElse(null)`. */
@@ -394,25 +377,25 @@ private constructor(
         /**
          * Sets [Builder.addons] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.addons] with a well-typed `List<AttachAddon>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.addons] with a well-typed `List<AttachAddon>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun addons(addons: JsonField<List<AttachAddon>>) = apply {
-            this.addons = addons.map { it.toMutableList() }
-        }
+        fun addons(addons: JsonField<List<AttachAddon>>) =
+            apply {
+                this.addons = addons.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [AttachAddon] to [addons].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAddon(addon: AttachAddon) = apply {
-            addons =
-                (addons ?: JsonField.of(mutableListOf())).also {
+        fun addAddon(addon: AttachAddon) =
+            apply {
+                addons = (addons ?: JsonField.of(mutableListOf())).also {
                     checkKnown("addons", it).add(addon)
                 }
-        }
+            }
 
         /** DEPRECATED: Use discount_codes instead. Cannot be used together with discount_codes. */
         @Deprecated("Use `discount_id` instead.")
@@ -425,50 +408,49 @@ private constructor(
         /**
          * Sets [Builder.discountCode] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.discountCode] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.discountCode] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
         @Deprecated("Use `discount_id` instead.")
-        fun discountCode(discountCode: JsonField<String>) = apply {
-            this.discountCode = discountCode
-        }
+        fun discountCode(discountCode: JsonField<String>) =
+            apply {
+                this.discountCode = discountCode
+            }
 
         /**
-         * Stacked discount codes to apply to the new plan. Max 20. Cannot be used together with
-         * discount_code. If provided, replaces any existing discount codes. Empty array removes all
-         * discounts. If not provided (None), existing discounts with preserve_on_plan_change=true
-         * are preserved.
+         * Stacked discount codes to apply to the new plan. Max 20.
+         * Cannot be used together with discount_code.
+         * If provided, replaces any existing discount codes.
+         * Empty array removes all discounts.
+         * If not provided (None), existing discounts with preserve_on_plan_change=true are preserved.
          */
-        fun discountCodes(discountCodes: List<String>?) =
-            discountCodes(JsonField.ofNullable(discountCodes))
+        fun discountCodes(discountCodes: List<String>?) = discountCodes(JsonField.ofNullable(discountCodes))
 
         /** Alias for calling [Builder.discountCodes] with `discountCodes.orElse(null)`. */
-        fun discountCodes(discountCodes: Optional<List<String>>) =
-            discountCodes(discountCodes.getOrNull())
+        fun discountCodes(discountCodes: Optional<List<String>>) = discountCodes(discountCodes.getOrNull())
 
         /**
          * Sets [Builder.discountCodes] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.discountCodes] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.discountCodes] with a well-typed `List<String>` value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun discountCodes(discountCodes: JsonField<List<String>>) = apply {
-            this.discountCodes = discountCodes.map { it.toMutableList() }
-        }
+        fun discountCodes(discountCodes: JsonField<List<String>>) =
+            apply {
+                this.discountCodes = discountCodes.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [String] to [discountCodes].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addDiscountCode(discountCode: String) = apply {
-            discountCodes =
-                (discountCodes ?: JsonField.of(mutableListOf())).also {
+        fun addDiscountCode(discountCode: String) =
+            apply {
+                discountCodes = (discountCodes ?: JsonField.of(mutableListOf())).also {
                     checkKnown("discountCodes", it).add(discountCode)
                 }
-        }
+            }
 
         /**
          * When to apply the plan change.
@@ -480,17 +462,15 @@ private constructor(
         /**
          * Sets [Builder.effectiveAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.effectiveAt] with a well-typed [EffectiveAt] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.effectiveAt] with a well-typed [EffectiveAt] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun effectiveAt(effectiveAt: JsonField<EffectiveAt>) = apply {
-            this.effectiveAt = effectiveAt
-        }
+        fun effectiveAt(effectiveAt: JsonField<EffectiveAt>) =
+            apply {
+                this.effectiveAt = effectiveAt
+            }
 
-        /**
-         * Metadata for the payment. If not passed, the metadata of the subscription will be taken
-         */
+        /** Metadata for the payment. If not passed, the metadata of the subscription will be taken */
         fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
@@ -499,11 +479,13 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                this.metadata = metadata
+            }
 
         /**
          * Controls behavior when the plan change payment fails.
@@ -512,42 +494,47 @@ private constructor(
          *
          * If not specified, uses the business-level default setting.
          */
-        fun onPaymentFailure(onPaymentFailure: OnPaymentFailure?) =
-            onPaymentFailure(JsonField.ofNullable(onPaymentFailure))
+        fun onPaymentFailure(onPaymentFailure: OnPaymentFailure?) = onPaymentFailure(JsonField.ofNullable(onPaymentFailure))
 
         /** Alias for calling [Builder.onPaymentFailure] with `onPaymentFailure.orElse(null)`. */
-        fun onPaymentFailure(onPaymentFailure: Optional<OnPaymentFailure>) =
-            onPaymentFailure(onPaymentFailure.getOrNull())
+        fun onPaymentFailure(onPaymentFailure: Optional<OnPaymentFailure>) = onPaymentFailure(onPaymentFailure.getOrNull())
 
         /**
          * Sets [Builder.onPaymentFailure] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.onPaymentFailure] with a well-typed [OnPaymentFailure]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.onPaymentFailure] with a well-typed [OnPaymentFailure] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun onPaymentFailure(onPaymentFailure: JsonField<OnPaymentFailure>) = apply {
-            this.onPaymentFailure = onPaymentFailure
-        }
+        fun onPaymentFailure(onPaymentFailure: JsonField<OnPaymentFailure>) =
+            apply {
+                this.onPaymentFailure = onPaymentFailure
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [UpdateSubscriptionPlanReq].
@@ -555,6 +542,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .productId()
          * .prorationBillingMode()
@@ -565,17 +553,23 @@ private constructor(
          */
         fun build(): UpdateSubscriptionPlanReq =
             UpdateSubscriptionPlanReq(
-                checkRequired("productId", productId),
-                checkRequired("prorationBillingMode", prorationBillingMode),
-                checkRequired("quantity", quantity),
-                adaptiveCurrencyFeesInclusive,
-                (addons ?: JsonMissing.of()).map { it.toImmutable() },
-                discountCode,
-                (discountCodes ?: JsonMissing.of()).map { it.toImmutable() },
-                effectiveAt,
-                metadata,
-                onPaymentFailure,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "productId", productId
+              ),
+              checkRequired(
+                "prorationBillingMode", prorationBillingMode
+              ),
+              checkRequired(
+                "quantity", quantity
+              ),
+              adaptiveCurrencyFeesInclusive,
+              (addons?: JsonMissing.of()).map { it.toImmutable() },
+              discountCode,
+              (discountCodes?: JsonMissing.of()).map { it.toImmutable() },
+              effectiveAt,
+              metadata,
+              onPaymentFailure,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -589,23 +583,24 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): UpdateSubscriptionPlanReq = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): UpdateSubscriptionPlanReq =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        productId()
-        prorationBillingMode().validate()
-        quantity()
-        adaptiveCurrencyFeesInclusive()
-        addons().ifPresent { it.forEach { it.validate() } }
-        discountCode()
-        discountCodes()
-        effectiveAt().ifPresent { it.validate() }
-        metadata().ifPresent { it.validate() }
-        onPaymentFailure().ifPresent { it.validate() }
-        validated = true
-    }
+            productId()
+            prorationBillingMode().validate()
+            quantity()
+            adaptiveCurrencyFeesInclusive()
+            addons().ifPresent { it.forEach { it.validate() } }
+            discountCode()
+            discountCodes()
+            effectiveAt().ifPresent { it.validate() }
+            metadata().ifPresent { it.validate() }
+            onPaymentFailure().ifPresent { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -621,32 +616,23 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (productId.asKnown().isPresent) 1 else 0) +
-            (prorationBillingMode.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (quantity.asKnown().isPresent) 1 else 0) +
-            (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
-            (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (discountCode.asKnown().isPresent) 1 else 0) +
-            (discountCodes.asKnown().getOrNull()?.size ?: 0) +
-            (effectiveAt.asKnown().getOrNull()?.validity() ?: 0) +
-            (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
+    internal fun validity(): Int = (if (productId.asKnown().isPresent) 1 else 0) + (prorationBillingMode.asKnown().getOrNull()?.validity() ?: 0) + (if (quantity.asKnown().isPresent) 1 else 0) + (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) + (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (discountCode.asKnown().isPresent) 1 else 0) + (discountCodes.asKnown().getOrNull()?.size ?: 0) + (effectiveAt.asKnown().getOrNull()?.validity() ?: 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Proration Billing Mode */
-    class ProrationBillingMode
-    @JsonCreator
-    private constructor(private val value: JsonField<String>) : Enum {
+    class ProrationBillingMode @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -670,13 +656,14 @@ private constructor(
         }
 
         /**
-         * An enum containing [ProrationBillingMode]'s known values, as well as an [_UNKNOWN]
-         * member.
+         * An enum containing [ProrationBillingMode]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [ProrationBillingMode] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -684,19 +671,16 @@ private constructor(
             FULL_IMMEDIATELY,
             DIFFERENCE_IMMEDIATELY,
             DO_NOT_BILL,
-            /**
-             * An enum member indicating that [ProrationBillingMode] was instantiated with an
-             * unknown value.
-             */
+            /** An enum member indicating that [ProrationBillingMode] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -710,11 +694,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -722,43 +705,39 @@ private constructor(
                 FULL_IMMEDIATELY -> Known.FULL_IMMEDIATELY
                 DIFFERENCE_IMMEDIATELY -> Known.DIFFERENCE_IMMEDIATELY
                 DO_NOT_BILL -> Known.DO_NOT_BILL
-                else ->
-                    throw DodoPaymentsInvalidDataException("Unknown ProrationBillingMode: $value")
+                else -> throw DodoPaymentsInvalidDataException("Unknown ProrationBillingMode: $value")
             }
 
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): ProrationBillingMode = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): ProrationBillingMode =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -769,19 +748,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is ProrationBillingMode && value == other.value
+          return other is ProrationBillingMode && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -794,18 +773,20 @@ private constructor(
      * - `immediately` (default): Apply the plan change right away
      * - `next_billing_date`: Schedule the change for the next billing date
      */
-    class EffectiveAt @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class EffectiveAt @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -826,26 +807,26 @@ private constructor(
          * An enum containing [EffectiveAt]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [EffectiveAt] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
             IMMEDIATELY,
             NEXT_BILLING_DATE,
-            /**
-             * An enum member indicating that [EffectiveAt] was instantiated with an unknown value.
-             */
+            /** An enum member indicating that [EffectiveAt] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -857,11 +838,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -873,36 +853,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): EffectiveAt = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): EffectiveAt =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -913,19 +890,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is EffectiveAt && value == other.value
+          return other is EffectiveAt && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -934,11 +911,9 @@ private constructor(
     }
 
     /** Metadata for the payment. If not passed, the metadata of the subscription will be taken */
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -950,7 +925,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -959,28 +935,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -993,21 +977,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1018,21 +1002,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -1049,18 +1031,20 @@ private constructor(
      *
      * If not specified, uses the business-level default setting.
      */
-    class OnPaymentFailure @JsonCreator private constructor(private val value: JsonField<String>) :
-        Enum {
+    class OnPaymentFailure @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -1081,27 +1065,26 @@ private constructor(
          * An enum containing [OnPaymentFailure]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [OnPaymentFailure] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
             PREVENT_CHANGE,
             APPLY_CHANGE,
-            /**
-             * An enum member indicating that [OnPaymentFailure] was instantiated with an unknown
-             * value.
-             */
+            /** An enum member indicating that [OnPaymentFailure] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -1113,11 +1096,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -1129,36 +1111,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): OnPaymentFailure = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): OnPaymentFailure =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -1169,19 +1148,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is OnPaymentFailure && value == other.value
+          return other is OnPaymentFailure && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -1190,42 +1169,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UpdateSubscriptionPlanReq &&
-            productId == other.productId &&
-            prorationBillingMode == other.prorationBillingMode &&
-            quantity == other.quantity &&
-            adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
-            addons == other.addons &&
-            discountCode == other.discountCode &&
-            discountCodes == other.discountCodes &&
-            effectiveAt == other.effectiveAt &&
-            metadata == other.metadata &&
-            onPaymentFailure == other.onPaymentFailure &&
-            additionalProperties == other.additionalProperties
+      return other is UpdateSubscriptionPlanReq && productId == other.productId && prorationBillingMode == other.prorationBillingMode && quantity == other.quantity && adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive && addons == other.addons && discountCode == other.discountCode && discountCodes == other.discountCodes && effectiveAt == other.effectiveAt && metadata == other.metadata && onPaymentFailure == other.onPaymentFailure && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            productId,
-            prorationBillingMode,
-            quantity,
-            adaptiveCurrencyFeesInclusive,
-            addons,
-            discountCode,
-            discountCodes,
-            effectiveAt,
-            metadata,
-            onPaymentFailure,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(productId, prorationBillingMode, quantity, adaptiveCurrencyFeesInclusive, addons, discountCode, discountCodes, effectiveAt, metadata, onPaymentFailure, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, discountCode=$discountCode, discountCodes=$discountCodes, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
+    override fun toString() = "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, discountCode=$discountCode, discountCodes=$discountCodes, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
 }

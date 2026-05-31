@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.products
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
@@ -12,25 +13,25 @@ internal class LicenseKeyDurationTest {
 
     @Test
     fun create() {
-        val licenseKeyDuration =
-            LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
+      val licenseKeyDuration = LicenseKeyDuration.builder()
+          .count(0)
+          .interval(TimeInterval.DAY)
+          .build()
 
-        assertThat(licenseKeyDuration.count()).isEqualTo(0)
-        assertThat(licenseKeyDuration.interval()).isEqualTo(TimeInterval.DAY)
+      assertThat(licenseKeyDuration.count()).isEqualTo(0)
+      assertThat(licenseKeyDuration.interval()).isEqualTo(TimeInterval.DAY)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val licenseKeyDuration =
-            LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
+      val jsonMapper = jsonMapper()
+      val licenseKeyDuration = LicenseKeyDuration.builder()
+          .count(0)
+          .interval(TimeInterval.DAY)
+          .build()
 
-        val roundtrippedLicenseKeyDuration =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(licenseKeyDuration),
-                jacksonTypeRef<LicenseKeyDuration>(),
-            )
+      val roundtrippedLicenseKeyDuration = jsonMapper.readValue(jsonMapper.writeValueAsString(licenseKeyDuration), jacksonTypeRef<LicenseKeyDuration>())
 
-        assertThat(roundtrippedLicenseKeyDuration).isEqualTo(licenseKeyDuration)
+      assertThat(roundtrippedLicenseKeyDuration).isEqualTo(licenseKeyDuration)
     }
 }

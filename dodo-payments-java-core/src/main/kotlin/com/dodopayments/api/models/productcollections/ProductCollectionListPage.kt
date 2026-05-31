@@ -5,17 +5,21 @@ package com.dodopayments.api.models.productcollections
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.productcollections.ProductCollectionListPageResponse
+import com.dodopayments.api.models.productcollections.ProductCollectionListParams
+import com.dodopayments.api.models.productcollections.ProductCollectionListResponse
 import com.dodopayments.api.services.blocking.ProductCollectionService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see ProductCollectionService.list */
-class ProductCollectionListPage
-private constructor(
+class ProductCollectionListPage private constructor(
     private val service: ProductCollectionService,
     private val params: ProductCollectionListParams,
     private val response: ProductCollectionListPageResponse,
+
 ) : Page<ProductCollectionListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see ProductCollectionListPageResponse.items
      */
-    override fun items(): List<ProductCollectionListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<ProductCollectionListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): ProductCollectionListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): ProductCollectionListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProductCollectionListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionListPage]. */
@@ -68,21 +75,29 @@ private constructor(
         private var response: ProductCollectionListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(productCollectionListPage: ProductCollectionListPage) = apply {
-            service = productCollectionListPage.service
-            params = productCollectionListPage.params
-            response = productCollectionListPage.response
-        }
+        internal fun from(productCollectionListPage: ProductCollectionListPage) =
+            apply {
+                service = productCollectionListPage.service
+                params = productCollectionListPage.params
+                response = productCollectionListPage.response
+            }
 
-        fun service(service: ProductCollectionService) = apply { this.service = service }
+        fun service(service: ProductCollectionService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: ProductCollectionListParams) = apply { this.params = params }
+        fun params(params: ProductCollectionListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: ProductCollectionListPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: ProductCollectionListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionListPage].
@@ -90,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -100,25 +116,27 @@ private constructor(
          */
         fun build(): ProductCollectionListPage =
             ProductCollectionListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is ProductCollectionListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "ProductCollectionListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "ProductCollectionListPage{service=$service, params=$params, response=$response}"
 }

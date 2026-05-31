@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.payments.NewCustomer
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,26 +12,28 @@ internal class NewCustomerTest {
 
     @Test
     fun create() {
-        val newCustomer =
-            NewCustomer.builder().email("email").name("name").phoneNumber("phone_number").build()
+      val newCustomer = NewCustomer.builder()
+          .email("email")
+          .name("name")
+          .phoneNumber("phone_number")
+          .build()
 
-        assertThat(newCustomer.email()).isEqualTo("email")
-        assertThat(newCustomer.name()).contains("name")
-        assertThat(newCustomer.phoneNumber()).contains("phone_number")
+      assertThat(newCustomer.email()).isEqualTo("email")
+      assertThat(newCustomer.name()).contains("name")
+      assertThat(newCustomer.phoneNumber()).contains("phone_number")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val newCustomer =
-            NewCustomer.builder().email("email").name("name").phoneNumber("phone_number").build()
+      val jsonMapper = jsonMapper()
+      val newCustomer = NewCustomer.builder()
+          .email("email")
+          .name("name")
+          .phoneNumber("phone_number")
+          .build()
 
-        val roundtrippedNewCustomer =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(newCustomer),
-                jacksonTypeRef<NewCustomer>(),
-            )
+      val roundtrippedNewCustomer = jsonMapper.readValue(jsonMapper.writeValueAsString(newCustomer), jacksonTypeRef<NewCustomer>())
 
-        assertThat(roundtrippedNewCustomer).isEqualTo(newCustomer)
+      assertThat(roundtrippedNewCustomer).isEqualTo(newCustomer)
     }
 }

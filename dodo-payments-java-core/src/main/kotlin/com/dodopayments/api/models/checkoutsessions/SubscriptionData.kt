@@ -17,36 +17,30 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class SubscriptionData
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class SubscriptionData @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val onDemand: JsonField<OnDemandSubscription>,
     private val trialPeriodDays: JsonField<Int>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("on_demand")
-        @ExcludeMissing
-        onDemand: JsonField<OnDemandSubscription> = JsonMissing.of(),
-        @JsonProperty("trial_period_days")
-        @ExcludeMissing
-        trialPeriodDays: JsonField<Int> = JsonMissing.of(),
-    ) : this(onDemand, trialPeriodDays, mutableMapOf())
+        @JsonProperty("on_demand") @ExcludeMissing onDemand: JsonField<OnDemandSubscription> = JsonMissing.of(),
+        @JsonProperty("trial_period_days") @ExcludeMissing trialPeriodDays: JsonField<Int> = JsonMissing.of()
+    ) : this(
+      onDemand,
+      trialPeriodDays,
+      mutableMapOf(),
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun onDemand(): Optional<OnDemandSubscription> = onDemand.getOptional("on_demand")
 
     /**
-     * Optional trial period in days If specified, this value overrides the trial period set in the
-     * product's price Must be between 0 and 10000 days
+     * Optional trial period in days If specified, this value overrides the trial period set in the product's price Must be between 0 and 10000 days
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun trialPeriodDays(): Optional<Int> = trialPeriodDays.getOptional("trial_period_days")
 
@@ -70,20 +64,20 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /** Returns a mutable builder for constructing an instance of [SubscriptionData]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionData]. */
@@ -94,11 +88,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(subscriptionData: SubscriptionData) = apply {
-            onDemand = subscriptionData.onDemand
-            trialPeriodDays = subscriptionData.trialPeriodDays
-            additionalProperties = subscriptionData.additionalProperties.toMutableMap()
-        }
+        internal fun from(subscriptionData: SubscriptionData) =
+            apply {
+                onDemand = subscriptionData.onDemand
+                trialPeriodDays = subscriptionData.trialPeriodDays
+                additionalProperties = subscriptionData.additionalProperties.toMutableMap()
+            }
 
         fun onDemand(onDemand: OnDemandSubscription?) = onDemand(JsonField.ofNullable(onDemand))
 
@@ -108,18 +103,16 @@ private constructor(
         /**
          * Sets [Builder.onDemand] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.onDemand] with a well-typed [OnDemandSubscription] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.onDemand] with a well-typed [OnDemandSubscription] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun onDemand(onDemand: JsonField<OnDemandSubscription>) = apply { this.onDemand = onDemand }
+        fun onDemand(onDemand: JsonField<OnDemandSubscription>) =
+            apply {
+                this.onDemand = onDemand
+            }
 
-        /**
-         * Optional trial period in days If specified, this value overrides the trial period set in
-         * the product's price Must be between 0 and 10000 days
-         */
-        fun trialPeriodDays(trialPeriodDays: Int?) =
-            trialPeriodDays(JsonField.ofNullable(trialPeriodDays))
+        /** Optional trial period in days If specified, this value overrides the trial period set in the product's price Must be between 0 and 10000 days */
+        fun trialPeriodDays(trialPeriodDays: Int?) = trialPeriodDays(JsonField.ofNullable(trialPeriodDays))
 
         /**
          * Alias for [Builder.trialPeriodDays].
@@ -129,38 +122,44 @@ private constructor(
         fun trialPeriodDays(trialPeriodDays: Int) = trialPeriodDays(trialPeriodDays as Int?)
 
         /** Alias for calling [Builder.trialPeriodDays] with `trialPeriodDays.orElse(null)`. */
-        fun trialPeriodDays(trialPeriodDays: Optional<Int>) =
-            trialPeriodDays(trialPeriodDays.getOrNull())
+        fun trialPeriodDays(trialPeriodDays: Optional<Int>) = trialPeriodDays(trialPeriodDays.getOrNull())
 
         /**
          * Sets [Builder.trialPeriodDays] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.trialPeriodDays] with a well-typed [Int] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.trialPeriodDays] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun trialPeriodDays(trialPeriodDays: JsonField<Int>) = apply {
-            this.trialPeriodDays = trialPeriodDays
-        }
+        fun trialPeriodDays(trialPeriodDays: JsonField<Int>) =
+            apply {
+                this.trialPeriodDays = trialPeriodDays
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionData].
@@ -168,7 +167,11 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): SubscriptionData =
-            SubscriptionData(onDemand, trialPeriodDays, additionalProperties.toMutableMap())
+            SubscriptionData(
+              onDemand,
+              trialPeriodDays,
+              additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -181,15 +184,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): SubscriptionData = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): SubscriptionData =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        onDemand().ifPresent { it.validate() }
-        trialPeriodDays()
-        validated = true
-    }
+            onDemand().ifPresent { it.validate() }
+            trialPeriodDays()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -205,27 +209,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (onDemand.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (trialPeriodDays.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (onDemand.asKnown().getOrNull()?.validity() ?: 0) + (if (trialPeriodDays.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionData &&
-            onDemand == other.onDemand &&
-            trialPeriodDays == other.trialPeriodDays &&
-            additionalProperties == other.additionalProperties
+      return other is SubscriptionData && onDemand == other.onDemand && trialPeriodDays == other.trialPeriodDays && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(onDemand, trialPeriodDays, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(onDemand, trialPeriodDays, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "SubscriptionData{onDemand=$onDemand, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+    override fun toString() = "SubscriptionData{onDemand=$onDemand, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
 }

@@ -7,14 +7,13 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
+import com.dodopayments.api.services.blocking.MiscService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface MiscService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -24,23 +23,22 @@ interface MiscService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscService
 
-    fun listSupportedCountries(): List<CountryCode> =
-        listSupportedCountries(MiscListSupportedCountriesParams.none())
+    fun listSupportedCountries(): List<CountryCode> = listSupportedCountries(MiscListSupportedCountriesParams.none())
 
     /** @see listSupportedCountries */
-    fun listSupportedCountries(
-        params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<CountryCode>
+    fun listSupportedCountries(params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(), requestOptions: RequestOptions = RequestOptions.none()): List<CountryCode>
 
     /** @see listSupportedCountries */
-    fun listSupportedCountries(
-        params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
-    ): List<CountryCode> = listSupportedCountries(params, RequestOptions.none())
+    fun listSupportedCountries(params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()): List<CountryCode> =
+        listSupportedCountries(
+          params, RequestOptions.none()
+        )
 
     /** @see listSupportedCountries */
     fun listSupportedCountries(requestOptions: RequestOptions): List<CountryCode> =
-        listSupportedCountries(MiscListSupportedCountriesParams.none(), requestOptions)
+        listSupportedCountries(
+          MiscListSupportedCountriesParams.none(), requestOptions
+        )
 
     /** A view of [MiscService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -52,33 +50,26 @@ interface MiscService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): MiscService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /checkout/supported_countries`, but is otherwise the
-         * same as [MiscService.listSupportedCountries].
-         */
+        /** Returns a raw HTTP response for `get /checkout/supported_countries`, but is otherwise the             same as [MiscService.listSupportedCountries]. */
         @MustBeClosed
-        fun listSupportedCountries(): HttpResponseFor<List<CountryCode>> =
-            listSupportedCountries(MiscListSupportedCountriesParams.none())
+        fun listSupportedCountries(): HttpResponseFor<List<CountryCode>> = listSupportedCountries(MiscListSupportedCountriesParams.none())
 
         /** @see listSupportedCountries */
         @MustBeClosed
-        fun listSupportedCountries(
-            params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<CountryCode>>
+        fun listSupportedCountries(params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<List<CountryCode>>
 
         /** @see listSupportedCountries */
         @MustBeClosed
-        fun listSupportedCountries(
-            params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()
-        ): HttpResponseFor<List<CountryCode>> =
-            listSupportedCountries(params, RequestOptions.none())
+        fun listSupportedCountries(params: MiscListSupportedCountriesParams = MiscListSupportedCountriesParams.none()): HttpResponseFor<List<CountryCode>> =
+            listSupportedCountries(
+              params, RequestOptions.none()
+            )
 
         /** @see listSupportedCountries */
         @MustBeClosed
-        fun listSupportedCountries(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<List<CountryCode>> =
-            listSupportedCountries(MiscListSupportedCountriesParams.none(), requestOptions)
+        fun listSupportedCountries(requestOptions: RequestOptions): HttpResponseFor<List<CountryCode>> =
+            listSupportedCountries(
+              MiscListSupportedCountriesParams.none(), requestOptions
+            )
     }
 }

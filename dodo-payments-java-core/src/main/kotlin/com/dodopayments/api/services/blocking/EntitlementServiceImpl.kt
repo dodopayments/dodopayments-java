@@ -25,6 +25,8 @@ import com.dodopayments.api.models.entitlements.EntitlementListPageResponse
 import com.dodopayments.api.models.entitlements.EntitlementListParams
 import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
+import com.dodopayments.api.services.blocking.EntitlementService
+import com.dodopayments.api.services.blocking.EntitlementServiceImpl
 import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.dodopayments.api.services.blocking.entitlements.FileServiceImpl
 import com.dodopayments.api.services.blocking.entitlements.GrantService
@@ -32,12 +34,12 @@ import com.dodopayments.api.services.blocking.entitlements.GrantServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class EntitlementServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    EntitlementService {
+class EntitlementServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: EntitlementService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : EntitlementService {
+
+    private val withRawResponse: EntitlementService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
@@ -45,216 +47,199 @@ class EntitlementServiceImpl internal constructor(private val clientOptions: Cli
 
     override fun withRawResponse(): EntitlementService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService =
-        EntitlementServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService = EntitlementServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun files(): FileService = files
 
     override fun grants(): GrantService = grants
 
-    override fun create(
-        params: EntitlementCreateParams,
-        requestOptions: RequestOptions,
-    ): Entitlement =
+    override fun create(params: EntitlementCreateParams, requestOptions: RequestOptions): Entitlement =
         // post /entitlements
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun retrieve(
-        params: EntitlementRetrieveParams,
-        requestOptions: RequestOptions,
-    ): Entitlement =
+    override fun retrieve(params: EntitlementRetrieveParams, requestOptions: RequestOptions): Entitlement =
         // get /entitlements/{id}
         withRawResponse().retrieve(params, requestOptions).parse()
 
-    override fun update(
-        params: EntitlementUpdateParams,
-        requestOptions: RequestOptions,
-    ): Entitlement =
+    override fun update(params: EntitlementUpdateParams, requestOptions: RequestOptions): Entitlement =
         // patch /entitlements/{id}
         withRawResponse().update(params, requestOptions).parse()
 
-    override fun list(
-        params: EntitlementListParams,
-        requestOptions: RequestOptions,
-    ): EntitlementListPage =
+    override fun list(params: EntitlementListParams, requestOptions: RequestOptions): EntitlementListPage =
         // get /entitlements
         withRawResponse().list(params, requestOptions).parse()
 
     override fun delete(params: EntitlementDeleteParams, requestOptions: RequestOptions) {
-        // delete /entitlements/{id}
-        withRawResponse().delete(params, requestOptions)
+      // delete /entitlements/{id}
+      withRawResponse().delete(params, requestOptions)
     }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        EntitlementService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : EntitlementService.WithRawResponse {
 
-        private val files: FileService.WithRawResponse by lazy {
-            FileServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val grants: GrantService.WithRawResponse by lazy {
-            GrantServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val files: FileService.WithRawResponse by lazy { FileServiceImpl.WithRawResponseImpl(clientOptions) }
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): EntitlementService.WithRawResponse =
-            EntitlementServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val grants: GrantService.WithRawResponse by lazy { GrantServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService.WithRawResponse = EntitlementServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun files(): FileService.WithRawResponse = files
 
         override fun grants(): GrantService.WithRawResponse = grants
 
-        private val createHandler: Handler<Entitlement> =
-            jsonHandler<Entitlement>(clientOptions.jsonMapper)
+        private val createHandler: Handler<Entitlement> = jsonHandler<Entitlement>(clientOptions.jsonMapper)
 
-        override fun create(
-            params: EntitlementCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Entitlement> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun create(params: EntitlementCreateParams, requestOptions: RequestOptions): HttpResponseFor<Entitlement> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val retrieveHandler: Handler<Entitlement> =
-            jsonHandler<Entitlement>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<Entitlement> = jsonHandler<Entitlement>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: EntitlementRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Entitlement> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: EntitlementRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<Entitlement> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val updateHandler: Handler<Entitlement> =
-            jsonHandler<Entitlement>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Entitlement> = jsonHandler<Entitlement>(clientOptions.jsonMapper)
 
-        override fun update(
-            params: EntitlementUpdateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Entitlement> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.PATCH)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements", params._pathParam(0))
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { updateHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun update(params: EntitlementUpdateParams, requestOptions: RequestOptions): HttpResponseFor<Entitlement> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.PATCH)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0))
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  updateHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<EntitlementListPageResponse> =
-            jsonHandler<EntitlementListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<EntitlementListPageResponse> = jsonHandler<EntitlementListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: EntitlementListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<EntitlementListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        EntitlementListPage.builder()
-                            .service(EntitlementServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: EntitlementListParams, requestOptions: RequestOptions): HttpResponseFor<EntitlementListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  EntitlementListPage.builder()
+                      .service(EntitlementServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
-        override fun delete(
-            params: EntitlementDeleteParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements", params._pathParam(0))
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { deleteHandler.handle(it) }
-            }
+        override fun delete(params: EntitlementDeleteParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  deleteHandler.handle(it)
+              }
+          }
         }
     }
 }

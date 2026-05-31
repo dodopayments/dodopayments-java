@@ -4,6 +4,7 @@ package com.dodopayments.api.models.webhooks
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.webhooks.WebhookDetails
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -13,65 +14,52 @@ internal class WebhookDetailsTest {
 
     @Test
     fun create() {
-        val webhookDetails =
-            WebhookDetails.builder()
-                .id("id")
-                .createdAt("created_at")
-                .description("description")
-                .metadata(
-                    WebhookDetails.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .updatedAt("updated_at")
-                .url("url")
-                .disabled(true)
-                .addFilterType("string")
-                .rateLimit(0)
-                .build()
+      val webhookDetails = WebhookDetails.builder()
+          .id("id")
+          .createdAt("created_at")
+          .description("description")
+          .metadata(WebhookDetails.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .updatedAt("updated_at")
+          .url("url")
+          .disabled(true)
+          .addFilterType("string")
+          .rateLimit(0)
+          .build()
 
-        assertThat(webhookDetails.id()).isEqualTo("id")
-        assertThat(webhookDetails.createdAt()).isEqualTo("created_at")
-        assertThat(webhookDetails.description()).isEqualTo("description")
-        assertThat(webhookDetails.metadata())
-            .isEqualTo(
-                WebhookDetails.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(webhookDetails.updatedAt()).isEqualTo("updated_at")
-        assertThat(webhookDetails.url()).isEqualTo("url")
-        assertThat(webhookDetails.disabled()).contains(true)
-        assertThat(webhookDetails.filterTypes().getOrNull()).containsExactly("string")
-        assertThat(webhookDetails.rateLimit()).contains(0)
+      assertThat(webhookDetails.id()).isEqualTo("id")
+      assertThat(webhookDetails.createdAt()).isEqualTo("created_at")
+      assertThat(webhookDetails.description()).isEqualTo("description")
+      assertThat(webhookDetails.metadata()).isEqualTo(WebhookDetails.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(webhookDetails.updatedAt()).isEqualTo("updated_at")
+      assertThat(webhookDetails.url()).isEqualTo("url")
+      assertThat(webhookDetails.disabled()).contains(true)
+      assertThat(webhookDetails.filterTypes().getOrNull()).containsExactly("string")
+      assertThat(webhookDetails.rateLimit()).contains(0)
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val webhookDetails =
-            WebhookDetails.builder()
-                .id("id")
-                .createdAt("created_at")
-                .description("description")
-                .metadata(
-                    WebhookDetails.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .updatedAt("updated_at")
-                .url("url")
-                .disabled(true)
-                .addFilterType("string")
-                .rateLimit(0)
-                .build()
+      val jsonMapper = jsonMapper()
+      val webhookDetails = WebhookDetails.builder()
+          .id("id")
+          .createdAt("created_at")
+          .description("description")
+          .metadata(WebhookDetails.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .updatedAt("updated_at")
+          .url("url")
+          .disabled(true)
+          .addFilterType("string")
+          .rateLimit(0)
+          .build()
 
-        val roundtrippedWebhookDetails =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(webhookDetails),
-                jacksonTypeRef<WebhookDetails>(),
-            )
+      val roundtrippedWebhookDetails = jsonMapper.readValue(jsonMapper.writeValueAsString(webhookDetails), jacksonTypeRef<WebhookDetails>())
 
-        assertThat(roundtrippedWebhookDetails).isEqualTo(webhookDetails)
+      assertThat(roundtrippedWebhookDetails).isEqualTo(webhookDetails)
     }
 }

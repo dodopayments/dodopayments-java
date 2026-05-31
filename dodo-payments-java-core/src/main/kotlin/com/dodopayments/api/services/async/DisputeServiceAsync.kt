@@ -9,14 +9,13 @@ import com.dodopayments.api.models.disputes.DisputeListPageAsync
 import com.dodopayments.api.models.disputes.DisputeListParams
 import com.dodopayments.api.models.disputes.DisputeRetrieveParams
 import com.dodopayments.api.models.disputes.GetDispute
+import com.dodopayments.api.services.async.DisputeServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface DisputeServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -27,56 +26,61 @@ interface DisputeServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DisputeServiceAsync
 
     fun retrieve(disputeId: String): CompletableFuture<GetDispute> =
-        retrieve(disputeId, DisputeRetrieveParams.none())
+        retrieve(
+          disputeId, DisputeRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        disputeId: String,
-        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GetDispute> =
-        retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
+    fun retrieve(disputeId: String, params: DisputeRetrieveParams = DisputeRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<GetDispute> =
+        retrieve(
+          params.toBuilder()
+              .disputeId(disputeId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        disputeId: String,
-        params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-    ): CompletableFuture<GetDispute> = retrieve(disputeId, params, RequestOptions.none())
+    fun retrieve(disputeId: String, params: DisputeRetrieveParams = DisputeRetrieveParams.none()): CompletableFuture<GetDispute> =
+        retrieve(
+          disputeId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: DisputeRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<GetDispute>
+    fun retrieve(params: DisputeRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<GetDispute>
 
     /** @see retrieve */
     fun retrieve(params: DisputeRetrieveParams): CompletableFuture<GetDispute> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(disputeId: String, requestOptions: RequestOptions): CompletableFuture<GetDispute> =
-        retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
+        retrieve(
+          disputeId,
+          DisputeRetrieveParams.none(),
+          requestOptions,
+        )
 
     fun list(): CompletableFuture<DisputeListPageAsync> = list(DisputeListParams.none())
 
     /** @see list */
-    fun list(
-        params: DisputeListParams = DisputeListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DisputeListPageAsync>
+    fun list(params: DisputeListParams = DisputeListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<DisputeListPageAsync>
 
     /** @see list */
-    fun list(
-        params: DisputeListParams = DisputeListParams.none()
-    ): CompletableFuture<DisputeListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: DisputeListParams = DisputeListParams.none()): CompletableFuture<DisputeListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<DisputeListPageAsync> =
-        list(DisputeListParams.none(), requestOptions)
+        list(
+          DisputeListParams.none(), requestOptions
+        )
 
-    /**
-     * A view of [DisputeServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [DisputeServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -84,73 +88,63 @@ interface DisputeServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): DisputeServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): DisputeServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /disputes/{dispute_id}`, but is otherwise the same
-         * as [DisputeServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /disputes/{dispute_id}`, but is otherwise the             same as [DisputeServiceAsync.retrieve]. */
         fun retrieve(disputeId: String): CompletableFuture<HttpResponseFor<GetDispute>> =
-            retrieve(disputeId, DisputeRetrieveParams.none())
+            retrieve(
+              disputeId, DisputeRetrieveParams.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            disputeId: String,
-            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GetDispute>> =
-            retrieve(params.toBuilder().disputeId(disputeId).build(), requestOptions)
+        fun retrieve(disputeId: String, params: DisputeRetrieveParams = DisputeRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<GetDispute>> =
+            retrieve(
+              params.toBuilder()
+                  .disputeId(disputeId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            disputeId: String,
-            params: DisputeRetrieveParams = DisputeRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<GetDispute>> =
-            retrieve(disputeId, params, RequestOptions.none())
+        fun retrieve(disputeId: String, params: DisputeRetrieveParams = DisputeRetrieveParams.none()): CompletableFuture<HttpResponseFor<GetDispute>> =
+            retrieve(
+              disputeId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: DisputeRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<GetDispute>>
+        fun retrieve(params: DisputeRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<GetDispute>>
 
         /** @see retrieve */
-        fun retrieve(
-            params: DisputeRetrieveParams
-        ): CompletableFuture<HttpResponseFor<GetDispute>> = retrieve(params, RequestOptions.none())
+        fun retrieve(params: DisputeRetrieveParams): CompletableFuture<HttpResponseFor<GetDispute>> =
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            disputeId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<GetDispute>> =
-            retrieve(disputeId, DisputeRetrieveParams.none(), requestOptions)
+        fun retrieve(disputeId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<GetDispute>> =
+            retrieve(
+              disputeId,
+              DisputeRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /disputes`, but is otherwise the same as
-         * [DisputeServiceAsync.list].
-         */
-        fun list(): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
-            list(DisputeListParams.none())
+        /** Returns a raw HTTP response for `get /disputes`, but is otherwise the             same as [DisputeServiceAsync.list]. */
+        fun list(): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> = list(DisputeListParams.none())
 
         /** @see list */
-        fun list(
-            params: DisputeListParams = DisputeListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>>
+        fun list(params: DisputeListParams = DisputeListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<DisputeListPageAsync>>
 
         /** @see list */
-        fun list(
-            params: DisputeListParams = DisputeListParams.none()
-        ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: DisputeListParams = DisputeListParams.none()): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
-            list(DisputeListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<DisputeListPageAsync>> =
+            list(
+              DisputeListParams.none(), requestOptions
+            )
     }
 }

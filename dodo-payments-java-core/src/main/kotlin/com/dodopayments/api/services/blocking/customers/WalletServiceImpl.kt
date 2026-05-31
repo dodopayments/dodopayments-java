@@ -17,81 +17,73 @@ import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.customers.wallets.WalletListParams
 import com.dodopayments.api.models.customers.wallets.WalletListResponse
+import com.dodopayments.api.services.blocking.customers.WalletService
+import com.dodopayments.api.services.blocking.customers.WalletServiceImpl
 import com.dodopayments.api.services.blocking.customers.wallets.LedgerEntryService
 import com.dodopayments.api.services.blocking.customers.wallets.LedgerEntryServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class WalletServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    WalletService {
+class WalletServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: WalletService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : WalletService {
+
+    private val withRawResponse: WalletService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val ledgerEntries: LedgerEntryService by lazy { LedgerEntryServiceImpl(clientOptions) }
 
     override fun withRawResponse(): WalletService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WalletService =
-        WalletServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WalletService = WalletServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun ledgerEntries(): LedgerEntryService = ledgerEntries
 
-    override fun list(
-        params: WalletListParams,
-        requestOptions: RequestOptions,
-    ): WalletListResponse =
+    override fun list(params: WalletListParams, requestOptions: RequestOptions): WalletListResponse =
         // get /customers/{customer_id}/wallets
         withRawResponse().list(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        WalletService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : WalletService.WithRawResponse {
 
-        private val ledgerEntries: LedgerEntryService.WithRawResponse by lazy {
-            LedgerEntryServiceImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): WalletService.WithRawResponse =
-            WalletServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val ledgerEntries: LedgerEntryService.WithRawResponse by lazy { LedgerEntryServiceImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WalletService.WithRawResponse = WalletServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun ledgerEntries(): LedgerEntryService.WithRawResponse = ledgerEntries
 
-        private val listHandler: Handler<WalletListResponse> =
-            jsonHandler<WalletListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<WalletListResponse> = jsonHandler<WalletListResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: WalletListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<WalletListResponse> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("customerId", params.customerId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("customers", params._pathParam(0), "wallets")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun list(params: WalletListParams, requestOptions: RequestOptions): HttpResponseFor<WalletListResponse> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("customerId", params.customerId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("customers", params._pathParam(0), "wallets")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

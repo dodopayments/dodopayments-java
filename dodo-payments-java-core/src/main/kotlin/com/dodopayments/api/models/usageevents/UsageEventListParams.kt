@@ -21,8 +21,7 @@ import kotlin.jvm.optionals.getOrNull
  * ## Filtering Options:
  * - **Customer filtering**: Filter by specific customer ID
  * - **Event name filtering**: Filter by event type/name
- * - **Meter-based filtering**: Use a meter ID to apply the meter's event name and filter criteria
- *   automatically
+ * - **Meter-based filtering**: Use a meter ID to apply the meter's event name and filter criteria automatically
  * - **Time range filtering**: Filter events within a specific date range
  * - **Pagination**: Navigate through large result sets
  *
@@ -39,8 +38,7 @@ import kotlin.jvm.optionals.getOrNull
  * - Get events with meter filtering: `?meter_id=mtr_xyz789`
  * - Paginate results: `?page_size=50&page_number=2`
  */
-class UsageEventListParams
-private constructor(
+class UsageEventListParams private constructor(
     private val customerId: String?,
     private val end: OffsetDateTime?,
     private val eventName: String?,
@@ -50,6 +48,7 @@ private constructor(
     private val start: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /** Filter events by customer ID */
@@ -58,16 +57,10 @@ private constructor(
     /** Filter events created before this timestamp */
     fun end(): Optional<OffsetDateTime> = Optional.ofNullable(end)
 
-    /**
-     * Filter events by event name. If both event_name and meter_id are provided, they must match
-     * the meter's configured event_name
-     */
+    /** Filter events by event name. If both event_name and meter_id are provided, they must match the meter's configured event_name */
     fun eventName(): Optional<String> = Optional.ofNullable(eventName)
 
-    /**
-     * Filter events by meter ID. When provided, only events that match the meter's event_name and
-     * filter criteria will be returned
-     */
+    /** Filter events by meter ID. When provided, only events that match the meter's event_name and filter criteria will be returned */
     fun meterId(): Optional<String> = Optional.ofNullable(meterId)
 
     /** Page number (0-based, default: 0) */
@@ -89,10 +82,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): UsageEventListParams = builder().build()
+        @JvmStatic
+        fun none(): UsageEventListParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [UsageEventListParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [UsageEventListParams]. */
@@ -109,50 +104,60 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(usageEventListParams: UsageEventListParams) = apply {
-            customerId = usageEventListParams.customerId
-            end = usageEventListParams.end
-            eventName = usageEventListParams.eventName
-            meterId = usageEventListParams.meterId
-            pageNumber = usageEventListParams.pageNumber
-            pageSize = usageEventListParams.pageSize
-            start = usageEventListParams.start
-            additionalHeaders = usageEventListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = usageEventListParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(usageEventListParams: UsageEventListParams) =
+            apply {
+                customerId = usageEventListParams.customerId
+                end = usageEventListParams.end
+                eventName = usageEventListParams.eventName
+                meterId = usageEventListParams.meterId
+                pageNumber = usageEventListParams.pageNumber
+                pageSize = usageEventListParams.pageSize
+                start = usageEventListParams.start
+                additionalHeaders = usageEventListParams.additionalHeaders.toBuilder()
+                additionalQueryParams = usageEventListParams.additionalQueryParams.toBuilder()
+            }
 
         /** Filter events by customer ID */
-        fun customerId(customerId: String?) = apply { this.customerId = customerId }
+        fun customerId(customerId: String?) =
+            apply {
+                this.customerId = customerId
+            }
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
         /** Filter events created before this timestamp */
-        fun end(end: OffsetDateTime?) = apply { this.end = end }
+        fun end(end: OffsetDateTime?) =
+            apply {
+                this.end = end
+            }
 
         /** Alias for calling [Builder.end] with `end.orElse(null)`. */
         fun end(end: Optional<OffsetDateTime>) = end(end.getOrNull())
 
-        /**
-         * Filter events by event name. If both event_name and meter_id are provided, they must
-         * match the meter's configured event_name
-         */
-        fun eventName(eventName: String?) = apply { this.eventName = eventName }
+        /** Filter events by event name. If both event_name and meter_id are provided, they must match the meter's configured event_name */
+        fun eventName(eventName: String?) =
+            apply {
+                this.eventName = eventName
+            }
 
         /** Alias for calling [Builder.eventName] with `eventName.orElse(null)`. */
         fun eventName(eventName: Optional<String>) = eventName(eventName.getOrNull())
 
-        /**
-         * Filter events by meter ID. When provided, only events that match the meter's event_name
-         * and filter criteria will be returned
-         */
-        fun meterId(meterId: String?) = apply { this.meterId = meterId }
+        /** Filter events by meter ID. When provided, only events that match the meter's event_name and filter criteria will be returned */
+        fun meterId(meterId: String?) =
+            apply {
+                this.meterId = meterId
+            }
 
         /** Alias for calling [Builder.meterId] with `meterId.orElse(null)`. */
         fun meterId(meterId: Optional<String>) = meterId(meterId.getOrNull())
 
         /** Page number (0-based, default: 0) */
-        fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
+        fun pageNumber(pageNumber: Int?) =
+            apply {
+                this.pageNumber = pageNumber
+            }
 
         /**
          * Alias for [Builder.pageNumber].
@@ -165,7 +170,10 @@ private constructor(
         fun pageNumber(pageNumber: Optional<Int>) = pageNumber(pageNumber.getOrNull())
 
         /** Number of events to return per page (default: 10) */
-        fun pageSize(pageSize: Int?) = apply { this.pageSize = pageSize }
+        fun pageSize(pageSize: Int?) =
+            apply {
+                this.pageSize = pageSize
+            }
 
         /**
          * Alias for [Builder.pageSize].
@@ -178,108 +186,137 @@ private constructor(
         fun pageSize(pageSize: Optional<Int>) = pageSize(pageSize.getOrNull())
 
         /** Filter events created after this timestamp */
-        fun start(start: OffsetDateTime?) = apply { this.start = start }
+        fun start(start: OffsetDateTime?) =
+            apply {
+                this.start = start
+            }
 
         /** Alias for calling [Builder.start] with `start.orElse(null)`. */
         fun start(start: Optional<OffsetDateTime>) = start(start.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [UsageEventListParams].
@@ -288,15 +325,15 @@ private constructor(
          */
         fun build(): UsageEventListParams =
             UsageEventListParams(
-                customerId,
-                end,
-                eventName,
-                meterId,
-                pageNumber,
-                pageSize,
-                start,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              customerId,
+              end,
+              eventName,
+              meterId,
+              pageNumber,
+              pageSize,
+              start,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -317,35 +354,14 @@ private constructor(
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is UsageEventListParams &&
-            customerId == other.customerId &&
-            end == other.end &&
-            eventName == other.eventName &&
-            meterId == other.meterId &&
-            pageNumber == other.pageNumber &&
-            pageSize == other.pageSize &&
-            start == other.start &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is UsageEventListParams && customerId == other.customerId && end == other.end && eventName == other.eventName && meterId == other.meterId && pageNumber == other.pageNumber && pageSize == other.pageSize && start == other.start && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            customerId,
-            end,
-            eventName,
-            meterId,
-            pageNumber,
-            pageSize,
-            start,
-            additionalHeaders,
-            additionalQueryParams,
-        )
+    override fun hashCode(): Int = Objects.hash(customerId, end, eventName, meterId, pageNumber, pageSize, start, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "UsageEventListParams{customerId=$customerId, end=$end, eventName=$eventName, meterId=$meterId, pageNumber=$pageNumber, pageSize=$pageSize, start=$start, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "UsageEventListParams{customerId=$customerId, end=$end, eventName=$eventName, meterId=$meterId, pageNumber=$pageNumber, pageSize=$pageSize, start=$start, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -14,14 +14,13 @@ import com.dodopayments.api.models.discounts.DiscountListParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveByCodeParams
 import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
+import com.dodopayments.api.services.async.DiscountServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 interface DiscountServiceAsync {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -32,170 +31,196 @@ interface DiscountServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DiscountServiceAsync
 
     /**
-     * POST /discounts If `code` is omitted or empty, a random 16-char uppercase code is generated.
+     * POST /discounts
+     * If `code` is omitted or empty, a random 16-char uppercase code is generated.
      */
     fun create(params: DiscountCreateParams): CompletableFuture<Discount> =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: DiscountCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount>
+    fun create(params: DiscountCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount>
 
     /** GET /discounts/{discount_id} */
     fun retrieve(discountId: String): CompletableFuture<Discount> =
-        retrieve(discountId, DiscountRetrieveParams.none())
+        retrieve(
+          discountId, DiscountRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        discountId: String,
-        params: DiscountRetrieveParams = DiscountRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount> =
-        retrieve(params.toBuilder().discountId(discountId).build(), requestOptions)
+    fun retrieve(discountId: String, params: DiscountRetrieveParams = DiscountRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount> =
+        retrieve(
+          params.toBuilder()
+              .discountId(discountId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        discountId: String,
-        params: DiscountRetrieveParams = DiscountRetrieveParams.none(),
-    ): CompletableFuture<Discount> = retrieve(discountId, params, RequestOptions.none())
+    fun retrieve(discountId: String, params: DiscountRetrieveParams = DiscountRetrieveParams.none()): CompletableFuture<Discount> =
+        retrieve(
+          discountId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: DiscountRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount>
+    fun retrieve(params: DiscountRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount>
 
     /** @see retrieve */
     fun retrieve(params: DiscountRetrieveParams): CompletableFuture<Discount> =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(discountId: String, requestOptions: RequestOptions): CompletableFuture<Discount> =
-        retrieve(discountId, DiscountRetrieveParams.none(), requestOptions)
+        retrieve(
+          discountId,
+          DiscountRetrieveParams.none(),
+          requestOptions,
+        )
 
     /** PATCH /discounts/{discount_id} */
     fun update(discountId: String): CompletableFuture<Discount> =
-        update(discountId, DiscountUpdateParams.none())
+        update(
+          discountId, DiscountUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        discountId: String,
-        params: DiscountUpdateParams = DiscountUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount> =
-        update(params.toBuilder().discountId(discountId).build(), requestOptions)
+    fun update(discountId: String, params: DiscountUpdateParams = DiscountUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount> =
+        update(
+          params.toBuilder()
+              .discountId(discountId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(
-        discountId: String,
-        params: DiscountUpdateParams = DiscountUpdateParams.none(),
-    ): CompletableFuture<Discount> = update(discountId, params, RequestOptions.none())
+    fun update(discountId: String, params: DiscountUpdateParams = DiscountUpdateParams.none()): CompletableFuture<Discount> =
+        update(
+          discountId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        params: DiscountUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount>
+    fun update(params: DiscountUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount>
 
     /** @see update */
     fun update(params: DiscountUpdateParams): CompletableFuture<Discount> =
-        update(params, RequestOptions.none())
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(discountId: String, requestOptions: RequestOptions): CompletableFuture<Discount> =
-        update(discountId, DiscountUpdateParams.none(), requestOptions)
+        update(
+          discountId,
+          DiscountUpdateParams.none(),
+          requestOptions,
+        )
 
     /** GET /discounts */
     fun list(): CompletableFuture<DiscountListPageAsync> = list(DiscountListParams.none())
 
     /** @see list */
-    fun list(
-        params: DiscountListParams = DiscountListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<DiscountListPageAsync>
+    fun list(params: DiscountListParams = DiscountListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<DiscountListPageAsync>
 
     /** @see list */
-    fun list(
-        params: DiscountListParams = DiscountListParams.none()
-    ): CompletableFuture<DiscountListPageAsync> = list(params, RequestOptions.none())
+    fun list(params: DiscountListParams = DiscountListParams.none()): CompletableFuture<DiscountListPageAsync> =
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<DiscountListPageAsync> =
-        list(DiscountListParams.none(), requestOptions)
+        list(
+          DiscountListParams.none(), requestOptions
+        )
 
     /** DELETE /discounts/{discount_id} */
     fun delete(discountId: String): CompletableFuture<Void?> =
-        delete(discountId, DiscountDeleteParams.none())
+        delete(
+          discountId, DiscountDeleteParams.none()
+        )
 
     /** @see delete */
-    fun delete(
-        discountId: String,
-        params: DiscountDeleteParams = DiscountDeleteParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
-        delete(params.toBuilder().discountId(discountId).build(), requestOptions)
+    fun delete(discountId: String, params: DiscountDeleteParams = DiscountDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?> =
+        delete(
+          params.toBuilder()
+              .discountId(discountId)
+              .build(), requestOptions
+        )
 
     /** @see delete */
-    fun delete(
-        discountId: String,
-        params: DiscountDeleteParams = DiscountDeleteParams.none(),
-    ): CompletableFuture<Void?> = delete(discountId, params, RequestOptions.none())
+    fun delete(discountId: String, params: DiscountDeleteParams = DiscountDeleteParams.none()): CompletableFuture<Void?> =
+        delete(
+          discountId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see delete */
-    fun delete(
-        params: DiscountDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    fun delete(params: DiscountDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Void?>
 
     /** @see delete */
     fun delete(params: DiscountDeleteParams): CompletableFuture<Void?> =
-        delete(params, RequestOptions.none())
+        delete(
+          params, RequestOptions.none()
+        )
 
     /** @see delete */
     fun delete(discountId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
-        delete(discountId, DiscountDeleteParams.none(), requestOptions)
+        delete(
+          discountId,
+          DiscountDeleteParams.none(),
+          requestOptions,
+        )
 
     /**
-     * Validate and fetch a discount by its code name (e.g., "SAVE20"). This allows real-time
-     * validation directly against the API using the human-readable discount code instead of
-     * requiring the internal discount_id.
+     * Validate and fetch a discount by its code name (e.g., "SAVE20").
+     * This allows real-time validation directly against the API using the
+     * human-readable discount code instead of requiring the internal discount_id.
      */
     fun retrieveByCode(code: String): CompletableFuture<Discount> =
-        retrieveByCode(code, DiscountRetrieveByCodeParams.none())
+        retrieveByCode(
+          code, DiscountRetrieveByCodeParams.none()
+        )
 
     /** @see retrieveByCode */
-    fun retrieveByCode(
-        code: String,
-        params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount> =
-        retrieveByCode(params.toBuilder().code(code).build(), requestOptions)
+    fun retrieveByCode(code: String, params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount> =
+        retrieveByCode(
+          params.toBuilder()
+              .code(code)
+              .build(), requestOptions
+        )
 
     /** @see retrieveByCode */
-    fun retrieveByCode(
-        code: String,
-        params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
-    ): CompletableFuture<Discount> = retrieveByCode(code, params, RequestOptions.none())
+    fun retrieveByCode(code: String, params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none()): CompletableFuture<Discount> =
+        retrieveByCode(
+          code,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieveByCode */
-    fun retrieveByCode(
-        params: DiscountRetrieveByCodeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Discount>
+    fun retrieveByCode(params: DiscountRetrieveByCodeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<Discount>
 
     /** @see retrieveByCode */
     fun retrieveByCode(params: DiscountRetrieveByCodeParams): CompletableFuture<Discount> =
-        retrieveByCode(params, RequestOptions.none())
+        retrieveByCode(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieveByCode */
     fun retrieveByCode(code: String, requestOptions: RequestOptions): CompletableFuture<Discount> =
-        retrieveByCode(code, DiscountRetrieveByCodeParams.none(), requestOptions)
+        retrieveByCode(
+          code,
+          DiscountRetrieveByCodeParams.none(),
+          requestOptions,
+        )
 
-    /**
-     * A view of [DiscountServiceAsync] that provides access to raw HTTP responses for each method.
-     */
+    /** A view of [DiscountServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -203,203 +228,189 @@ interface DiscountServiceAsync {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): DiscountServiceAsync.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): DiscountServiceAsync.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /discounts`, but is otherwise the same as
-         * [DiscountServiceAsync.create].
-         */
+        /** Returns a raw HTTP response for `post /discounts`, but is otherwise the             same as [DiscountServiceAsync.create]. */
         fun create(params: DiscountCreateParams): CompletableFuture<HttpResponseFor<Discount>> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
-        fun create(
-            params: DiscountCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>>
+        fun create(params: DiscountCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>>
 
-        /**
-         * Returns a raw HTTP response for `get /discounts/{discount_id}`, but is otherwise the same
-         * as [DiscountServiceAsync.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /discounts/{discount_id}`, but is otherwise the             same as [DiscountServiceAsync.retrieve]. */
         fun retrieve(discountId: String): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieve(discountId, DiscountRetrieveParams.none())
+            retrieve(
+              discountId, DiscountRetrieveParams.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            discountId: String,
-            params: DiscountRetrieveParams = DiscountRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieve(params.toBuilder().discountId(discountId).build(), requestOptions)
+        fun retrieve(discountId: String, params: DiscountRetrieveParams = DiscountRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieve(
+              params.toBuilder()
+                  .discountId(discountId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            discountId: String,
-            params: DiscountRetrieveParams = DiscountRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieve(discountId, params, RequestOptions.none())
+        fun retrieve(discountId: String, params: DiscountRetrieveParams = DiscountRetrieveParams.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieve(
+              discountId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            params: DiscountRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>>
+        fun retrieve(params: DiscountRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>>
 
         /** @see retrieve */
         fun retrieve(params: DiscountRetrieveParams): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
-        fun retrieve(
-            discountId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieve(discountId, DiscountRetrieveParams.none(), requestOptions)
+        fun retrieve(discountId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieve(
+              discountId,
+              DiscountRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /discounts/{discount_id}`, but is otherwise the
-         * same as [DiscountServiceAsync.update].
-         */
+        /** Returns a raw HTTP response for `patch /discounts/{discount_id}`, but is otherwise the             same as [DiscountServiceAsync.update]. */
         fun update(discountId: String): CompletableFuture<HttpResponseFor<Discount>> =
-            update(discountId, DiscountUpdateParams.none())
+            update(
+              discountId, DiscountUpdateParams.none()
+            )
 
         /** @see update */
-        fun update(
-            discountId: String,
-            params: DiscountUpdateParams = DiscountUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            update(params.toBuilder().discountId(discountId).build(), requestOptions)
+        fun update(discountId: String, params: DiscountUpdateParams = DiscountUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            update(
+              params.toBuilder()
+                  .discountId(discountId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
-        fun update(
-            discountId: String,
-            params: DiscountUpdateParams = DiscountUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            update(discountId, params, RequestOptions.none())
+        fun update(discountId: String, params: DiscountUpdateParams = DiscountUpdateParams.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            update(
+              discountId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
-        fun update(
-            params: DiscountUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>>
+        fun update(params: DiscountUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>>
 
         /** @see update */
         fun update(params: DiscountUpdateParams): CompletableFuture<HttpResponseFor<Discount>> =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
-        fun update(
-            discountId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            update(discountId, DiscountUpdateParams.none(), requestOptions)
+        fun update(discountId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Discount>> =
+            update(
+              discountId,
+              DiscountUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /discounts`, but is otherwise the same as
-         * [DiscountServiceAsync.list].
-         */
-        fun list(): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> =
-            list(DiscountListParams.none())
+        /** Returns a raw HTTP response for `get /discounts`, but is otherwise the             same as [DiscountServiceAsync.list]. */
+        fun list(): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> = list(DiscountListParams.none())
 
         /** @see list */
-        fun list(
-            params: DiscountListParams = DiscountListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<DiscountListPageAsync>>
+        fun list(params: DiscountListParams = DiscountListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<DiscountListPageAsync>>
 
         /** @see list */
-        fun list(
-            params: DiscountListParams = DiscountListParams.none()
-        ): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> =
-            list(params, RequestOptions.none())
+        fun list(params: DiscountListParams = DiscountListParams.none()): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> =
-            list(DiscountListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<DiscountListPageAsync>> =
+            list(
+              DiscountListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /discounts/{discount_id}`, but is otherwise the
-         * same as [DiscountServiceAsync.delete].
-         */
+        /** Returns a raw HTTP response for `delete /discounts/{discount_id}`, but is otherwise the             same as [DiscountServiceAsync.delete]. */
         fun delete(discountId: String): CompletableFuture<HttpResponse> =
-            delete(discountId, DiscountDeleteParams.none())
+            delete(
+              discountId, DiscountDeleteParams.none()
+            )
 
         /** @see delete */
-        fun delete(
-            discountId: String,
-            params: DiscountDeleteParams = DiscountDeleteParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
-            delete(params.toBuilder().discountId(discountId).build(), requestOptions)
+        fun delete(discountId: String, params: DiscountDeleteParams = DiscountDeleteParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse> =
+            delete(
+              params.toBuilder()
+                  .discountId(discountId)
+                  .build(), requestOptions
+            )
 
         /** @see delete */
-        fun delete(
-            discountId: String,
-            params: DiscountDeleteParams = DiscountDeleteParams.none(),
-        ): CompletableFuture<HttpResponse> = delete(discountId, params, RequestOptions.none())
+        fun delete(discountId: String, params: DiscountDeleteParams = DiscountDeleteParams.none()): CompletableFuture<HttpResponse> =
+            delete(
+              discountId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see delete */
-        fun delete(
-            params: DiscountDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        fun delete(params: DiscountDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponse>
 
         /** @see delete */
         fun delete(params: DiscountDeleteParams): CompletableFuture<HttpResponse> =
-            delete(params, RequestOptions.none())
+            delete(
+              params, RequestOptions.none()
+            )
 
         /** @see delete */
-        fun delete(
-            discountId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> =
-            delete(discountId, DiscountDeleteParams.none(), requestOptions)
+        fun delete(discountId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            delete(
+              discountId,
+              DiscountDeleteParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /discounts/code/{code}`, but is otherwise the same
-         * as [DiscountServiceAsync.retrieveByCode].
-         */
+        /** Returns a raw HTTP response for `get /discounts/code/{code}`, but is otherwise the             same as [DiscountServiceAsync.retrieveByCode]. */
         fun retrieveByCode(code: String): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieveByCode(code, DiscountRetrieveByCodeParams.none())
+            retrieveByCode(
+              code, DiscountRetrieveByCodeParams.none()
+            )
 
         /** @see retrieveByCode */
-        fun retrieveByCode(
-            code: String,
-            params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieveByCode(params.toBuilder().code(code).build(), requestOptions)
+        fun retrieveByCode(code: String, params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(
+              params.toBuilder()
+                  .code(code)
+                  .build(), requestOptions
+            )
 
         /** @see retrieveByCode */
-        fun retrieveByCode(
-            code: String,
-            params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieveByCode(code, params, RequestOptions.none())
+        fun retrieveByCode(code: String, params: DiscountRetrieveByCodeParams = DiscountRetrieveByCodeParams.none()): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(
+              code,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieveByCode */
-        fun retrieveByCode(
-            params: DiscountRetrieveByCodeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<Discount>>
+        fun retrieveByCode(params: DiscountRetrieveByCodeParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<Discount>>
 
         /** @see retrieveByCode */
-        fun retrieveByCode(
-            params: DiscountRetrieveByCodeParams
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieveByCode(params, RequestOptions.none())
+        fun retrieveByCode(params: DiscountRetrieveByCodeParams): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieveByCode */
-        fun retrieveByCode(
-            code: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<Discount>> =
-            retrieveByCode(code, DiscountRetrieveByCodeParams.none(), requestOptions)
+        fun retrieveByCode(code: String, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<Discount>> =
+            retrieveByCode(
+              code,
+              DiscountRetrieveByCodeParams.none(),
+              requestOptions,
+            )
     }
 }

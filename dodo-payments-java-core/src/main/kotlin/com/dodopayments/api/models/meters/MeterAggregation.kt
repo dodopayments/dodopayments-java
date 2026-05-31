@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.meters.MeterAggregation
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -18,33 +19,34 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class MeterAggregation
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class MeterAggregation @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val type: JsonField<Type>,
     private val key: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-        @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
-    ) : this(type, key, mutableMapOf())
+        @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of()
+    ) : this(
+      type,
+      key,
+      mutableMapOf(),
+    )
 
     /**
      * Aggregation type for the meter
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun type(): Type = type.getRequired("type")
 
     /**
      * Required when type is not COUNT
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun key(): Optional<String> = key.getOptional("key")
 
@@ -53,24 +55,27 @@ private constructor(
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+    @JsonProperty("type")
+    @ExcludeMissing
+    fun _type(): JsonField<Type> = type
 
     /**
      * Returns the raw JSON value of [key].
      *
      * Unlike [key], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("key") @ExcludeMissing fun _key(): JsonField<String> = key
+    @JsonProperty("key")
+    @ExcludeMissing
+    fun _key(): JsonField<String> = key
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -80,11 +85,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [MeterAggregation].
          *
          * The following fields are required:
+         *
          * ```java
          * .type()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [MeterAggregation]. */
@@ -95,11 +102,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(meterAggregation: MeterAggregation) = apply {
-            type = meterAggregation.type
-            key = meterAggregation.key
-            additionalProperties = meterAggregation.additionalProperties.toMutableMap()
-        }
+        internal fun from(meterAggregation: MeterAggregation) =
+            apply {
+                type = meterAggregation.type
+                key = meterAggregation.key
+                additionalProperties = meterAggregation.additionalProperties.toMutableMap()
+            }
 
         /** Aggregation type for the meter */
         fun type(type: Type) = type(JsonField.of(type))
@@ -107,10 +115,13 @@ private constructor(
         /**
          * Sets [Builder.type] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.type] with a well-typed [Type] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonField<Type>) =
+            apply {
+                this.type = type
+            }
 
         /** Required when type is not COUNT */
         fun key(key: String?) = key(JsonField.ofNullable(key))
@@ -121,29 +132,39 @@ private constructor(
         /**
          * Sets [Builder.key] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.key] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.key] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun key(key: JsonField<String>) = apply { this.key = key }
+        fun key(key: JsonField<String>) =
+            apply {
+                this.key = key
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [MeterAggregation].
@@ -151,6 +172,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .type()
          * ```
@@ -158,7 +180,13 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): MeterAggregation =
-            MeterAggregation(checkRequired("type", type), key, additionalProperties.toMutableMap())
+            MeterAggregation(
+              checkRequired(
+                "type", type
+              ),
+              key,
+              additionalProperties.toMutableMap(),
+            )
     }
 
     private var validated: Boolean = false
@@ -171,15 +199,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): MeterAggregation = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): MeterAggregation =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        type().validate()
-        key()
-        validated = true
-    }
+            type().validate()
+            key()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -195,21 +224,23 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (type.asKnown().getOrNull()?.validity() ?: 0) + (if (key.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0) + (if (key.asKnown().isPresent) 1 else 0)
 
     /** Aggregation type for the meter */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class Type @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -236,9 +267,11 @@ private constructor(
          * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -251,11 +284,11 @@ private constructor(
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -269,11 +302,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -287,36 +319,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Type =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -327,19 +356,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Type && value == other.value
+          return other is Type && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -348,20 +377,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is MeterAggregation &&
-            type == other.type &&
-            key == other.key &&
-            additionalProperties == other.additionalProperties
+      return other is MeterAggregation && type == other.type && key == other.key && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(type, key, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "MeterAggregation{type=$type, key=$key, additionalProperties=$additionalProperties}"
+    override fun toString() = "MeterAggregation{type=$type, key=$key, additionalProperties=$additionalProperties}"
 }

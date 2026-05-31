@@ -5,17 +5,21 @@ package com.dodopayments.api.models.entitlements
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.entitlements.Entitlement
+import com.dodopayments.api.models.entitlements.EntitlementListPageResponse
+import com.dodopayments.api.models.entitlements.EntitlementListParams
 import com.dodopayments.api.services.blocking.EntitlementService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see EntitlementService.list */
-class EntitlementListPage
-private constructor(
+class EntitlementListPage private constructor(
     private val service: EntitlementService,
     private val params: EntitlementListParams,
     private val response: EntitlementListPageResponse,
+
 ) : Page<Entitlement> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see EntitlementListPageResponse.items
      */
-    override fun items(): List<Entitlement> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Entitlement> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): EntitlementListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): EntitlementListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [EntitlementListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [EntitlementListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: EntitlementListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(entitlementListPage: EntitlementListPage) = apply {
-            service = entitlementListPage.service
-            params = entitlementListPage.params
-            response = entitlementListPage.response
-        }
+        internal fun from(entitlementListPage: EntitlementListPage) =
+            apply {
+                service = entitlementListPage.service
+                params = entitlementListPage.params
+                response = entitlementListPage.response
+            }
 
-        fun service(service: EntitlementService) = apply { this.service = service }
+        fun service(service: EntitlementService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: EntitlementListParams) = apply { this.params = params }
+        fun params(params: EntitlementListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: EntitlementListPageResponse) = apply { this.response = response }
+        fun response(response: EntitlementListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [EntitlementListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): EntitlementListPage =
             EntitlementListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is EntitlementListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is EntitlementListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "EntitlementListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "EntitlementListPage{service=$service, params=$params, response=$response}"
 }

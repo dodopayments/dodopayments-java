@@ -17,73 +17,60 @@ internal class GroupServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val groupServiceAsync = client.productCollections().groups()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val groupServiceAsync = client.productCollections().groups()
 
-        val productCollectionGroupResponseFuture =
-            groupServiceAsync.create(
-                GroupCreateParams.builder()
-                    .id("id")
-                    .productCollectionGroupDetails(
-                        ProductCollectionGroupDetails.builder()
-                            .addProduct(
-                                GroupProduct.builder().productId("product_id").status(true).build()
-                            )
-                            .groupName("group_name")
-                            .status(true)
-                            .build()
-                    )
-                    .build()
-            )
+      val productCollectionGroupResponseFuture = groupServiceAsync.create(GroupCreateParams.builder()
+          .id("id")
+          .productCollectionGroupDetails(ProductCollectionGroupDetails.builder()
+              .addProduct(GroupProduct.builder()
+                  .productId("product_id")
+                  .status(true)
+                  .build())
+              .groupName("group_name")
+              .status(true)
+              .build())
+          .build())
 
-        val productCollectionGroupResponse = productCollectionGroupResponseFuture.get()
-        productCollectionGroupResponse.validate()
+      val productCollectionGroupResponse = productCollectionGroupResponseFuture.get()
+      productCollectionGroupResponse.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val groupServiceAsync = client.productCollections().groups()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val groupServiceAsync = client.productCollections().groups()
 
-        val future =
-            groupServiceAsync.update(
-                GroupUpdateParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .groupName("group_name")
-                    .addProductOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .status(true)
-                    .build()
-            )
+      val future = groupServiceAsync.update(GroupUpdateParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .groupName("group_name")
+          .addProductOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .status(true)
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val groupServiceAsync = client.productCollections().groups()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val groupServiceAsync = client.productCollections().groups()
 
-        val future =
-            groupServiceAsync.delete(
-                GroupDeleteParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .build()
-            )
+      val future = groupServiceAsync.delete(GroupDeleteParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 }

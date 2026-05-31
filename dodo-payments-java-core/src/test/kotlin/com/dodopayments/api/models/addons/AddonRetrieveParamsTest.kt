@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.addons
 
+import com.dodopayments.api.models.addons.AddonRetrieveParams
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -9,15 +10,19 @@ internal class AddonRetrieveParamsTest {
 
     @Test
     fun create() {
-        AddonRetrieveParams.builder().id("id").build()
+      AddonRetrieveParams.builder()
+          .id("id")
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = AddonRetrieveParams.builder().id("id").build()
+      val params = AddonRetrieveParams.builder()
+          .id("id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 }

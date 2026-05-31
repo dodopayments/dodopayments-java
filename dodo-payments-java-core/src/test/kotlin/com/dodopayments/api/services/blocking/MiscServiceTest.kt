@@ -4,6 +4,7 @@ package com.dodopayments.api.services.blocking
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
+import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -12,15 +13,14 @@ internal class MiscServiceTest {
 
     @Test
     fun listSupportedCountries() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val miscService = client.misc()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val miscService = client.misc()
 
-        val countryCodes = miscService.listSupportedCountries()
+      val countryCodes = miscService.listSupportedCountries()
 
-        countryCodes.forEach { it.validate() }
+      countryCodes.forEach { it.validate() }
     }
 }

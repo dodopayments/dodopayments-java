@@ -11,13 +11,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class ProductCollectionUpdateImagesParams
-private constructor(
+class ProductCollectionUpdateImagesParams private constructor(
     private val id: String?,
     private val forceUpdate: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
+
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
@@ -38,13 +38,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ProductCollectionUpdateImagesParams = builder().build()
+        @JvmStatic
+        fun none(): ProductCollectionUpdateImagesParams = builder().build()
 
-        /**
-         * Returns a mutable builder for constructing an instance of
-         * [ProductCollectionUpdateImagesParams].
-         */
-        @JvmStatic fun builder() = Builder()
+        /** Returns a mutable builder for constructing an instance of [ProductCollectionUpdateImagesParams]. */
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionUpdateImagesParams]. */
@@ -57,25 +56,28 @@ private constructor(
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            productCollectionUpdateImagesParams: ProductCollectionUpdateImagesParams
-        ) = apply {
-            id = productCollectionUpdateImagesParams.id
-            forceUpdate = productCollectionUpdateImagesParams.forceUpdate
-            additionalHeaders = productCollectionUpdateImagesParams.additionalHeaders.toBuilder()
-            additionalQueryParams =
-                productCollectionUpdateImagesParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties =
-                productCollectionUpdateImagesParams.additionalBodyProperties.toMutableMap()
-        }
+        internal fun from(productCollectionUpdateImagesParams: ProductCollectionUpdateImagesParams) =
+            apply {
+                id = productCollectionUpdateImagesParams.id
+                forceUpdate = productCollectionUpdateImagesParams.forceUpdate
+                additionalHeaders = productCollectionUpdateImagesParams.additionalHeaders.toBuilder()
+                additionalQueryParams = productCollectionUpdateImagesParams.additionalQueryParams.toBuilder()
+                additionalBodyProperties = productCollectionUpdateImagesParams.additionalBodyProperties.toMutableMap()
+            }
 
-        fun id(id: String?) = apply { this.id = id }
+        fun id(id: String?) =
+            apply {
+                this.id = id
+            }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** If true, generates a new image ID to force cache invalidation */
-        fun forceUpdate(forceUpdate: Boolean?) = apply { this.forceUpdate = forceUpdate }
+        fun forceUpdate(forceUpdate: Boolean?) =
+            apply {
+                this.forceUpdate = forceUpdate
+            }
 
         /**
          * Alias for [Builder.forceUpdate].
@@ -87,125 +89,155 @@ private constructor(
         /** Alias for calling [Builder.forceUpdate] with `forceUpdate.orElse(null)`. */
         fun forceUpdate(forceUpdate: Optional<Boolean>) = forceUpdate(forceUpdate.getOrNull())
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalBodyProperties.clear()
+                putAllAdditionalBodyProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                additionalBodyProperties.put(key, value)
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 this.additionalBodyProperties.putAll(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                additionalBodyProperties.remove(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalBodyProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionUpdateImagesParams].
@@ -214,16 +246,15 @@ private constructor(
          */
         fun build(): ProductCollectionUpdateImagesParams =
             ProductCollectionUpdateImagesParams(
-                id,
-                forceUpdate,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
+              id,
+              forceUpdate,
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
+              additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+    fun _body(): Optional<Map<String, JsonValue>> = Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -242,27 +273,14 @@ private constructor(
             .build()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionUpdateImagesParams &&
-            id == other.id &&
-            forceUpdate == other.forceUpdate &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+      return other is ProductCollectionUpdateImagesParams && id == other.id && forceUpdate == other.forceUpdate && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(
-            id,
-            forceUpdate,
-            additionalHeaders,
-            additionalQueryParams,
-            additionalBodyProperties,
-        )
+    override fun hashCode(): Int = Objects.hash(id, forceUpdate, additionalHeaders, additionalQueryParams, additionalBodyProperties)
 
-    override fun toString() =
-        "ProductCollectionUpdateImagesParams{id=$id, forceUpdate=$forceUpdate, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+    override fun toString() = "ProductCollectionUpdateImagesParams{id=$id, forceUpdate=$forceUpdate, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

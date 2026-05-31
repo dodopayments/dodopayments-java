@@ -15,22 +15,20 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 
-class CustomerPortalSession
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomerPortalSession @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val link: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("link") @ExcludeMissing link: JsonField<String> = JsonMissing.of()
-    ) : this(link, mutableMapOf())
+    ) : this(
+      link, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun link(): String = link.getRequired("link")
 
     /**
@@ -38,17 +36,18 @@ private constructor(
      *
      * Unlike [link], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("link") @ExcludeMissing fun _link(): JsonField<String> = link
+    @JsonProperty("link")
+    @ExcludeMissing
+    fun _link(): JsonField<String> = link
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -58,11 +57,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [CustomerPortalSession].
          *
          * The following fields are required:
+         *
          * ```java
          * .link()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerPortalSession]. */
@@ -72,39 +73,50 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(customerPortalSession: CustomerPortalSession) = apply {
-            link = customerPortalSession.link
-            additionalProperties = customerPortalSession.additionalProperties.toMutableMap()
-        }
+        internal fun from(customerPortalSession: CustomerPortalSession) =
+            apply {
+                link = customerPortalSession.link
+                additionalProperties = customerPortalSession.additionalProperties.toMutableMap()
+            }
 
         fun link(link: String) = link(JsonField.of(link))
 
         /**
          * Sets [Builder.link] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.link] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.link] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun link(link: JsonField<String>) = apply { this.link = link }
+        fun link(link: JsonField<String>) =
+            apply {
+                this.link = link
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomerPortalSession].
@@ -112,6 +124,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .link()
          * ```
@@ -119,7 +132,11 @@ private constructor(
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): CustomerPortalSession =
-            CustomerPortalSession(checkRequired("link", link), additionalProperties.toMutableMap())
+            CustomerPortalSession(
+              checkRequired(
+                "link", link
+              ), additionalProperties.toMutableMap()
+            )
     }
 
     private var validated: Boolean = false
@@ -132,14 +149,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomerPortalSession = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomerPortalSession =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        link()
-        validated = true
-    }
+            link()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -154,22 +172,20 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (link.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int = (if (link.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerPortalSession &&
-            link == other.link &&
-            additionalProperties == other.additionalProperties
+      return other is CustomerPortalSession && link == other.link && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(link, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomerPortalSession{link=$link, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomerPortalSession{link=$link, additionalProperties=$additionalProperties}"
 }

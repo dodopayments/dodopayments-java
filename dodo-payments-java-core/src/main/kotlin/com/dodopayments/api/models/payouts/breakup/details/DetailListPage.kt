@@ -5,17 +5,21 @@ package com.dodopayments.api.models.payouts.breakup.details
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.payouts.breakup.details.DetailListPageResponse
+import com.dodopayments.api.models.payouts.breakup.details.DetailListParams
+import com.dodopayments.api.models.payouts.breakup.details.DetailListResponse
 import com.dodopayments.api.services.blocking.payouts.breakup.DetailService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see DetailService.list */
-class DetailListPage
-private constructor(
+class DetailListPage private constructor(
     private val service: DetailService,
     private val params: DetailListParams,
     private val response: DetailListPageResponse,
+
 ) : Page<DetailListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see DetailListPageResponse.items
      */
-    override fun items(): List<DetailListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<DetailListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): DetailListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): DetailListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DetailListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DetailListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: DetailListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(detailListPage: DetailListPage) = apply {
-            service = detailListPage.service
-            params = detailListPage.params
-            response = detailListPage.response
-        }
+        internal fun from(detailListPage: DetailListPage) =
+            apply {
+                service = detailListPage.service
+                params = detailListPage.params
+                response = detailListPage.response
+            }
 
-        fun service(service: DetailService) = apply { this.service = service }
+        fun service(service: DetailService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: DetailListParams) = apply { this.params = params }
+        fun params(params: DetailListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: DetailListPageResponse) = apply { this.response = response }
+        fun response(response: DetailListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [DetailListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,21 +116,24 @@ private constructor(
          */
         fun build(): DetailListPage =
             DetailListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DetailListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is DetailListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)

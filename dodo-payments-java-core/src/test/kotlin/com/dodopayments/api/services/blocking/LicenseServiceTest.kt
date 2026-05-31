@@ -15,55 +15,47 @@ internal class LicenseServiceTest {
 
     @Test
     fun activate() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseService = client.licenses()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseService = client.licenses()
 
-        val response =
-            licenseService.activate(
-                LicenseActivateParams.builder().licenseKey("license_key").name("name").build()
-            )
+      val response = licenseService.activate(LicenseActivateParams.builder()
+          .licenseKey("license_key")
+          .name("name")
+          .build())
 
-        response.validate()
+      response.validate()
     }
 
     @Test
     fun deactivate() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseService = client.licenses()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseService = client.licenses()
 
-        licenseService.deactivate(
-            LicenseDeactivateParams.builder()
-                .licenseKey("license_key")
-                .licenseKeyInstanceId("license_key_instance_id")
-                .build()
-        )
+      licenseService.deactivate(LicenseDeactivateParams.builder()
+          .licenseKey("license_key")
+          .licenseKeyInstanceId("license_key_instance_id")
+          .build())
     }
 
     @Test
     fun validate() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val licenseService = client.licenses()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val licenseService = client.licenses()
 
-        val response =
-            licenseService.validate(
-                LicenseValidateParams.builder()
-                    .licenseKey("2b1f8e2d-c41e-4e8f-b2d3-d9fd61c38f43")
-                    .licenseKeyInstanceId("lki_123")
-                    .build()
-            )
+      val response = licenseService.validate(LicenseValidateParams.builder()
+          .licenseKey("2b1f8e2d-c41e-4e8f-b2d3-d9fd61c38f43")
+          .licenseKeyInstanceId("lki_123")
+          .build())
 
-        response.validate()
+      response.validate()
     }
 }

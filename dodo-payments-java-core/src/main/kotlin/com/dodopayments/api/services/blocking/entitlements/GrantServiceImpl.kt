@@ -21,116 +21,105 @@ import com.dodopayments.api.models.entitlements.grants.GrantListPage
 import com.dodopayments.api.models.entitlements.grants.GrantListPageResponse
 import com.dodopayments.api.models.entitlements.grants.GrantListParams
 import com.dodopayments.api.models.entitlements.grants.GrantRevokeParams
+import com.dodopayments.api.services.blocking.entitlements.GrantService
+import com.dodopayments.api.services.blocking.entitlements.GrantServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class GrantServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    GrantService {
+class GrantServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: GrantService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : GrantService {
+
+    private val withRawResponse: GrantService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): GrantService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantService =
-        GrantServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantService = GrantServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun list(params: GrantListParams, requestOptions: RequestOptions): GrantListPage =
         // get /entitlements/{id}/grants
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun revoke(
-        params: GrantRevokeParams,
-        requestOptions: RequestOptions,
-    ): EntitlementGrant =
+    override fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions): EntitlementGrant =
         // delete /entitlements/{id}/grants/{grant_id}
         withRawResponse().revoke(params, requestOptions).parse()
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        GrantService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : GrantService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): GrantService.WithRawResponse =
-            GrantServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): GrantService.WithRawResponse = GrantServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val listHandler: Handler<GrantListPageResponse> = jsonHandler<GrantListPageResponse>(clientOptions.jsonMapper)
+
+        override fun list(params: GrantListParams, requestOptions: RequestOptions): HttpResponseFor<GrantListPage> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0), "grants")
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        private val listHandler: Handler<GrantListPageResponse> =
-            jsonHandler<GrantListPageResponse>(clientOptions.jsonMapper)
-
-        override fun list(
-            params: GrantListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<GrantListPage> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("entitlements", params._pathParam(0), "grants")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        GrantListPage.builder()
-                            .service(GrantServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  GrantListPage.builder()
+                      .service(GrantServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
-        private val revokeHandler: Handler<EntitlementGrant> =
-            jsonHandler<EntitlementGrant>(clientOptions.jsonMapper)
+        private val revokeHandler: Handler<EntitlementGrant> = jsonHandler<EntitlementGrant>(clientOptions.jsonMapper)
 
-        override fun revoke(
-            params: GrantRevokeParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<EntitlementGrant> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("grantId", params.grantId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "entitlements",
-                        params._pathParam(0),
-                        "grants",
-                        params._pathParam(1),
-                    )
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { revokeHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun revoke(params: GrantRevokeParams, requestOptions: RequestOptions): HttpResponseFor<EntitlementGrant> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("grantId", params.grantId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("entitlements", params._pathParam(0), "grants", params._pathParam(1))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  revokeHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
     }
 }

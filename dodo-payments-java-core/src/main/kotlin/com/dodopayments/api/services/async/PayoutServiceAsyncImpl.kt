@@ -14,92 +14,82 @@ import com.dodopayments.api.core.http.HttpResponse.Handler
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
+import com.dodopayments.api.models.payouts.PayoutListPage
 import com.dodopayments.api.models.payouts.PayoutListPageAsync
 import com.dodopayments.api.models.payouts.PayoutListPageResponse
 import com.dodopayments.api.models.payouts.PayoutListParams
+import com.dodopayments.api.services.async.PayoutServiceAsync
+import com.dodopayments.api.services.async.PayoutServiceAsyncImpl
 import com.dodopayments.api.services.async.payouts.BreakupServiceAsync
 import com.dodopayments.api.services.async.payouts.BreakupServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-class PayoutServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    PayoutServiceAsync {
+class PayoutServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: PayoutServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : PayoutServiceAsync {
+
+    private val withRawResponse: PayoutServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     private val breakup: BreakupServiceAsync by lazy { BreakupServiceAsyncImpl(clientOptions) }
 
     override fun withRawResponse(): PayoutServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync =
-        PayoutServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync = PayoutServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun breakup(): BreakupServiceAsync = breakup
 
-    override fun list(
-        params: PayoutListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<PayoutListPageAsync> =
+    override fun list(params: PayoutListParams, requestOptions: RequestOptions): CompletableFuture<PayoutListPageAsync> =
         // get /payouts
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        PayoutServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : PayoutServiceAsync.WithRawResponse {
 
-        private val breakup: BreakupServiceAsync.WithRawResponse by lazy {
-            BreakupServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): PayoutServiceAsync.WithRawResponse =
-            PayoutServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val breakup: BreakupServiceAsync.WithRawResponse by lazy { BreakupServiceAsyncImpl.WithRawResponseImpl(clientOptions) }
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PayoutServiceAsync.WithRawResponse = PayoutServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         override fun breakup(): BreakupServiceAsync.WithRawResponse = breakup
 
-        private val listHandler: Handler<PayoutListPageResponse> =
-            jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<PayoutListPageResponse> = jsonHandler<PayoutListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: PayoutListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("payouts")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                            .let {
-                                PayoutListPageAsync.builder()
-                                    .service(PayoutServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .response(it)
-                                    .build()
-                            }
-                    }
-                }
+        override fun list(params: PayoutListParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<PayoutListPageAsync>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("payouts")
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  PayoutListPageAsync.builder()
+                      .service(PayoutServiceAsyncImpl(clientOptions))
+                      .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          } }
         }
     }
 }

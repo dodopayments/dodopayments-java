@@ -13,23 +13,19 @@ internal class CustomerPortalServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerPortalServiceAsync = client.customers().customerPortal()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerPortalServiceAsync = client.customers().customerPortal()
 
-        val customerPortalSessionFuture =
-            customerPortalServiceAsync.create(
-                CustomerPortalCreateParams.builder()
-                    .customerId("customer_id")
-                    .returnUrl("return_url")
-                    .sendEmail(true)
-                    .build()
-            )
+      val customerPortalSessionFuture = customerPortalServiceAsync.create(CustomerPortalCreateParams.builder()
+          .customerId("customer_id")
+          .returnUrl("return_url")
+          .sendEmail(true)
+          .build())
 
-        val customerPortalSession = customerPortalSessionFuture.get()
-        customerPortalSession.validate()
+      val customerPortalSession = customerPortalSessionFuture.get()
+      customerPortalSession.validate()
     }
 }

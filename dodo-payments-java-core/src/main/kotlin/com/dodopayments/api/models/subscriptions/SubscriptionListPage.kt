@@ -5,17 +5,21 @@ package com.dodopayments.api.models.subscriptions
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.subscriptions.SubscriptionListPageResponse
+import com.dodopayments.api.models.subscriptions.SubscriptionListParams
+import com.dodopayments.api.models.subscriptions.SubscriptionListResponse
 import com.dodopayments.api.services.blocking.SubscriptionService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see SubscriptionService.list */
-class SubscriptionListPage
-private constructor(
+class SubscriptionListPage private constructor(
     private val service: SubscriptionService,
     private val params: SubscriptionListParams,
     private val response: SubscriptionListPageResponse,
+
 ) : Page<SubscriptionListResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see SubscriptionListPageResponse.items
      */
-    override fun items(): List<SubscriptionListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<SubscriptionListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): SubscriptionListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): SubscriptionListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [SubscriptionListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: SubscriptionListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(subscriptionListPage: SubscriptionListPage) = apply {
-            service = subscriptionListPage.service
-            params = subscriptionListPage.params
-            response = subscriptionListPage.response
-        }
+        internal fun from(subscriptionListPage: SubscriptionListPage) =
+            apply {
+                service = subscriptionListPage.service
+                params = subscriptionListPage.params
+                response = subscriptionListPage.response
+            }
 
-        fun service(service: SubscriptionService) = apply { this.service = service }
+        fun service(service: SubscriptionService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: SubscriptionListParams) = apply { this.params = params }
+        fun params(params: SubscriptionListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: SubscriptionListPageResponse) = apply { this.response = response }
+        fun response(response: SubscriptionListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): SubscriptionListPage =
             SubscriptionListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is SubscriptionListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "SubscriptionListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "SubscriptionListPage{service=$service, params=$params, response=$response}"
 }

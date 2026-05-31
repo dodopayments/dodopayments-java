@@ -5,37 +5,40 @@ package com.dodopayments.api.models.subscriptions
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageResponse
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryResponse
 import com.dodopayments.api.services.blocking.SubscriptionService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see SubscriptionService.retrieveUsageHistory */
-class SubscriptionRetrieveUsageHistoryPage
-private constructor(
+class SubscriptionRetrieveUsageHistoryPage private constructor(
     private val service: SubscriptionService,
     private val params: SubscriptionRetrieveUsageHistoryParams,
     private val response: SubscriptionRetrieveUsageHistoryPageResponse,
+
 ) : Page<SubscriptionRetrieveUsageHistoryResponse> {
 
     /**
-     * Delegates to [SubscriptionRetrieveUsageHistoryPageResponse], but gracefully handles missing
-     * data.
+     * Delegates to [SubscriptionRetrieveUsageHistoryPageResponse], but gracefully handles missing data.
      *
      * @see SubscriptionRetrieveUsageHistoryPageResponse.items
      */
-    override fun items(): List<SubscriptionRetrieveUsageHistoryResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<SubscriptionRetrieveUsageHistoryResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): SubscriptionRetrieveUsageHistoryParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
-    override fun nextPage(): SubscriptionRetrieveUsageHistoryPage =
-        service.retrieveUsageHistory(nextPageParams())
+    override fun nextPage(): SubscriptionRetrieveUsageHistoryPage = service.retrieveUsageHistory(nextPageParams())
 
     fun autoPager(): AutoPager<SubscriptionRetrieveUsageHistoryResponse> = AutoPager.from(this)
 
@@ -50,17 +53,18 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [SubscriptionRetrieveUsageHistoryPage].
+         * Returns a mutable builder for constructing an instance of [SubscriptionRetrieveUsageHistoryPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [SubscriptionRetrieveUsageHistoryPage]. */
@@ -71,23 +75,29 @@ private constructor(
         private var response: SubscriptionRetrieveUsageHistoryPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(
-            subscriptionRetrieveUsageHistoryPage: SubscriptionRetrieveUsageHistoryPage
-        ) = apply {
-            service = subscriptionRetrieveUsageHistoryPage.service
-            params = subscriptionRetrieveUsageHistoryPage.params
-            response = subscriptionRetrieveUsageHistoryPage.response
-        }
+        internal fun from(subscriptionRetrieveUsageHistoryPage: SubscriptionRetrieveUsageHistoryPage) =
+            apply {
+                service = subscriptionRetrieveUsageHistoryPage.service
+                params = subscriptionRetrieveUsageHistoryPage.params
+                response = subscriptionRetrieveUsageHistoryPage.response
+            }
 
-        fun service(service: SubscriptionService) = apply { this.service = service }
+        fun service(service: SubscriptionService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: SubscriptionRetrieveUsageHistoryParams) = apply { this.params = params }
+        fun params(params: SubscriptionRetrieveUsageHistoryParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: SubscriptionRetrieveUsageHistoryPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: SubscriptionRetrieveUsageHistoryPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [SubscriptionRetrieveUsageHistoryPage].
@@ -95,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -105,25 +116,27 @@ private constructor(
          */
         fun build(): SubscriptionRetrieveUsageHistoryPage =
             SubscriptionRetrieveUsageHistoryPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is SubscriptionRetrieveUsageHistoryPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is SubscriptionRetrieveUsageHistoryPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "SubscriptionRetrieveUsageHistoryPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "SubscriptionRetrieveUsageHistoryPage{service=$service, params=$params, response=$response}"
 }

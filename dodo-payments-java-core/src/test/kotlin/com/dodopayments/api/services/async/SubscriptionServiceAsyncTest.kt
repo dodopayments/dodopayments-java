@@ -14,10 +14,15 @@ import com.dodopayments.api.models.payments.PaymentMethodTypes
 import com.dodopayments.api.models.subscriptions.AttachAddon
 import com.dodopayments.api.models.subscriptions.CancellationFeedback
 import com.dodopayments.api.models.subscriptions.OnDemandSubscription
+import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
+import com.dodopayments.api.models.subscriptions.SubscriptionListParams
 import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
@@ -32,350 +37,294 @@ internal class SubscriptionServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture =
-            subscriptionServiceAsync.create(
-                SubscriptionCreateParams.builder()
-                    .billing(
-                        BillingAddress.builder()
-                            .country(CountryCode.AF)
-                            .city("city")
-                            .state("state")
-                            .street("street")
-                            .zipcode("zipcode")
-                            .build()
-                    )
-                    .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
-                    .productId("product_id")
-                    .quantity(0)
-                    .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                    .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
-                    .billingCurrency(Currency.AED)
-                    .customerBusinessName("customer_business_name")
-                    .discountCode("discount_code")
-                    .addDiscountCode("string")
-                    .force3ds(true)
-                    .mandateMinAmountInrPaise(0)
-                    .metadata(
-                        SubscriptionCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .onDemand(
-                        OnDemandSubscription.builder()
-                            .mandateOnly(true)
-                            .adaptiveCurrencyFeesInclusive(true)
-                            .productCurrency(Currency.AED)
-                            .productDescription("product_description")
-                            .productPrice(0)
-                            .build()
-                    )
-                    .addOneTimeProductCart(
-                        OneTimeProductCartItem.builder()
-                            .productId("product_id")
-                            .quantity(0)
-                            .amount(0)
-                            .build()
-                    )
-                    .paymentLink(true)
-                    .paymentMethodId("payment_method_id")
-                    .redirectImmediately(true)
-                    .requirePhoneNumber(true)
-                    .returnUrl("return_url")
-                    .shortLink(true)
-                    .showSavedPaymentMethods(true)
-                    .taxId("tax_id")
-                    .trialPeriodDays(0)
-                    .build()
-            )
+      val subscriptionFuture = subscriptionServiceAsync.create(SubscriptionCreateParams.builder()
+          .billing(BillingAddress.builder()
+              .country(CountryCode.AF)
+              .city("city")
+              .state("state")
+              .street("street")
+              .zipcode("zipcode")
+              .build())
+          .customer(AttachExistingCustomer.builder()
+              .customerId("customer_id")
+              .build())
+          .productId("product_id")
+          .quantity(0)
+          .addAddon(AttachAddon.builder()
+              .addonId("addon_id")
+              .quantity(0)
+              .build())
+          .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
+          .billingCurrency(Currency.AED)
+          .customerBusinessName("customer_business_name")
+          .discountCode("discount_code")
+          .addDiscountCode("string")
+          .force3ds(true)
+          .mandateMinAmountInrPaise(0)
+          .metadata(SubscriptionCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .onDemand(OnDemandSubscription.builder()
+              .mandateOnly(true)
+              .adaptiveCurrencyFeesInclusive(true)
+              .productCurrency(Currency.AED)
+              .productDescription("product_description")
+              .productPrice(0)
+              .build())
+          .addOneTimeProductCart(OneTimeProductCartItem.builder()
+              .productId("product_id")
+              .quantity(0)
+              .amount(0)
+              .build())
+          .paymentLink(true)
+          .paymentMethodId("payment_method_id")
+          .redirectImmediately(true)
+          .requirePhoneNumber(true)
+          .returnUrl("return_url")
+          .shortLink(true)
+          .showSavedPaymentMethods(true)
+          .taxId("tax_id")
+          .trialPeriodDays(0)
+          .build())
 
-        val subscription = subscriptionFuture.get()
-        subscription.validate()
+      val subscription = subscriptionFuture.get()
+      subscription.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture = subscriptionServiceAsync.retrieve("subscription_id")
+      val subscriptionFuture = subscriptionServiceAsync.retrieve("subscription_id")
 
-        val subscription = subscriptionFuture.get()
-        subscription.validate()
+      val subscription = subscriptionFuture.get()
+      subscription.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture =
-            subscriptionServiceAsync.update(
-                SubscriptionUpdateParams.builder()
-                    .subscriptionId("subscription_id")
-                    .billing(
-                        BillingAddress.builder()
-                            .country(CountryCode.AF)
-                            .city("city")
-                            .state("state")
-                            .street("street")
-                            .zipcode("zipcode")
-                            .build()
-                    )
-                    .cancelAtNextBillingDate(true)
-                    .cancelReason(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
-                    .cancellationComment("cancellation_comment")
-                    .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
-                    .addCreditEntitlementCart(
-                        SubscriptionUpdateParams.CreditEntitlementCart.builder()
-                            .creditEntitlementId("credit_entitlement_id")
-                            .creditsAmount("credits_amount")
-                            .expiresAfterDays(0)
-                            .lowBalanceThresholdPercent(0)
-                            .maxRolloverCount(0)
-                            .overageEnabled(true)
-                            .overageLimit("overage_limit")
-                            .rolloverEnabled(true)
-                            .rolloverPercentage(0)
-                            .rolloverTimeframeCount(0)
-                            .rolloverTimeframeInterval(TimeInterval.DAY)
-                            .build()
-                    )
-                    .customerBusinessName("customer_business_name")
-                    .customerName("customer_name")
-                    .disableOnDemand(
-                        SubscriptionUpdateParams.DisableOnDemand.builder()
-                            .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                            .build()
-                    )
-                    .metadata(
-                        SubscriptionUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .status(SubscriptionStatus.PENDING)
-                    .taxId("tax_id")
-                    .build()
-            )
+      val subscriptionFuture = subscriptionServiceAsync.update(SubscriptionUpdateParams.builder()
+          .subscriptionId("subscription_id")
+          .billing(BillingAddress.builder()
+              .country(CountryCode.AF)
+              .city("city")
+              .state("state")
+              .street("street")
+              .zipcode("zipcode")
+              .build())
+          .cancelAtNextBillingDate(true)
+          .cancelReason(SubscriptionUpdateParams.CancelReason.CANCELLED_BY_CUSTOMER)
+          .cancellationComment("cancellation_comment")
+          .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
+          .addCreditEntitlementCart(SubscriptionUpdateParams.CreditEntitlementCart.builder()
+              .creditEntitlementId("credit_entitlement_id")
+              .creditsAmount("credits_amount")
+              .expiresAfterDays(0)
+              .lowBalanceThresholdPercent(0)
+              .maxRolloverCount(0)
+              .overageEnabled(true)
+              .overageLimit("overage_limit")
+              .rolloverEnabled(true)
+              .rolloverPercentage(0)
+              .rolloverTimeframeCount(0)
+              .rolloverTimeframeInterval(TimeInterval.DAY)
+              .build())
+          .customerBusinessName("customer_business_name")
+          .customerName("customer_name")
+          .disableOnDemand(SubscriptionUpdateParams.DisableOnDemand.builder()
+              .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .build())
+          .metadata(SubscriptionUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .status(SubscriptionStatus.PENDING)
+          .taxId("tax_id")
+          .build())
 
-        val subscription = subscriptionFuture.get()
-        subscription.validate()
+      val subscription = subscriptionFuture.get()
+      subscription.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val pageFuture = subscriptionServiceAsync.list()
+      val pageFuture = subscriptionServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun cancelChangePlan() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val future = subscriptionServiceAsync.cancelChangePlan("subscription_id")
+      val future = subscriptionServiceAsync.cancelChangePlan("subscription_id")
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun changePlan() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val future =
-            subscriptionServiceAsync.changePlan(
-                SubscriptionChangePlanParams.builder()
-                    .subscriptionId("subscription_id")
-                    .updateSubscriptionPlanReq(
-                        UpdateSubscriptionPlanReq.builder()
-                            .productId("product_id")
-                            .prorationBillingMode(
-                                UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY
-                            )
-                            .quantity(0)
-                            .adaptiveCurrencyFeesInclusive(true)
-                            .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                            .discountCode("discount_code")
-                            .addDiscountCode("string")
-                            .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
-                            .metadata(
-                                UpdateSubscriptionPlanReq.Metadata.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                                    .build()
-                            )
-                            .onPaymentFailure(
-                                UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE
-                            )
-                            .build()
-                    )
-                    .build()
-            )
+      val future = subscriptionServiceAsync.changePlan(SubscriptionChangePlanParams.builder()
+          .subscriptionId("subscription_id")
+          .updateSubscriptionPlanReq(UpdateSubscriptionPlanReq.builder()
+              .productId("product_id")
+              .prorationBillingMode(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
+              .quantity(0)
+              .adaptiveCurrencyFeesInclusive(true)
+              .addAddon(AttachAddon.builder()
+                  .addonId("addon_id")
+                  .quantity(0)
+                  .build())
+              .discountCode("discount_code")
+              .addDiscountCode("string")
+              .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+              .metadata(UpdateSubscriptionPlanReq.Metadata.builder()
+                  .putAdditionalProperty("foo", JsonValue.from("string"))
+                  .build())
+              .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
+              .build())
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun charge() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val responseFuture =
-            subscriptionServiceAsync.charge(
-                SubscriptionChargeParams.builder()
-                    .subscriptionId("subscription_id")
-                    .productPrice(0)
-                    .adaptiveCurrencyFeesInclusive(true)
-                    .customerBalanceConfig(
-                        SubscriptionChargeParams.CustomerBalanceConfig.builder()
-                            .allowCustomerCreditsPurchase(true)
-                            .allowCustomerCreditsUsage(true)
-                            .build()
-                    )
-                    .metadata(
-                        SubscriptionChargeParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .productCurrency(Currency.AED)
-                    .productDescription("product_description")
-                    .build()
-            )
+      val responseFuture = subscriptionServiceAsync.charge(SubscriptionChargeParams.builder()
+          .subscriptionId("subscription_id")
+          .productPrice(0)
+          .adaptiveCurrencyFeesInclusive(true)
+          .customerBalanceConfig(SubscriptionChargeParams.CustomerBalanceConfig.builder()
+              .allowCustomerCreditsPurchase(true)
+              .allowCustomerCreditsUsage(true)
+              .build())
+          .metadata(SubscriptionChargeParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .productCurrency(Currency.AED)
+          .productDescription("product_description")
+          .build())
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 
     @Test
     fun previewChangePlan() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val responseFuture =
-            subscriptionServiceAsync.previewChangePlan(
-                SubscriptionPreviewChangePlanParams.builder()
-                    .subscriptionId("subscription_id")
-                    .updateSubscriptionPlanReq(
-                        UpdateSubscriptionPlanReq.builder()
-                            .productId("product_id")
-                            .prorationBillingMode(
-                                UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY
-                            )
-                            .quantity(0)
-                            .adaptiveCurrencyFeesInclusive(true)
-                            .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
-                            .discountCode("discount_code")
-                            .addDiscountCode("string")
-                            .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
-                            .metadata(
-                                UpdateSubscriptionPlanReq.Metadata.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                                    .build()
-                            )
-                            .onPaymentFailure(
-                                UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE
-                            )
-                            .build()
-                    )
-                    .build()
-            )
+      val responseFuture = subscriptionServiceAsync.previewChangePlan(SubscriptionPreviewChangePlanParams.builder()
+          .subscriptionId("subscription_id")
+          .updateSubscriptionPlanReq(UpdateSubscriptionPlanReq.builder()
+              .productId("product_id")
+              .prorationBillingMode(UpdateSubscriptionPlanReq.ProrationBillingMode.PRORATED_IMMEDIATELY)
+              .quantity(0)
+              .adaptiveCurrencyFeesInclusive(true)
+              .addAddon(AttachAddon.builder()
+                  .addonId("addon_id")
+                  .quantity(0)
+                  .build())
+              .discountCode("discount_code")
+              .addDiscountCode("string")
+              .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+              .metadata(UpdateSubscriptionPlanReq.Metadata.builder()
+                  .putAdditionalProperty("foo", JsonValue.from("string"))
+                  .build())
+              .onPaymentFailure(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
+              .build())
+          .build())
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 
     @Test
     fun retrieveCreditUsage() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val responseFuture = subscriptionServiceAsync.retrieveCreditUsage("subscription_id")
+      val responseFuture = subscriptionServiceAsync.retrieveCreditUsage("subscription_id")
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 
     @Test
     fun retrieveUsageHistory() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val pageFuture = subscriptionServiceAsync.retrieveUsageHistory("subscription_id")
+      val pageFuture = subscriptionServiceAsync.retrieveUsageHistory("subscription_id")
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun updatePaymentMethod() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val subscriptionServiceAsync = client.subscriptions()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val subscriptionServiceAsync = client.subscriptions()
 
-        val responseFuture =
-            subscriptionServiceAsync.updatePaymentMethod(
-                SubscriptionUpdatePaymentMethodParams.builder()
-                    .subscriptionId("subscription_id")
-                    .paymentMethod(
-                        SubscriptionUpdatePaymentMethodParams.PaymentMethod.New.builder()
-                            .returnUrl("return_url")
-                            .build()
-                    )
-                    .build()
-            )
+      val responseFuture = subscriptionServiceAsync.updatePaymentMethod(SubscriptionUpdatePaymentMethodParams.builder()
+          .subscriptionId("subscription_id")
+          .paymentMethod(SubscriptionUpdatePaymentMethodParams.PaymentMethod.New.builder()
+              .returnUrl("return_url")
+              .build())
+          .build())
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 }

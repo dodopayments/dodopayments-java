@@ -13,6 +13,9 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.getOrThrow
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.meters.FilterOperator
+import com.dodopayments.api.models.meters.FilterType
+import com.dodopayments.api.models.meters.MeterFilter
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -29,38 +32,31 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Filter clauses — either a flat list of `MeterFilterCondition`s or a list of nested
- * `MeterFilter`s. Up to 3 levels of nesting are accepted; the limit is enforced at runtime.
- */
+/** Filter clauses — either a flat list of `MeterFilterCondition`s or a list of nested `MeterFilter`s. Up to 3 levels of nesting are accepted; the limit is enforced at runtime. */
 @JsonDeserialize(using = FilterType.Deserializer::class)
 @JsonSerialize(using = FilterType.Serializer::class)
-class FilterType
-private constructor(
+class FilterType private constructor(
     private val meterFilterConditionList: List<MeterFilterCondition>? = null,
     private val nestedMeterFilterList: List<MeterFilter>? = null,
     private val _json: JsonValue? = null,
+
 ) {
 
     /** Array of filter conditions. */
-    fun meterFilterConditionList(): Optional<List<MeterFilterCondition>> =
-        Optional.ofNullable(meterFilterConditionList)
+    fun meterFilterConditionList(): Optional<List<MeterFilterCondition>> = Optional.ofNullable(meterFilterConditionList)
 
     /** Array of nested filters. */
-    fun nestedMeterFilterList(): Optional<List<MeterFilter>> =
-        Optional.ofNullable(nestedMeterFilterList)
+    fun nestedMeterFilterList(): Optional<List<MeterFilter>> = Optional.ofNullable(nestedMeterFilterList)
 
     fun isMeterFilterConditionList(): Boolean = meterFilterConditionList != null
 
     fun isNestedMeterFilterList(): Boolean = nestedMeterFilterList != null
 
     /** Array of filter conditions. */
-    fun asMeterFilterConditionList(): List<MeterFilterCondition> =
-        meterFilterConditionList.getOrThrow("meterFilterConditionList")
+    fun asMeterFilterConditionList(): List<MeterFilterCondition> = meterFilterConditionList.getOrThrow("meterFilterConditionList")
 
     /** Array of nested filters. */
-    fun asNestedMeterFilterList(): List<MeterFilter> =
-        nestedMeterFilterList.getOrThrow("nestedMeterFilterList")
+    fun asNestedMeterFilterList(): List<MeterFilter> = nestedMeterFilterList.getOrThrow("nestedMeterFilterList")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -68,8 +64,9 @@ private constructor(
      * Maps this instance's current variant to a value of type [T] using the given [visitor].
      *
      * Note that this method is _not_ forwards compatible with new variants from the API, unless
-     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the
-     * SDK gracefully, consider overriding [Visitor.unknown]:
+     * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the SDK
+     * gracefully, consider overriding [Visitor.unknown]:
+     *
      * ```java
      * import com.dodopayments.api.core.JsonValue;
      * import java.util.Optional;
@@ -90,15 +87,13 @@ private constructor(
      * });
      * ```
      *
-     * @throws DodoPaymentsInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
-     *   and the current variant is unknown.
+     * @throws DodoPaymentsInvalidDataException if [Visitor.unknown] is not overridden in
+     *   [visitor] and the current variant is unknown.
      */
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            meterFilterConditionList != null ->
-                visitor.visitMeterFilterConditionList(meterFilterConditionList)
-            nestedMeterFilterList != null ->
-                visitor.visitNestedMeterFilterList(nestedMeterFilterList)
+            meterFilterConditionList != null -> visitor.visitMeterFilterConditionList(meterFilterConditionList)
+            nestedMeterFilterList != null -> visitor.visitNestedMeterFilterList(nestedMeterFilterList)
             else -> visitor.unknown(_json)
         }
 
@@ -112,26 +107,23 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): FilterType = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): FilterType =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        accept(
-            object : Visitor<Unit> {
-                override fun visitMeterFilterConditionList(
-                    meterFilterConditionList: List<MeterFilterCondition>
-                ) {
-                    meterFilterConditionList.forEach { it.validate() }
+            accept(object : Visitor<Unit> {
+                override fun visitMeterFilterConditionList(meterFilterConditionList: List<MeterFilterCondition>) {
+                  meterFilterConditionList.forEach { it.validate() }
                 }
 
                 override fun visitNestedMeterFilterList(nestedMeterFilterList: List<MeterFilter>) {
-                    nestedMeterFilterList.forEach { it.validate() }
+                  nestedMeterFilterList.forEach { it.validate() }
                 }
-            }
-        )
-        validated = true
-    }
+            })
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -148,37 +140,28 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        accept(
-            object : Visitor<Int> {
-                override fun visitMeterFilterConditionList(
-                    meterFilterConditionList: List<MeterFilterCondition>
-                ) = meterFilterConditionList.sumOf { it.validity().toInt() }
+        accept(object : Visitor<Int> {
+            override fun visitMeterFilterConditionList(meterFilterConditionList: List<MeterFilterCondition>) = meterFilterConditionList.sumOf { it.validity().toInt() }
 
-                override fun visitNestedMeterFilterList(nestedMeterFilterList: List<MeterFilter>) =
-                    nestedMeterFilterList.sumOf { it.validity().toInt() }
+            override fun visitNestedMeterFilterList(nestedMeterFilterList: List<MeterFilter>) = nestedMeterFilterList.sumOf { it.validity().toInt() }
 
-                override fun unknown(json: JsonValue?) = 0
-            }
-        )
+            override fun unknown(json: JsonValue?) = 0
+        })
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is FilterType &&
-            meterFilterConditionList == other.meterFilterConditionList &&
-            nestedMeterFilterList == other.nestedMeterFilterList
+      return other is FilterType && meterFilterConditionList == other.meterFilterConditionList && nestedMeterFilterList == other.nestedMeterFilterList
     }
 
     override fun hashCode(): Int = Objects.hash(meterFilterConditionList, nestedMeterFilterList)
 
     override fun toString(): String =
         when {
-            meterFilterConditionList != null ->
-                "FilterType{meterFilterConditionList=$meterFilterConditionList}"
-            nestedMeterFilterList != null ->
-                "FilterType{nestedMeterFilterList=$nestedMeterFilterList}"
+            meterFilterConditionList != null -> "FilterType{meterFilterConditionList=$meterFilterConditionList}"
+            nestedMeterFilterList != null -> "FilterType{nestedMeterFilterList=$nestedMeterFilterList}"
             _json != null -> "FilterType{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid FilterType")
         }
@@ -187,13 +170,11 @@ private constructor(
 
         /** Array of filter conditions. */
         @JvmStatic
-        fun ofMeterFilterConditionList(meterFilterConditionList: List<MeterFilterCondition>) =
-            FilterType(meterFilterConditionList = meterFilterConditionList.toImmutable())
+        fun ofMeterFilterConditionList(meterFilterConditionList: List<MeterFilterCondition>) = FilterType(meterFilterConditionList = meterFilterConditionList.toImmutable())
 
         /** Array of nested filters. */
         @JvmStatic
-        fun ofNestedMeterFilterList(nestedMeterFilterList: List<MeterFilter>) =
-            FilterType(nestedMeterFilterList = nestedMeterFilterList.toImmutable())
+        fun ofNestedMeterFilterList(nestedMeterFilterList: List<MeterFilter>) = FilterType(nestedMeterFilterList = nestedMeterFilterList.toImmutable())
     }
 
     /** An interface that defines how to map each variant of [FilterType] to a value of type [T]. */
@@ -208,103 +189,95 @@ private constructor(
         /**
          * Maps an unknown variant of [FilterType] to a value of type [T].
          *
-         * An instance of [FilterType] can contain an unknown variant if it was deserialized from
-         * data that doesn't match any known variant. For example, if the SDK is on an older version
-         * than the API, then the API may respond with new variants that the SDK is unaware of.
+         * An instance of [FilterType] can contain an unknown variant if it was deserialized from data
+         * that doesn't match any known variant. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new variants that the SDK is unaware of.
          *
          * @throws DodoPaymentsInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw DodoPaymentsInvalidDataException("Unknown FilterType: $json")
+          throw DodoPaymentsInvalidDataException("Unknown FilterType: $json")
         }
     }
 
     internal class Deserializer : BaseDeserializer<FilterType>(FilterType::class) {
 
         override fun ObjectCodec.deserialize(node: JsonNode): FilterType {
-            val json = JsonValue.fromJsonNode(node)
+          val json = JsonValue.fromJsonNode(node)
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<List<MeterFilterCondition>>())?.let {
-                            FilterType(meterFilterConditionList = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<List<MeterFilter>>())?.let {
-                            FilterType(nestedMeterFilterList = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> FilterType(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-            }
+          val bestMatches = sequenceOf(
+                  tryDeserialize(node, jacksonTypeRef<List<MeterFilterCondition>>())
+                      ?.let {
+                          FilterType(meterFilterConditionList = it, _json = json)
+                      },
+                  tryDeserialize(node, jacksonTypeRef<List<MeterFilter>>())
+                      ?.let {
+                          FilterType(nestedMeterFilterList = it, _json = json)
+                      }
+              )
+              .filterNotNull()
+              .allMaxBy { it.validity() }
+              .toList()
+          return when (bestMatches.size) {
+              // This can happen if what we're deserializing is completely incompatible with all the possible variants (e.g. deserializing from boolean).
+              0 -> FilterType(_json = json)
+              1 -> bestMatches.single()
+              // If there's more than one match with the highest validity, then use the first completely valid match, or simply the first match if none are completely valid.
+              else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+          }
         }
     }
 
     internal class Serializer : BaseSerializer<FilterType>(FilterType::class) {
 
-        override fun serialize(
-            value: FilterType,
-            generator: JsonGenerator,
-            provider: SerializerProvider,
-        ) {
-            when {
-                value.meterFilterConditionList != null ->
-                    generator.writeObject(value.meterFilterConditionList)
-                value.nestedMeterFilterList != null ->
-                    generator.writeObject(value.nestedMeterFilterList)
-                value._json != null -> generator.writeObject(value._json)
-                else -> throw IllegalStateException("Invalid FilterType")
-            }
+        override fun serialize(value: FilterType, generator: JsonGenerator, provider: SerializerProvider) {
+          when {
+              value.meterFilterConditionList != null -> generator.writeObject(value.meterFilterConditionList)
+              value.nestedMeterFilterList != null -> generator.writeObject(value.nestedMeterFilterList)
+              value._json != null -> generator.writeObject(value._json)
+              else -> throw IllegalStateException("Invalid FilterType")
+          }
         }
     }
 
-    class MeterFilterCondition
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class MeterFilterCondition @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val key: JsonField<String>,
         private val operator: JsonField<FilterOperator>,
         private val value: JsonField<Value>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("key") @ExcludeMissing key: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("operator")
-            @ExcludeMissing
-            operator: JsonField<FilterOperator> = JsonMissing.of(),
-            @JsonProperty("value") @ExcludeMissing value: JsonField<Value> = JsonMissing.of(),
-        ) : this(key, operator, value, mutableMapOf())
+            @JsonProperty("operator") @ExcludeMissing operator: JsonField<FilterOperator> = JsonMissing.of(),
+            @JsonProperty("value") @ExcludeMissing value: JsonField<Value> = JsonMissing.of()
+        ) : this(
+          key,
+          operator,
+          value,
+          mutableMapOf(),
+        )
 
         /**
          * Filter key to apply
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun key(): String = key.getRequired("key")
 
         /**
          * Filter operator
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun operator(): FilterOperator = operator.getRequired("operator")
 
         /**
          * Filter value - can be string, number, or boolean
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun value(): Value = value.getRequired("value")
 
@@ -313,7 +286,9 @@ private constructor(
          *
          * Unlike [key], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("key") @ExcludeMissing fun _key(): JsonField<String> = key
+        @JsonProperty("key")
+        @ExcludeMissing
+        fun _key(): JsonField<String> = key
 
         /**
          * Returns the raw JSON value of [operator].
@@ -329,17 +304,18 @@ private constructor(
          *
          * Unlike [value], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("value") @ExcludeMissing fun _value(): JsonField<Value> = value
+        @JsonProperty("value")
+        @ExcludeMissing
+        fun _value(): JsonField<Value> = value
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -349,13 +325,15 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [MeterFilterCondition].
              *
              * The following fields are required:
+             *
              * ```java
              * .key()
              * .operator()
              * .value()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [MeterFilterCondition]. */
@@ -367,12 +345,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(meterFilterCondition: MeterFilterCondition) = apply {
-                key = meterFilterCondition.key
-                operator = meterFilterCondition.operator
-                value = meterFilterCondition.value
-                additionalProperties = meterFilterCondition.additionalProperties.toMutableMap()
-            }
+            internal fun from(meterFilterCondition: MeterFilterCondition) =
+                apply {
+                    key = meterFilterCondition.key
+                    operator = meterFilterCondition.operator
+                    value = meterFilterCondition.value
+                    additionalProperties = meterFilterCondition.additionalProperties.toMutableMap()
+                }
 
             /** Filter key to apply */
             fun key(key: String) = key(JsonField.of(key))
@@ -380,11 +359,13 @@ private constructor(
             /**
              * Sets [Builder.key] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.key] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.key] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun key(key: JsonField<String>) = apply { this.key = key }
+            fun key(key: JsonField<String>) =
+                apply {
+                    this.key = key
+                }
 
             /** Filter operator */
             fun operator(operator: FilterOperator) = operator(JsonField.of(operator))
@@ -392,11 +373,13 @@ private constructor(
             /**
              * Sets [Builder.operator] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.operator] with a well-typed [FilterOperator] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.operator] with a well-typed [FilterOperator] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun operator(operator: JsonField<FilterOperator>) = apply { this.operator = operator }
+            fun operator(operator: JsonField<FilterOperator>) =
+                apply {
+                    this.operator = operator
+                }
 
             /** Filter value - can be string, number, or boolean */
             fun value(value: Value) = value(JsonField.of(value))
@@ -404,11 +387,13 @@ private constructor(
             /**
              * Sets [Builder.value] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.value] with a well-typed [Value] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.value] with a well-typed [Value] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun value(value: JsonField<Value>) = apply { this.value = value }
+            fun value(value: JsonField<Value>) =
+                apply {
+                    this.value = value
+                }
 
             /** Alias for calling [value] with `Value.ofString(string)`. */
             fun value(string: String) = value(Value.ofString(string))
@@ -419,24 +404,31 @@ private constructor(
             /** Alias for calling [value] with `Value.ofBool(bool)`. */
             fun value(bool: Boolean) = value(Value.ofBool(bool))
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [MeterFilterCondition].
@@ -444,6 +436,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .key()
              * .operator()
@@ -454,34 +447,40 @@ private constructor(
              */
             fun build(): MeterFilterCondition =
                 MeterFilterCondition(
-                    checkRequired("key", key),
-                    checkRequired("operator", operator),
-                    checkRequired("value", value),
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "key", key
+                  ),
+                  checkRequired(
+                    "operator", operator
+                  ),
+                  checkRequired(
+                    "value", value
+                  ),
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): MeterFilterCondition = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): MeterFilterCondition =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            key()
-            operator().validate()
-            value().validate()
-            validated = true
-        }
+                key()
+                operator().validate()
+                value().validate()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -492,26 +491,22 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (key.asKnown().isPresent) 1 else 0) +
-                (operator.asKnown().getOrNull()?.validity() ?: 0) +
-                (value.asKnown().getOrNull()?.validity() ?: 0)
+        internal fun validity(): Int = (if (key.asKnown().isPresent) 1 else 0) + (operator.asKnown().getOrNull()?.validity() ?: 0) + (value.asKnown().getOrNull()?.validity() ?: 0)
 
         /** Filter value - can be string, number, or boolean */
         @JsonDeserialize(using = Value.Deserializer::class)
         @JsonSerialize(using = Value.Serializer::class)
-        class Value
-        private constructor(
+        class Value private constructor(
             private val string: String? = null,
             private val number: Double? = null,
             private val bool: Boolean? = null,
             private val _json: JsonValue? = null,
+
         ) {
 
             fun string(): Optional<String> = Optional.ofNullable(string)
@@ -535,12 +530,12 @@ private constructor(
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             /**
-             * Maps this instance's current variant to a value of type [T] using the given
-             * [visitor].
+             * Maps this instance's current variant to a value of type [T] using the given [visitor].
              *
-             * Note that this method is _not_ forwards compatible with new variants from the API,
-             * unless [visitor] overrides [Visitor.unknown]. To handle variants not known to this
-             * version of the SDK gracefully, consider overriding [Visitor.unknown]:
+             * Note that this method is _not_ forwards compatible with new variants from the API, unless
+             * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of the SDK
+             * gracefully, consider overriding [Visitor.unknown]:
+             *
              * ```java
              * import com.dodopayments.api.core.JsonValue;
              * import java.util.Optional;
@@ -575,31 +570,34 @@ private constructor(
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Value = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                accept(
-                    object : Visitor<Unit> {
-                        override fun visitString(string: String) {}
-
-                        override fun visitNumber(number: Double) {}
-
-                        override fun visitBool(bool: Boolean) {}
+            fun validate(): Value =
+                apply {
+                    if (validated) {
+                      return@apply
                     }
-                )
-                validated = true
-            }
+
+                    accept(object : Visitor<Unit> {
+                        override fun visitString(string: String) {
+
+                        }
+
+                        override fun visitNumber(number: Double) {
+
+                        }
+
+                        override fun visitBool(bool: Boolean) {
+
+                        }
+                    })
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -610,34 +608,28 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                accept(
-                    object : Visitor<Int> {
-                        override fun visitString(string: String) = 1
+                accept(object : Visitor<Int> {
+                    override fun visitString(string: String) = 1
 
-                        override fun visitNumber(number: Double) = 1
+                    override fun visitNumber(number: Double) = 1
 
-                        override fun visitBool(bool: Boolean) = 1
+                    override fun visitBool(bool: Boolean) = 1
 
-                        override fun unknown(json: JsonValue?) = 0
-                    }
-                )
+                    override fun unknown(json: JsonValue?) = 0
+                })
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Value &&
-                    string == other.string &&
-                    number == other.number &&
-                    bool == other.bool
+              return other is Value && string == other.string && number == other.number && bool == other.bool
             }
 
             override fun hashCode(): Int = Objects.hash(string, number, bool)
@@ -653,16 +645,17 @@ private constructor(
 
             companion object {
 
-                @JvmStatic fun ofString(string: String) = Value(string = string)
+                @JvmStatic
+                fun ofString(string: String) = Value(string = string)
 
-                @JvmStatic fun ofNumber(number: Double) = Value(number = number)
+                @JvmStatic
+                fun ofNumber(number: Double) = Value(number = number)
 
-                @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
+                @JvmStatic
+                fun ofBool(bool: Boolean) = Value(bool = bool)
             }
 
-            /**
-             * An interface that defines how to map each variant of [Value] to a value of type [T].
-             */
+            /** An interface that defines how to map each variant of [Value] to a value of type [T]. */
             interface Visitor<out T> {
 
                 fun visitString(string: String): T
@@ -674,88 +667,75 @@ private constructor(
                 /**
                  * Maps an unknown variant of [Value] to a value of type [T].
                  *
-                 * An instance of [Value] can contain an unknown variant if it was deserialized from
-                 * data that doesn't match any known variant. For example, if the SDK is on an older
-                 * version than the API, then the API may respond with new variants that the SDK is
-                 * unaware of.
+                 * An instance of [Value] can contain an unknown variant if it was deserialized from data
+                 * that doesn't match any known variant. For example, if the SDK is on an older version than the
+                 * API, then the API may respond with new variants that the SDK is unaware of.
                  *
                  * @throws DodoPaymentsInvalidDataException in the default implementation.
                  */
                 fun unknown(json: JsonValue?): T {
-                    throw DodoPaymentsInvalidDataException("Unknown Value: $json")
+                  throw DodoPaymentsInvalidDataException("Unknown Value: $json")
                 }
             }
 
             internal class Deserializer : BaseDeserializer<Value>(Value::class) {
 
                 override fun ObjectCodec.deserialize(node: JsonNode): Value {
-                    val json = JsonValue.fromJsonNode(node)
+                  val json = JsonValue.fromJsonNode(node)
 
-                    val bestMatches =
-                        sequenceOf(
-                                tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                    Value(string = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                    Value(number = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
-                                    Value(bool = it, _json = json)
-                                },
-                            )
-                            .filterNotNull()
-                            .allMaxBy { it.validity() }
-                            .toList()
-                    return when (bestMatches.size) {
-                        // This can happen if what we're deserializing is completely incompatible
-                        // with all the possible variants (e.g. deserializing from object).
-                        0 -> Value(_json = json)
-                        1 -> bestMatches.single()
-                        // If there's more than one match with the highest validity, then use the
-                        // first completely valid match, or simply the first match if none are
-                        // completely valid.
-                        else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-                    }
+                  val bestMatches = sequenceOf(
+                          tryDeserialize(node, jacksonTypeRef<String>())
+                              ?.let {
+                                  Value(string = it, _json = json)
+                              },
+                          tryDeserialize(node, jacksonTypeRef<Double>())
+                              ?.let {
+                                  Value(number = it, _json = json)
+                              },
+                          tryDeserialize(node, jacksonTypeRef<Boolean>())
+                              ?.let {
+                                  Value(bool = it, _json = json)
+                              }
+                      )
+                      .filterNotNull()
+                      .allMaxBy { it.validity() }
+                      .toList()
+                  return when (bestMatches.size) {
+                      // This can happen if what we're deserializing is completely incompatible with all the possible variants (e.g. deserializing from object).
+                      0 -> Value(_json = json)
+                      1 -> bestMatches.single()
+                      // If there's more than one match with the highest validity, then use the first completely valid match, or simply the first match if none are completely valid.
+                      else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                  }
                 }
             }
 
             internal class Serializer : BaseSerializer<Value>(Value::class) {
 
-                override fun serialize(
-                    value: Value,
-                    generator: JsonGenerator,
-                    provider: SerializerProvider,
-                ) {
-                    when {
-                        value.string != null -> generator.writeObject(value.string)
-                        value.number != null -> generator.writeObject(value.number)
-                        value.bool != null -> generator.writeObject(value.bool)
-                        value._json != null -> generator.writeObject(value._json)
-                        else -> throw IllegalStateException("Invalid Value")
-                    }
+                override fun serialize(value: Value, generator: JsonGenerator, provider: SerializerProvider) {
+                  when {
+                      value.string != null -> generator.writeObject(value.string)
+                      value.number != null -> generator.writeObject(value.number)
+                      value.bool != null -> generator.writeObject(value.bool)
+                      value._json != null -> generator.writeObject(value._json)
+                      else -> throw IllegalStateException("Invalid Value")
+                  }
                 }
             }
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is MeterFilterCondition &&
-                key == other.key &&
-                operator == other.operator &&
-                value == other.value &&
-                additionalProperties == other.additionalProperties
+          return other is MeterFilterCondition && key == other.key && operator == other.operator && value == other.value && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(key, operator, value, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(key, operator, value, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "MeterFilterCondition{key=$key, operator=$operator, value=$value, additionalProperties=$additionalProperties}"
+        override fun toString() = "MeterFilterCondition{key=$key, operator=$operator, value=$value, additionalProperties=$additionalProperties}"
     }
 }

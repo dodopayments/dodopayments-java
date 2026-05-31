@@ -10,6 +10,10 @@ import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.errors.DodoPaymentsWebhookException
 import com.dodopayments.api.models.webhookevents.WebhookEventType
 import com.dodopayments.api.models.webhooks.WebhookCreateParams
+import com.dodopayments.api.models.webhooks.WebhookDeleteParams
+import com.dodopayments.api.models.webhooks.WebhookListParams
+import com.dodopayments.api.models.webhooks.WebhookRetrieveParams
+import com.dodopayments.api.models.webhooks.WebhookRetrieveSecretParams
 import com.dodopayments.api.models.webhooks.WebhookUpdateParams
 import com.standardwebhooks.Webhook
 import java.time.Instant
@@ -22,272 +26,257 @@ internal class WebhookServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val webhookDetails =
-            webhookService.create(
-                WebhookCreateParams.builder()
-                    .url("url")
-                    .description("description")
-                    .disabled(true)
-                    .addFilterType(WebhookEventType.PAYMENT_SUCCEEDED)
-                    .headers(
-                        WebhookCreateParams.Headers.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .idempotencyKey("idempotency_key")
-                    .metadata(
-                        WebhookCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .rateLimit(0)
-                    .build()
-            )
+      val webhookDetails = webhookService.create(WebhookCreateParams.builder()
+          .url("url")
+          .description("description")
+          .disabled(true)
+          .addFilterType(WebhookEventType.PAYMENT_SUCCEEDED)
+          .headers(WebhookCreateParams.Headers.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .idempotencyKey("idempotency_key")
+          .metadata(WebhookCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .rateLimit(0)
+          .build())
 
-        webhookDetails.validate()
+      webhookDetails.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val webhookDetails = webhookService.retrieve("webhook_id")
+      val webhookDetails = webhookService.retrieve("webhook_id")
 
-        webhookDetails.validate()
+      webhookDetails.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val webhookDetails =
-            webhookService.update(
-                WebhookUpdateParams.builder()
-                    .webhookId("webhook_id")
-                    .description("description")
-                    .disabled(true)
-                    .addFilterType(WebhookEventType.PAYMENT_SUCCEEDED)
-                    .metadata(
-                        WebhookUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .rateLimit(0)
-                    .url("url")
-                    .build()
-            )
+      val webhookDetails = webhookService.update(WebhookUpdateParams.builder()
+          .webhookId("webhook_id")
+          .description("description")
+          .disabled(true)
+          .addFilterType(WebhookEventType.PAYMENT_SUCCEEDED)
+          .metadata(WebhookUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .rateLimit(0)
+          .url("url")
+          .build())
 
-        webhookDetails.validate()
+      webhookDetails.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val page = webhookService.list()
+      val page = webhookService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        webhookService.delete("webhook_id")
+      webhookService.delete("webhook_id")
     }
 
     @Test
     fun retrieveSecret() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val response = webhookService.retrieveSecret("webhook_id")
+      val response = webhookService.retrieveSecret("webhook_id")
 
-        response.validate()
+      response.validate()
     }
 
     @Test
     fun unsafeUnwrap() {
-        val client = DodoPaymentsOkHttpClient.builder().bearerToken("My Bearer Token").build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val payload =
-            "{\"business_id\":\"business_id\",\"data\":{\"abandoned_at\":\"2019-12-27T18:11:19.117Z\",\"abandonment_reason\":\"payment_failed\",\"customer_id\":\"customer_id\",\"payment_id\":\"payment_id\",\"status\":\"abandoned\",\"recovered_payment_id\":\"recovered_payment_id\"},\"timestamp\":\"2019-12-27T18:11:19.117Z\",\"type\":\"abandoned_checkout.detected\"}"
-        val webhookSecret = "whsec_c2VjcmV0Cg=="
-        val headers = Headers.builder().build()
+      val payload = "{\"business_id\":\"business_id\",\"data\":{\"abandoned_at\":\"2019-12-27T18:11:19.117Z\",\"abandonment_reason\":\"payment_failed\",\"customer_id\":\"customer_id\",\"payment_id\":\"payment_id\",\"status\":\"abandoned\",\"recovered_payment_id\":\"recovered_payment_id\"},\"timestamp\":\"2019-12-27T18:11:19.117Z\",\"type\":\"abandoned_checkout.detected\"}"
+      val webhookSecret = "whsec_c2VjcmV0Cg=="
+      val headers = Headers.builder()
+          .build()
 
-        webhookService.unsafeUnwrap(payload).validate()
+      webhookService.unsafeUnwrap(payload).validate()
     }
 
     @Test
     fun unwrap() {
-        val client = DodoPaymentsOkHttpClient.builder().bearerToken("My Bearer Token").build()
-        val webhookService = client.webhooks()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .bearerToken("My Bearer Token")
+          .build()
+      val webhookService = client.webhooks()
 
-        val payload =
-            "{\"business_id\":\"business_id\",\"data\":{\"abandoned_at\":\"2019-12-27T18:11:19.117Z\",\"abandonment_reason\":\"payment_failed\",\"customer_id\":\"customer_id\",\"payment_id\":\"payment_id\",\"status\":\"abandoned\",\"recovered_payment_id\":\"recovered_payment_id\"},\"timestamp\":\"2019-12-27T18:11:19.117Z\",\"type\":\"abandoned_checkout.detected\"}"
-        val webhookSecret = "whsec_c2VjcmV0Cg=="
-        val messageId = "1"
-        val timestampSeconds = Instant.now().epochSecond
-        val webhook = Webhook(webhookSecret)
-        val signature = webhook.sign(messageId, timestampSeconds, payload)
-        val headers =
-            Headers.builder()
-                .putAll(
-                    mapOf(
-                        "webhook-signature" to listOf(signature),
-                        "webhook-id" to listOf(messageId),
-                        "webhook-timestamp" to listOf(timestampSeconds.toString()),
-                    )
+      val payload = "{\"business_id\":\"business_id\",\"data\":{\"abandoned_at\":\"2019-12-27T18:11:19.117Z\",\"abandonment_reason\":\"payment_failed\",\"customer_id\":\"customer_id\",\"payment_id\":\"payment_id\",\"status\":\"abandoned\",\"recovered_payment_id\":\"recovered_payment_id\"},\"timestamp\":\"2019-12-27T18:11:19.117Z\",\"type\":\"abandoned_checkout.detected\"}"
+      val webhookSecret = "whsec_c2VjcmV0Cg=="
+      val messageId = "1"
+      val timestampSeconds = Instant.now().epochSecond
+      val webhook = Webhook(webhookSecret)
+      val signature = webhook.sign(messageId, timestampSeconds, payload)
+      val headers = Headers.builder()
+          .putAll(
+                mapOf(
+                    "webhook-signature" to listOf(signature),
+                    "webhook-id" to listOf(messageId),
+                    "webhook-timestamp" to listOf(timestampSeconds.toString())
                 )
-                .build()
+            ).build()
 
-        // Correct key should not throw
-        webhookService.unwrap(
-            UnwrapWebhookParams.builder()
-                .body(payload)
-                .headers(headers)
-                .secret(webhookSecret)
-                .build()
-        )
-        webhookService
-            .withOptions { it.webhookKey(webhookSecret) }
-            .unwrap(UnwrapWebhookParams.builder().body(payload).headers(headers).build())
+      // Correct key should not throw
+      webhookService.unwrap(UnwrapWebhookParams.builder()
+      .body(payload)
+      .headers(headers)
+      .secret(webhookSecret)
+      .build())
+      webhookService.withOptions {
+        it.webhookKey(webhookSecret)
+      }.unwrap(UnwrapWebhookParams.builder()
+      .body(payload)
+      .headers(headers)
+      .build());
 
-        // Secret in method takes precedence to secret on client
-        val wrongKey = "whsec_aaaaaaaaaa"
-        webhookService
-            .withOptions { it.webhookKey(wrongKey) }
-            .unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(headers)
-                    .secret(webhookSecret)
-                    .build()
-            )
+      // Secret in method takes precedence to secret on client
+      val wrongKey = "whsec_aaaaaaaaaa"
+      webhookService.withOptions {
+        it.webhookKey(wrongKey)
+      }.unwrap(UnwrapWebhookParams.builder()
+      .body(payload)
+      .headers(headers)
+      .secret(webhookSecret)
+      .build())
 
-        // Wrong key should throw
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongKey = "whsec_aaaaaaaaaa"
-            webhookService.unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(headers)
-                    .secret(wrongKey)
-                    .build()
-            )
-        }
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongKey = "whsec_aaaaaaaaaa"
-            webhookService
-                .withOptions { it.webhookKey(wrongKey) }
-                .unwrap(UnwrapWebhookParams.builder().body(payload).headers(headers).build())
-        }
+      // Wrong key should throw
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongKey = "whsec_aaaaaaaaaa"
+          webhookService.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(headers)
+          .secret(wrongKey)
+          .build())
+      };
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongKey = "whsec_aaaaaaaaaa"
+          webhookService.withOptions {
+            it.webhookKey(wrongKey)
+          }.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(headers)
+          .build())
+      };
 
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongKey = "whsec_aaaaaaaaaa"
-            webhookService.unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(headers)
-                    .secret(wrongKey)
-                    .build()
-            )
-        }
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongKey = "whsec_aaaaaaaaaa"
-            webhookService
-                .withOptions { it.webhookKey(wrongKey) }
-                .unwrap(UnwrapWebhookParams.builder().body(payload).headers(headers).build())
-        }
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongKey = "whsec_aaaaaaaaaa"
+          webhookService.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(headers)
+          .secret(wrongKey)
+          .build())
+      };
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongKey = "whsec_aaaaaaaaaa"
+          webhookService.withOptions {
+            it.webhookKey(wrongKey)
+          }.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(headers)
+          .build())
+      };
 
-        // Bad signature should throw
-        assertThrows<DodoPaymentsWebhookException> {
-            val badSig = webhook.sign(messageId, timestampSeconds, "some other payload")
-            val badHeaders =
-                headers.toBuilder().replace("webhook-signature", listOf(badSig)).build()
-            webhookService.unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(badHeaders)
-                    .secret(webhookSecret)
-                    .build()
-            )
-        }
-        assertThrows<DodoPaymentsWebhookException> {
-            val badSig = webhook.sign(messageId, timestampSeconds, "some other payload")
-            val badHeaders =
-                headers.toBuilder().replace("webhook-signature", listOf(badSig)).build()
-            webhookService
-                .withOptions { it.webhookKey(webhookSecret) }
-                .unwrap(UnwrapWebhookParams.builder().body(payload).headers(badHeaders).build())
-        }
+      // Bad signature should throw
+      assertThrows<DodoPaymentsWebhookException> {
+          val badSig = webhook.sign(messageId, timestampSeconds, "some other payload")
+          val badHeaders = headers.toBuilder().replace("webhook-signature", listOf(badSig)).build()
+          webhookService.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(badHeaders)
+          .secret(webhookSecret)
+          .build())
+      };
+      assertThrows<DodoPaymentsWebhookException> {
+          val badSig = webhook.sign(messageId, timestampSeconds, "some other payload")
+          val badHeaders = headers.toBuilder().replace("webhook-signature", listOf(badSig)).build()
+          webhookService.withOptions {
+            it.webhookKey(webhookSecret)
+          }.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(badHeaders)
+          .build())
+      };
 
-        // Old timestamp should throw
-        assertThrows<DodoPaymentsWebhookException> {
-            val oldHeaders = headers.toBuilder().replace("webhook-timestamp", listOf("5")).build()
-            webhookService.unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(oldHeaders)
-                    .secret(webhookSecret)
-                    .build()
-            )
-        }
-        assertThrows<DodoPaymentsWebhookException> {
-            val oldHeaders = headers.toBuilder().replace("webhook-timestamp", listOf("5")).build()
-            webhookService
-                .withOptions { it.webhookKey(webhookSecret) }
-                .unwrap(UnwrapWebhookParams.builder().body(payload).headers(oldHeaders).build())
-        }
+      // Old timestamp should throw
+      assertThrows<DodoPaymentsWebhookException> {
+        val oldHeaders = headers.toBuilder().replace("webhook-timestamp", listOf("5")).build()
+        webhookService.unwrap(UnwrapWebhookParams.builder()
+        .body(payload)
+        .headers(oldHeaders)
+        .secret(webhookSecret)
+        .build())
+      };
+      assertThrows<DodoPaymentsWebhookException> {
+        val oldHeaders = headers.toBuilder().replace("webhook-timestamp", listOf("5")).build()
+        webhookService.withOptions {
+          it.webhookKey(webhookSecret)
+        }.unwrap(UnwrapWebhookParams.builder()
+        .body(payload)
+        .headers(oldHeaders)
+        .build())
+      };
 
-        // Wrong message ID should throw
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongIdHeaders = headers.toBuilder().replace("webhook-id", listOf("wrong")).build()
-            webhookService.unwrap(
-                UnwrapWebhookParams.builder()
-                    .body(payload)
-                    .headers(wrongIdHeaders)
-                    .secret(webhookSecret)
-                    .build()
-            )
-        }
-        assertThrows<DodoPaymentsWebhookException> {
-            val wrongIdHeaders = headers.toBuilder().replace("webhook-id", listOf("wrong")).build()
-            webhookService
-                .withOptions { it.webhookKey(webhookSecret) }
-                .unwrap(UnwrapWebhookParams.builder().body(payload).headers(wrongIdHeaders).build())
-        }
+      // Wrong message ID should throw
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongIdHeaders = headers.toBuilder().replace("webhook-id", listOf("wrong")).build()
+          webhookService.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(wrongIdHeaders)
+          .secret(webhookSecret)
+          .build())
+      };
+      assertThrows<DodoPaymentsWebhookException> {
+          val wrongIdHeaders = headers.toBuilder().replace("webhook-id", listOf("wrong")).build()
+          webhookService.withOptions {
+            it.webhookKey(webhookSecret)
+          }.unwrap(UnwrapWebhookParams.builder()
+          .body(payload)
+          .headers(wrongIdHeaders)
+          .build())
+      };
     }
 }

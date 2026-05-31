@@ -11,7 +11,10 @@ import com.dodopayments.api.models.payments.AttachExistingCustomer
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.OneTimeProductCartItem
 import com.dodopayments.api.models.payments.PaymentCreateParams
+import com.dodopayments.api.models.payments.PaymentListParams
 import com.dodopayments.api.models.payments.PaymentMethodTypes
+import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
+import com.dodopayments.api.models.payments.PaymentRetrieveParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -20,98 +23,87 @@ internal class PaymentServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentService = client.payments()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentService = client.payments()
 
-        val payment =
-            paymentService.create(
-                PaymentCreateParams.builder()
-                    .billing(
-                        BillingAddress.builder()
-                            .country(CountryCode.AF)
-                            .city("city")
-                            .state("state")
-                            .street("street")
-                            .zipcode("zipcode")
-                            .build()
-                    )
-                    .customer(AttachExistingCustomer.builder().customerId("customer_id").build())
-                    .addProductCart(
-                        OneTimeProductCartItem.builder()
-                            .productId("product_id")
-                            .quantity(0)
-                            .amount(0)
-                            .build()
-                    )
-                    .adaptiveCurrencyFeesInclusive(true)
-                    .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
-                    .billingCurrency(Currency.AED)
-                    .customerBusinessName("customer_business_name")
-                    .discountCode("discount_code")
-                    .addDiscountCode("string")
-                    .force3ds(true)
-                    .metadata(
-                        PaymentCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .paymentLink(true)
-                    .paymentMethodId("payment_method_id")
-                    .redirectImmediately(true)
-                    .requirePhoneNumber(true)
-                    .returnUrl("return_url")
-                    .shortLink(true)
-                    .showSavedPaymentMethods(true)
-                    .taxId("tax_id")
-                    .build()
-            )
+      val payment = paymentService.create(PaymentCreateParams.builder()
+          .billing(BillingAddress.builder()
+              .country(CountryCode.AF)
+              .city("city")
+              .state("state")
+              .street("street")
+              .zipcode("zipcode")
+              .build())
+          .customer(AttachExistingCustomer.builder()
+              .customerId("customer_id")
+              .build())
+          .addProductCart(OneTimeProductCartItem.builder()
+              .productId("product_id")
+              .quantity(0)
+              .amount(0)
+              .build())
+          .adaptiveCurrencyFeesInclusive(true)
+          .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
+          .billingCurrency(Currency.AED)
+          .customerBusinessName("customer_business_name")
+          .discountCode("discount_code")
+          .addDiscountCode("string")
+          .force3ds(true)
+          .metadata(PaymentCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .paymentLink(true)
+          .paymentMethodId("payment_method_id")
+          .redirectImmediately(true)
+          .requirePhoneNumber(true)
+          .returnUrl("return_url")
+          .shortLink(true)
+          .showSavedPaymentMethods(true)
+          .taxId("tax_id")
+          .build())
 
-        payment.validate()
+      payment.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentService = client.payments()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentService = client.payments()
 
-        val payment = paymentService.retrieve("payment_id")
+      val payment = paymentService.retrieve("payment_id")
 
-        payment.validate()
+      payment.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentService = client.payments()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentService = client.payments()
 
-        val page = paymentService.list()
+      val page = paymentService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun retrieveLineItems() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val paymentService = client.payments()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val paymentService = client.payments()
 
-        val response = paymentService.retrieveLineItems("payment_id")
+      val response = paymentService.retrieveLineItems("payment_id")
 
-        response.validate()
+      response.validate()
     }
 }

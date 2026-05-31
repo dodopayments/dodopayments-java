@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.discounts
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.discounts.DiscountType
+import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -12,78 +14,74 @@ internal class DiscountUpdateParamsTest {
 
     @Test
     fun create() {
-        DiscountUpdateParams.builder()
-            .discountId("discount_id")
-            .amount(0)
-            .code("code")
-            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-            .metadata(
-                DiscountUpdateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-            .name("name")
-            .preserveOnPlanChange(true)
-            .addRestrictedTo("string")
-            .subscriptionCycles(0)
-            .type(DiscountType.PERCENTAGE)
-            .usageLimit(0)
-            .build()
+      DiscountUpdateParams.builder()
+          .discountId("discount_id")
+          .amount(0)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .type(DiscountType.PERCENTAGE)
+          .usageLimit(0)
+          .build()
     }
 
     @Test
     fun pathParams() {
-        val params = DiscountUpdateParams.builder().discountId("discount_id").build()
+      val params = DiscountUpdateParams.builder()
+          .discountId("discount_id")
+          .build()
 
-        assertThat(params._pathParam(0)).isEqualTo("discount_id")
-        // out-of-bound path param
-        assertThat(params._pathParam(1)).isEqualTo("")
+      assertThat(params._pathParam(0)).isEqualTo("discount_id")
+      // out-of-bound path param
+      assertThat(params._pathParam(1)).isEqualTo("")
     }
 
     @Test
     fun body() {
-        val params =
-            DiscountUpdateParams.builder()
-                .discountId("discount_id")
-                .amount(0)
-                .code("code")
-                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .metadata(
-                    DiscountUpdateParams.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .name("name")
-                .preserveOnPlanChange(true)
-                .addRestrictedTo("string")
-                .subscriptionCycles(0)
-                .type(DiscountType.PERCENTAGE)
-                .usageLimit(0)
-                .build()
+      val params = DiscountUpdateParams.builder()
+          .discountId("discount_id")
+          .amount(0)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .type(DiscountType.PERCENTAGE)
+          .usageLimit(0)
+          .build()
 
-        val body = params._body()
+      val body = params._body()
 
-        assertThat(body.amount()).contains(0)
-        assertThat(body.code()).contains("code")
-        assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(body.metadata())
-            .contains(
-                DiscountUpdateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(body.name()).contains("name")
-        assertThat(body.preserveOnPlanChange()).contains(true)
-        assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
-        assertThat(body.subscriptionCycles()).contains(0)
-        assertThat(body.type()).contains(DiscountType.PERCENTAGE)
-        assertThat(body.usageLimit()).contains(0)
+      assertThat(body.amount()).contains(0)
+      assertThat(body.code()).contains("code")
+      assertThat(body.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(body.metadata()).contains(DiscountUpdateParams.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(body.name()).contains("name")
+      assertThat(body.preserveOnPlanChange()).contains(true)
+      assertThat(body.restrictedTo().getOrNull()).containsExactly("string")
+      assertThat(body.subscriptionCycles()).contains(0)
+      assertThat(body.type()).contains(DiscountType.PERCENTAGE)
+      assertThat(body.usageLimit()).contains(0)
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = DiscountUpdateParams.builder().discountId("discount_id").build()
+      val params = DiscountUpdateParams.builder()
+          .discountId("discount_id")
+          .build()
 
-        val body = params._body()
+      val body = params._body()
     }
 }

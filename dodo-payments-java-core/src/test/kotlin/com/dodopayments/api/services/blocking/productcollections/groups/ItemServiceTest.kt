@@ -16,59 +16,52 @@ internal class ItemServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemService = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemService = client.productCollections().groups().items()
 
-        val productCollectionProducts =
-            itemService.create(
-                ItemCreateParams.builder()
-                    .id("id")
-                    .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                    .addProduct(GroupProduct.builder().productId("product_id").status(true).build())
-                    .build()
-            )
+      val productCollectionProducts = itemService.create(ItemCreateParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .addProduct(GroupProduct.builder()
+              .productId("product_id")
+              .status(true)
+              .build())
+          .build())
 
-        productCollectionProducts.forEach { it.validate() }
+      productCollectionProducts.forEach { it.validate() }
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemService = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemService = client.productCollections().groups().items()
 
-        itemService.update(
-            ItemUpdateParams.builder()
-                .id("id")
-                .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .status(true)
-                .build()
-        )
+      itemService.update(ItemUpdateParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .status(true)
+          .build())
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val itemService = client.productCollections().groups().items()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val itemService = client.productCollections().groups().items()
 
-        itemService.delete(
-            ItemDeleteParams.builder()
-                .id("id")
-                .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
-                .build()
-        )
+      itemService.delete(ItemDeleteParams.builder()
+          .id("id")
+          .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
+          .build())
     }
 }

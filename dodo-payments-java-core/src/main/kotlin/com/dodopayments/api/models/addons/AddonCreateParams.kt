@@ -22,50 +22,45 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class AddonCreateParams
-private constructor(
+class AddonCreateParams private constructor(
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     /**
      * The currency of the Addon
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currency(): Currency = body.currency()
 
     /**
      * Name of the Addon
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun name(): String = body.name()
 
     /**
      * Amount of the addon
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun price(): Int = body.price()
 
     /**
      * Tax category applied to this Addon
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun taxCategory(): TaxCategory = body.taxCategory()
 
     /**
      * Optional description of the Addon
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun description(): Optional<String> = body.description()
 
@@ -120,6 +115,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [AddonCreateParams].
          *
          * The following fields are required:
+         *
          * ```java
          * .currency()
          * .name()
@@ -127,7 +123,8 @@ private constructor(
          * .taxCategory()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AddonCreateParams]. */
@@ -138,17 +135,18 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(addonCreateParams: AddonCreateParams) = apply {
-            body = addonCreateParams.body.toBuilder()
-            additionalHeaders = addonCreateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = addonCreateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(addonCreateParams: AddonCreateParams) =
+            apply {
+                body = addonCreateParams.body.toBuilder()
+                additionalHeaders = addonCreateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = addonCreateParams.additionalQueryParams.toBuilder()
+            }
 
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [currency]
          * - [name]
          * - [price]
@@ -156,58 +154,84 @@ private constructor(
          * - [description]
          * - etc.
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
         /** The currency of the Addon */
-        fun currency(currency: Currency) = apply { body.currency(currency) }
+        fun currency(currency: Currency) =
+            apply {
+                body.currency(currency)
+            }
 
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [Currency] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<Currency>) = apply { body.currency(currency) }
+        fun currency(currency: JsonField<Currency>) =
+            apply {
+                body.currency(currency)
+            }
 
         /** Name of the Addon */
-        fun name(name: String) = apply { body.name(name) }
+        fun name(name: String) =
+            apply {
+                body.name(name)
+            }
 
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { body.name(name) }
+        fun name(name: JsonField<String>) =
+            apply {
+                body.name(name)
+            }
 
         /** Amount of the addon */
-        fun price(price: Int) = apply { body.price(price) }
+        fun price(price: Int) =
+            apply {
+                body.price(price)
+            }
 
         /**
          * Sets [Builder.price] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.price] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.price] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun price(price: JsonField<Int>) = apply { body.price(price) }
+        fun price(price: JsonField<Int>) =
+            apply {
+                body.price(price)
+            }
 
         /** Tax category applied to this Addon */
-        fun taxCategory(taxCategory: TaxCategory) = apply { body.taxCategory(taxCategory) }
+        fun taxCategory(taxCategory: TaxCategory) =
+            apply {
+                body.taxCategory(taxCategory)
+            }
 
         /**
          * Sets [Builder.taxCategory] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun taxCategory(taxCategory: JsonField<TaxCategory>) = apply {
-            body.taxCategory(taxCategory)
-        }
+        fun taxCategory(taxCategory: JsonField<TaxCategory>) =
+            apply {
+                body.taxCategory(taxCategory)
+            }
 
         /** Optional description of the Addon */
-        fun description(description: String?) = apply { body.description(description) }
+        fun description(description: String?) =
+            apply {
+                body.description(description)
+            }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
         fun description(description: Optional<String>) = description(description.getOrNull())
@@ -215,128 +239,164 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { body.description(description) }
+        fun description(description: JsonField<String>) =
+            apply {
+                body.description(description)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [AddonCreateParams].
@@ -344,6 +404,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .currency()
          * .name()
@@ -355,9 +416,9 @@ private constructor(
          */
         fun build(): AddonCreateParams =
             AddonCreateParams(
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -367,69 +428,64 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val currency: JsonField<Currency>,
         private val name: JsonField<String>,
         private val price: JsonField<Int>,
         private val taxCategory: JsonField<TaxCategory>,
         private val description: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("currency")
-            @ExcludeMissing
-            currency: JsonField<Currency> = JsonMissing.of(),
+            @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("price") @ExcludeMissing price: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("tax_category")
-            @ExcludeMissing
-            taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
-            @JsonProperty("description")
-            @ExcludeMissing
-            description: JsonField<String> = JsonMissing.of(),
-        ) : this(currency, name, price, taxCategory, description, mutableMapOf())
+            @JsonProperty("tax_category") @ExcludeMissing taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
+            @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of()
+        ) : this(
+          currency,
+          name,
+          price,
+          taxCategory,
+          description,
+          mutableMapOf(),
+        )
 
         /**
          * The currency of the Addon
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun currency(): Currency = currency.getRequired("currency")
 
         /**
          * Name of the Addon
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun name(): String = name.getRequired("name")
 
         /**
          * Amount of the addon
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun price(): Int = price.getRequired("price")
 
         /**
          * Tax category applied to this Addon
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun taxCategory(): TaxCategory = taxCategory.getRequired("tax_category")
 
         /**
          * Optional description of the Addon
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
         fun description(): Optional<String> = description.getOptional("description")
 
@@ -438,21 +494,27 @@ private constructor(
          *
          * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+        @JsonProperty("currency")
+        @ExcludeMissing
+        fun _currency(): JsonField<Currency> = currency
 
         /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("name")
+        @ExcludeMissing
+        fun _name(): JsonField<String> = name
 
         /**
          * Returns the raw JSON value of [price].
          *
          * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Int> = price
+        @JsonProperty("price")
+        @ExcludeMissing
+        fun _price(): JsonField<Int> = price
 
         /**
          * Returns the raw JSON value of [taxCategory].
@@ -474,13 +536,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -490,6 +551,7 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Body].
              *
              * The following fields are required:
+             *
              * ```java
              * .currency()
              * .name()
@@ -497,7 +559,8 @@ private constructor(
              * .taxCategory()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -511,14 +574,15 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                currency = body.currency
-                name = body.name
-                price = body.price
-                taxCategory = body.taxCategory
-                description = body.description
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    currency = body.currency
+                    name = body.name
+                    price = body.price
+                    taxCategory = body.taxCategory
+                    description = body.description
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             /** The currency of the Addon */
             fun currency(currency: Currency) = currency(JsonField.of(currency))
@@ -526,11 +590,13 @@ private constructor(
             /**
              * Sets [Builder.currency] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.currency] with a well-typed [Currency] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+            fun currency(currency: JsonField<Currency>) =
+                apply {
+                    this.currency = currency
+                }
 
             /** Name of the Addon */
             fun name(name: String) = name(JsonField.of(name))
@@ -538,11 +604,13 @@ private constructor(
             /**
              * Sets [Builder.name] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun name(name: JsonField<String>) =
+                apply {
+                    this.name = name
+                }
 
             /** Amount of the addon */
             fun price(price: Int) = price(JsonField.of(price))
@@ -550,11 +618,13 @@ private constructor(
             /**
              * Sets [Builder.price] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.price] with a well-typed [Int] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.price] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun price(price: JsonField<Int>) = apply { this.price = price }
+            fun price(price: JsonField<Int>) =
+                apply {
+                    this.price = price
+                }
 
             /** Tax category applied to this Addon */
             fun taxCategory(taxCategory: TaxCategory) = taxCategory(JsonField.of(taxCategory))
@@ -562,13 +632,13 @@ private constructor(
             /**
              * Sets [Builder.taxCategory] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun taxCategory(taxCategory: JsonField<TaxCategory>) = apply {
-                this.taxCategory = taxCategory
-            }
+            fun taxCategory(taxCategory: JsonField<TaxCategory>) =
+                apply {
+                    this.taxCategory = taxCategory
+                }
 
             /** Optional description of the Addon */
             fun description(description: String?) = description(JsonField.ofNullable(description))
@@ -579,32 +649,39 @@ private constructor(
             /**
              * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun description(description: JsonField<String>) = apply {
-                this.description = description
-            }
+            fun description(description: JsonField<String>) =
+                apply {
+                    this.description = description
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -612,6 +689,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .currency()
              * .name()
@@ -623,38 +701,46 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("currency", currency),
-                    checkRequired("name", name),
-                    checkRequired("price", price),
-                    checkRequired("taxCategory", taxCategory),
-                    description,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "currency", currency
+                  ),
+                  checkRequired(
+                    "name", name
+                  ),
+                  checkRequired(
+                    "price", price
+                  ),
+                  checkRequired(
+                    "taxCategory", taxCategory
+                  ),
+                  description,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            currency().validate()
-            name()
-            price()
-            taxCategory().validate()
-            description()
-            validated = true
-        }
+                currency().validate()
+                name()
+                price()
+                taxCategory().validate()
+                description()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -665,56 +751,37 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (currency.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
-                (if (price.asKnown().isPresent) 1 else 0) +
-                (taxCategory.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (description.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (price.asKnown().isPresent) 1 else 0) + (taxCategory.asKnown().getOrNull()?.validity() ?: 0) + (if (description.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                currency == other.currency &&
-                name == other.name &&
-                price == other.price &&
-                taxCategory == other.taxCategory &&
-                description == other.description &&
-                additionalProperties == other.additionalProperties
+          return other is Body && currency == other.currency && name == other.name && price == other.price && taxCategory == other.taxCategory && description == other.description && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(currency, name, price, taxCategory, description, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(currency, name, price, taxCategory, description, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{currency=$currency, name=$name, price=$price, taxCategory=$taxCategory, description=$description, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{currency=$currency, name=$name, price=$price, taxCategory=$taxCategory, description=$description, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AddonCreateParams &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is AddonCreateParams && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "AddonCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "AddonCreateParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

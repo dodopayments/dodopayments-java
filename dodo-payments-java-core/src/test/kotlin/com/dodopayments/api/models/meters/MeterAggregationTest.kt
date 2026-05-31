@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.meters
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.meters.MeterAggregation
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -11,25 +12,25 @@ internal class MeterAggregationTest {
 
     @Test
     fun create() {
-        val meterAggregation =
-            MeterAggregation.builder().type(MeterAggregation.Type.COUNT).key("key").build()
+      val meterAggregation = MeterAggregation.builder()
+          .type(MeterAggregation.Type.COUNT)
+          .key("key")
+          .build()
 
-        assertThat(meterAggregation.type()).isEqualTo(MeterAggregation.Type.COUNT)
-        assertThat(meterAggregation.key()).contains("key")
+      assertThat(meterAggregation.type()).isEqualTo(MeterAggregation.Type.COUNT)
+      assertThat(meterAggregation.key()).contains("key")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val meterAggregation =
-            MeterAggregation.builder().type(MeterAggregation.Type.COUNT).key("key").build()
+      val jsonMapper = jsonMapper()
+      val meterAggregation = MeterAggregation.builder()
+          .type(MeterAggregation.Type.COUNT)
+          .key("key")
+          .build()
 
-        val roundtrippedMeterAggregation =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(meterAggregation),
-                jacksonTypeRef<MeterAggregation>(),
-            )
+      val roundtrippedMeterAggregation = jsonMapper.readValue(jsonMapper.writeValueAsString(meterAggregation), jacksonTypeRef<MeterAggregation>())
 
-        assertThat(roundtrippedMeterAggregation).isEqualTo(meterAggregation)
+      assertThat(roundtrippedMeterAggregation).isEqualTo(meterAggregation)
     }
 }

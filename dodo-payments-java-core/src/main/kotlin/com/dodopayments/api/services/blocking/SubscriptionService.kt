@@ -25,14 +25,13 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistor
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
+import com.dodopayments.api.services.blocking.SubscriptionService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface SubscriptionService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -44,238 +43,258 @@ interface SubscriptionService {
 
     @Deprecated("deprecated")
     fun create(params: SubscriptionCreateParams): SubscriptionCreateResponse =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
     @Deprecated("deprecated")
-    fun create(
-        params: SubscriptionCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionCreateResponse
+    fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionCreateResponse
 
     fun retrieve(subscriptionId: String): Subscription =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none())
+        retrieve(
+          subscriptionId, SubscriptionRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Subscription =
-        retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): Subscription =
+        retrieve(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        subscriptionId: String,
-        params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-    ): Subscription = retrieve(subscriptionId, params, RequestOptions.none())
+    fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none()): Subscription =
+        retrieve(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: SubscriptionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Subscription
+    fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): Subscription
 
     /** @see retrieve */
     fun retrieve(params: SubscriptionRetrieveParams): Subscription =
-        retrieve(params, RequestOptions.none())
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(subscriptionId: String, requestOptions: RequestOptions): Subscription =
-        retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
+        retrieve(
+          subscriptionId,
+          SubscriptionRetrieveParams.none(),
+          requestOptions,
+        )
 
     fun update(subscriptionId: String): Subscription =
-        update(subscriptionId, SubscriptionUpdateParams.none())
+        update(
+          subscriptionId, SubscriptionUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Subscription =
-        update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): Subscription =
+        update(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see update */
-    fun update(
-        subscriptionId: String,
-        params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-    ): Subscription = update(subscriptionId, params, RequestOptions.none())
+    fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none()): Subscription =
+        update(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
-    fun update(
-        params: SubscriptionUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Subscription
+    fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): Subscription
 
     /** @see update */
     fun update(params: SubscriptionUpdateParams): Subscription =
-        update(params, RequestOptions.none())
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(subscriptionId: String, requestOptions: RequestOptions): Subscription =
-        update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
+        update(
+          subscriptionId,
+          SubscriptionUpdateParams.none(),
+          requestOptions,
+        )
 
     fun list(): SubscriptionListPage = list(SubscriptionListParams.none())
 
     /** @see list */
-    fun list(
-        params: SubscriptionListParams = SubscriptionListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionListPage
+    fun list(params: SubscriptionListParams = SubscriptionListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): SubscriptionListPage
 
     /** @see list */
     fun list(params: SubscriptionListParams = SubscriptionListParams.none()): SubscriptionListPage =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): SubscriptionListPage =
-        list(SubscriptionListParams.none(), requestOptions)
+        list(
+          SubscriptionListParams.none(), requestOptions
+        )
 
     fun cancelChangePlan(subscriptionId: String) =
-        cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none())
+        cancelChangePlan(
+          subscriptionId, SubscriptionCancelChangePlanParams.none()
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        subscriptionId: String,
-        params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = cancelChangePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        cancelChangePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        subscriptionId: String,
-        params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-    ) = cancelChangePlan(subscriptionId, params, RequestOptions.none())
+    fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none()) =
+        cancelChangePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see cancelChangePlan */
-    fun cancelChangePlan(
-        params: SubscriptionCancelChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see cancelChangePlan */
     fun cancelChangePlan(params: SubscriptionCancelChangePlanParams) =
-        cancelChangePlan(params, RequestOptions.none())
+        cancelChangePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see cancelChangePlan */
     fun cancelChangePlan(subscriptionId: String, requestOptions: RequestOptions) =
-        cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none(), requestOptions)
+        cancelChangePlan(
+          subscriptionId,
+          SubscriptionCancelChangePlanParams.none(),
+          requestOptions,
+        )
 
     fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams) =
-        changePlan(subscriptionId, params, RequestOptions.none())
+        changePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see changePlan */
-    fun changePlan(
-        subscriptionId: String,
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()) =
+        changePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see changePlan */
-    fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
+    fun changePlan(params: SubscriptionChangePlanParams) =
+        changePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see changePlan */
-    fun changePlan(
-        params: SubscriptionChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none())
 
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-    ): SubscriptionChargeResponse = charge(subscriptionId, params, RequestOptions.none())
+    fun charge(subscriptionId: String, params: SubscriptionChargeParams): SubscriptionChargeResponse =
+        charge(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see charge */
-    fun charge(
-        subscriptionId: String,
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionChargeResponse =
-        charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun charge(subscriptionId: String, params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionChargeResponse =
+        charge(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see charge */
     fun charge(params: SubscriptionChargeParams): SubscriptionChargeResponse =
-        charge(params, RequestOptions.none())
+        charge(
+          params, RequestOptions.none()
+        )
 
     /** @see charge */
-    fun charge(
-        params: SubscriptionChargeParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionChargeResponse
+    fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionChargeResponse
 
-    fun previewChangePlan(
-        subscriptionId: String,
-        params: SubscriptionPreviewChangePlanParams,
-    ): SubscriptionPreviewChangePlanResponse =
-        previewChangePlan(subscriptionId, params, RequestOptions.none())
+    fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams): SubscriptionPreviewChangePlanResponse =
+        previewChangePlan(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        subscriptionId: String,
-        params: SubscriptionPreviewChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionPreviewChangePlanResponse =
-        previewChangePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionPreviewChangePlanResponse =
+        previewChangePlan(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        params: SubscriptionPreviewChangePlanParams
-    ): SubscriptionPreviewChangePlanResponse = previewChangePlan(params, RequestOptions.none())
+    fun previewChangePlan(params: SubscriptionPreviewChangePlanParams): SubscriptionPreviewChangePlanResponse =
+        previewChangePlan(
+          params, RequestOptions.none()
+        )
 
     /** @see previewChangePlan */
-    fun previewChangePlan(
-        params: SubscriptionPreviewChangePlanParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionPreviewChangePlanResponse
+    fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionPreviewChangePlanResponse
 
     fun retrieveCreditUsage(subscriptionId: String): SubscriptionRetrieveCreditUsageResponse =
-        retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        params: SubscriptionRetrieveCreditUsageParams =
-            SubscriptionRetrieveCreditUsageParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionRetrieveCreditUsageResponse =
         retrieveCreditUsage(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId, SubscriptionRetrieveCreditUsageParams.none()
         )
 
     /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(),
-    ): SubscriptionRetrieveCreditUsageResponse =
-        retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        params: SubscriptionRetrieveCreditUsageParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionRetrieveCreditUsageResponse
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        params: SubscriptionRetrieveCreditUsageParams
-    ): SubscriptionRetrieveCreditUsageResponse = retrieveCreditUsage(params, RequestOptions.none())
-
-    /** @see retrieveCreditUsage */
-    fun retrieveCreditUsage(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): SubscriptionRetrieveCreditUsageResponse =
+    fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(), requestOptions: RequestOptions = RequestOptions.none()): SubscriptionRetrieveCreditUsageResponse =
         retrieveCreditUsage(
-            subscriptionId,
-            SubscriptionRetrieveCreditUsageParams.none(),
-            requestOptions,
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none()): SubscriptionRetrieveCreditUsageResponse =
+        retrieveCreditUsage(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionRetrieveCreditUsageResponse
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams): SubscriptionRetrieveCreditUsageResponse =
+        retrieveCreditUsage(
+          params, RequestOptions.none()
+        )
+
+    /** @see retrieveCreditUsage */
+    fun retrieveCreditUsage(subscriptionId: String, requestOptions: RequestOptions): SubscriptionRetrieveCreditUsageResponse =
+        retrieveCreditUsage(
+          subscriptionId,
+          SubscriptionRetrieveCreditUsageParams.none(),
+          requestOptions,
         )
 
     /**
-     * Get detailed usage history for a subscription that includes usage-based billing (metered
-     * components). This endpoint provides insights into customer usage patterns and billing
-     * calculations over time.
+     * Get detailed usage history for a subscription that includes usage-based billing (metered components).
+     * This endpoint provides insights into customer usage patterns and billing calculations over time.
      *
      * ## What You'll Get:
      * - **Billing periods**: Each item represents a billing cycle with start and end dates
@@ -307,81 +326,68 @@ interface SubscriptionService {
      * - Recent usage: `?start_date=2024-03-01T00:00:00Z` (from March 1st to now)
      */
     fun retrieveUsageHistory(subscriptionId: String): SubscriptionRetrieveUsageHistoryPage =
-        retrieveUsageHistory(subscriptionId, SubscriptionRetrieveUsageHistoryParams.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        params: SubscriptionRetrieveUsageHistoryParams =
-            SubscriptionRetrieveUsageHistoryParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionRetrieveUsageHistoryPage =
         retrieveUsageHistory(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId, SubscriptionRetrieveUsageHistoryParams.none()
         )
 
     /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        params: SubscriptionRetrieveUsageHistoryParams =
-            SubscriptionRetrieveUsageHistoryParams.none(),
-    ): SubscriptionRetrieveUsageHistoryPage =
-        retrieveUsageHistory(subscriptionId, params, RequestOptions.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        params: SubscriptionRetrieveUsageHistoryParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionRetrieveUsageHistoryPage
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        params: SubscriptionRetrieveUsageHistoryParams
-    ): SubscriptionRetrieveUsageHistoryPage = retrieveUsageHistory(params, RequestOptions.none())
-
-    /** @see retrieveUsageHistory */
-    fun retrieveUsageHistory(
-        subscriptionId: String,
-        requestOptions: RequestOptions,
-    ): SubscriptionRetrieveUsageHistoryPage =
+    fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none(), requestOptions: RequestOptions = RequestOptions.none()): SubscriptionRetrieveUsageHistoryPage =
         retrieveUsageHistory(
-            subscriptionId,
-            SubscriptionRetrieveUsageHistoryParams.none(),
-            requestOptions,
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
         )
 
-    fun updatePaymentMethod(
-        subscriptionId: String,
-        params: SubscriptionUpdatePaymentMethodParams,
-    ): SubscriptionUpdatePaymentMethodResponse =
-        updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none()): SubscriptionRetrieveUsageHistoryPage =
+        retrieveUsageHistory(
+          subscriptionId,
+          params,
+          RequestOptions.none(),
+        )
 
-    /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        subscriptionId: String,
-        params: SubscriptionUpdatePaymentMethodParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionUpdatePaymentMethodResponse =
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionRetrieveUsageHistoryPage
+
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams): SubscriptionRetrieveUsageHistoryPage =
+        retrieveUsageHistory(
+          params, RequestOptions.none()
+        )
+
+    /** @see retrieveUsageHistory */
+    fun retrieveUsageHistory(subscriptionId: String, requestOptions: RequestOptions): SubscriptionRetrieveUsageHistoryPage =
+        retrieveUsageHistory(
+          subscriptionId,
+          SubscriptionRetrieveUsageHistoryParams.none(),
+          requestOptions,
+        )
+
+    fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams): SubscriptionUpdatePaymentMethodResponse =
         updatePaymentMethod(
-            params.toBuilder().subscriptionId(subscriptionId).build(),
-            requestOptions,
+          subscriptionId,
+          params,
+          RequestOptions.none(),
         )
 
     /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        params: SubscriptionUpdatePaymentMethodParams
-    ): SubscriptionUpdatePaymentMethodResponse = updatePaymentMethod(params, RequestOptions.none())
+    fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionUpdatePaymentMethodResponse =
+        updatePaymentMethod(
+          params.toBuilder()
+              .subscriptionId(subscriptionId)
+              .build(), requestOptions
+        )
 
     /** @see updatePaymentMethod */
-    fun updatePaymentMethod(
-        params: SubscriptionUpdatePaymentMethodParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): SubscriptionUpdatePaymentMethodResponse
+    fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams): SubscriptionUpdatePaymentMethodResponse =
+        updatePaymentMethod(
+          params, RequestOptions.none()
+        )
 
-    /**
-     * A view of [SubscriptionService] that provides access to raw HTTP responses for each method.
-     */
+    /** @see updatePaymentMethod */
+    fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): SubscriptionUpdatePaymentMethodResponse
+
+    /** A view of [SubscriptionService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -389,440 +395,382 @@ interface SubscriptionService {
          *
          * The original service is not modified.
          */
-        fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): SubscriptionService.WithRawResponse
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions`, but is otherwise the same as
-         * [SubscriptionService.create].
-         */
+        /** Returns a raw HTTP response for `post /subscriptions`, but is otherwise the             same as [SubscriptionService.create]. */
         @Deprecated("deprecated")
         @MustBeClosed
         fun create(params: SubscriptionCreateParams): HttpResponseFor<SubscriptionCreateResponse> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @Deprecated("deprecated")
         @MustBeClosed
-        fun create(
-            params: SubscriptionCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionCreateResponse>
+        fun create(params: SubscriptionCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionCreateResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}`, but is otherwise
-         * the same as [SubscriptionService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}`, but is otherwise the             same as [SubscriptionService.retrieve]. */
         @MustBeClosed
         fun retrieve(subscriptionId: String): HttpResponseFor<Subscription> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none())
+            retrieve(
+              subscriptionId, SubscriptionRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Subscription> =
-            retrieve(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Subscription> =
+            retrieve(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            subscriptionId: String,
-            params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none(),
-        ): HttpResponseFor<Subscription> = retrieve(subscriptionId, params, RequestOptions.none())
+        fun retrieve(subscriptionId: String, params: SubscriptionRetrieveParams = SubscriptionRetrieveParams.none()): HttpResponseFor<Subscription> =
+            retrieve(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: SubscriptionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Subscription>
+        fun retrieve(params: SubscriptionRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Subscription>
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: SubscriptionRetrieveParams): HttpResponseFor<Subscription> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Subscription> =
-            retrieve(subscriptionId, SubscriptionRetrieveParams.none(), requestOptions)
+        fun retrieve(subscriptionId: String, requestOptions: RequestOptions): HttpResponseFor<Subscription> =
+            retrieve(
+              subscriptionId,
+              SubscriptionRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /subscriptions/{subscription_id}`, but is
-         * otherwise the same as [SubscriptionService.update].
-         */
+        /** Returns a raw HTTP response for `patch /subscriptions/{subscription_id}`, but is otherwise the             same as [SubscriptionService.update]. */
         @MustBeClosed
         fun update(subscriptionId: String): HttpResponseFor<Subscription> =
-            update(subscriptionId, SubscriptionUpdateParams.none())
+            update(
+              subscriptionId, SubscriptionUpdateParams.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Subscription> =
-            update(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Subscription> =
+            update(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            subscriptionId: String,
-            params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
-        ): HttpResponseFor<Subscription> = update(subscriptionId, params, RequestOptions.none())
+        fun update(subscriptionId: String, params: SubscriptionUpdateParams = SubscriptionUpdateParams.none()): HttpResponseFor<Subscription> =
+            update(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: SubscriptionUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Subscription>
+        fun update(params: SubscriptionUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Subscription>
 
         /** @see update */
         @MustBeClosed
         fun update(params: SubscriptionUpdateParams): HttpResponseFor<Subscription> =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Subscription> =
-            update(subscriptionId, SubscriptionUpdateParams.none(), requestOptions)
+        fun update(subscriptionId: String, requestOptions: RequestOptions): HttpResponseFor<Subscription> =
+            update(
+              subscriptionId,
+              SubscriptionUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions`, but is otherwise the same as
-         * [SubscriptionService.list].
-         */
+        /** Returns a raw HTTP response for `get /subscriptions`, but is otherwise the             same as [SubscriptionService.list]. */
         @MustBeClosed
         fun list(): HttpResponseFor<SubscriptionListPage> = list(SubscriptionListParams.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: SubscriptionListParams = SubscriptionListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionListPage>
+        fun list(params: SubscriptionListParams = SubscriptionListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionListPage>
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: SubscriptionListParams = SubscriptionListParams.none()
-        ): HttpResponseFor<SubscriptionListPage> = list(params, RequestOptions.none())
+        fun list(params: SubscriptionListParams = SubscriptionListParams.none()): HttpResponseFor<SubscriptionListPage> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<SubscriptionListPage> =
-            list(SubscriptionListParams.none(), requestOptions)
+            list(
+              SubscriptionListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete
-         * /subscriptions/{subscription_id}/change-plan/scheduled`, but is otherwise the same as
-         * [SubscriptionService.cancelChangePlan].
-         */
+        /** Returns a raw HTTP response for `delete /subscriptions/{subscription_id}/change-plan/scheduled`, but is otherwise the             same as [SubscriptionService.cancelChangePlan]. */
         @MustBeClosed
         fun cancelChangePlan(subscriptionId: String): HttpResponse =
-            cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none())
-
-        /** @see cancelChangePlan */
-        @MustBeClosed
-        fun cancelChangePlan(
-            subscriptionId: String,
-            params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse =
             cancelChangePlan(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionCancelChangePlanParams.none()
             )
 
         /** @see cancelChangePlan */
         @MustBeClosed
-        fun cancelChangePlan(
-            subscriptionId: String,
-            params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(),
-        ): HttpResponse = cancelChangePlan(subscriptionId, params, RequestOptions.none())
+        fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            cancelChangePlan(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see cancelChangePlan */
         @MustBeClosed
-        fun cancelChangePlan(
-            params: SubscriptionCancelChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun cancelChangePlan(subscriptionId: String, params: SubscriptionCancelChangePlanParams = SubscriptionCancelChangePlanParams.none()): HttpResponse =
+            cancelChangePlan(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see cancelChangePlan */
+        @MustBeClosed
+        fun cancelChangePlan(params: SubscriptionCancelChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see cancelChangePlan */
         @MustBeClosed
         fun cancelChangePlan(params: SubscriptionCancelChangePlanParams): HttpResponse =
-            cancelChangePlan(params, RequestOptions.none())
+            cancelChangePlan(
+              params, RequestOptions.none()
+            )
 
         /** @see cancelChangePlan */
         @MustBeClosed
         fun cancelChangePlan(subscriptionId: String, requestOptions: RequestOptions): HttpResponse =
             cancelChangePlan(
-                subscriptionId,
-                SubscriptionCancelChangePlanParams.none(),
-                requestOptions,
+              subscriptionId,
+              SubscriptionCancelChangePlanParams.none(),
+              requestOptions,
             )
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but
-         * is otherwise the same as [SubscriptionService.changePlan].
-         */
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan`, but is otherwise the             same as [SubscriptionService.changePlan]. */
         @MustBeClosed
         fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): HttpResponse =
-            changePlan(subscriptionId, params, RequestOptions.none())
+            changePlan(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see changePlan */
         @MustBeClosed
-        fun changePlan(
-            subscriptionId: String,
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse =
-            changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            changePlan(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see changePlan */
         @MustBeClosed
         fun changePlan(params: SubscriptionChangePlanParams): HttpResponse =
-            changePlan(params, RequestOptions.none())
+            changePlan(
+              params, RequestOptions.none()
+            )
 
         /** @see changePlan */
         @MustBeClosed
-        fun changePlan(
-            params: SubscriptionChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun changePlan(params: SubscriptionChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
-        /**
-         * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
-         * otherwise the same as [SubscriptionService.charge].
-         */
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is otherwise the             same as [SubscriptionService.charge]. */
         @MustBeClosed
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-        ): HttpResponseFor<SubscriptionChargeResponse> =
-            charge(subscriptionId, params, RequestOptions.none())
+        fun charge(subscriptionId: String, params: SubscriptionChargeParams): HttpResponseFor<SubscriptionChargeResponse> =
+            charge(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see charge */
         @MustBeClosed
-        fun charge(
-            subscriptionId: String,
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionChargeResponse> =
-            charge(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+        fun charge(subscriptionId: String, params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionChargeResponse> =
+            charge(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see charge */
         @MustBeClosed
         fun charge(params: SubscriptionChargeParams): HttpResponseFor<SubscriptionChargeResponse> =
-            charge(params, RequestOptions.none())
+            charge(
+              params, RequestOptions.none()
+            )
 
         /** @see charge */
         @MustBeClosed
-        fun charge(
-            params: SubscriptionChargeParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionChargeResponse>
+        fun charge(params: SubscriptionChargeParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionChargeResponse>
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /subscriptions/{subscription_id}/change-plan/preview`, but is otherwise the same as
-         * [SubscriptionService.previewChangePlan].
-         */
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/change-plan/preview`, but is otherwise the             same as [SubscriptionService.previewChangePlan]. */
         @MustBeClosed
-        fun previewChangePlan(
-            subscriptionId: String,
-            params: SubscriptionPreviewChangePlanParams,
-        ): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
-            previewChangePlan(subscriptionId, params, RequestOptions.none())
-
-        /** @see previewChangePlan */
-        @MustBeClosed
-        fun previewChangePlan(
-            subscriptionId: String,
-            params: SubscriptionPreviewChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
+        fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
             previewChangePlan(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId,
+              params,
+              RequestOptions.none(),
             )
 
         /** @see previewChangePlan */
         @MustBeClosed
-        fun previewChangePlan(
-            params: SubscriptionPreviewChangePlanParams
-        ): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
-            previewChangePlan(params, RequestOptions.none())
+        fun previewChangePlan(subscriptionId: String, params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
+            previewChangePlan(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see previewChangePlan */
         @MustBeClosed
-        fun previewChangePlan(
-            params: SubscriptionPreviewChangePlanParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionPreviewChangePlanResponse>
+        fun previewChangePlan(params: SubscriptionPreviewChangePlanParams): HttpResponseFor<SubscriptionPreviewChangePlanResponse> =
+            previewChangePlan(
+              params, RequestOptions.none()
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/credit-usage`, but
-         * is otherwise the same as [SubscriptionService.retrieveCreditUsage].
-         */
+        /** @see previewChangePlan */
         @MustBeClosed
-        fun retrieveCreditUsage(
-            subscriptionId: String
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
-            retrieveCreditUsage(subscriptionId, SubscriptionRetrieveCreditUsageParams.none())
+        fun previewChangePlan(params: SubscriptionPreviewChangePlanParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionPreviewChangePlanResponse>
 
-        /** @see retrieveCreditUsage */
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}/credit-usage`, but is otherwise the             same as [SubscriptionService.retrieveCreditUsage]. */
         @MustBeClosed
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            params: SubscriptionRetrieveCreditUsageParams =
-                SubscriptionRetrieveCreditUsageParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
+        fun retrieveCreditUsage(subscriptionId: String): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
             retrieveCreditUsage(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionRetrieveCreditUsageParams.none()
             )
 
         /** @see retrieveCreditUsage */
         @MustBeClosed
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            params: SubscriptionRetrieveCreditUsageParams =
-                SubscriptionRetrieveCreditUsageParams.none(),
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
-            retrieveCreditUsage(subscriptionId, params, RequestOptions.none())
-
-        /** @see retrieveCreditUsage */
-        @MustBeClosed
-        fun retrieveCreditUsage(
-            params: SubscriptionRetrieveCreditUsageParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>
-
-        /** @see retrieveCreditUsage */
-        @MustBeClosed
-        fun retrieveCreditUsage(
-            params: SubscriptionRetrieveCreditUsageParams
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
-            retrieveCreditUsage(params, RequestOptions.none())
-
-        /** @see retrieveCreditUsage */
-        @MustBeClosed
-        fun retrieveCreditUsage(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
+        fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
             retrieveCreditUsage(
-                subscriptionId,
-                SubscriptionRetrieveCreditUsageParams.none(),
-                requestOptions,
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
             )
 
-        /**
-         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but
-         * is otherwise the same as [SubscriptionService.retrieveUsageHistory].
-         */
+        /** @see retrieveCreditUsage */
         @MustBeClosed
-        fun retrieveUsageHistory(
-            subscriptionId: String
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
-            retrieveUsageHistory(subscriptionId, SubscriptionRetrieveUsageHistoryParams.none())
+        fun retrieveCreditUsage(subscriptionId: String, params: SubscriptionRetrieveCreditUsageParams = SubscriptionRetrieveCreditUsageParams.none()): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
+            retrieveCreditUsage(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
-        /** @see retrieveUsageHistory */
+        /** @see retrieveCreditUsage */
         @MustBeClosed
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            params: SubscriptionRetrieveUsageHistoryParams =
-                SubscriptionRetrieveUsageHistoryParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
+        fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse>
+
+        /** @see retrieveCreditUsage */
+        @MustBeClosed
+        fun retrieveCreditUsage(params: SubscriptionRetrieveCreditUsageParams): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
+            retrieveCreditUsage(
+              params, RequestOptions.none()
+            )
+
+        /** @see retrieveCreditUsage */
+        @MustBeClosed
+        fun retrieveCreditUsage(subscriptionId: String, requestOptions: RequestOptions): HttpResponseFor<SubscriptionRetrieveCreditUsageResponse> =
+            retrieveCreditUsage(
+              subscriptionId,
+              SubscriptionRetrieveCreditUsageParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `get /subscriptions/{subscription_id}/usage-history`, but is otherwise the             same as [SubscriptionService.retrieveUsageHistory]. */
+        @MustBeClosed
+        fun retrieveUsageHistory(subscriptionId: String): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
             retrieveUsageHistory(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId, SubscriptionRetrieveUsageHistoryParams.none()
             )
 
         /** @see retrieveUsageHistory */
         @MustBeClosed
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            params: SubscriptionRetrieveUsageHistoryParams =
-                SubscriptionRetrieveUsageHistoryParams.none(),
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
-            retrieveUsageHistory(subscriptionId, params, RequestOptions.none())
-
-        /** @see retrieveUsageHistory */
-        @MustBeClosed
-        fun retrieveUsageHistory(
-            params: SubscriptionRetrieveUsageHistoryParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage>
-
-        /** @see retrieveUsageHistory */
-        @MustBeClosed
-        fun retrieveUsageHistory(
-            params: SubscriptionRetrieveUsageHistoryParams
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
-            retrieveUsageHistory(params, RequestOptions.none())
-
-        /** @see retrieveUsageHistory */
-        @MustBeClosed
-        fun retrieveUsageHistory(
-            subscriptionId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
+        fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
             retrieveUsageHistory(
-                subscriptionId,
-                SubscriptionRetrieveUsageHistoryParams.none(),
-                requestOptions,
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
             )
 
-        /**
-         * Returns a raw HTTP response for `post
-         * /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the same as
-         * [SubscriptionService.updatePaymentMethod].
-         */
+        /** @see retrieveUsageHistory */
         @MustBeClosed
-        fun updatePaymentMethod(
-            subscriptionId: String,
-            params: SubscriptionUpdatePaymentMethodParams,
-        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
-            updatePaymentMethod(subscriptionId, params, RequestOptions.none())
+        fun retrieveUsageHistory(subscriptionId: String, params: SubscriptionRetrieveUsageHistoryParams = SubscriptionRetrieveUsageHistoryParams.none()): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
+            retrieveUsageHistory(
+              subscriptionId,
+              params,
+              RequestOptions.none(),
+            )
 
-        /** @see updatePaymentMethod */
+        /** @see retrieveUsageHistory */
         @MustBeClosed
-        fun updatePaymentMethod(
-            subscriptionId: String,
-            params: SubscriptionUpdatePaymentMethodParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+        fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage>
+
+        /** @see retrieveUsageHistory */
+        @MustBeClosed
+        fun retrieveUsageHistory(params: SubscriptionRetrieveUsageHistoryParams): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
+            retrieveUsageHistory(
+              params, RequestOptions.none()
+            )
+
+        /** @see retrieveUsageHistory */
+        @MustBeClosed
+        fun retrieveUsageHistory(subscriptionId: String, requestOptions: RequestOptions): HttpResponseFor<SubscriptionRetrieveUsageHistoryPage> =
+            retrieveUsageHistory(
+              subscriptionId,
+              SubscriptionRetrieveUsageHistoryParams.none(),
+              requestOptions,
+            )
+
+        /** Returns a raw HTTP response for `post /subscriptions/{subscription_id}/update-payment-method`, but is otherwise the             same as [SubscriptionService.updatePaymentMethod]. */
+        @MustBeClosed
+        fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
             updatePaymentMethod(
-                params.toBuilder().subscriptionId(subscriptionId).build(),
-                requestOptions,
+              subscriptionId,
+              params,
+              RequestOptions.none(),
             )
 
         /** @see updatePaymentMethod */
         @MustBeClosed
-        fun updatePaymentMethod(
-            params: SubscriptionUpdatePaymentMethodParams
-        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
-            updatePaymentMethod(params, RequestOptions.none())
+        fun updatePaymentMethod(subscriptionId: String, params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+            updatePaymentMethod(
+              params.toBuilder()
+                  .subscriptionId(subscriptionId)
+                  .build(), requestOptions
+            )
 
         /** @see updatePaymentMethod */
         @MustBeClosed
-        fun updatePaymentMethod(
-            params: SubscriptionUpdatePaymentMethodParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>
+        fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse> =
+            updatePaymentMethod(
+              params, RequestOptions.none()
+            )
+
+        /** @see updatePaymentMethod */
+        @MustBeClosed
+        fun updatePaymentMethod(params: SubscriptionUpdatePaymentMethodParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<SubscriptionUpdatePaymentMethodResponse>
     }
 }

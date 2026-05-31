@@ -4,6 +4,7 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.misc.MiscListSupportedCountriesParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -12,16 +13,15 @@ internal class MiscServiceAsyncTest {
 
     @Test
     fun listSupportedCountries() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val miscServiceAsync = client.misc()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val miscServiceAsync = client.misc()
 
-        val countryCodesFuture = miscServiceAsync.listSupportedCountries()
+      val countryCodesFuture = miscServiceAsync.listSupportedCountries()
 
-        val countryCodes = countryCodesFuture.get()
-        countryCodes.forEach { it.validate() }
+      val countryCodes = countryCodesFuture.get()
+      countryCodes.forEach { it.validate() }
     }
 }

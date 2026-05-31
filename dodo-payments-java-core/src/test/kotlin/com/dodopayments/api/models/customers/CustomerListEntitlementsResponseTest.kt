@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.customers
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -13,69 +14,55 @@ internal class CustomerListEntitlementsResponseTest {
 
     @Test
     fun create() {
-        val customerListEntitlementsResponse =
-            CustomerListEntitlementsResponse.builder()
-                .addItem(
-                    CustomerListEntitlementsResponse.Item.builder()
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .entitlementId("entitlement_id")
-                        .entitlementName("entitlement_name")
-                        .grantId("grant_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
-                        .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .entitlementDescription("entitlement_description")
-                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .build()
-                )
-                .build()
+      val customerListEntitlementsResponse = CustomerListEntitlementsResponse.builder()
+          .addItem(CustomerListEntitlementsResponse.Item.builder()
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .entitlementId("entitlement_id")
+              .entitlementName("entitlement_name")
+              .grantId("grant_id")
+              .integrationType(EntitlementIntegrationType.DISCORD)
+              .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .entitlementDescription("entitlement_description")
+              .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .build())
+          .build()
 
-        assertThat(customerListEntitlementsResponse.items())
-            .containsExactly(
-                CustomerListEntitlementsResponse.Item.builder()
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .entitlementId("entitlement_id")
-                    .entitlementName("entitlement_name")
-                    .grantId("grant_id")
-                    .integrationType(EntitlementIntegrationType.DISCORD)
-                    .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
-                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .entitlementDescription("entitlement_description")
-                    .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .build()
-            )
+      assertThat(customerListEntitlementsResponse.items()).containsExactly(CustomerListEntitlementsResponse.Item.builder()
+          .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .entitlementId("entitlement_id")
+          .entitlementName("entitlement_name")
+          .grantId("grant_id")
+          .integrationType(EntitlementIntegrationType.DISCORD)
+          .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
+          .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .entitlementDescription("entitlement_description")
+          .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build())
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val customerListEntitlementsResponse =
-            CustomerListEntitlementsResponse.builder()
-                .addItem(
-                    CustomerListEntitlementsResponse.Item.builder()
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .entitlementId("entitlement_id")
-                        .entitlementName("entitlement_name")
-                        .grantId("grant_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
-                        .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
-                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .entitlementDescription("entitlement_description")
-                        .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .build()
-                )
-                .build()
+      val jsonMapper = jsonMapper()
+      val customerListEntitlementsResponse = CustomerListEntitlementsResponse.builder()
+          .addItem(CustomerListEntitlementsResponse.Item.builder()
+              .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .entitlementId("entitlement_id")
+              .entitlementName("entitlement_name")
+              .grantId("grant_id")
+              .integrationType(EntitlementIntegrationType.DISCORD)
+              .status(CustomerListEntitlementsResponse.Item.Status.PENDING)
+              .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .deliveredAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .entitlementDescription("entitlement_description")
+              .revokedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+              .build())
+          .build()
 
-        val roundtrippedCustomerListEntitlementsResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(customerListEntitlementsResponse),
-                jacksonTypeRef<CustomerListEntitlementsResponse>(),
-            )
+      val roundtrippedCustomerListEntitlementsResponse = jsonMapper.readValue(jsonMapper.writeValueAsString(customerListEntitlementsResponse), jacksonTypeRef<CustomerListEntitlementsResponse>())
 
-        assertThat(roundtrippedCustomerListEntitlementsResponse)
-            .isEqualTo(customerListEntitlementsResponse)
+      assertThat(roundtrippedCustomerListEntitlementsResponse).isEqualTo(customerListEntitlementsResponse)
     }
 }

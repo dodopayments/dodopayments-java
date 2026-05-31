@@ -17,33 +17,34 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class GroupProduct
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class GroupProduct @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val productId: JsonField<String>,
     private val status: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("status") @ExcludeMissing status: JsonField<Boolean> = JsonMissing.of(),
-    ) : this(productId, status, mutableMapOf())
+        @JsonProperty("status") @ExcludeMissing status: JsonField<Boolean> = JsonMissing.of()
+    ) : this(
+      productId,
+      status,
+      mutableMapOf(),
+    )
 
     /**
      * Product ID to include in the group
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun productId(): String = productId.getRequired("product_id")
 
     /**
      * Status of the product in this group (defaults to true if not provided)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun status(): Optional<Boolean> = status.getOptional("status")
 
@@ -52,24 +53,27 @@ private constructor(
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+    @JsonProperty("product_id")
+    @ExcludeMissing
+    fun _productId(): JsonField<String> = productId
 
     /**
      * Returns the raw JSON value of [status].
      *
      * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Boolean> = status
+    @JsonProperty("status")
+    @ExcludeMissing
+    fun _status(): JsonField<Boolean> = status
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -79,11 +83,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [GroupProduct].
          *
          * The following fields are required:
+         *
          * ```java
          * .productId()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [GroupProduct]. */
@@ -94,11 +100,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(groupProduct: GroupProduct) = apply {
-            productId = groupProduct.productId
-            status = groupProduct.status
-            additionalProperties = groupProduct.additionalProperties.toMutableMap()
-        }
+        internal fun from(groupProduct: GroupProduct) =
+            apply {
+                productId = groupProduct.productId
+                status = groupProduct.status
+                additionalProperties = groupProduct.additionalProperties.toMutableMap()
+            }
 
         /** Product ID to include in the group */
         fun productId(productId: String) = productId(JsonField.of(productId))
@@ -106,11 +113,13 @@ private constructor(
         /**
          * Sets [Builder.productId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+        fun productId(productId: JsonField<String>) =
+            apply {
+                this.productId = productId
+            }
 
         /** Status of the product in this group (defaults to true if not provided) */
         fun status(status: Boolean?) = status(JsonField.ofNullable(status))
@@ -128,29 +137,39 @@ private constructor(
         /**
          * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun status(status: JsonField<Boolean>) = apply { this.status = status }
+        fun status(status: JsonField<Boolean>) =
+            apply {
+                this.status = status
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [GroupProduct].
@@ -158,6 +177,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .productId()
          * ```
@@ -166,9 +186,11 @@ private constructor(
          */
         fun build(): GroupProduct =
             GroupProduct(
-                checkRequired("productId", productId),
-                status,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "productId", productId
+              ),
+              status,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -182,15 +204,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): GroupProduct = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): GroupProduct =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        productId()
-        status()
-        validated = true
-    }
+            productId()
+            status()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -206,24 +229,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (productId.asKnown().isPresent) 1 else 0) + (if (status.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (productId.asKnown().isPresent) 1 else 0) + (if (status.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is GroupProduct &&
-            productId == other.productId &&
-            status == other.status &&
-            additionalProperties == other.additionalProperties
+      return other is GroupProduct && productId == other.productId && status == other.status && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(productId, status, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "GroupProduct{productId=$productId, status=$status, additionalProperties=$additionalProperties}"
+    override fun toString() = "GroupProduct{productId=$productId, status=$status, additionalProperties=$additionalProperties}"
 }

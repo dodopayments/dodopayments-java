@@ -7,14 +7,13 @@ import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.balances.BalanceRetrieveLedgerPage
 import com.dodopayments.api.models.balances.BalanceRetrieveLedgerParams
+import com.dodopayments.api.services.blocking.BalanceService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
 interface BalanceService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -24,23 +23,22 @@ interface BalanceService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BalanceService
 
-    fun retrieveLedger(): BalanceRetrieveLedgerPage =
-        retrieveLedger(BalanceRetrieveLedgerParams.none())
+    fun retrieveLedger(): BalanceRetrieveLedgerPage = retrieveLedger(BalanceRetrieveLedgerParams.none())
 
     /** @see retrieveLedger */
-    fun retrieveLedger(
-        params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): BalanceRetrieveLedgerPage
+    fun retrieveLedger(params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none(), requestOptions: RequestOptions = RequestOptions.none()): BalanceRetrieveLedgerPage
 
     /** @see retrieveLedger */
-    fun retrieveLedger(
-        params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none()
-    ): BalanceRetrieveLedgerPage = retrieveLedger(params, RequestOptions.none())
+    fun retrieveLedger(params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none()): BalanceRetrieveLedgerPage =
+        retrieveLedger(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieveLedger */
     fun retrieveLedger(requestOptions: RequestOptions): BalanceRetrieveLedgerPage =
-        retrieveLedger(BalanceRetrieveLedgerParams.none(), requestOptions)
+        retrieveLedger(
+          BalanceRetrieveLedgerParams.none(), requestOptions
+        )
 
     /** A view of [BalanceService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -52,33 +50,26 @@ interface BalanceService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): BalanceService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `get /balances/ledger`, but is otherwise the same as
-         * [BalanceService.retrieveLedger].
-         */
+        /** Returns a raw HTTP response for `get /balances/ledger`, but is otherwise the             same as [BalanceService.retrieveLedger]. */
         @MustBeClosed
-        fun retrieveLedger(): HttpResponseFor<BalanceRetrieveLedgerPage> =
-            retrieveLedger(BalanceRetrieveLedgerParams.none())
+        fun retrieveLedger(): HttpResponseFor<BalanceRetrieveLedgerPage> = retrieveLedger(BalanceRetrieveLedgerParams.none())
 
         /** @see retrieveLedger */
         @MustBeClosed
-        fun retrieveLedger(
-            params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<BalanceRetrieveLedgerPage>
+        fun retrieveLedger(params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<BalanceRetrieveLedgerPage>
 
         /** @see retrieveLedger */
         @MustBeClosed
-        fun retrieveLedger(
-            params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none()
-        ): HttpResponseFor<BalanceRetrieveLedgerPage> =
-            retrieveLedger(params, RequestOptions.none())
+        fun retrieveLedger(params: BalanceRetrieveLedgerParams = BalanceRetrieveLedgerParams.none()): HttpResponseFor<BalanceRetrieveLedgerPage> =
+            retrieveLedger(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieveLedger */
         @MustBeClosed
-        fun retrieveLedger(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<BalanceRetrieveLedgerPage> =
-            retrieveLedger(BalanceRetrieveLedgerParams.none(), requestOptions)
+        fun retrieveLedger(requestOptions: RequestOptions): HttpResponseFor<BalanceRetrieveLedgerPage> =
+            retrieveLedger(
+              BalanceRetrieveLedgerParams.none(), requestOptions
+            )
     }
 }

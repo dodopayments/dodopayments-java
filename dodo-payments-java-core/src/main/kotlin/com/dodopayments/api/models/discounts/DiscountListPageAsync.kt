@@ -5,20 +5,24 @@ package com.dodopayments.api.models.discounts
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.discounts.Discount
+import com.dodopayments.api.models.discounts.DiscountListPageResponse
+import com.dodopayments.api.models.discounts.DiscountListParams
 import com.dodopayments.api.services.async.DiscountServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see DiscountServiceAsync.list */
-class DiscountListPageAsync
-private constructor(
+class DiscountListPageAsync private constructor(
     private val service: DiscountServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: DiscountListParams,
     private val response: DiscountListPageResponse,
+
 ) : PageAsync<Discount> {
 
     /**
@@ -26,20 +30,23 @@ private constructor(
      *
      * @see DiscountListPageResponse.items
      */
-    override fun items(): List<Discount> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<Discount> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): DiscountListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
-    override fun nextPage(): CompletableFuture<DiscountListPageAsync> =
-        service.list(nextPageParams())
+    override fun nextPage(): CompletableFuture<DiscountListPageAsync> = service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<Discount> = AutoPagerAsync.from(this, streamHandlerExecutor)
+    fun autoPager(): AutoPagerAsync<Discount> =
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): DiscountListParams = params
@@ -55,6 +62,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DiscountListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -62,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DiscountListPageAsync]. */
@@ -74,24 +83,35 @@ private constructor(
         private var response: DiscountListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(discountListPageAsync: DiscountListPageAsync) = apply {
-            service = discountListPageAsync.service
-            streamHandlerExecutor = discountListPageAsync.streamHandlerExecutor
-            params = discountListPageAsync.params
-            response = discountListPageAsync.response
-        }
+        internal fun from(discountListPageAsync: DiscountListPageAsync) =
+            apply {
+                service = discountListPageAsync.service
+                streamHandlerExecutor = discountListPageAsync.streamHandlerExecutor
+                params = discountListPageAsync.params
+                response = discountListPageAsync.response
+            }
 
-        fun service(service: DiscountServiceAsync) = apply { this.service = service }
+        fun service(service: DiscountServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: DiscountListParams) = apply { this.params = params }
+        fun params(params: DiscountListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: DiscountListPageResponse) = apply { this.response = response }
+        fun response(response: DiscountListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [DiscountListPageAsync].
@@ -99,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -110,27 +131,30 @@ private constructor(
          */
         fun build(): DiscountListPageAsync =
             DiscountListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DiscountListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is DiscountListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "DiscountListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "DiscountListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

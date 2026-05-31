@@ -15,113 +15,101 @@ import com.dodopayments.api.core.prepare
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams
 import com.dodopayments.api.models.invoices.payments.PaymentRetrievePayoutParams
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveRefundParams
+import com.dodopayments.api.services.blocking.invoices.PaymentService
+import com.dodopayments.api.services.blocking.invoices.PaymentServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class PaymentServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    PaymentService {
+class PaymentServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: PaymentService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : PaymentService {
+
+    private val withRawResponse: PaymentService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): PaymentService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService =
-        PaymentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService = PaymentServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieve(
-        params: PaymentRetrieveParams,
-        requestOptions: RequestOptions,
-    ): HttpResponse =
+    override fun retrieve(params: PaymentRetrieveParams, requestOptions: RequestOptions): HttpResponse =
         // get /invoices/payments/{payment_id}
         withRawResponse().retrieve(params, requestOptions)
 
-    override fun retrievePayout(
-        params: PaymentRetrievePayoutParams,
-        requestOptions: RequestOptions,
-    ): HttpResponse =
+    override fun retrievePayout(params: PaymentRetrievePayoutParams, requestOptions: RequestOptions): HttpResponse =
         // get /invoices/payouts/{payout_id}
         withRawResponse().retrievePayout(params, requestOptions)
 
-    override fun retrieveRefund(
-        params: PaymentRetrieveRefundParams,
-        requestOptions: RequestOptions,
-    ): HttpResponse =
+    override fun retrieveRefund(params: PaymentRetrieveRefundParams, requestOptions: RequestOptions): HttpResponse =
         // get /invoices/refunds/{refund_id}
         withRawResponse().retrieveRefund(params, requestOptions)
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        PaymentService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : PaymentService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): PaymentService.WithRawResponse =
-            PaymentServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): PaymentService.WithRawResponse = PaymentServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        override fun retrieve(params: PaymentRetrieveParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("paymentId", params.paymentId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("invoices", "payments", params._pathParam(0))
+            .putHeader("Accept", "application/pdf")
+            .build()
+            .prepare(
+              clientOptions, params
             )
-
-        override fun retrieve(
-            params: PaymentRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("paymentId", params.paymentId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("invoices", "payments", params._pathParam(0))
-                    .putHeader("Accept", "application/pdf")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response)
         }
 
-        override fun retrievePayout(
-            params: PaymentRetrievePayoutParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("payoutId", params.payoutId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("invoices", "payouts", params._pathParam(0))
-                    .putHeader("Accept", "application/pdf")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response)
+        override fun retrievePayout(params: PaymentRetrievePayoutParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("payoutId", params.payoutId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("invoices", "payouts", params._pathParam(0))
+            .putHeader("Accept", "application/pdf")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response)
         }
 
-        override fun retrieveRefund(
-            params: PaymentRetrieveRefundParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("refundId", params.refundId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("invoices", "refunds", params._pathParam(0))
-                    .putHeader("Accept", "application/pdf")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response)
+        override fun retrieveRefund(params: PaymentRetrieveRefundParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("refundId", params.refundId().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("invoices", "refunds", params._pathParam(0))
+            .putHeader("Accept", "application/pdf")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response)
         }
     }
 }

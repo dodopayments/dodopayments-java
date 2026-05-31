@@ -16,6 +16,7 @@ import com.dodopayments.api.models.products.ProductUnarchiveParams
 import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
+import com.dodopayments.api.services.blocking.ProductService
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.ShortLinkService
 import com.google.errorprone.annotations.MustBeClosed
@@ -23,9 +24,7 @@ import java.util.function.Consumer
 
 interface ProductService {
 
-    /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
-     */
+    /** Returns a view of this service that provides access to raw HTTP responses for each method. */
     fun withRawResponse(): WithRawResponse
 
     /**
@@ -39,152 +38,206 @@ interface ProductService {
 
     fun shortLinks(): ShortLinkService
 
-    fun create(params: ProductCreateParams): Product = create(params, RequestOptions.none())
+    fun create(params: ProductCreateParams): Product =
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see create */
-    fun create(
-        params: ProductCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Product
+    fun create(params: ProductCreateParams, requestOptions: RequestOptions = RequestOptions.none()): Product
 
-    fun retrieve(id: String): Product = retrieve(id, ProductRetrieveParams.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: ProductRetrieveParams = ProductRetrieveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Product = retrieve(params.toBuilder().id(id).build(), requestOptions)
+    fun retrieve(id: String): Product =
+        retrieve(
+          id, ProductRetrieveParams.none()
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        id: String,
-        params: ProductRetrieveParams = ProductRetrieveParams.none(),
-    ): Product = retrieve(id, params, RequestOptions.none())
+    fun retrieve(id: String, params: ProductRetrieveParams = ProductRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): Product =
+        retrieve(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see retrieve */
-    fun retrieve(
-        params: ProductRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): Product
+    fun retrieve(id: String, params: ProductRetrieveParams = ProductRetrieveParams.none()): Product =
+        retrieve(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see retrieve */
-    fun retrieve(params: ProductRetrieveParams): Product = retrieve(params, RequestOptions.none())
+    fun retrieve(params: ProductRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): Product
+
+    /** @see retrieve */
+    fun retrieve(params: ProductRetrieveParams): Product =
+        retrieve(
+          params, RequestOptions.none()
+        )
 
     /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): Product =
-        retrieve(id, ProductRetrieveParams.none(), requestOptions)
+        retrieve(
+          id,
+          ProductRetrieveParams.none(),
+          requestOptions,
+        )
 
-    fun update(id: String) = update(id, ProductUpdateParams.none())
+    fun update(id: String) =
+        update(
+          id, ProductUpdateParams.none()
+        )
 
     /** @see update */
-    fun update(
-        id: String,
-        params: ProductUpdateParams = ProductUpdateParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = update(params.toBuilder().id(id).build(), requestOptions)
+    fun update(id: String, params: ProductUpdateParams = ProductUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        update(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see update */
     fun update(id: String, params: ProductUpdateParams = ProductUpdateParams.none()) =
-        update(id, params, RequestOptions.none())
+        update(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see update */
     fun update(params: ProductUpdateParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see update */
-    fun update(params: ProductUpdateParams) = update(params, RequestOptions.none())
+    fun update(params: ProductUpdateParams) =
+        update(
+          params, RequestOptions.none()
+        )
 
     /** @see update */
     fun update(id: String, requestOptions: RequestOptions) =
-        update(id, ProductUpdateParams.none(), requestOptions)
+        update(
+          id,
+          ProductUpdateParams.none(),
+          requestOptions,
+        )
 
     fun list(): ProductListPage = list(ProductListParams.none())
 
     /** @see list */
-    fun list(
-        params: ProductListParams = ProductListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProductListPage
+    fun list(params: ProductListParams = ProductListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): ProductListPage
 
     /** @see list */
     fun list(params: ProductListParams = ProductListParams.none()): ProductListPage =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see list */
     fun list(requestOptions: RequestOptions): ProductListPage =
-        list(ProductListParams.none(), requestOptions)
+        list(
+          ProductListParams.none(), requestOptions
+        )
 
-    fun archive(id: String) = archive(id, ProductArchiveParams.none())
+    fun archive(id: String) =
+        archive(
+          id, ProductArchiveParams.none()
+        )
 
     /** @see archive */
-    fun archive(
-        id: String,
-        params: ProductArchiveParams = ProductArchiveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = archive(params.toBuilder().id(id).build(), requestOptions)
+    fun archive(id: String, params: ProductArchiveParams = ProductArchiveParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        archive(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see archive */
     fun archive(id: String, params: ProductArchiveParams = ProductArchiveParams.none()) =
-        archive(id, params, RequestOptions.none())
+        archive(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see archive */
-    fun archive(
-        params: ProductArchiveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun archive(params: ProductArchiveParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see archive */
-    fun archive(params: ProductArchiveParams) = archive(params, RequestOptions.none())
+    fun archive(params: ProductArchiveParams) =
+        archive(
+          params, RequestOptions.none()
+        )
 
     /** @see archive */
     fun archive(id: String, requestOptions: RequestOptions) =
-        archive(id, ProductArchiveParams.none(), requestOptions)
+        archive(
+          id,
+          ProductArchiveParams.none(),
+          requestOptions,
+        )
 
-    fun unarchive(id: String) = unarchive(id, ProductUnarchiveParams.none())
+    fun unarchive(id: String) =
+        unarchive(
+          id, ProductUnarchiveParams.none()
+        )
 
     /** @see unarchive */
-    fun unarchive(
-        id: String,
-        params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ) = unarchive(params.toBuilder().id(id).build(), requestOptions)
+    fun unarchive(id: String, params: ProductUnarchiveParams = ProductUnarchiveParams.none(), requestOptions: RequestOptions = RequestOptions.none()) =
+        unarchive(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see unarchive */
     fun unarchive(id: String, params: ProductUnarchiveParams = ProductUnarchiveParams.none()) =
-        unarchive(id, params, RequestOptions.none())
+        unarchive(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see unarchive */
-    fun unarchive(
-        params: ProductUnarchiveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    fun unarchive(params: ProductUnarchiveParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** @see unarchive */
-    fun unarchive(params: ProductUnarchiveParams) = unarchive(params, RequestOptions.none())
+    fun unarchive(params: ProductUnarchiveParams) =
+        unarchive(
+          params, RequestOptions.none()
+        )
 
     /** @see unarchive */
     fun unarchive(id: String, requestOptions: RequestOptions) =
-        unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+        unarchive(
+          id,
+          ProductUnarchiveParams.none(),
+          requestOptions,
+        )
 
     fun updateFiles(id: String, params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
-        updateFiles(id, params, RequestOptions.none())
+        updateFiles(
+          id,
+          params,
+          RequestOptions.none(),
+        )
 
     /** @see updateFiles */
-    fun updateFiles(
-        id: String,
-        params: ProductUpdateFilesParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProductUpdateFilesResponse = updateFiles(params.toBuilder().id(id).build(), requestOptions)
+    fun updateFiles(id: String, params: ProductUpdateFilesParams, requestOptions: RequestOptions = RequestOptions.none()): ProductUpdateFilesResponse =
+        updateFiles(
+          params.toBuilder()
+              .id(id)
+              .build(), requestOptions
+        )
 
     /** @see updateFiles */
     fun updateFiles(params: ProductUpdateFilesParams): ProductUpdateFilesResponse =
-        updateFiles(params, RequestOptions.none())
+        updateFiles(
+          params, RequestOptions.none()
+        )
 
     /** @see updateFiles */
-    fun updateFiles(
-        params: ProductUpdateFilesParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ProductUpdateFilesResponse
+    fun updateFiles(params: ProductUpdateFilesParams, requestOptions: RequestOptions = RequestOptions.none()): ProductUpdateFilesResponse
 
     /** A view of [ProductService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -200,232 +253,246 @@ interface ProductService {
 
         fun shortLinks(): ShortLinkService.WithRawResponse
 
-        /**
-         * Returns a raw HTTP response for `post /products`, but is otherwise the same as
-         * [ProductService.create].
-         */
+        /** Returns a raw HTTP response for `post /products`, but is otherwise the             same as [ProductService.create]. */
         @MustBeClosed
         fun create(params: ProductCreateParams): HttpResponseFor<Product> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see create */
         @MustBeClosed
-        fun create(
-            params: ProductCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Product>
+        fun create(params: ProductCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Product>
 
-        /**
-         * Returns a raw HTTP response for `get /products/{id}`, but is otherwise the same as
-         * [ProductService.retrieve].
-         */
+        /** Returns a raw HTTP response for `get /products/{id}`, but is otherwise the             same as [ProductService.retrieve]. */
         @MustBeClosed
         fun retrieve(id: String): HttpResponseFor<Product> =
-            retrieve(id, ProductRetrieveParams.none())
+            retrieve(
+              id, ProductRetrieveParams.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: ProductRetrieveParams = ProductRetrieveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Product> = retrieve(params.toBuilder().id(id).build(), requestOptions)
+        fun retrieve(id: String, params: ProductRetrieveParams = ProductRetrieveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Product> =
+            retrieve(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            id: String,
-            params: ProductRetrieveParams = ProductRetrieveParams.none(),
-        ): HttpResponseFor<Product> = retrieve(id, params, RequestOptions.none())
+        fun retrieve(id: String, params: ProductRetrieveParams = ProductRetrieveParams.none()): HttpResponseFor<Product> =
+            retrieve(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see retrieve */
         @MustBeClosed
-        fun retrieve(
-            params: ProductRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<Product>
+        fun retrieve(params: ProductRetrieveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<Product>
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(params: ProductRetrieveParams): HttpResponseFor<Product> =
-            retrieve(params, RequestOptions.none())
+            retrieve(
+              params, RequestOptions.none()
+            )
 
         /** @see retrieve */
         @MustBeClosed
         fun retrieve(id: String, requestOptions: RequestOptions): HttpResponseFor<Product> =
-            retrieve(id, ProductRetrieveParams.none(), requestOptions)
+            retrieve(
+              id,
+              ProductRetrieveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `patch /products/{id}`, but is otherwise the same as
-         * [ProductService.update].
-         */
-        @MustBeClosed fun update(id: String): HttpResponse = update(id, ProductUpdateParams.none())
+        /** Returns a raw HTTP response for `patch /products/{id}`, but is otherwise the             same as [ProductService.update]. */
+        @MustBeClosed
+        fun update(id: String): HttpResponse =
+            update(
+              id, ProductUpdateParams.none()
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            id: String,
-            params: ProductUpdateParams = ProductUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = update(params.toBuilder().id(id).build(), requestOptions)
+        fun update(id: String, params: ProductUpdateParams = ProductUpdateParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            update(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            id: String,
-            params: ProductUpdateParams = ProductUpdateParams.none(),
-        ): HttpResponse = update(id, params, RequestOptions.none())
+        fun update(id: String, params: ProductUpdateParams = ProductUpdateParams.none()): HttpResponse =
+            update(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: ProductUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun update(params: ProductUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see update */
         @MustBeClosed
         fun update(params: ProductUpdateParams): HttpResponse =
-            update(params, RequestOptions.none())
+            update(
+              params, RequestOptions.none()
+            )
 
         /** @see update */
         @MustBeClosed
         fun update(id: String, requestOptions: RequestOptions): HttpResponse =
-            update(id, ProductUpdateParams.none(), requestOptions)
+            update(
+              id,
+              ProductUpdateParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `get /products`, but is otherwise the same as
-         * [ProductService.list].
-         */
-        @MustBeClosed fun list(): HttpResponseFor<ProductListPage> = list(ProductListParams.none())
+        /** Returns a raw HTTP response for `get /products`, but is otherwise the             same as [ProductService.list]. */
+        @MustBeClosed
+        fun list(): HttpResponseFor<ProductListPage> = list(ProductListParams.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: ProductListParams = ProductListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProductListPage>
+        fun list(params: ProductListParams = ProductListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProductListPage>
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: ProductListParams = ProductListParams.none()
-        ): HttpResponseFor<ProductListPage> = list(params, RequestOptions.none())
+        fun list(params: ProductListParams = ProductListParams.none()): HttpResponseFor<ProductListPage> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ProductListPage> =
-            list(ProductListParams.none(), requestOptions)
+            list(
+              ProductListParams.none(), requestOptions
+            )
 
-        /**
-         * Returns a raw HTTP response for `delete /products/{id}`, but is otherwise the same as
-         * [ProductService.archive].
-         */
+        /** Returns a raw HTTP response for `delete /products/{id}`, but is otherwise the             same as [ProductService.archive]. */
         @MustBeClosed
-        fun archive(id: String): HttpResponse = archive(id, ProductArchiveParams.none())
-
-        /** @see archive */
-        @MustBeClosed
-        fun archive(
-            id: String,
-            params: ProductArchiveParams = ProductArchiveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = archive(params.toBuilder().id(id).build(), requestOptions)
+        fun archive(id: String): HttpResponse =
+            archive(
+              id, ProductArchiveParams.none()
+            )
 
         /** @see archive */
         @MustBeClosed
-        fun archive(
-            id: String,
-            params: ProductArchiveParams = ProductArchiveParams.none(),
-        ): HttpResponse = archive(id, params, RequestOptions.none())
+        fun archive(id: String, params: ProductArchiveParams = ProductArchiveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            archive(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see archive */
         @MustBeClosed
-        fun archive(
-            params: ProductArchiveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun archive(id: String, params: ProductArchiveParams = ProductArchiveParams.none()): HttpResponse =
+            archive(
+              id,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(params: ProductArchiveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see archive */
         @MustBeClosed
         fun archive(params: ProductArchiveParams): HttpResponse =
-            archive(params, RequestOptions.none())
+            archive(
+              params, RequestOptions.none()
+            )
 
         /** @see archive */
         @MustBeClosed
         fun archive(id: String, requestOptions: RequestOptions): HttpResponse =
-            archive(id, ProductArchiveParams.none(), requestOptions)
+            archive(
+              id,
+              ProductArchiveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `post /products/{id}/unarchive`, but is otherwise the
-         * same as [ProductService.unarchive].
-         */
+        /** Returns a raw HTTP response for `post /products/{id}/unarchive`, but is otherwise the             same as [ProductService.unarchive]. */
         @MustBeClosed
-        fun unarchive(id: String): HttpResponse = unarchive(id, ProductUnarchiveParams.none())
-
-        /** @see unarchive */
-        @MustBeClosed
-        fun unarchive(
-            id: String,
-            params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse = unarchive(params.toBuilder().id(id).build(), requestOptions)
+        fun unarchive(id: String): HttpResponse =
+            unarchive(
+              id, ProductUnarchiveParams.none()
+            )
 
         /** @see unarchive */
         @MustBeClosed
-        fun unarchive(
-            id: String,
-            params: ProductUnarchiveParams = ProductUnarchiveParams.none(),
-        ): HttpResponse = unarchive(id, params, RequestOptions.none())
+        fun unarchive(id: String, params: ProductUnarchiveParams = ProductUnarchiveParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponse =
+            unarchive(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see unarchive */
         @MustBeClosed
-        fun unarchive(
-            params: ProductUnarchiveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        fun unarchive(id: String, params: ProductUnarchiveParams = ProductUnarchiveParams.none()): HttpResponse =
+            unarchive(
+              id,
+              params,
+              RequestOptions.none(),
+            )
+
+        /** @see unarchive */
+        @MustBeClosed
+        fun unarchive(params: ProductUnarchiveParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponse
 
         /** @see unarchive */
         @MustBeClosed
         fun unarchive(params: ProductUnarchiveParams): HttpResponse =
-            unarchive(params, RequestOptions.none())
+            unarchive(
+              params, RequestOptions.none()
+            )
 
         /** @see unarchive */
         @MustBeClosed
         fun unarchive(id: String, requestOptions: RequestOptions): HttpResponse =
-            unarchive(id, ProductUnarchiveParams.none(), requestOptions)
+            unarchive(
+              id,
+              ProductUnarchiveParams.none(),
+              requestOptions,
+            )
 
-        /**
-         * Returns a raw HTTP response for `put /products/{id}/files`, but is otherwise the same as
-         * [ProductService.updateFiles].
-         */
+        /** Returns a raw HTTP response for `put /products/{id}/files`, but is otherwise the             same as [ProductService.updateFiles]. */
         @MustBeClosed
-        fun updateFiles(
-            id: String,
-            params: ProductUpdateFilesParams,
-        ): HttpResponseFor<ProductUpdateFilesResponse> =
-            updateFiles(id, params, RequestOptions.none())
-
-        /** @see updateFiles */
-        @MustBeClosed
-        fun updateFiles(
-            id: String,
-            params: ProductUpdateFilesParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProductUpdateFilesResponse> =
-            updateFiles(params.toBuilder().id(id).build(), requestOptions)
+        fun updateFiles(id: String, params: ProductUpdateFilesParams): HttpResponseFor<ProductUpdateFilesResponse> =
+            updateFiles(
+              id,
+              params,
+              RequestOptions.none(),
+            )
 
         /** @see updateFiles */
         @MustBeClosed
-        fun updateFiles(
-            params: ProductUpdateFilesParams
-        ): HttpResponseFor<ProductUpdateFilesResponse> = updateFiles(params, RequestOptions.none())
+        fun updateFiles(id: String, params: ProductUpdateFilesParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProductUpdateFilesResponse> =
+            updateFiles(
+              params.toBuilder()
+                  .id(id)
+                  .build(), requestOptions
+            )
 
         /** @see updateFiles */
         @MustBeClosed
-        fun updateFiles(
-            params: ProductUpdateFilesParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ProductUpdateFilesResponse>
+        fun updateFiles(params: ProductUpdateFilesParams): HttpResponseFor<ProductUpdateFilesResponse> =
+            updateFiles(
+              params, RequestOptions.none()
+            )
+
+        /** @see updateFiles */
+        @MustBeClosed
+        fun updateFiles(params: ProductUpdateFilesParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProductUpdateFilesResponse>
     }
 }

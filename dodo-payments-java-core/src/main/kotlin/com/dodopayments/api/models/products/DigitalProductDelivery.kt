@@ -10,6 +10,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.products.DigitalProductDeliveryFile
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -20,53 +21,49 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Digital-product-delivery payload, present on grants for `digital_files` entitlements. Each file
- * carries a short-lived presigned download URL.
+ * Digital-product-delivery payload, present on grants for `digital_files`
+ * entitlements. Each file carries a short-lived presigned download URL.
  */
-class DigitalProductDelivery
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class DigitalProductDelivery @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val files: JsonField<List<DigitalProductDeliveryFile>>,
     private val externalUrl: JsonField<String>,
     private val instructions: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("files")
-        @ExcludeMissing
-        files: JsonField<List<DigitalProductDeliveryFile>> = JsonMissing.of(),
-        @JsonProperty("external_url")
-        @ExcludeMissing
-        externalUrl: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("instructions")
-        @ExcludeMissing
-        instructions: JsonField<String> = JsonMissing.of(),
-    ) : this(files, externalUrl, instructions, mutableMapOf())
+        @JsonProperty("files") @ExcludeMissing files: JsonField<List<DigitalProductDeliveryFile>> = JsonMissing.of(),
+        @JsonProperty("external_url") @ExcludeMissing externalUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("instructions") @ExcludeMissing instructions: JsonField<String> = JsonMissing.of()
+    ) : this(
+      files,
+      externalUrl,
+      instructions,
+      mutableMapOf(),
+    )
 
     /**
      * One entry per attached file.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun files(): List<DigitalProductDeliveryFile> = files.getRequired("files")
 
     /**
-     * Optional external URL, passed through from the entitlement configuration.
+     * Optional external URL, passed through from the entitlement
+     * configuration.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun externalUrl(): Optional<String> = externalUrl.getOptional("external_url")
 
     /**
-     * Optional human-readable delivery instructions, passed through from the entitlement
-     * configuration.
+     * Optional human-readable delivery instructions, passed through from
+     * the entitlement configuration.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun instructions(): Optional<String> = instructions.getOptional("instructions")
 
@@ -99,13 +96,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -115,11 +111,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [DigitalProductDelivery].
          *
          * The following fields are required:
+         *
          * ```java
          * .files()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [DigitalProductDelivery]. */
@@ -131,12 +129,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(digitalProductDelivery: DigitalProductDelivery) = apply {
-            files = digitalProductDelivery.files.map { it.toMutableList() }
-            externalUrl = digitalProductDelivery.externalUrl
-            instructions = digitalProductDelivery.instructions
-            additionalProperties = digitalProductDelivery.additionalProperties.toMutableMap()
-        }
+        internal fun from(digitalProductDelivery: DigitalProductDelivery) =
+            apply {
+                files = digitalProductDelivery.files.map { it.toMutableList() }
+                externalUrl = digitalProductDelivery.externalUrl
+                instructions = digitalProductDelivery.instructions
+                additionalProperties = digitalProductDelivery.additionalProperties.toMutableMap()
+            }
 
         /** One entry per attached file. */
         fun files(files: List<DigitalProductDeliveryFile>) = files(JsonField.of(files))
@@ -144,25 +143,30 @@ private constructor(
         /**
          * Sets [Builder.files] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.files] with a well-typed
-         * `List<DigitalProductDeliveryFile>` value instead. This method is primarily for setting
-         * the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.files] with a well-typed `List<DigitalProductDeliveryFile>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun files(files: JsonField<List<DigitalProductDeliveryFile>>) = apply {
-            this.files = files.map { it.toMutableList() }
-        }
+        fun files(files: JsonField<List<DigitalProductDeliveryFile>>) =
+            apply {
+                this.files = files.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [DigitalProductDeliveryFile] to [files].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addFile(file: DigitalProductDeliveryFile) = apply {
-            files =
-                (files ?: JsonField.of(mutableListOf())).also { checkKnown("files", it).add(file) }
-        }
+        fun addFile(file: DigitalProductDeliveryFile) =
+            apply {
+                files = (files ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("files", it).add(file)
+                }
+            }
 
-        /** Optional external URL, passed through from the entitlement configuration. */
+        /**
+         * Optional external URL, passed through from the entitlement
+         * configuration.
+         */
         fun externalUrl(externalUrl: String?) = externalUrl(JsonField.ofNullable(externalUrl))
 
         /** Alias for calling [Builder.externalUrl] with `externalUrl.orElse(null)`. */
@@ -171,15 +175,17 @@ private constructor(
         /**
          * Sets [Builder.externalUrl] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.externalUrl] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.externalUrl] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun externalUrl(externalUrl: JsonField<String>) = apply { this.externalUrl = externalUrl }
+        fun externalUrl(externalUrl: JsonField<String>) =
+            apply {
+                this.externalUrl = externalUrl
+            }
 
         /**
-         * Optional human-readable delivery instructions, passed through from the entitlement
-         * configuration.
+         * Optional human-readable delivery instructions, passed through from
+         * the entitlement configuration.
          */
         fun instructions(instructions: String?) = instructions(JsonField.ofNullable(instructions))
 
@@ -189,32 +195,39 @@ private constructor(
         /**
          * Sets [Builder.instructions] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.instructions] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.instructions] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun instructions(instructions: JsonField<String>) = apply {
-            this.instructions = instructions
-        }
+        fun instructions(instructions: JsonField<String>) =
+            apply {
+                this.instructions = instructions
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [DigitalProductDelivery].
@@ -222,6 +235,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .files()
          * ```
@@ -230,10 +244,12 @@ private constructor(
          */
         fun build(): DigitalProductDelivery =
             DigitalProductDelivery(
-                checkRequired("files", files).map { it.toImmutable() },
-                externalUrl,
-                instructions,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "files", files
+              ).map { it.toImmutable() },
+              externalUrl,
+              instructions,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -247,16 +263,17 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): DigitalProductDelivery = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): DigitalProductDelivery =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        files().forEach { it.validate() }
-        externalUrl()
-        instructions()
-        validated = true
-    }
+            files().forEach { it.validate() }
+            externalUrl()
+            instructions()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -272,29 +289,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (files.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (externalUrl.asKnown().isPresent) 1 else 0) +
-            (if (instructions.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (files.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) + (if (externalUrl.asKnown().isPresent) 1 else 0) + (if (instructions.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is DigitalProductDelivery &&
-            files == other.files &&
-            externalUrl == other.externalUrl &&
-            instructions == other.instructions &&
-            additionalProperties == other.additionalProperties
+      return other is DigitalProductDelivery && files == other.files && externalUrl == other.externalUrl && instructions == other.instructions && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(files, externalUrl, instructions, additionalProperties)
-    }
+    private val hashCode: Int by lazy { Objects.hash(files, externalUrl, instructions, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "DigitalProductDelivery{files=$files, externalUrl=$externalUrl, instructions=$instructions, additionalProperties=$additionalProperties}"
+    override fun toString() = "DigitalProductDelivery{files=$files, externalUrl=$externalUrl, instructions=$instructions, additionalProperties=$additionalProperties}"
 }

@@ -25,20 +25,21 @@ import com.dodopayments.api.models.meters.MeterListPageResponse
 import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.models.meters.MeterRetrieveParams
 import com.dodopayments.api.models.meters.MeterUnarchiveParams
+import com.dodopayments.api.services.blocking.MeterService
+import com.dodopayments.api.services.blocking.MeterServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class MeterServiceImpl internal constructor(private val clientOptions: ClientOptions) :
-    MeterService {
+class MeterServiceImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: MeterService.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : MeterService {
+
+    private val withRawResponse: MeterService.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): MeterService.WithRawResponse = withRawResponse
 
-    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterService =
-        MeterServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterService = MeterServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(params: MeterCreateParams, requestOptions: RequestOptions): Meter =
         // post /meters
@@ -53,164 +54,168 @@ class MeterServiceImpl internal constructor(private val clientOptions: ClientOpt
         withRawResponse().list(params, requestOptions).parse()
 
     override fun archive(params: MeterArchiveParams, requestOptions: RequestOptions) {
-        // delete /meters/{id}
-        withRawResponse().archive(params, requestOptions)
+      // delete /meters/{id}
+      withRawResponse().archive(params, requestOptions)
     }
 
     override fun unarchive(params: MeterUnarchiveParams, requestOptions: RequestOptions) {
-        // post /meters/{id}/unarchive
-        withRawResponse().unarchive(params, requestOptions)
+      // post /meters/{id}/unarchive
+      withRawResponse().unarchive(params, requestOptions)
     }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        MeterService.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : MeterService.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): MeterService.WithRawResponse =
-            MeterServiceImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
-            )
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterService.WithRawResponse = MeterServiceImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
         private val createHandler: Handler<Meter> = jsonHandler<Meter>(clientOptions.jsonMapper)
 
-        override fun create(
-            params: MeterCreateParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Meter> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("meters")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun create(params: MeterCreateParams, requestOptions: RequestOptions): HttpResponseFor<Meter> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("meters")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
         private val retrieveHandler: Handler<Meter> = jsonHandler<Meter>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: MeterRetrieveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<Meter> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("meters", params._pathParam(0))
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { retrieveHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
+        override fun retrieve(params: MeterRetrieveParams, requestOptions: RequestOptions): HttpResponseFor<Meter> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("meters", params._pathParam(0))
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          }
         }
 
-        private val listHandler: Handler<MeterListPageResponse> =
-            jsonHandler<MeterListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<MeterListPageResponse> = jsonHandler<MeterListPageResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: MeterListParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<MeterListPage> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("meters")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-                    .let {
-                        MeterListPage.builder()
-                            .service(MeterServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
-                    }
-            }
+        override fun list(params: MeterListParams, requestOptions: RequestOptions): HttpResponseFor<MeterListPage> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("meters")
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+              .let {
+                  MeterListPage.builder()
+                      .service(MeterServiceImpl(clientOptions))
+                      .params(params)
+                      .response(it)
+                      .build()
+              }
+          }
         }
 
         private val archiveHandler: Handler<Void?> = emptyHandler()
 
-        override fun archive(
-            params: MeterArchiveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("meters", params._pathParam(0))
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { archiveHandler.handle(it) }
-            }
+        override fun archive(params: MeterArchiveParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("meters", params._pathParam(0))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  archiveHandler.handle(it)
+              }
+          }
         }
 
         private val unarchiveHandler: Handler<Void?> = emptyHandler()
 
-        override fun unarchive(
-            params: MeterUnarchiveParams,
-            requestOptions: RequestOptions,
-        ): HttpResponse {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("meters", params._pathParam(0), "unarchive")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response.use { unarchiveHandler.handle(it) }
-            }
+        override fun unarchive(params: MeterUnarchiveParams, requestOptions: RequestOptions): HttpResponse {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("meters", params._pathParam(0), "unarchive")
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepare(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          val response = clientOptions.httpClient.execute(
+            request, requestOptions
+          )
+          return errorHandler.handle(response).parseable {
+              response.use {
+                  unarchiveHandler.handle(it)
+              }
+          }
         }
     }
 }

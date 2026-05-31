@@ -5,17 +5,21 @@ package com.dodopayments.api.models.addons
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.addons.AddonListPageResponse
+import com.dodopayments.api.models.addons.AddonListParams
+import com.dodopayments.api.models.addons.AddonResponse
 import com.dodopayments.api.services.blocking.AddonService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see AddonService.list */
-class AddonListPage
-private constructor(
+class AddonListPage private constructor(
     private val service: AddonService,
     private val params: AddonListParams,
     private val response: AddonListPageResponse,
+
 ) : Page<AddonResponse> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see AddonListPageResponse.items
      */
-    override fun items(): List<AddonResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<AddonResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): AddonListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): AddonListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [AddonListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [AddonListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: AddonListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(addonListPage: AddonListPage) = apply {
-            service = addonListPage.service
-            params = addonListPage.params
-            response = addonListPage.response
-        }
+        internal fun from(addonListPage: AddonListPage) =
+            apply {
+                service = addonListPage.service
+                params = addonListPage.params
+                response = addonListPage.response
+            }
 
-        fun service(service: AddonService) = apply { this.service = service }
+        fun service(service: AddonService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: AddonListParams) = apply { this.params = params }
+        fun params(params: AddonListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: AddonListPageResponse) = apply { this.response = response }
+        fun response(response: AddonListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [AddonListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,21 +116,24 @@ private constructor(
          */
         fun build(): AddonListPage =
             AddonListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is AddonListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is AddonListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)

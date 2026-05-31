@@ -11,6 +11,8 @@ import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
+import com.dodopayments.api.models.refunds.Refund
+import com.dodopayments.api.models.refunds.RefundStatus
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -21,9 +23,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class Refund
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class Refund @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customer: JsonField<CustomerLimitedDetails>,
@@ -36,129 +36,111 @@ private constructor(
     private val currency: JsonField<Currency>,
     private val reason: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("customer")
-        @ExcludeMissing
-        customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
-        @JsonProperty("is_partial")
-        @ExcludeMissing
-        isPartial: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("customer") @ExcludeMissing customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
+        @JsonProperty("is_partial") @ExcludeMissing isPartial: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("refund_id") @ExcludeMissing refundId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<RefundStatus> = JsonMissing.of(),
         @JsonProperty("amount") @ExcludeMissing amount: JsonField<Int> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
-        @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of()
     ) : this(
-        businessId,
-        createdAt,
-        customer,
-        isPartial,
-        metadata,
-        paymentId,
-        refundId,
-        status,
-        amount,
-        currency,
-        reason,
-        mutableMapOf(),
+      businessId,
+      createdAt,
+      customer,
+      isPartial,
+      metadata,
+      paymentId,
+      refundId,
+      status,
+      amount,
+      currency,
+      reason,
+      mutableMapOf(),
     )
 
     /**
      * The unique identifier of the business issuing the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun businessId(): String = businessId.getRequired("business_id")
 
     /**
      * The timestamp of when the refund was created in UTC.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
      * Details about the customer for this refund (from the associated payment)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
 
     /**
      * If true the refund is a partial refund
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun isPartial(): Boolean = isPartial.getRequired("is_partial")
 
     /**
      * Additional metadata stored with the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun metadata(): Metadata = metadata.getRequired("metadata")
 
     /**
      * The unique identifier of the payment associated with the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
      * The unique identifier of the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun refundId(): String = refundId.getRequired("refund_id")
 
     /**
      * The current status of the refund.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun status(): RefundStatus = status.getRequired("status")
 
     /**
      * The refunded amount.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun amount(): Optional<Int> = amount.getOptional("amount")
 
     /**
      * The currency of the refund, represented as an ISO 4217 currency code.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun currency(): Optional<Currency> = currency.getOptional("currency")
 
     /**
      * The reason provided for the refund, if any. Optional.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun reason(): Optional<String> = reason.getOptional("reason")
 
@@ -167,7 +149,9 @@ private constructor(
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -192,66 +176,81 @@ private constructor(
      *
      * Unlike [isPartial], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("is_partial") @ExcludeMissing fun _isPartial(): JsonField<Boolean> = isPartial
+    @JsonProperty("is_partial")
+    @ExcludeMissing
+    fun _isPartial(): JsonField<Boolean> = isPartial
 
     /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+    @JsonProperty("metadata")
+    @ExcludeMissing
+    fun _metadata(): JsonField<Metadata> = metadata
 
     /**
      * Returns the raw JSON value of [paymentId].
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+    @JsonProperty("payment_id")
+    @ExcludeMissing
+    fun _paymentId(): JsonField<String> = paymentId
 
     /**
      * Returns the raw JSON value of [refundId].
      *
      * Unlike [refundId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("refund_id") @ExcludeMissing fun _refundId(): JsonField<String> = refundId
+    @JsonProperty("refund_id")
+    @ExcludeMissing
+    fun _refundId(): JsonField<String> = refundId
 
     /**
      * Returns the raw JSON value of [status].
      *
      * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<RefundStatus> = status
+    @JsonProperty("status")
+    @ExcludeMissing
+    fun _status(): JsonField<RefundStatus> = status
 
     /**
      * Returns the raw JSON value of [amount].
      *
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Int> = amount
+    @JsonProperty("amount")
+    @ExcludeMissing
+    fun _amount(): JsonField<Int> = amount
 
     /**
      * Returns the raw JSON value of [currency].
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+    @JsonProperty("currency")
+    @ExcludeMissing
+    fun _currency(): JsonField<Currency> = currency
 
     /**
      * Returns the raw JSON value of [reason].
      *
      * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<String> = reason
+    @JsonProperty("reason")
+    @ExcludeMissing
+    fun _reason(): JsonField<String> = reason
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -261,6 +260,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [Refund].
          *
          * The following fields are required:
+         *
          * ```java
          * .businessId()
          * .createdAt()
@@ -272,7 +272,8 @@ private constructor(
          * .status()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [Refund]. */
@@ -292,20 +293,21 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(refund: Refund) = apply {
-            businessId = refund.businessId
-            createdAt = refund.createdAt
-            customer = refund.customer
-            isPartial = refund.isPartial
-            metadata = refund.metadata
-            paymentId = refund.paymentId
-            refundId = refund.refundId
-            status = refund.status
-            amount = refund.amount
-            currency = refund.currency
-            reason = refund.reason
-            additionalProperties = refund.additionalProperties.toMutableMap()
-        }
+        internal fun from(refund: Refund) =
+            apply {
+                businessId = refund.businessId
+                createdAt = refund.createdAt
+                customer = refund.customer
+                isPartial = refund.isPartial
+                metadata = refund.metadata
+                paymentId = refund.paymentId
+                refundId = refund.refundId
+                status = refund.status
+                amount = refund.amount
+                currency = refund.currency
+                reason = refund.reason
+                additionalProperties = refund.additionalProperties.toMutableMap()
+            }
 
         /** The unique identifier of the business issuing the refund. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -313,11 +315,13 @@ private constructor(
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
         /** The timestamp of when the refund was created in UTC. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -325,11 +329,13 @@ private constructor(
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         /** Details about the customer for this refund (from the associated payment) */
         fun customer(customer: CustomerLimitedDetails) = customer(JsonField.of(customer))
@@ -337,13 +343,13 @@ private constructor(
         /**
          * Sets [Builder.customer] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customer] with a well-typed [CustomerLimitedDetails]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.customer] with a well-typed [CustomerLimitedDetails] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
-            this.customer = customer
-        }
+        fun customer(customer: JsonField<CustomerLimitedDetails>) =
+            apply {
+                this.customer = customer
+            }
 
         /** If true the refund is a partial refund */
         fun isPartial(isPartial: Boolean) = isPartial(JsonField.of(isPartial))
@@ -351,11 +357,13 @@ private constructor(
         /**
          * Sets [Builder.isPartial] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isPartial] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.isPartial] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun isPartial(isPartial: JsonField<Boolean>) = apply { this.isPartial = isPartial }
+        fun isPartial(isPartial: JsonField<Boolean>) =
+            apply {
+                this.isPartial = isPartial
+            }
 
         /** Additional metadata stored with the refund. */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -363,11 +371,13 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                this.metadata = metadata
+            }
 
         /** The unique identifier of the payment associated with the refund. */
         fun paymentId(paymentId: String) = paymentId(JsonField.of(paymentId))
@@ -375,11 +385,13 @@ private constructor(
         /**
          * Sets [Builder.paymentId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.paymentId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+        fun paymentId(paymentId: JsonField<String>) =
+            apply {
+                this.paymentId = paymentId
+            }
 
         /** The unique identifier of the refund. */
         fun refundId(refundId: String) = refundId(JsonField.of(refundId))
@@ -387,10 +399,13 @@ private constructor(
         /**
          * Sets [Builder.refundId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.refundId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.refundId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun refundId(refundId: JsonField<String>) = apply { this.refundId = refundId }
+        fun refundId(refundId: JsonField<String>) =
+            apply {
+                this.refundId = refundId
+            }
 
         /** The current status of the refund. */
         fun status(status: RefundStatus) = status(JsonField.of(status))
@@ -398,11 +413,13 @@ private constructor(
         /**
          * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [RefundStatus] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.status] with a well-typed [RefundStatus] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun status(status: JsonField<RefundStatus>) = apply { this.status = status }
+        fun status(status: JsonField<RefundStatus>) =
+            apply {
+                this.status = status
+            }
 
         /** The refunded amount. */
         fun amount(amount: Int?) = amount(JsonField.ofNullable(amount))
@@ -420,10 +437,13 @@ private constructor(
         /**
          * Sets [Builder.amount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.amount] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
+        fun amount(amount: JsonField<Int>) =
+            apply {
+                this.amount = amount
+            }
 
         /** The currency of the refund, represented as an ISO 4217 currency code. */
         fun currency(currency: Currency?) = currency(JsonField.ofNullable(currency))
@@ -434,11 +454,13 @@ private constructor(
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [Currency] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+        fun currency(currency: JsonField<Currency>) =
+            apply {
+                this.currency = currency
+            }
 
         /** The reason provided for the refund, if any. Optional. */
         fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
@@ -449,29 +471,39 @@ private constructor(
         /**
          * Sets [Builder.reason] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.reason] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.reason] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun reason(reason: JsonField<String>) = apply { this.reason = reason }
+        fun reason(reason: JsonField<String>) =
+            apply {
+                this.reason = reason
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [Refund].
@@ -479,6 +511,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .businessId()
          * .createdAt()
@@ -494,18 +527,34 @@ private constructor(
          */
         fun build(): Refund =
             Refund(
-                checkRequired("businessId", businessId),
-                checkRequired("createdAt", createdAt),
-                checkRequired("customer", customer),
-                checkRequired("isPartial", isPartial),
-                checkRequired("metadata", metadata),
-                checkRequired("paymentId", paymentId),
-                checkRequired("refundId", refundId),
-                checkRequired("status", status),
-                amount,
-                currency,
-                reason,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "customer", customer
+              ),
+              checkRequired(
+                "isPartial", isPartial
+              ),
+              checkRequired(
+                "metadata", metadata
+              ),
+              checkRequired(
+                "paymentId", paymentId
+              ),
+              checkRequired(
+                "refundId", refundId
+              ),
+              checkRequired(
+                "status", status
+              ),
+              amount,
+              currency,
+              reason,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -519,24 +568,25 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): Refund = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): Refund =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        businessId()
-        createdAt()
-        customer().validate()
-        isPartial()
-        metadata().validate()
-        paymentId()
-        refundId()
-        status().validate()
-        amount()
-        currency().ifPresent { it.validate() }
-        reason()
-        validated = true
-    }
+            businessId()
+            createdAt()
+            customer().validate()
+            isPartial()
+            metadata().validate()
+            paymentId()
+            refundId()
+            status().validate()
+            amount()
+            currency().ifPresent { it.validate() }
+            reason()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -552,25 +602,12 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (businessId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (customer.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (isPartial.asKnown().isPresent) 1 else 0) +
-            (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (if (refundId.asKnown().isPresent) 1 else 0) +
-            (status.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (amount.asKnown().isPresent) 1 else 0) +
-            (currency.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (reason.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (businessId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (customer.asKnown().getOrNull()?.validity() ?: 0) + (if (isPartial.asKnown().isPresent) 1 else 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (if (paymentId.asKnown().isPresent) 1 else 0) + (if (refundId.asKnown().isPresent) 1 else 0) + (status.asKnown().getOrNull()?.validity() ?: 0) + (if (amount.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (reason.asKnown().isPresent) 1 else 0)
 
     /** Additional metadata stored with the refund. */
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -582,7 +619,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -591,28 +629,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -625,21 +671,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -650,21 +696,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -675,44 +719,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is Refund &&
-            businessId == other.businessId &&
-            createdAt == other.createdAt &&
-            customer == other.customer &&
-            isPartial == other.isPartial &&
-            metadata == other.metadata &&
-            paymentId == other.paymentId &&
-            refundId == other.refundId &&
-            status == other.status &&
-            amount == other.amount &&
-            currency == other.currency &&
-            reason == other.reason &&
-            additionalProperties == other.additionalProperties
+      return other is Refund && businessId == other.businessId && createdAt == other.createdAt && customer == other.customer && isPartial == other.isPartial && metadata == other.metadata && paymentId == other.paymentId && refundId == other.refundId && status == other.status && amount == other.amount && currency == other.currency && reason == other.reason && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            businessId,
-            createdAt,
-            customer,
-            isPartial,
-            metadata,
-            paymentId,
-            refundId,
-            status,
-            amount,
-            currency,
-            reason,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(businessId, createdAt, customer, isPartial, metadata, paymentId, refundId, status, amount, currency, reason, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
+    override fun toString() = "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
 }

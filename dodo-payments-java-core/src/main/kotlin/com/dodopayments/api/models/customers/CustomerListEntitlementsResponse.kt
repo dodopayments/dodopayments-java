@@ -11,6 +11,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -22,22 +23,20 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerListEntitlementsResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomerListEntitlementsResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val items: JsonField<List<Item>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of()
-    ) : this(items, mutableMapOf())
+    ) : this(
+      items, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun items(): List<Item> = items.getRequired("items")
 
     /**
@@ -45,32 +44,34 @@ private constructor(
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+    @JsonProperty("items")
+    @ExcludeMissing
+    fun _items(): JsonField<List<Item>> = items
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CustomerListEntitlementsResponse].
+         * Returns a mutable builder for constructing an instance of [CustomerListEntitlementsResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerListEntitlementsResponse]. */
@@ -83,8 +84,7 @@ private constructor(
         internal fun from(customerListEntitlementsResponse: CustomerListEntitlementsResponse) =
             apply {
                 items = customerListEntitlementsResponse.items.map { it.toMutableList() }
-                additionalProperties =
-                    customerListEntitlementsResponse.additionalProperties.toMutableMap()
+                additionalProperties = customerListEntitlementsResponse.additionalProperties.toMutableMap()
             }
 
         fun items(items: List<Item>) = items(JsonField.of(items))
@@ -92,42 +92,51 @@ private constructor(
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<Item>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
+        fun items(items: JsonField<List<Item>>) =
+            apply {
+                this.items = items.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [Item] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: Item) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
-        }
+        fun addItem(item: Item) =
+            apply {
+                items = (items ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("items", it).add(item)
+                }
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomerListEntitlementsResponse].
@@ -135,6 +144,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
@@ -143,8 +153,9 @@ private constructor(
          */
         fun build(): CustomerListEntitlementsResponse =
             CustomerListEntitlementsResponse(
-                checkRequired("items", items).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "items", items
+              ).map { it.toImmutable() }, additionalProperties.toMutableMap()
             )
     }
 
@@ -158,14 +169,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomerListEntitlementsResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomerListEntitlementsResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        items().forEach { it.validate() }
-        validated = true
-    }
+            items().forEach { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -181,12 +193,9 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+    internal fun validity(): Int = (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
-    class Item
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Item @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val entitlementId: JsonField<String>,
         private val entitlementName: JsonField<String>,
@@ -198,114 +207,71 @@ private constructor(
         private val entitlementDescription: JsonField<String>,
         private val revokedAt: JsonField<OffsetDateTime>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("created_at")
-            @ExcludeMissing
-            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("entitlement_id")
-            @ExcludeMissing
-            entitlementId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("entitlement_name")
-            @ExcludeMissing
-            entitlementName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("entitlement_id") @ExcludeMissing entitlementId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("entitlement_name") @ExcludeMissing entitlementName: JsonField<String> = JsonMissing.of(),
             @JsonProperty("grant_id") @ExcludeMissing grantId: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("integration_type")
-            @ExcludeMissing
-            integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
+            @JsonProperty("integration_type") @ExcludeMissing integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
             @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-            @JsonProperty("updated_at")
-            @ExcludeMissing
-            updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("delivered_at")
-            @ExcludeMissing
-            deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("entitlement_description")
-            @ExcludeMissing
-            entitlementDescription: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("revoked_at")
-            @ExcludeMissing
-            revokedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("updated_at") @ExcludeMissing updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("delivered_at") @ExcludeMissing deliveredAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("entitlement_description") @ExcludeMissing entitlementDescription: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("revoked_at") @ExcludeMissing revokedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         ) : this(
-            createdAt,
-            entitlementId,
-            entitlementName,
-            grantId,
-            integrationType,
-            status,
-            updatedAt,
-            deliveredAt,
-            entitlementDescription,
-            revokedAt,
-            mutableMapOf(),
+          createdAt,
+          entitlementId,
+          entitlementName,
+          grantId,
+          integrationType,
+          status,
+          updatedAt,
+          deliveredAt,
+          entitlementDescription,
+          revokedAt,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
         /**
          * The entitlement this grant belongs to.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun entitlementId(): String = entitlementId.getRequired("entitlement_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun entitlementName(): String = entitlementName.getRequired("entitlement_name")
 
         /**
          * Grant id (the per-customer row in `entitlement_grants`).
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun grantId(): String = grantId.getRequired("grant_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun integrationType(): EntitlementIntegrationType =
-            integrationType.getRequired("integration_type")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
+        fun integrationType(): EntitlementIntegrationType = integrationType.getRequired("integration_type")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun status(): Status = status.getRequired("status")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun deliveredAt(): Optional<OffsetDateTime> = deliveredAt.getOptional("delivered_at")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun entitlementDescription(): Optional<String> =
-            entitlementDescription.getOptional("entitlement_description")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun entitlementDescription(): Optional<String> = entitlementDescription.getOptional("entitlement_description")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun revokedAt(): Optional<OffsetDateTime> = revokedAt.getOptional("revoked_at")
 
         /**
@@ -320,8 +286,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [entitlementId].
          *
-         * Unlike [entitlementId], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [entitlementId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("entitlement_id")
         @ExcludeMissing
@@ -330,8 +295,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [entitlementName].
          *
-         * Unlike [entitlementName], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [entitlementName], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("entitlement_name")
         @ExcludeMissing
@@ -342,13 +306,14 @@ private constructor(
          *
          * Unlike [grantId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("grant_id") @ExcludeMissing fun _grantId(): JsonField<String> = grantId
+        @JsonProperty("grant_id")
+        @ExcludeMissing
+        fun _grantId(): JsonField<String> = grantId
 
         /**
          * Returns the raw JSON value of [integrationType].
          *
-         * Unlike [integrationType], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [integrationType], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("integration_type")
         @ExcludeMissing
@@ -359,7 +324,9 @@ private constructor(
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
+        @JsonProperty("status")
+        @ExcludeMissing
+        fun _status(): JsonField<Status> = status
 
         /**
          * Returns the raw JSON value of [updatedAt].
@@ -382,8 +349,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [entitlementDescription].
          *
-         * Unlike [entitlementDescription], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [entitlementDescription], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("entitlement_description")
         @ExcludeMissing
@@ -400,13 +366,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -416,6 +381,7 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Item].
              *
              * The following fields are required:
+             *
              * ```java
              * .createdAt()
              * .entitlementId()
@@ -426,7 +392,8 @@ private constructor(
              * .updatedAt()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Item]. */
@@ -445,32 +412,33 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(item: Item) = apply {
-                createdAt = item.createdAt
-                entitlementId = item.entitlementId
-                entitlementName = item.entitlementName
-                grantId = item.grantId
-                integrationType = item.integrationType
-                status = item.status
-                updatedAt = item.updatedAt
-                deliveredAt = item.deliveredAt
-                entitlementDescription = item.entitlementDescription
-                revokedAt = item.revokedAt
-                additionalProperties = item.additionalProperties.toMutableMap()
-            }
+            internal fun from(item: Item) =
+                apply {
+                    createdAt = item.createdAt
+                    entitlementId = item.entitlementId
+                    entitlementName = item.entitlementName
+                    grantId = item.grantId
+                    integrationType = item.integrationType
+                    status = item.status
+                    updatedAt = item.updatedAt
+                    deliveredAt = item.deliveredAt
+                    entitlementDescription = item.entitlementDescription
+                    revokedAt = item.revokedAt
+                    additionalProperties = item.additionalProperties.toMutableMap()
+                }
 
             fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
             /**
              * Sets [Builder.createdAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
-                this.createdAt = createdAt
-            }
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.createdAt = createdAt
+                }
 
             /** The entitlement this grant belongs to. */
             fun entitlementId(entitlementId: String) = entitlementId(JsonField.of(entitlementId))
@@ -478,27 +446,26 @@ private constructor(
             /**
              * Sets [Builder.entitlementId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.entitlementId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.entitlementId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun entitlementId(entitlementId: JsonField<String>) = apply {
-                this.entitlementId = entitlementId
-            }
+            fun entitlementId(entitlementId: JsonField<String>) =
+                apply {
+                    this.entitlementId = entitlementId
+                }
 
-            fun entitlementName(entitlementName: String) =
-                entitlementName(JsonField.of(entitlementName))
+            fun entitlementName(entitlementName: String) = entitlementName(JsonField.of(entitlementName))
 
             /**
              * Sets [Builder.entitlementName] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.entitlementName] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.entitlementName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun entitlementName(entitlementName: JsonField<String>) = apply {
-                this.entitlementName = entitlementName
-            }
+            fun entitlementName(entitlementName: JsonField<String>) =
+                apply {
+                    this.entitlementName = entitlementName
+                }
 
             /** Grant id (the per-customer row in `entitlement_grants`). */
             fun grantId(grantId: String) = grantId(JsonField.of(grantId))
@@ -506,88 +473,84 @@ private constructor(
             /**
              * Sets [Builder.grantId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.grantId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.grantId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun grantId(grantId: JsonField<String>) = apply { this.grantId = grantId }
+            fun grantId(grantId: JsonField<String>) =
+                apply {
+                    this.grantId = grantId
+                }
 
-            fun integrationType(integrationType: EntitlementIntegrationType) =
-                integrationType(JsonField.of(integrationType))
+            fun integrationType(integrationType: EntitlementIntegrationType) = integrationType(JsonField.of(integrationType))
 
             /**
              * Sets [Builder.integrationType] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.integrationType] with a well-typed
-             * [EntitlementIntegrationType] value instead. This method is primarily for setting the
-             * field to an undocumented or not yet supported value.
+             * You should usually call [Builder.integrationType] with a well-typed [EntitlementIntegrationType] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) = apply {
-                this.integrationType = integrationType
-            }
+            fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) =
+                apply {
+                    this.integrationType = integrationType
+                }
 
             fun status(status: Status) = status(JsonField.of(status))
 
             /**
              * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.status] with a well-typed [Status] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [Status] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun status(status: JsonField<Status>) = apply { this.status = status }
+            fun status(status: JsonField<Status>) =
+                apply {
+                    this.status = status
+                }
 
             fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
 
             /**
              * Sets [Builder.updatedAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply {
-                this.updatedAt = updatedAt
-            }
+            fun updatedAt(updatedAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.updatedAt = updatedAt
+                }
 
-            fun deliveredAt(deliveredAt: OffsetDateTime?) =
-                deliveredAt(JsonField.ofNullable(deliveredAt))
+            fun deliveredAt(deliveredAt: OffsetDateTime?) = deliveredAt(JsonField.ofNullable(deliveredAt))
 
             /** Alias for calling [Builder.deliveredAt] with `deliveredAt.orElse(null)`. */
-            fun deliveredAt(deliveredAt: Optional<OffsetDateTime>) =
-                deliveredAt(deliveredAt.getOrNull())
+            fun deliveredAt(deliveredAt: Optional<OffsetDateTime>) = deliveredAt(deliveredAt.getOrNull())
 
             /**
              * Sets [Builder.deliveredAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.deliveredAt] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.deliveredAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun deliveredAt(deliveredAt: JsonField<OffsetDateTime>) = apply {
-                this.deliveredAt = deliveredAt
-            }
+            fun deliveredAt(deliveredAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.deliveredAt = deliveredAt
+                }
 
-            fun entitlementDescription(entitlementDescription: String?) =
-                entitlementDescription(JsonField.ofNullable(entitlementDescription))
+            fun entitlementDescription(entitlementDescription: String?) = entitlementDescription(JsonField.ofNullable(entitlementDescription))
 
-            /**
-             * Alias for calling [Builder.entitlementDescription] with
-             * `entitlementDescription.orElse(null)`.
-             */
-            fun entitlementDescription(entitlementDescription: Optional<String>) =
-                entitlementDescription(entitlementDescription.getOrNull())
+            /** Alias for calling [Builder.entitlementDescription] with `entitlementDescription.orElse(null)`. */
+            fun entitlementDescription(entitlementDescription: Optional<String>) = entitlementDescription(entitlementDescription.getOrNull())
 
             /**
              * Sets [Builder.entitlementDescription] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.entitlementDescription] with a well-typed [String]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.entitlementDescription] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun entitlementDescription(entitlementDescription: JsonField<String>) = apply {
-                this.entitlementDescription = entitlementDescription
-            }
+            fun entitlementDescription(entitlementDescription: JsonField<String>) =
+                apply {
+                    this.entitlementDescription = entitlementDescription
+                }
 
             fun revokedAt(revokedAt: OffsetDateTime?) = revokedAt(JsonField.ofNullable(revokedAt))
 
@@ -597,32 +560,39 @@ private constructor(
             /**
              * Sets [Builder.revokedAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.revokedAt] with a well-typed [OffsetDateTime] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.revokedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun revokedAt(revokedAt: JsonField<OffsetDateTime>) = apply {
-                this.revokedAt = revokedAt
-            }
+            fun revokedAt(revokedAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.revokedAt = revokedAt
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Item].
@@ -630,6 +600,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .createdAt()
              * .entitlementId()
@@ -644,48 +615,62 @@ private constructor(
              */
             fun build(): Item =
                 Item(
-                    checkRequired("createdAt", createdAt),
-                    checkRequired("entitlementId", entitlementId),
-                    checkRequired("entitlementName", entitlementName),
-                    checkRequired("grantId", grantId),
-                    checkRequired("integrationType", integrationType),
-                    checkRequired("status", status),
-                    checkRequired("updatedAt", updatedAt),
-                    deliveredAt,
-                    entitlementDescription,
-                    revokedAt,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "createdAt", createdAt
+                  ),
+                  checkRequired(
+                    "entitlementId", entitlementId
+                  ),
+                  checkRequired(
+                    "entitlementName", entitlementName
+                  ),
+                  checkRequired(
+                    "grantId", grantId
+                  ),
+                  checkRequired(
+                    "integrationType", integrationType
+                  ),
+                  checkRequired(
+                    "status", status
+                  ),
+                  checkRequired(
+                    "updatedAt", updatedAt
+                  ),
+                  deliveredAt,
+                  entitlementDescription,
+                  revokedAt,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Item = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Item =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            createdAt()
-            entitlementId()
-            entitlementName()
-            grantId()
-            integrationType().validate()
-            status().validate()
-            updatedAt()
-            deliveredAt()
-            entitlementDescription()
-            revokedAt()
-            validated = true
-        }
+                createdAt()
+                entitlementId()
+                entitlementName()
+                grantId()
+                integrationType().validate()
+                status().validate()
+                updatedAt()
+                deliveredAt()
+                entitlementDescription()
+                revokedAt()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -696,35 +681,27 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-                (if (entitlementId.asKnown().isPresent) 1 else 0) +
-                (if (entitlementName.asKnown().isPresent) 1 else 0) +
-                (if (grantId.asKnown().isPresent) 1 else 0) +
-                (integrationType.asKnown().getOrNull()?.validity() ?: 0) +
-                (status.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (updatedAt.asKnown().isPresent) 1 else 0) +
-                (if (deliveredAt.asKnown().isPresent) 1 else 0) +
-                (if (entitlementDescription.asKnown().isPresent) 1 else 0) +
-                (if (revokedAt.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (createdAt.asKnown().isPresent) 1 else 0) + (if (entitlementId.asKnown().isPresent) 1 else 0) + (if (entitlementName.asKnown().isPresent) 1 else 0) + (if (grantId.asKnown().isPresent) 1 else 0) + (integrationType.asKnown().getOrNull()?.validity() ?: 0) + (status.asKnown().getOrNull()?.validity() ?: 0) + (if (updatedAt.asKnown().isPresent) 1 else 0) + (if (deliveredAt.asKnown().isPresent) 1 else 0) + (if (entitlementDescription.asKnown().isPresent) 1 else 0) + (if (revokedAt.asKnown().isPresent) 1 else 0)
 
-        class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+        class Status @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -751,9 +728,11 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -761,18 +740,16 @@ private constructor(
                 DELIVERED,
                 FAILED,
                 REVOKED,
-                /**
-                 * An enum member indicating that [Status] was instantiated with an unknown value.
-                 */
+                /** An enum member indicating that [Status] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -786,11 +763,10 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
@@ -804,37 +780,33 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Status = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Status =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -845,19 +817,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Status && value == other.value
+              return other is Status && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -866,60 +838,31 @@ private constructor(
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Item &&
-                createdAt == other.createdAt &&
-                entitlementId == other.entitlementId &&
-                entitlementName == other.entitlementName &&
-                grantId == other.grantId &&
-                integrationType == other.integrationType &&
-                status == other.status &&
-                updatedAt == other.updatedAt &&
-                deliveredAt == other.deliveredAt &&
-                entitlementDescription == other.entitlementDescription &&
-                revokedAt == other.revokedAt &&
-                additionalProperties == other.additionalProperties
+          return other is Item && createdAt == other.createdAt && entitlementId == other.entitlementId && entitlementName == other.entitlementName && grantId == other.grantId && integrationType == other.integrationType && status == other.status && updatedAt == other.updatedAt && deliveredAt == other.deliveredAt && entitlementDescription == other.entitlementDescription && revokedAt == other.revokedAt && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                createdAt,
-                entitlementId,
-                entitlementName,
-                grantId,
-                integrationType,
-                status,
-                updatedAt,
-                deliveredAt,
-                entitlementDescription,
-                revokedAt,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(createdAt, entitlementId, entitlementName, grantId, integrationType, status, updatedAt, deliveredAt, entitlementDescription, revokedAt, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Item{createdAt=$createdAt, entitlementId=$entitlementId, entitlementName=$entitlementName, grantId=$grantId, integrationType=$integrationType, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, entitlementDescription=$entitlementDescription, revokedAt=$revokedAt, additionalProperties=$additionalProperties}"
+        override fun toString() = "Item{createdAt=$createdAt, entitlementId=$entitlementId, entitlementName=$entitlementName, grantId=$grantId, integrationType=$integrationType, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, entitlementDescription=$entitlementDescription, revokedAt=$revokedAt, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerListEntitlementsResponse &&
-            items == other.items &&
-            additionalProperties == other.additionalProperties
+      return other is CustomerListEntitlementsResponse && items == other.items && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(items, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomerListEntitlementsResponse{items=$items, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomerListEntitlementsResponse{items=$items, additionalProperties=$additionalProperties}"
 }

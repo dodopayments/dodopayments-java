@@ -3,6 +3,8 @@
 package com.dodopayments.api.models.licensekeys
 
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.licensekeys.LicenseKey
+import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -12,64 +14,58 @@ internal class LicenseKeyTest {
 
     @Test
     fun create() {
-        val licenseKey =
-            LicenseKey.builder()
-                .id("lic_123")
-                .businessId("business_id")
-                .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                .customerId("cus_123")
-                .instancesCount(0)
-                .key("key")
-                .productId("product_id")
-                .source(LicenseKey.Source.AUTO)
-                .status(LicenseKeyStatus.ACTIVE)
-                .activationsLimit(5)
-                .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                .paymentId("payment_id")
-                .subscriptionId("subscription_id")
-                .build()
+      val licenseKey = LicenseKey.builder()
+          .id("lic_123")
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+          .customerId("cus_123")
+          .instancesCount(0)
+          .key("key")
+          .productId("product_id")
+          .source(LicenseKey.Source.AUTO)
+          .status(LicenseKeyStatus.ACTIVE)
+          .activationsLimit(5)
+          .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+          .paymentId("payment_id")
+          .subscriptionId("subscription_id")
+          .build()
 
-        assertThat(licenseKey.id()).isEqualTo("lic_123")
-        assertThat(licenseKey.businessId()).isEqualTo("business_id")
-        assertThat(licenseKey.createdAt()).isEqualTo(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-        assertThat(licenseKey.customerId()).isEqualTo("cus_123")
-        assertThat(licenseKey.instancesCount()).isEqualTo(0)
-        assertThat(licenseKey.key()).isEqualTo("key")
-        assertThat(licenseKey.productId()).isEqualTo("product_id")
-        assertThat(licenseKey.source()).isEqualTo(LicenseKey.Source.AUTO)
-        assertThat(licenseKey.status()).isEqualTo(LicenseKeyStatus.ACTIVE)
-        assertThat(licenseKey.activationsLimit()).contains(5)
-        assertThat(licenseKey.expiresAt()).contains(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-        assertThat(licenseKey.paymentId()).contains("payment_id")
-        assertThat(licenseKey.subscriptionId()).contains("subscription_id")
+      assertThat(licenseKey.id()).isEqualTo("lic_123")
+      assertThat(licenseKey.businessId()).isEqualTo("business_id")
+      assertThat(licenseKey.createdAt()).isEqualTo(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+      assertThat(licenseKey.customerId()).isEqualTo("cus_123")
+      assertThat(licenseKey.instancesCount()).isEqualTo(0)
+      assertThat(licenseKey.key()).isEqualTo("key")
+      assertThat(licenseKey.productId()).isEqualTo("product_id")
+      assertThat(licenseKey.source()).isEqualTo(LicenseKey.Source.AUTO)
+      assertThat(licenseKey.status()).isEqualTo(LicenseKeyStatus.ACTIVE)
+      assertThat(licenseKey.activationsLimit()).contains(5)
+      assertThat(licenseKey.expiresAt()).contains(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+      assertThat(licenseKey.paymentId()).contains("payment_id")
+      assertThat(licenseKey.subscriptionId()).contains("subscription_id")
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val licenseKey =
-            LicenseKey.builder()
-                .id("lic_123")
-                .businessId("business_id")
-                .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
-                .customerId("cus_123")
-                .instancesCount(0)
-                .key("key")
-                .productId("product_id")
-                .source(LicenseKey.Source.AUTO)
-                .status(LicenseKeyStatus.ACTIVE)
-                .activationsLimit(5)
-                .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
-                .paymentId("payment_id")
-                .subscriptionId("subscription_id")
-                .build()
+      val jsonMapper = jsonMapper()
+      val licenseKey = LicenseKey.builder()
+          .id("lic_123")
+          .businessId("business_id")
+          .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
+          .customerId("cus_123")
+          .instancesCount(0)
+          .key("key")
+          .productId("product_id")
+          .source(LicenseKey.Source.AUTO)
+          .status(LicenseKeyStatus.ACTIVE)
+          .activationsLimit(5)
+          .expiresAt(OffsetDateTime.parse("2024-12-31T23:59:59Z"))
+          .paymentId("payment_id")
+          .subscriptionId("subscription_id")
+          .build()
 
-        val roundtrippedLicenseKey =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(licenseKey),
-                jacksonTypeRef<LicenseKey>(),
-            )
+      val roundtrippedLicenseKey = jsonMapper.readValue(jsonMapper.writeValueAsString(licenseKey), jacksonTypeRef<LicenseKey>())
 
-        assertThat(roundtrippedLicenseKey).isEqualTo(licenseKey)
+      assertThat(roundtrippedLicenseKey).isEqualTo(licenseKey)
     }
 }

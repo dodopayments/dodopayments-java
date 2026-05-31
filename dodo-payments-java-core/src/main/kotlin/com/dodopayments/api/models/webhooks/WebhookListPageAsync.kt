@@ -5,6 +5,9 @@ package com.dodopayments.api.models.webhooks
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.webhooks.WebhookDetails
+import com.dodopayments.api.models.webhooks.WebhookListPageResponse
+import com.dodopayments.api.models.webhooks.WebhookListParams
 import com.dodopayments.api.services.async.WebhookServiceAsync
 import java.util.Objects
 import java.util.Optional
@@ -13,12 +16,12 @@ import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrNull
 
 /** @see WebhookServiceAsync.list */
-class WebhookListPageAsync
-private constructor(
+class WebhookListPageAsync private constructor(
     private val service: WebhookServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: WebhookListParams,
     private val response: WebhookListPageResponse,
+
 ) : PageAsync<WebhookDetails> {
 
     /**
@@ -26,8 +29,7 @@ private constructor(
      *
      * @see WebhookListPageResponse.data
      */
-    fun data(): List<WebhookDetails> =
-        response._data().getOptional("data").getOrNull() ?: emptyList()
+    fun data(): List<WebhookDetails> = response._data().getOptional("data").getOrNull() ?: emptyList()
 
     /**
      * Delegates to [WebhookListPageResponse], but gracefully handles missing data.
@@ -48,17 +50,18 @@ private constructor(
     override fun hasNextPage(): Boolean = items().isNotEmpty() && iterator().isPresent
 
     fun nextPageParams(): WebhookListParams {
-        val nextCursor =
-            iterator().getOrNull()
-                ?: throw IllegalStateException("Cannot construct next page params")
-        return params.toBuilder().iterator(nextCursor).build()
+      val nextCursor = iterator().getOrNull() ?: throw IllegalStateException("Cannot construct next page params")
+      return params.toBuilder()
+          .iterator(nextCursor)
+          .build()
     }
 
-    override fun nextPage(): CompletableFuture<WebhookListPageAsync> =
-        service.list(nextPageParams())
+    override fun nextPage(): CompletableFuture<WebhookListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<WebhookDetails> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): WebhookListParams = params
@@ -74,6 +77,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [WebhookListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -81,7 +85,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [WebhookListPageAsync]. */
@@ -93,24 +98,35 @@ private constructor(
         private var response: WebhookListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(webhookListPageAsync: WebhookListPageAsync) = apply {
-            service = webhookListPageAsync.service
-            streamHandlerExecutor = webhookListPageAsync.streamHandlerExecutor
-            params = webhookListPageAsync.params
-            response = webhookListPageAsync.response
-        }
+        internal fun from(webhookListPageAsync: WebhookListPageAsync) =
+            apply {
+                service = webhookListPageAsync.service
+                streamHandlerExecutor = webhookListPageAsync.streamHandlerExecutor
+                params = webhookListPageAsync.params
+                response = webhookListPageAsync.response
+            }
 
-        fun service(service: WebhookServiceAsync) = apply { this.service = service }
+        fun service(service: WebhookServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: WebhookListParams) = apply { this.params = params }
+        fun params(params: WebhookListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: WebhookListPageResponse) = apply { this.response = response }
+        fun response(response: WebhookListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [WebhookListPageAsync].
@@ -118,6 +134,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -129,27 +146,30 @@ private constructor(
          */
         fun build(): WebhookListPageAsync =
             WebhookListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is WebhookListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is WebhookListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "WebhookListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "WebhookListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

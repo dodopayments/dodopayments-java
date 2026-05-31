@@ -20,9 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class ProductCollectionProduct
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProductCollectionProduct @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val addonsCount: JsonField<Long>,
     private val filesCount: JsonField<Long>,
@@ -40,165 +38,105 @@ private constructor(
     private val taxCategory: JsonField<TaxCategory>,
     private val taxInclusive: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("addons_count")
-        @ExcludeMissing
-        addonsCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("addons_count") @ExcludeMissing addonsCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("files_count") @ExcludeMissing filesCount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("has_credit_entitlements")
-        @ExcludeMissing
-        hasCreditEntitlements: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("is_recurring")
-        @ExcludeMissing
-        isRecurring: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("license_key_enabled")
-        @ExcludeMissing
-        licenseKeyEnabled: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("meters_count")
-        @ExcludeMissing
-        metersCount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("has_credit_entitlements") @ExcludeMissing hasCreditEntitlements: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("is_recurring") @ExcludeMissing isRecurring: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("license_key_enabled") @ExcludeMissing licenseKeyEnabled: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("meters_count") @ExcludeMissing metersCount: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("product_id") @ExcludeMissing productId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("price") @ExcludeMissing price: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("price_detail")
-        @ExcludeMissing
-        priceDetail: JsonField<Price> = JsonMissing.of(),
-        @JsonProperty("tax_category")
-        @ExcludeMissing
-        taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
-        @JsonProperty("tax_inclusive")
-        @ExcludeMissing
-        taxInclusive: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("price_detail") @ExcludeMissing priceDetail: JsonField<Price> = JsonMissing.of(),
+        @JsonProperty("tax_category") @ExcludeMissing taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
+        @JsonProperty("tax_inclusive") @ExcludeMissing taxInclusive: JsonField<Boolean> = JsonMissing.of()
     ) : this(
-        id,
-        addonsCount,
-        filesCount,
-        hasCreditEntitlements,
-        isRecurring,
-        licenseKeyEnabled,
-        metersCount,
-        productId,
-        status,
-        currency,
-        description,
-        name,
-        price,
-        priceDetail,
-        taxCategory,
-        taxInclusive,
-        mutableMapOf(),
+      id,
+      addonsCount,
+      filesCount,
+      hasCreditEntitlements,
+      isRecurring,
+      licenseKeyEnabled,
+      metersCount,
+      productId,
+      status,
+      currency,
+      description,
+      name,
+      price,
+      priceDetail,
+      taxCategory,
+      taxInclusive,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun id(): String = id.getRequired("id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun addonsCount(): Long = addonsCount.getRequired("addons_count")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun filesCount(): Long = filesCount.getRequired("files_count")
 
     /**
      * Whether this product has any credit entitlements attached
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun hasCreditEntitlements(): Boolean =
-        hasCreditEntitlements.getRequired("has_credit_entitlements")
+    fun hasCreditEntitlements(): Boolean = hasCreditEntitlements.getRequired("has_credit_entitlements")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun isRecurring(): Boolean = isRecurring.getRequired("is_recurring")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun licenseKeyEnabled(): Boolean = licenseKeyEnabled.getRequired("license_key_enabled")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun metersCount(): Long = metersCount.getRequired("meters_count")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun productId(): String = productId.getRequired("product_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun status(): Boolean = status.getRequired("status")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun currency(): Optional<Currency> = currency.getOptional("currency")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun description(): Optional<String> = description.getOptional("description")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun name(): Optional<String> = name.getOptional("name")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun price(): Optional<Int> = price.getOptional("price")
 
     /**
      * One-time price details.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun priceDetail(): Optional<Price> = priceDetail.getOptional("price_detail")
 
     /**
      * Represents the different categories of taxation applicable to various products and services.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun taxCategory(): Optional<TaxCategory> = taxCategory.getOptional("tax_category")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun taxInclusive(): Optional<Boolean> = taxInclusive.getOptional("tax_inclusive")
 
     /**
@@ -206,27 +144,32 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [addonsCount].
      *
      * Unlike [addonsCount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("addons_count") @ExcludeMissing fun _addonsCount(): JsonField<Long> = addonsCount
+    @JsonProperty("addons_count")
+    @ExcludeMissing
+    fun _addonsCount(): JsonField<Long> = addonsCount
 
     /**
      * Returns the raw JSON value of [filesCount].
      *
      * Unlike [filesCount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("files_count") @ExcludeMissing fun _filesCount(): JsonField<Long> = filesCount
+    @JsonProperty("files_count")
+    @ExcludeMissing
+    fun _filesCount(): JsonField<Long> = filesCount
 
     /**
      * Returns the raw JSON value of [hasCreditEntitlements].
      *
-     * Unlike [hasCreditEntitlements], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [hasCreditEntitlements], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("has_credit_entitlements")
     @ExcludeMissing
@@ -244,8 +187,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [licenseKeyEnabled].
      *
-     * Unlike [licenseKeyEnabled], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [licenseKeyEnabled], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("license_key_enabled")
     @ExcludeMissing
@@ -256,56 +198,72 @@ private constructor(
      *
      * Unlike [metersCount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("meters_count") @ExcludeMissing fun _metersCount(): JsonField<Long> = metersCount
+    @JsonProperty("meters_count")
+    @ExcludeMissing
+    fun _metersCount(): JsonField<Long> = metersCount
 
     /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+    @JsonProperty("product_id")
+    @ExcludeMissing
+    fun _productId(): JsonField<String> = productId
 
     /**
      * Returns the raw JSON value of [status].
      *
      * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Boolean> = status
+    @JsonProperty("status")
+    @ExcludeMissing
+    fun _status(): JsonField<Boolean> = status
 
     /**
      * Returns the raw JSON value of [currency].
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+    @JsonProperty("currency")
+    @ExcludeMissing
+    fun _currency(): JsonField<Currency> = currency
 
     /**
      * Returns the raw JSON value of [description].
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+    @JsonProperty("name")
+    @ExcludeMissing
+    fun _name(): JsonField<String> = name
 
     /**
      * Returns the raw JSON value of [price].
      *
      * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Int> = price
+    @JsonProperty("price")
+    @ExcludeMissing
+    fun _price(): JsonField<Int> = price
 
     /**
      * Returns the raw JSON value of [priceDetail].
      *
      * Unlike [priceDetail], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("price_detail") @ExcludeMissing fun _priceDetail(): JsonField<Price> = priceDetail
+    @JsonProperty("price_detail")
+    @ExcludeMissing
+    fun _priceDetail(): JsonField<Price> = priceDetail
 
     /**
      * Returns the raw JSON value of [taxCategory].
@@ -327,13 +285,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -343,6 +300,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [ProductCollectionProduct].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .addonsCount()
@@ -355,7 +313,8 @@ private constructor(
          * .status()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionProduct]. */
@@ -380,128 +339,144 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(productCollectionProduct: ProductCollectionProduct) = apply {
-            id = productCollectionProduct.id
-            addonsCount = productCollectionProduct.addonsCount
-            filesCount = productCollectionProduct.filesCount
-            hasCreditEntitlements = productCollectionProduct.hasCreditEntitlements
-            isRecurring = productCollectionProduct.isRecurring
-            licenseKeyEnabled = productCollectionProduct.licenseKeyEnabled
-            metersCount = productCollectionProduct.metersCount
-            productId = productCollectionProduct.productId
-            status = productCollectionProduct.status
-            currency = productCollectionProduct.currency
-            description = productCollectionProduct.description
-            name = productCollectionProduct.name
-            price = productCollectionProduct.price
-            priceDetail = productCollectionProduct.priceDetail
-            taxCategory = productCollectionProduct.taxCategory
-            taxInclusive = productCollectionProduct.taxInclusive
-            additionalProperties = productCollectionProduct.additionalProperties.toMutableMap()
-        }
+        internal fun from(productCollectionProduct: ProductCollectionProduct) =
+            apply {
+                id = productCollectionProduct.id
+                addonsCount = productCollectionProduct.addonsCount
+                filesCount = productCollectionProduct.filesCount
+                hasCreditEntitlements = productCollectionProduct.hasCreditEntitlements
+                isRecurring = productCollectionProduct.isRecurring
+                licenseKeyEnabled = productCollectionProduct.licenseKeyEnabled
+                metersCount = productCollectionProduct.metersCount
+                productId = productCollectionProduct.productId
+                status = productCollectionProduct.status
+                currency = productCollectionProduct.currency
+                description = productCollectionProduct.description
+                name = productCollectionProduct.name
+                price = productCollectionProduct.price
+                priceDetail = productCollectionProduct.priceDetail
+                taxCategory = productCollectionProduct.taxCategory
+                taxInclusive = productCollectionProduct.taxInclusive
+                additionalProperties = productCollectionProduct.additionalProperties.toMutableMap()
+            }
 
         fun id(id: String) = id(JsonField.of(id))
 
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         fun addonsCount(addonsCount: Long) = addonsCount(JsonField.of(addonsCount))
 
         /**
          * Sets [Builder.addonsCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.addonsCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.addonsCount] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun addonsCount(addonsCount: JsonField<Long>) = apply { this.addonsCount = addonsCount }
+        fun addonsCount(addonsCount: JsonField<Long>) =
+            apply {
+                this.addonsCount = addonsCount
+            }
 
         fun filesCount(filesCount: Long) = filesCount(JsonField.of(filesCount))
 
         /**
          * Sets [Builder.filesCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.filesCount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.filesCount] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun filesCount(filesCount: JsonField<Long>) = apply { this.filesCount = filesCount }
+        fun filesCount(filesCount: JsonField<Long>) =
+            apply {
+                this.filesCount = filesCount
+            }
 
         /** Whether this product has any credit entitlements attached */
-        fun hasCreditEntitlements(hasCreditEntitlements: Boolean) =
-            hasCreditEntitlements(JsonField.of(hasCreditEntitlements))
+        fun hasCreditEntitlements(hasCreditEntitlements: Boolean) = hasCreditEntitlements(JsonField.of(hasCreditEntitlements))
 
         /**
          * Sets [Builder.hasCreditEntitlements] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.hasCreditEntitlements] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.hasCreditEntitlements] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun hasCreditEntitlements(hasCreditEntitlements: JsonField<Boolean>) = apply {
-            this.hasCreditEntitlements = hasCreditEntitlements
-        }
+        fun hasCreditEntitlements(hasCreditEntitlements: JsonField<Boolean>) =
+            apply {
+                this.hasCreditEntitlements = hasCreditEntitlements
+            }
 
         fun isRecurring(isRecurring: Boolean) = isRecurring(JsonField.of(isRecurring))
 
         /**
          * Sets [Builder.isRecurring] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isRecurring] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.isRecurring] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun isRecurring(isRecurring: JsonField<Boolean>) = apply { this.isRecurring = isRecurring }
+        fun isRecurring(isRecurring: JsonField<Boolean>) =
+            apply {
+                this.isRecurring = isRecurring
+            }
 
-        fun licenseKeyEnabled(licenseKeyEnabled: Boolean) =
-            licenseKeyEnabled(JsonField.of(licenseKeyEnabled))
+        fun licenseKeyEnabled(licenseKeyEnabled: Boolean) = licenseKeyEnabled(JsonField.of(licenseKeyEnabled))
 
         /**
          * Sets [Builder.licenseKeyEnabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.licenseKeyEnabled] with a well-typed [Boolean] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.licenseKeyEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun licenseKeyEnabled(licenseKeyEnabled: JsonField<Boolean>) = apply {
-            this.licenseKeyEnabled = licenseKeyEnabled
-        }
+        fun licenseKeyEnabled(licenseKeyEnabled: JsonField<Boolean>) =
+            apply {
+                this.licenseKeyEnabled = licenseKeyEnabled
+            }
 
         fun metersCount(metersCount: Long) = metersCount(JsonField.of(metersCount))
 
         /**
          * Sets [Builder.metersCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metersCount] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metersCount] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metersCount(metersCount: JsonField<Long>) = apply { this.metersCount = metersCount }
+        fun metersCount(metersCount: JsonField<Long>) =
+            apply {
+                this.metersCount = metersCount
+            }
 
         fun productId(productId: String) = productId(JsonField.of(productId))
 
         /**
          * Sets [Builder.productId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.productId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.productId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+        fun productId(productId: JsonField<String>) =
+            apply {
+                this.productId = productId
+            }
 
         fun status(status: Boolean) = status(JsonField.of(status))
 
         /**
          * Sets [Builder.status] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.status] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun status(status: JsonField<Boolean>) = apply { this.status = status }
+        fun status(status: JsonField<Boolean>) =
+            apply {
+                this.status = status
+            }
 
         fun currency(currency: Currency?) = currency(JsonField.ofNullable(currency))
 
@@ -511,11 +486,13 @@ private constructor(
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [Currency] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+        fun currency(currency: JsonField<Currency>) =
+            apply {
+                this.currency = currency
+            }
 
         fun description(description: String?) = description(JsonField.ofNullable(description))
 
@@ -525,11 +502,13 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
         fun name(name: String?) = name(JsonField.ofNullable(name))
 
@@ -539,10 +518,13 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { this.name = name }
+        fun name(name: JsonField<String>) =
+            apply {
+                this.name = name
+            }
 
         fun price(price: Int?) = price(JsonField.ofNullable(price))
 
@@ -559,10 +541,13 @@ private constructor(
         /**
          * Sets [Builder.price] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.price] with a well-typed [Int] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.price] with a well-typed [Int] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun price(price: JsonField<Int>) = apply { this.price = price }
+        fun price(price: JsonField<Int>) =
+            apply {
+                this.price = price
+            }
 
         /** One-time price details. */
         fun priceDetail(priceDetail: Price?) = priceDetail(JsonField.ofNullable(priceDetail))
@@ -573,11 +558,13 @@ private constructor(
         /**
          * Sets [Builder.priceDetail] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.priceDetail] with a well-typed [Price] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.priceDetail] with a well-typed [Price] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun priceDetail(priceDetail: JsonField<Price>) = apply { this.priceDetail = priceDetail }
+        fun priceDetail(priceDetail: JsonField<Price>) =
+            apply {
+                this.priceDetail = priceDetail
+            }
 
         /** Alias for calling [priceDetail] with `Price.ofOneTime(oneTime)`. */
         fun priceDetail(oneTime: Price.OneTimePrice) = priceDetail(Price.ofOneTime(oneTime))
@@ -586,13 +573,9 @@ private constructor(
         fun priceDetail(recurring: Price.RecurringPrice) = priceDetail(Price.ofRecurring(recurring))
 
         /** Alias for calling [priceDetail] with `Price.ofUsageBased(usageBased)`. */
-        fun priceDetail(usageBased: Price.UsageBasedPrice) =
-            priceDetail(Price.ofUsageBased(usageBased))
+        fun priceDetail(usageBased: Price.UsageBasedPrice) = priceDetail(Price.ofUsageBased(usageBased))
 
-        /**
-         * Represents the different categories of taxation applicable to various products and
-         * services.
-         */
+        /** Represents the different categories of taxation applicable to various products and services. */
         fun taxCategory(taxCategory: TaxCategory?) = taxCategory(JsonField.ofNullable(taxCategory))
 
         /** Alias for calling [Builder.taxCategory] with `taxCategory.orElse(null)`. */
@@ -601,13 +584,13 @@ private constructor(
         /**
          * Sets [Builder.taxCategory] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.taxCategory] with a well-typed [TaxCategory] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun taxCategory(taxCategory: JsonField<TaxCategory>) = apply {
-            this.taxCategory = taxCategory
-        }
+        fun taxCategory(taxCategory: JsonField<TaxCategory>) =
+            apply {
+                this.taxCategory = taxCategory
+            }
 
         fun taxInclusive(taxInclusive: Boolean?) = taxInclusive(JsonField.ofNullable(taxInclusive))
 
@@ -624,32 +607,39 @@ private constructor(
         /**
          * Sets [Builder.taxInclusive] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.taxInclusive] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun taxInclusive(taxInclusive: JsonField<Boolean>) = apply {
-            this.taxInclusive = taxInclusive
-        }
+        fun taxInclusive(taxInclusive: JsonField<Boolean>) =
+            apply {
+                this.taxInclusive = taxInclusive
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionProduct].
@@ -657,6 +647,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .addonsCount()
@@ -673,23 +664,41 @@ private constructor(
          */
         fun build(): ProductCollectionProduct =
             ProductCollectionProduct(
-                checkRequired("id", id),
-                checkRequired("addonsCount", addonsCount),
-                checkRequired("filesCount", filesCount),
-                checkRequired("hasCreditEntitlements", hasCreditEntitlements),
-                checkRequired("isRecurring", isRecurring),
-                checkRequired("licenseKeyEnabled", licenseKeyEnabled),
-                checkRequired("metersCount", metersCount),
-                checkRequired("productId", productId),
-                checkRequired("status", status),
-                currency,
-                description,
-                name,
-                price,
-                priceDetail,
-                taxCategory,
-                taxInclusive,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "addonsCount", addonsCount
+              ),
+              checkRequired(
+                "filesCount", filesCount
+              ),
+              checkRequired(
+                "hasCreditEntitlements", hasCreditEntitlements
+              ),
+              checkRequired(
+                "isRecurring", isRecurring
+              ),
+              checkRequired(
+                "licenseKeyEnabled", licenseKeyEnabled
+              ),
+              checkRequired(
+                "metersCount", metersCount
+              ),
+              checkRequired(
+                "productId", productId
+              ),
+              checkRequired(
+                "status", status
+              ),
+              currency,
+              description,
+              name,
+              price,
+              priceDetail,
+              taxCategory,
+              taxInclusive,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -703,29 +712,30 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ProductCollectionProduct = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProductCollectionProduct =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        addonsCount()
-        filesCount()
-        hasCreditEntitlements()
-        isRecurring()
-        licenseKeyEnabled()
-        metersCount()
-        productId()
-        status()
-        currency().ifPresent { it.validate() }
-        description()
-        name()
-        price()
-        priceDetail().ifPresent { it.validate() }
-        taxCategory().ifPresent { it.validate() }
-        taxInclusive()
-        validated = true
-    }
+            id()
+            addonsCount()
+            filesCount()
+            hasCreditEntitlements()
+            isRecurring()
+            licenseKeyEnabled()
+            metersCount()
+            productId()
+            status()
+            currency().ifPresent { it.validate() }
+            description()
+            name()
+            price()
+            priceDetail().ifPresent { it.validate() }
+            taxCategory().ifPresent { it.validate() }
+            taxInclusive()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -741,73 +751,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (addonsCount.asKnown().isPresent) 1 else 0) +
-            (if (filesCount.asKnown().isPresent) 1 else 0) +
-            (if (hasCreditEntitlements.asKnown().isPresent) 1 else 0) +
-            (if (isRecurring.asKnown().isPresent) 1 else 0) +
-            (if (licenseKeyEnabled.asKnown().isPresent) 1 else 0) +
-            (if (metersCount.asKnown().isPresent) 1 else 0) +
-            (if (productId.asKnown().isPresent) 1 else 0) +
-            (if (status.asKnown().isPresent) 1 else 0) +
-            (currency.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (if (name.asKnown().isPresent) 1 else 0) +
-            (if (price.asKnown().isPresent) 1 else 0) +
-            (priceDetail.asKnown().getOrNull()?.validity() ?: 0) +
-            (taxCategory.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (taxInclusive.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (if (addonsCount.asKnown().isPresent) 1 else 0) + (if (filesCount.asKnown().isPresent) 1 else 0) + (if (hasCreditEntitlements.asKnown().isPresent) 1 else 0) + (if (isRecurring.asKnown().isPresent) 1 else 0) + (if (licenseKeyEnabled.asKnown().isPresent) 1 else 0) + (if (metersCount.asKnown().isPresent) 1 else 0) + (if (productId.asKnown().isPresent) 1 else 0) + (if (status.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0) + (if (price.asKnown().isPresent) 1 else 0) + (priceDetail.asKnown().getOrNull()?.validity() ?: 0) + (taxCategory.asKnown().getOrNull()?.validity() ?: 0) + (if (taxInclusive.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionProduct &&
-            id == other.id &&
-            addonsCount == other.addonsCount &&
-            filesCount == other.filesCount &&
-            hasCreditEntitlements == other.hasCreditEntitlements &&
-            isRecurring == other.isRecurring &&
-            licenseKeyEnabled == other.licenseKeyEnabled &&
-            metersCount == other.metersCount &&
-            productId == other.productId &&
-            status == other.status &&
-            currency == other.currency &&
-            description == other.description &&
-            name == other.name &&
-            price == other.price &&
-            priceDetail == other.priceDetail &&
-            taxCategory == other.taxCategory &&
-            taxInclusive == other.taxInclusive &&
-            additionalProperties == other.additionalProperties
+      return other is ProductCollectionProduct && id == other.id && addonsCount == other.addonsCount && filesCount == other.filesCount && hasCreditEntitlements == other.hasCreditEntitlements && isRecurring == other.isRecurring && licenseKeyEnabled == other.licenseKeyEnabled && metersCount == other.metersCount && productId == other.productId && status == other.status && currency == other.currency && description == other.description && name == other.name && price == other.price && priceDetail == other.priceDetail && taxCategory == other.taxCategory && taxInclusive == other.taxInclusive && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            addonsCount,
-            filesCount,
-            hasCreditEntitlements,
-            isRecurring,
-            licenseKeyEnabled,
-            metersCount,
-            productId,
-            status,
-            currency,
-            description,
-            name,
-            price,
-            priceDetail,
-            taxCategory,
-            taxInclusive,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, addonsCount, filesCount, hasCreditEntitlements, isRecurring, licenseKeyEnabled, metersCount, productId, status, currency, description, name, price, priceDetail, taxCategory, taxInclusive, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProductCollectionProduct{id=$id, addonsCount=$addonsCount, filesCount=$filesCount, hasCreditEntitlements=$hasCreditEntitlements, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, metersCount=$metersCount, productId=$productId, status=$status, currency=$currency, description=$description, name=$name, price=$price, priceDetail=$priceDetail, taxCategory=$taxCategory, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProductCollectionProduct{id=$id, addonsCount=$addonsCount, filesCount=$filesCount, hasCreditEntitlements=$hasCreditEntitlements, isRecurring=$isRecurring, licenseKeyEnabled=$licenseKeyEnabled, metersCount=$metersCount, productId=$productId, status=$status, currency=$currency, description=$description, name=$name, price=$price, priceDetail=$priceDetail, taxCategory=$taxCategory, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
 }

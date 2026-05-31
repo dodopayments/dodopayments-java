@@ -7,6 +7,11 @@ import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
+import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
+import com.dodopayments.api.models.customers.CustomerListParams
+import com.dodopayments.api.models.customers.CustomerRetrieveParams
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParams
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,151 +21,130 @@ internal class CustomerServiceAsyncTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val customerFuture =
-            customerServiceAsync.create(
-                CustomerCreateParams.builder()
-                    .email("email")
-                    .name("name")
-                    .metadata(
-                        CustomerCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .phoneNumber("phone_number")
-                    .build()
-            )
+      val customerFuture = customerServiceAsync.create(CustomerCreateParams.builder()
+          .email("email")
+          .name("name")
+          .metadata(CustomerCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .phoneNumber("phone_number")
+          .build())
 
-        val customer = customerFuture.get()
-        customer.validate()
+      val customer = customerFuture.get()
+      customer.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val customerFuture = customerServiceAsync.retrieve("customer_id")
+      val customerFuture = customerServiceAsync.retrieve("customer_id")
 
-        val customer = customerFuture.get()
-        customer.validate()
+      val customer = customerFuture.get()
+      customer.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val customerFuture =
-            customerServiceAsync.update(
-                CustomerUpdateParams.builder()
-                    .customerId("customer_id")
-                    .email("email")
-                    .metadata(
-                        CustomerUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .phoneNumber("phone_number")
-                    .build()
-            )
+      val customerFuture = customerServiceAsync.update(CustomerUpdateParams.builder()
+          .customerId("customer_id")
+          .email("email")
+          .metadata(CustomerUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .phoneNumber("phone_number")
+          .build())
 
-        val customer = customerFuture.get()
-        customer.validate()
+      val customer = customerFuture.get()
+      customer.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val pageFuture = customerServiceAsync.list()
+      val pageFuture = customerServiceAsync.list()
 
-        val page = pageFuture.get()
-        page.response().validate()
+      val page = pageFuture.get()
+      page.response().validate()
     }
 
     @Test
     fun deletePaymentMethod() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val future =
-            customerServiceAsync.deletePaymentMethod(
-                CustomerDeletePaymentMethodParams.builder()
-                    .customerId("customer_id")
-                    .paymentMethodId("payment_method_id")
-                    .build()
-            )
+      val future = customerServiceAsync.deletePaymentMethod(CustomerDeletePaymentMethodParams.builder()
+          .customerId("customer_id")
+          .paymentMethodId("payment_method_id")
+          .build())
 
-        val response = future.get()
+      val response = future.get()
     }
 
     @Test
     fun listCreditEntitlements() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val responseFuture = customerServiceAsync.listCreditEntitlements("customer_id")
+      val responseFuture = customerServiceAsync.listCreditEntitlements("customer_id")
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 
     @Test
     fun listEntitlements() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val responseFuture = customerServiceAsync.listEntitlements("customer_id")
+      val responseFuture = customerServiceAsync.listEntitlements("customer_id")
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 
     @Test
     fun retrievePaymentMethods() {
-        val client =
-            DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val customerServiceAsync = client.customers()
+      val client = DodoPaymentsOkHttpClientAsync.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val customerServiceAsync = client.customers()
 
-        val responseFuture = customerServiceAsync.retrievePaymentMethods("customer_id")
+      val responseFuture = customerServiceAsync.retrievePaymentMethods("customer_id")
 
-        val response = responseFuture.get()
-        response.validate()
+      val response = responseFuture.get()
+      response.validate()
     }
 }

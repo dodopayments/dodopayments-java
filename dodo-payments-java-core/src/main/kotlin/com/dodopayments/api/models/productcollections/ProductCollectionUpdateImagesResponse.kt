@@ -17,33 +17,34 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class ProductCollectionUpdateImagesResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class ProductCollectionUpdateImagesResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val url: JsonField<String>,
     private val imageId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("image_id") @ExcludeMissing imageId: JsonField<String> = JsonMissing.of(),
-    ) : this(url, imageId, mutableMapOf())
+        @JsonProperty("image_id") @ExcludeMissing imageId: JsonField<String> = JsonMissing.of()
+    ) : this(
+      url,
+      imageId,
+      mutableMapOf(),
+    )
 
     /**
      * Presigned S3 URL for uploading the image
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun url(): String = url.getRequired("url")
 
     /**
      * Optional image ID (present when force_update is true)
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun imageId(): Optional<String> = imageId.getOptional("image_id")
 
@@ -52,39 +53,43 @@ private constructor(
      *
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+    @JsonProperty("url")
+    @ExcludeMissing
+    fun _url(): JsonField<String> = url
 
     /**
      * Returns the raw JSON value of [imageId].
      *
      * Unlike [imageId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("image_id") @ExcludeMissing fun _imageId(): JsonField<String> = imageId
+    @JsonProperty("image_id")
+    @ExcludeMissing
+    fun _imageId(): JsonField<String> = imageId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [ProductCollectionUpdateImagesResponse].
+         * Returns a mutable builder for constructing an instance of [ProductCollectionUpdateImagesResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .url()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionUpdateImagesResponse]. */
@@ -95,14 +100,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            productCollectionUpdateImagesResponse: ProductCollectionUpdateImagesResponse
-        ) = apply {
-            url = productCollectionUpdateImagesResponse.url
-            imageId = productCollectionUpdateImagesResponse.imageId
-            additionalProperties =
-                productCollectionUpdateImagesResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(productCollectionUpdateImagesResponse: ProductCollectionUpdateImagesResponse) =
+            apply {
+                url = productCollectionUpdateImagesResponse.url
+                imageId = productCollectionUpdateImagesResponse.imageId
+                additionalProperties = productCollectionUpdateImagesResponse.additionalProperties.toMutableMap()
+            }
 
         /** Presigned S3 URL for uploading the image */
         fun url(url: String) = url(JsonField.of(url))
@@ -110,10 +113,13 @@ private constructor(
         /**
          * Sets [Builder.url] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.url] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.url] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun url(url: JsonField<String>) = apply { this.url = url }
+        fun url(url: JsonField<String>) =
+            apply {
+                this.url = url
+            }
 
         /** Optional image ID (present when force_update is true) */
         fun imageId(imageId: String?) = imageId(JsonField.ofNullable(imageId))
@@ -124,29 +130,39 @@ private constructor(
         /**
          * Sets [Builder.imageId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.imageId] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.imageId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun imageId(imageId: JsonField<String>) = apply { this.imageId = imageId }
+        fun imageId(imageId: JsonField<String>) =
+            apply {
+                this.imageId = imageId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionUpdateImagesResponse].
@@ -154,6 +170,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .url()
          * ```
@@ -162,9 +179,11 @@ private constructor(
          */
         fun build(): ProductCollectionUpdateImagesResponse =
             ProductCollectionUpdateImagesResponse(
-                checkRequired("url", url),
-                imageId,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "url", url
+              ),
+              imageId,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -178,15 +197,16 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): ProductCollectionUpdateImagesResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): ProductCollectionUpdateImagesResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        url()
-        imageId()
-        validated = true
-    }
+            url()
+            imageId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -202,24 +222,19 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (url.asKnown().isPresent) 1 else 0) + (if (imageId.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (url.asKnown().isPresent) 1 else 0) + (if (imageId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionUpdateImagesResponse &&
-            url == other.url &&
-            imageId == other.imageId &&
-            additionalProperties == other.additionalProperties
+      return other is ProductCollectionUpdateImagesResponse && url == other.url && imageId == other.imageId && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(url, imageId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "ProductCollectionUpdateImagesResponse{url=$url, imageId=$imageId, additionalProperties=$additionalProperties}"
+    override fun toString() = "ProductCollectionUpdateImagesResponse{url=$url, imageId=$imageId, additionalProperties=$additionalProperties}"
 }

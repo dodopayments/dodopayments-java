@@ -22,151 +22,127 @@ import com.dodopayments.api.models.checkoutsessions.CheckoutSessionPreviewRespon
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionResponse
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionRetrieveParams
 import com.dodopayments.api.models.checkoutsessions.CheckoutSessionStatus
+import com.dodopayments.api.services.async.CheckoutSessionServiceAsync
+import com.dodopayments.api.services.async.CheckoutSessionServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class CheckoutSessionServiceAsyncImpl
-internal constructor(private val clientOptions: ClientOptions) : CheckoutSessionServiceAsync {
+class CheckoutSessionServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: CheckoutSessionServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : CheckoutSessionServiceAsync {
+
+    private val withRawResponse: CheckoutSessionServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): CheckoutSessionServiceAsync.WithRawResponse = withRawResponse
 
-    override fun withOptions(
-        modifier: Consumer<ClientOptions.Builder>
-    ): CheckoutSessionServiceAsync =
-        CheckoutSessionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CheckoutSessionServiceAsync = CheckoutSessionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: CheckoutSessionCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CheckoutSessionResponse> =
+    override fun create(params: CheckoutSessionCreateParams, requestOptions: RequestOptions): CompletableFuture<CheckoutSessionResponse> =
         // post /checkouts
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    override fun retrieve(
-        params: CheckoutSessionRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CheckoutSessionStatus> =
+    override fun retrieve(params: CheckoutSessionRetrieveParams, requestOptions: RequestOptions): CompletableFuture<CheckoutSessionStatus> =
         // get /checkouts/{id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
-    override fun preview(
-        params: CheckoutSessionPreviewParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CheckoutSessionPreviewResponse> =
+    override fun preview(params: CheckoutSessionPreviewParams, requestOptions: RequestOptions): CompletableFuture<CheckoutSessionPreviewResponse> =
         // post /checkouts/preview
         withRawResponse().preview(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        CheckoutSessionServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+    ) : CheckoutSessionServiceAsync.WithRawResponse {
 
-        override fun withOptions(
-            modifier: Consumer<ClientOptions.Builder>
-        ): CheckoutSessionServiceAsync.WithRawResponse =
-            CheckoutSessionServiceAsyncImpl.WithRawResponseImpl(
-                clientOptions.toBuilder().apply(modifier::accept).build()
+        private val errorHandler: Handler<HttpResponse> = errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CheckoutSessionServiceAsync.WithRawResponse = CheckoutSessionServiceAsyncImpl.WithRawResponseImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+        private val createHandler: Handler<CheckoutSessionResponse> = jsonHandler<CheckoutSessionResponse>(clientOptions.jsonMapper)
+
+        override fun create(params: CheckoutSessionCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("checkouts")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
             )
-
-        private val createHandler: Handler<CheckoutSessionResponse> =
-            jsonHandler<CheckoutSessionResponse>(clientOptions.jsonMapper)
-
-        override fun create(
-            params: CheckoutSessionCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CheckoutSessionResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("checkouts")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val retrieveHandler: Handler<CheckoutSessionStatus> =
-            jsonHandler<CheckoutSessionStatus>(clientOptions.jsonMapper)
+        private val retrieveHandler: Handler<CheckoutSessionStatus> = jsonHandler<CheckoutSessionStatus>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: CheckoutSessionRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("id", params.id().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("checkouts", params._pathParam(0))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun retrieve(params: CheckoutSessionRetrieveParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CheckoutSessionStatus>> {
+          // We check here instead of in the params builder because this can be specified positionally or in the params class.
+          checkRequired("id", params.id().getOrNull())
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("checkouts", params._pathParam(0))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  retrieveHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val previewHandler: Handler<CheckoutSessionPreviewResponse> =
-            jsonHandler<CheckoutSessionPreviewResponse>(clientOptions.jsonMapper)
+        private val previewHandler: Handler<CheckoutSessionPreviewResponse> = jsonHandler<CheckoutSessionPreviewResponse>(clientOptions.jsonMapper)
 
-        override fun preview(
-            params: CheckoutSessionPreviewParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CheckoutSessionPreviewResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("checkouts", "preview")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { previewHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun preview(params: CheckoutSessionPreviewParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CheckoutSessionPreviewResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .baseUrl(clientOptions.baseUrl())
+            .addPathSegments("checkouts", "preview")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(
+              clientOptions, params
+            )
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> errorHandler.handle(response).parseable {
+              response.use {
+                  previewHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }

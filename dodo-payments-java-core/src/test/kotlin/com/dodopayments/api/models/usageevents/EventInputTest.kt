@@ -4,6 +4,7 @@ package com.dodopayments.api.models.usageevents
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.usageevents.EventInput
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -13,54 +14,40 @@ internal class EventInputTest {
 
     @Test
     fun create() {
-        val eventInput =
-            EventInput.builder()
-                .customerId("customer_id")
-                .eventId("event_id")
-                .eventName("event_name")
-                .metadata(
-                    EventInput.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val eventInput = EventInput.builder()
+          .customerId("customer_id")
+          .eventId("event_id")
+          .eventName("event_name")
+          .metadata(EventInput.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        assertThat(eventInput.customerId()).isEqualTo("customer_id")
-        assertThat(eventInput.eventId()).isEqualTo("event_id")
-        assertThat(eventInput.eventName()).isEqualTo("event_name")
-        assertThat(eventInput.metadata())
-            .contains(
-                EventInput.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
-            )
-        assertThat(eventInput.timestamp())
-            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+      assertThat(eventInput.customerId()).isEqualTo("customer_id")
+      assertThat(eventInput.eventId()).isEqualTo("event_id")
+      assertThat(eventInput.eventName()).isEqualTo("event_name")
+      assertThat(eventInput.metadata()).contains(EventInput.Metadata.builder()
+          .putAdditionalProperty("foo", JsonValue.from("string"))
+          .build())
+      assertThat(eventInput.timestamp()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
     }
 
     @Test
     fun roundtrip() {
-        val jsonMapper = jsonMapper()
-        val eventInput =
-            EventInput.builder()
-                .customerId("customer_id")
-                .eventId("event_id")
-                .eventName("event_name")
-                .metadata(
-                    EventInput.Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .build()
+      val jsonMapper = jsonMapper()
+      val eventInput = EventInput.builder()
+          .customerId("customer_id")
+          .eventId("event_id")
+          .eventName("event_name")
+          .metadata(EventInput.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .build()
 
-        val roundtrippedEventInput =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(eventInput),
-                jacksonTypeRef<EventInput>(),
-            )
+      val roundtrippedEventInput = jsonMapper.readValue(jsonMapper.writeValueAsString(eventInput), jacksonTypeRef<EventInput>())
 
-        assertThat(roundtrippedEventInput).isEqualTo(eventInput)
+      assertThat(roundtrippedEventInput).isEqualTo(eventInput)
     }
 }

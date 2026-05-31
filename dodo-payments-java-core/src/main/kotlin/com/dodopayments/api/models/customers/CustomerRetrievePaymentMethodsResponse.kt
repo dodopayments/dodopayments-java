@@ -11,6 +11,7 @@ import com.dodopayments.api.core.checkKnown
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsResponse
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.payments.PaymentMethodTypes
 import com.fasterxml.jackson.annotation.JsonAnyGetter
@@ -23,22 +24,20 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class CustomerRetrievePaymentMethodsResponse
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class CustomerRetrievePaymentMethodsResponse @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val items: JsonField<List<Item>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of()
-    ) : this(items, mutableMapOf())
+    ) : this(
+      items, mutableMapOf()
+    )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun items(): List<Item> = items.getRequired("items")
 
     /**
@@ -46,32 +45,34 @@ private constructor(
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Item>> = items
+    @JsonProperty("items")
+    @ExcludeMissing
+    fun _items(): JsonField<List<Item>> = items
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CustomerRetrievePaymentMethodsResponse].
+         * Returns a mutable builder for constructing an instance of [CustomerRetrievePaymentMethodsResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [CustomerRetrievePaymentMethodsResponse]. */
@@ -81,55 +82,62 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            customerRetrievePaymentMethodsResponse: CustomerRetrievePaymentMethodsResponse
-        ) = apply {
-            items = customerRetrievePaymentMethodsResponse.items.map { it.toMutableList() }
-            additionalProperties =
-                customerRetrievePaymentMethodsResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(customerRetrievePaymentMethodsResponse: CustomerRetrievePaymentMethodsResponse) =
+            apply {
+                items = customerRetrievePaymentMethodsResponse.items.map { it.toMutableList() }
+                additionalProperties = customerRetrievePaymentMethodsResponse.additionalProperties.toMutableMap()
+            }
 
         fun items(items: List<Item>) = items(JsonField.of(items))
 
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.items] with a well-typed `List<Item>` value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun items(items: JsonField<List<Item>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
+        fun items(items: JsonField<List<Item>>) =
+            apply {
+                this.items = items.map { it.toMutableList() }
+            }
 
         /**
          * Adds a single [Item] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: Item) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
-        }
+        fun addItem(item: Item) =
+            apply {
+                items = (items ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("items", it).add(item)
+                }
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [CustomerRetrievePaymentMethodsResponse].
@@ -137,6 +145,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .items()
          * ```
@@ -145,8 +154,9 @@ private constructor(
          */
         fun build(): CustomerRetrievePaymentMethodsResponse =
             CustomerRetrievePaymentMethodsResponse(
-                checkRequired("items", items).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "items", items
+              ).map { it.toImmutable() }, additionalProperties.toMutableMap()
             )
     }
 
@@ -160,14 +170,15 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): CustomerRetrievePaymentMethodsResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): CustomerRetrievePaymentMethodsResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        items().forEach { it.validate() }
-        validated = true
-    }
+            items().forEach { it.validate() }
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -183,12 +194,9 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+    internal fun validity(): Int = (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
-    class Item
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Item @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val paymentMethod: JsonField<PaymentMethod>,
         private val paymentMethodId: JsonField<String>,
         private val card: JsonField<Card>,
@@ -196,58 +204,37 @@ private constructor(
         private val paymentMethodType: JsonField<PaymentMethodTypes>,
         private val recurringEnabled: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("payment_method")
-            @ExcludeMissing
-            paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
-            @JsonProperty("payment_method_id")
-            @ExcludeMissing
-            paymentMethodId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("payment_method") @ExcludeMissing paymentMethod: JsonField<PaymentMethod> = JsonMissing.of(),
+            @JsonProperty("payment_method_id") @ExcludeMissing paymentMethodId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("card") @ExcludeMissing card: JsonField<Card> = JsonMissing.of(),
-            @JsonProperty("last_used_at")
-            @ExcludeMissing
-            lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("payment_method_type")
-            @ExcludeMissing
-            paymentMethodType: JsonField<PaymentMethodTypes> = JsonMissing.of(),
-            @JsonProperty("recurring_enabled")
-            @ExcludeMissing
-            recurringEnabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("last_used_at") @ExcludeMissing lastUsedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("payment_method_type") @ExcludeMissing paymentMethodType: JsonField<PaymentMethodTypes> = JsonMissing.of(),
+            @JsonProperty("recurring_enabled") @ExcludeMissing recurringEnabled: JsonField<Boolean> = JsonMissing.of()
         ) : this(
-            paymentMethod,
-            paymentMethodId,
-            card,
-            lastUsedAt,
-            paymentMethodType,
-            recurringEnabled,
-            mutableMapOf(),
+          paymentMethod,
+          paymentMethodId,
+          card,
+          lastUsedAt,
+          paymentMethodType,
+          recurringEnabled,
+          mutableMapOf(),
         )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun paymentMethod(): PaymentMethod = paymentMethod.getRequired("payment_method")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
         fun paymentMethodId(): String = paymentMethodId.getRequired("payment_method_id")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun card(): Optional<Card> = card.getOptional("card")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun lastUsedAt(): Optional<OffsetDateTime> = lastUsedAt.getOptional("last_used_at")
 
         /**
@@ -255,24 +242,17 @@ private constructor(
          *
          * Used for disabled-payment-methods filtering and validation.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun paymentMethodType(): Optional<PaymentMethodTypes> =
-            paymentMethodType.getOptional("payment_method_type")
+        fun paymentMethodType(): Optional<PaymentMethodTypes> = paymentMethodType.getOptional("payment_method_type")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
-        fun recurringEnabled(): Optional<Boolean> =
-            recurringEnabled.getOptional("recurring_enabled")
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
+        fun recurringEnabled(): Optional<Boolean> = recurringEnabled.getOptional("recurring_enabled")
 
         /**
          * Returns the raw JSON value of [paymentMethod].
          *
-         * Unlike [paymentMethod], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [paymentMethod], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("payment_method")
         @ExcludeMissing
@@ -281,8 +261,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [paymentMethodId].
          *
-         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("payment_method_id")
         @ExcludeMissing
@@ -293,7 +272,9 @@ private constructor(
          *
          * Unlike [card], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("card") @ExcludeMissing fun _card(): JsonField<Card> = card
+        @JsonProperty("card")
+        @ExcludeMissing
+        fun _card(): JsonField<Card> = card
 
         /**
          * Returns the raw JSON value of [lastUsedAt].
@@ -307,8 +288,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [paymentMethodType].
          *
-         * Unlike [paymentMethodType], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [paymentMethodType], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("payment_method_type")
         @ExcludeMissing
@@ -317,8 +297,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [recurringEnabled].
          *
-         * Unlike [recurringEnabled], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [recurringEnabled], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("recurring_enabled")
         @ExcludeMissing
@@ -326,13 +305,12 @@ private constructor(
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -342,12 +320,14 @@ private constructor(
              * Returns a mutable builder for constructing an instance of [Item].
              *
              * The following fields are required:
+             *
              * ```java
              * .paymentMethod()
              * .paymentMethodId()
              * ```
              */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Item]. */
@@ -362,43 +342,42 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(item: Item) = apply {
-                paymentMethod = item.paymentMethod
-                paymentMethodId = item.paymentMethodId
-                card = item.card
-                lastUsedAt = item.lastUsedAt
-                paymentMethodType = item.paymentMethodType
-                recurringEnabled = item.recurringEnabled
-                additionalProperties = item.additionalProperties.toMutableMap()
-            }
+            internal fun from(item: Item) =
+                apply {
+                    paymentMethod = item.paymentMethod
+                    paymentMethodId = item.paymentMethodId
+                    card = item.card
+                    lastUsedAt = item.lastUsedAt
+                    paymentMethodType = item.paymentMethodType
+                    recurringEnabled = item.recurringEnabled
+                    additionalProperties = item.additionalProperties.toMutableMap()
+                }
 
-            fun paymentMethod(paymentMethod: PaymentMethod) =
-                paymentMethod(JsonField.of(paymentMethod))
+            fun paymentMethod(paymentMethod: PaymentMethod) = paymentMethod(JsonField.of(paymentMethod))
 
             /**
              * Sets [Builder.paymentMethod] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentMethod] with a well-typed [PaymentMethod]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.paymentMethod] with a well-typed [PaymentMethod] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun paymentMethod(paymentMethod: JsonField<PaymentMethod>) = apply {
-                this.paymentMethod = paymentMethod
-            }
+            fun paymentMethod(paymentMethod: JsonField<PaymentMethod>) =
+                apply {
+                    this.paymentMethod = paymentMethod
+                }
 
-            fun paymentMethodId(paymentMethodId: String) =
-                paymentMethodId(JsonField.of(paymentMethodId))
+            fun paymentMethodId(paymentMethodId: String) = paymentMethodId(JsonField.of(paymentMethodId))
 
             /**
              * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
-                this.paymentMethodId = paymentMethodId
-            }
+            fun paymentMethodId(paymentMethodId: JsonField<String>) =
+                apply {
+                    this.paymentMethodId = paymentMethodId
+                }
 
             fun card(card: Card?) = card(JsonField.ofNullable(card))
 
@@ -408,101 +387,99 @@ private constructor(
             /**
              * Sets [Builder.card] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.card] with a well-typed [Card] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.card] with a well-typed [Card] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun card(card: JsonField<Card>) = apply { this.card = card }
+            fun card(card: JsonField<Card>) =
+                apply {
+                    this.card = card
+                }
 
-            fun lastUsedAt(lastUsedAt: OffsetDateTime?) =
-                lastUsedAt(JsonField.ofNullable(lastUsedAt))
+            fun lastUsedAt(lastUsedAt: OffsetDateTime?) = lastUsedAt(JsonField.ofNullable(lastUsedAt))
 
             /** Alias for calling [Builder.lastUsedAt] with `lastUsedAt.orElse(null)`. */
-            fun lastUsedAt(lastUsedAt: Optional<OffsetDateTime>) =
-                lastUsedAt(lastUsedAt.getOrNull())
+            fun lastUsedAt(lastUsedAt: Optional<OffsetDateTime>) = lastUsedAt(lastUsedAt.getOrNull())
 
             /**
              * Sets [Builder.lastUsedAt] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.lastUsedAt] with a well-typed [OffsetDateTime] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.lastUsedAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun lastUsedAt(lastUsedAt: JsonField<OffsetDateTime>) = apply {
-                this.lastUsedAt = lastUsedAt
-            }
+            fun lastUsedAt(lastUsedAt: JsonField<OffsetDateTime>) =
+                apply {
+                    this.lastUsedAt = lastUsedAt
+                }
 
             /**
              * All supported payment method types (from Hyperswitch).
              *
              * Used for disabled-payment-methods filtering and validation.
              */
-            fun paymentMethodType(paymentMethodType: PaymentMethodTypes?) =
-                paymentMethodType(JsonField.ofNullable(paymentMethodType))
+            fun paymentMethodType(paymentMethodType: PaymentMethodTypes?) = paymentMethodType(JsonField.ofNullable(paymentMethodType))
 
-            /**
-             * Alias for calling [Builder.paymentMethodType] with `paymentMethodType.orElse(null)`.
-             */
-            fun paymentMethodType(paymentMethodType: Optional<PaymentMethodTypes>) =
-                paymentMethodType(paymentMethodType.getOrNull())
+            /** Alias for calling [Builder.paymentMethodType] with `paymentMethodType.orElse(null)`. */
+            fun paymentMethodType(paymentMethodType: Optional<PaymentMethodTypes>) = paymentMethodType(paymentMethodType.getOrNull())
 
             /**
              * Sets [Builder.paymentMethodType] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.paymentMethodType] with a well-typed
-             * [PaymentMethodTypes] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
+             * You should usually call [Builder.paymentMethodType] with a well-typed [PaymentMethodTypes] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun paymentMethodType(paymentMethodType: JsonField<PaymentMethodTypes>) = apply {
-                this.paymentMethodType = paymentMethodType
-            }
+            fun paymentMethodType(paymentMethodType: JsonField<PaymentMethodTypes>) =
+                apply {
+                    this.paymentMethodType = paymentMethodType
+                }
 
-            fun recurringEnabled(recurringEnabled: Boolean?) =
-                recurringEnabled(JsonField.ofNullable(recurringEnabled))
+            fun recurringEnabled(recurringEnabled: Boolean?) = recurringEnabled(JsonField.ofNullable(recurringEnabled))
 
             /**
              * Alias for [Builder.recurringEnabled].
              *
              * This unboxed primitive overload exists for backwards compatibility.
              */
-            fun recurringEnabled(recurringEnabled: Boolean) =
-                recurringEnabled(recurringEnabled as Boolean?)
+            fun recurringEnabled(recurringEnabled: Boolean) = recurringEnabled(recurringEnabled as Boolean?)
 
-            /**
-             * Alias for calling [Builder.recurringEnabled] with `recurringEnabled.orElse(null)`.
-             */
-            fun recurringEnabled(recurringEnabled: Optional<Boolean>) =
-                recurringEnabled(recurringEnabled.getOrNull())
+            /** Alias for calling [Builder.recurringEnabled] with `recurringEnabled.orElse(null)`. */
+            fun recurringEnabled(recurringEnabled: Optional<Boolean>) = recurringEnabled(recurringEnabled.getOrNull())
 
             /**
              * Sets [Builder.recurringEnabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.recurringEnabled] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.recurringEnabled] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun recurringEnabled(recurringEnabled: JsonField<Boolean>) = apply {
-                this.recurringEnabled = recurringEnabled
-            }
+            fun recurringEnabled(recurringEnabled: JsonField<Boolean>) =
+                apply {
+                    this.recurringEnabled = recurringEnabled
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Item].
@@ -510,6 +487,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
+             *
              * ```java
              * .paymentMethod()
              * .paymentMethodId()
@@ -519,40 +497,44 @@ private constructor(
              */
             fun build(): Item =
                 Item(
-                    checkRequired("paymentMethod", paymentMethod),
-                    checkRequired("paymentMethodId", paymentMethodId),
-                    card,
-                    lastUsedAt,
-                    paymentMethodType,
-                    recurringEnabled,
-                    additionalProperties.toMutableMap(),
+                  checkRequired(
+                    "paymentMethod", paymentMethod
+                  ),
+                  checkRequired(
+                    "paymentMethodId", paymentMethodId
+                  ),
+                  card,
+                  lastUsedAt,
+                  paymentMethodType,
+                  recurringEnabled,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Item = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Item =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            paymentMethod().validate()
-            paymentMethodId()
-            card().ifPresent { it.validate() }
-            lastUsedAt()
-            paymentMethodType().ifPresent { it.validate() }
-            recurringEnabled()
-            validated = true
-        }
+                paymentMethod().validate()
+                paymentMethodId()
+                card().ifPresent { it.validate() }
+                lastUsedAt()
+                paymentMethodType().ifPresent { it.validate() }
+                recurringEnabled()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -563,32 +545,27 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
-                (card.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (lastUsedAt.asKnown().isPresent) 1 else 0) +
-                (paymentMethodType.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (recurringEnabled.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (paymentMethod.asKnown().getOrNull()?.validity() ?: 0) + (if (paymentMethodId.asKnown().isPresent) 1 else 0) + (card.asKnown().getOrNull()?.validity() ?: 0) + (if (lastUsedAt.asKnown().isPresent) 1 else 0) + (paymentMethodType.asKnown().getOrNull()?.validity() ?: 0) + (if (recurringEnabled.asKnown().isPresent) 1 else 0)
 
-        class PaymentMethod @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
+        class PaymentMethod @JsonCreator private constructor(
+            private val value: JsonField<String>,
+
+        ) : Enum {
 
             /**
              * Returns this class instance's raw value.
              *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
+             * This is usually only useful if this instance was deserialized from data that doesn't match any known
+             * member, and you want to know that value. For example, if the SDK is on an older version than the
+             * API, then the API may respond with new members that the SDK is unaware of.
              */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+            @com.fasterxml.jackson.annotation.JsonValue
+            fun _value(): JsonField<String> = value
 
             companion object {
 
@@ -648,9 +625,11 @@ private constructor(
              * An enum containing [PaymentMethod]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [PaymentMethod] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
+             *
+             * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+             *   an older version than the API, then the API may respond with new members that the SDK is unaware
+             *   of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -669,19 +648,16 @@ private constructor(
                 GIFT_CARD,
                 OPEN_BANKING,
                 MOBILE_PAYMENT,
-                /**
-                 * An enum member indicating that [PaymentMethod] was instantiated with an unknown
-                 * value.
-                 */
+                /** An enum member indicating that [PaymentMethod] was instantiated with an unknown value. */
                 _UNKNOWN,
             }
 
             /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+             * class was instantiated with an unknown value.
              *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
+             * Use the [known] method instead if you're certain the value is always known or if you want to throw
+             * for the unknown case.
              */
             fun value(): Value =
                 when (this) {
@@ -706,11 +682,10 @@ private constructor(
             /**
              * Returns an enum member corresponding to this class instance's value.
              *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
+             * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+             * for the unknown case.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
              */
             fun known(): Known =
                 when (this) {
@@ -735,37 +710,33 @@ private constructor(
             /**
              * Returns this class instance's primitive wire representation.
              *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
+             * This differs from the [toString] method because that method is primarily for debugging and generally
+             * doesn't throw.
              *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
+             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+             *   primitive type.
              */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
+            fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): PaymentMethod = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): PaymentMethod =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                known()
-                validated = true
-            }
+                    known()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -776,19 +747,19 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+            @JvmSynthetic
+            internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is PaymentMethod && value == other.value
+              return other is PaymentMethod && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -796,9 +767,7 @@ private constructor(
             override fun toString() = value.toString()
         }
 
-        class Card
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
+        class Card @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
             private val cardHolderName: JsonField<String>,
             private val cardIssuingCountry: JsonField<CountryCode>,
             private val cardNetwork: JsonField<String>,
@@ -807,92 +776,58 @@ private constructor(
             private val expiryYear: JsonField<String>,
             private val last4Digits: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
+
         ) {
 
             @JsonCreator
             private constructor(
-                @JsonProperty("card_holder_name")
-                @ExcludeMissing
-                cardHolderName: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("card_issuing_country")
-                @ExcludeMissing
-                cardIssuingCountry: JsonField<CountryCode> = JsonMissing.of(),
-                @JsonProperty("card_network")
-                @ExcludeMissing
-                cardNetwork: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("card_type")
-                @ExcludeMissing
-                cardType: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("expiry_month")
-                @ExcludeMissing
-                expiryMonth: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("expiry_year")
-                @ExcludeMissing
-                expiryYear: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("last4_digits")
-                @ExcludeMissing
-                last4Digits: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("card_holder_name") @ExcludeMissing cardHolderName: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("card_issuing_country") @ExcludeMissing cardIssuingCountry: JsonField<CountryCode> = JsonMissing.of(),
+                @JsonProperty("card_network") @ExcludeMissing cardNetwork: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("card_type") @ExcludeMissing cardType: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("expiry_month") @ExcludeMissing expiryMonth: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("expiry_year") @ExcludeMissing expiryYear: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("last4_digits") @ExcludeMissing last4Digits: JsonField<String> = JsonMissing.of()
             ) : this(
-                cardHolderName,
-                cardIssuingCountry,
-                cardNetwork,
-                cardType,
-                expiryMonth,
-                expiryYear,
-                last4Digits,
-                mutableMapOf(),
+              cardHolderName,
+              cardIssuingCountry,
+              cardNetwork,
+              cardType,
+              expiryMonth,
+              expiryYear,
+              last4Digits,
+              mutableMapOf(),
             )
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun cardHolderName(): Optional<String> = cardHolderName.getOptional("card_holder_name")
 
             /**
              * ISO country code alpha2 variant
              *
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
              */
-            fun cardIssuingCountry(): Optional<CountryCode> =
-                cardIssuingCountry.getOptional("card_issuing_country")
+            fun cardIssuingCountry(): Optional<CountryCode> = cardIssuingCountry.getOptional("card_issuing_country")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun cardNetwork(): Optional<String> = cardNetwork.getOptional("card_network")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun cardType(): Optional<String> = cardType.getOptional("card_type")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun expiryMonth(): Optional<String> = expiryMonth.getOptional("expiry_month")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun expiryYear(): Optional<String> = expiryYear.getOptional("expiry_year")
 
-            /**
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
-             *   (e.g. if the server responded with an unexpected value).
-             */
+            /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
             fun last4Digits(): Optional<String> = last4Digits.getOptional("last4_digits")
 
             /**
              * Returns the raw JSON value of [cardHolderName].
              *
-             * Unlike [cardHolderName], this method doesn't throw if the JSON field has an
-             * unexpected type.
+             * Unlike [cardHolderName], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("card_holder_name")
             @ExcludeMissing
@@ -901,8 +836,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [cardIssuingCountry].
              *
-             * Unlike [cardIssuingCountry], this method doesn't throw if the JSON field has an
-             * unexpected type.
+             * Unlike [cardIssuingCountry], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("card_issuing_country")
             @ExcludeMissing
@@ -911,8 +845,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [cardNetwork].
              *
-             * Unlike [cardNetwork], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [cardNetwork], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("card_network")
             @ExcludeMissing
@@ -921,16 +854,16 @@ private constructor(
             /**
              * Returns the raw JSON value of [cardType].
              *
-             * Unlike [cardType], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [cardType], this method doesn't throw if the JSON field has an unexpected type.
              */
-            @JsonProperty("card_type") @ExcludeMissing fun _cardType(): JsonField<String> = cardType
+            @JsonProperty("card_type")
+            @ExcludeMissing
+            fun _cardType(): JsonField<String> = cardType
 
             /**
              * Returns the raw JSON value of [expiryMonth].
              *
-             * Unlike [expiryMonth], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [expiryMonth], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("expiry_month")
             @ExcludeMissing
@@ -939,8 +872,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [expiryYear].
              *
-             * Unlike [expiryYear], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [expiryYear], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("expiry_year")
             @ExcludeMissing
@@ -949,8 +881,7 @@ private constructor(
             /**
              * Returns the raw JSON value of [last4Digits].
              *
-             * Unlike [last4Digits], this method doesn't throw if the JSON field has an unexpected
-             * type.
+             * Unlike [last4Digits], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("last4_digits")
             @ExcludeMissing
@@ -958,20 +889,20 @@ private constructor(
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
+              additionalProperties.put(key, value)
             }
 
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
+            fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
             companion object {
 
                 /** Returns a mutable builder for constructing an instance of [Card]. */
-                @JvmStatic fun builder() = Builder()
+                @JvmStatic
+                fun builder() = Builder()
             }
 
             /** A builder for [Card]. */
@@ -987,76 +918,66 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(card: Card) = apply {
-                    cardHolderName = card.cardHolderName
-                    cardIssuingCountry = card.cardIssuingCountry
-                    cardNetwork = card.cardNetwork
-                    cardType = card.cardType
-                    expiryMonth = card.expiryMonth
-                    expiryYear = card.expiryYear
-                    last4Digits = card.last4Digits
-                    additionalProperties = card.additionalProperties.toMutableMap()
-                }
+                internal fun from(card: Card) =
+                    apply {
+                        cardHolderName = card.cardHolderName
+                        cardIssuingCountry = card.cardIssuingCountry
+                        cardNetwork = card.cardNetwork
+                        cardType = card.cardType
+                        expiryMonth = card.expiryMonth
+                        expiryYear = card.expiryYear
+                        last4Digits = card.last4Digits
+                        additionalProperties = card.additionalProperties.toMutableMap()
+                    }
 
-                fun cardHolderName(cardHolderName: String?) =
-                    cardHolderName(JsonField.ofNullable(cardHolderName))
+                fun cardHolderName(cardHolderName: String?) = cardHolderName(JsonField.ofNullable(cardHolderName))
 
-                /**
-                 * Alias for calling [Builder.cardHolderName] with `cardHolderName.orElse(null)`.
-                 */
-                fun cardHolderName(cardHolderName: Optional<String>) =
-                    cardHolderName(cardHolderName.getOrNull())
+                /** Alias for calling [Builder.cardHolderName] with `cardHolderName.orElse(null)`. */
+                fun cardHolderName(cardHolderName: Optional<String>) = cardHolderName(cardHolderName.getOrNull())
 
                 /**
                  * Sets [Builder.cardHolderName] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.cardHolderName] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.cardHolderName] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun cardHolderName(cardHolderName: JsonField<String>) = apply {
-                    this.cardHolderName = cardHolderName
-                }
+                fun cardHolderName(cardHolderName: JsonField<String>) =
+                    apply {
+                        this.cardHolderName = cardHolderName
+                    }
 
                 /** ISO country code alpha2 variant */
-                fun cardIssuingCountry(cardIssuingCountry: CountryCode?) =
-                    cardIssuingCountry(JsonField.ofNullable(cardIssuingCountry))
+                fun cardIssuingCountry(cardIssuingCountry: CountryCode?) = cardIssuingCountry(JsonField.ofNullable(cardIssuingCountry))
 
-                /**
-                 * Alias for calling [Builder.cardIssuingCountry] with
-                 * `cardIssuingCountry.orElse(null)`.
-                 */
-                fun cardIssuingCountry(cardIssuingCountry: Optional<CountryCode>) =
-                    cardIssuingCountry(cardIssuingCountry.getOrNull())
+                /** Alias for calling [Builder.cardIssuingCountry] with `cardIssuingCountry.orElse(null)`. */
+                fun cardIssuingCountry(cardIssuingCountry: Optional<CountryCode>) = cardIssuingCountry(cardIssuingCountry.getOrNull())
 
                 /**
                  * Sets [Builder.cardIssuingCountry] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.cardIssuingCountry] with a well-typed
-                 * [CountryCode] value instead. This method is primarily for setting the field to an
-                 * undocumented or not yet supported value.
+                 * You should usually call [Builder.cardIssuingCountry] with a well-typed [CountryCode] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun cardIssuingCountry(cardIssuingCountry: JsonField<CountryCode>) = apply {
-                    this.cardIssuingCountry = cardIssuingCountry
-                }
+                fun cardIssuingCountry(cardIssuingCountry: JsonField<CountryCode>) =
+                    apply {
+                        this.cardIssuingCountry = cardIssuingCountry
+                    }
 
-                fun cardNetwork(cardNetwork: String?) =
-                    cardNetwork(JsonField.ofNullable(cardNetwork))
+                fun cardNetwork(cardNetwork: String?) = cardNetwork(JsonField.ofNullable(cardNetwork))
 
                 /** Alias for calling [Builder.cardNetwork] with `cardNetwork.orElse(null)`. */
-                fun cardNetwork(cardNetwork: Optional<String>) =
-                    cardNetwork(cardNetwork.getOrNull())
+                fun cardNetwork(cardNetwork: Optional<String>) = cardNetwork(cardNetwork.getOrNull())
 
                 /**
                  * Sets [Builder.cardNetwork] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.cardNetwork] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.cardNetwork] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun cardNetwork(cardNetwork: JsonField<String>) = apply {
-                    this.cardNetwork = cardNetwork
-                }
+                fun cardNetwork(cardNetwork: JsonField<String>) =
+                    apply {
+                        this.cardNetwork = cardNetwork
+                    }
 
                 fun cardType(cardType: String?) = cardType(JsonField.ofNullable(cardType))
 
@@ -1066,29 +987,29 @@ private constructor(
                 /**
                  * Sets [Builder.cardType] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.cardType] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.cardType] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun cardType(cardType: JsonField<String>) = apply { this.cardType = cardType }
+                fun cardType(cardType: JsonField<String>) =
+                    apply {
+                        this.cardType = cardType
+                    }
 
-                fun expiryMonth(expiryMonth: String?) =
-                    expiryMonth(JsonField.ofNullable(expiryMonth))
+                fun expiryMonth(expiryMonth: String?) = expiryMonth(JsonField.ofNullable(expiryMonth))
 
                 /** Alias for calling [Builder.expiryMonth] with `expiryMonth.orElse(null)`. */
-                fun expiryMonth(expiryMonth: Optional<String>) =
-                    expiryMonth(expiryMonth.getOrNull())
+                fun expiryMonth(expiryMonth: Optional<String>) = expiryMonth(expiryMonth.getOrNull())
 
                 /**
                  * Sets [Builder.expiryMonth] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.expiryMonth] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.expiryMonth] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun expiryMonth(expiryMonth: JsonField<String>) = apply {
-                    this.expiryMonth = expiryMonth
-                }
+                fun expiryMonth(expiryMonth: JsonField<String>) =
+                    apply {
+                        this.expiryMonth = expiryMonth
+                    }
 
                 fun expiryYear(expiryYear: String?) = expiryYear(JsonField.ofNullable(expiryYear))
 
@@ -1098,53 +1019,55 @@ private constructor(
                 /**
                  * Sets [Builder.expiryYear] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.expiryYear] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.expiryYear] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun expiryYear(expiryYear: JsonField<String>) = apply {
-                    this.expiryYear = expiryYear
-                }
+                fun expiryYear(expiryYear: JsonField<String>) =
+                    apply {
+                        this.expiryYear = expiryYear
+                    }
 
-                fun last4Digits(last4Digits: String?) =
-                    last4Digits(JsonField.ofNullable(last4Digits))
+                fun last4Digits(last4Digits: String?) = last4Digits(JsonField.ofNullable(last4Digits))
 
                 /** Alias for calling [Builder.last4Digits] with `last4Digits.orElse(null)`. */
-                fun last4Digits(last4Digits: Optional<String>) =
-                    last4Digits(last4Digits.getOrNull())
+                fun last4Digits(last4Digits: Optional<String>) = last4Digits(last4Digits.getOrNull())
 
                 /**
                  * Sets [Builder.last4Digits] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.last4Digits] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
+                 * You should usually call [Builder.last4Digits] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
                  */
-                fun last4Digits(last4Digits: JsonField<String>) = apply {
-                    this.last4Digits = last4Digits
-                }
+                fun last4Digits(last4Digits: JsonField<String>) =
+                    apply {
+                        this.last4Digits = last4Digits
+                    }
 
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
 
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
+                fun putAdditionalProperty(key: String, value: JsonValue) =
+                    apply {
+                        additionalProperties.put(key, value)
+                    }
 
                 fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
                     apply {
                         this.additionalProperties.putAll(additionalProperties)
                     }
 
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
+                fun removeAdditionalProperty(key: String) =
+                    apply {
+                        additionalProperties.remove(key)
+                    }
 
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
+                fun removeAllAdditionalProperties(keys: Set<String>) =
+                    apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
 
                 /**
                  * Returns an immutable instance of [Card].
@@ -1153,43 +1076,42 @@ private constructor(
                  */
                 fun build(): Card =
                     Card(
-                        cardHolderName,
-                        cardIssuingCountry,
-                        cardNetwork,
-                        cardType,
-                        expiryMonth,
-                        expiryYear,
-                        last4Digits,
-                        additionalProperties.toMutableMap(),
+                      cardHolderName,
+                      cardIssuingCountry,
+                      cardNetwork,
+                      cardType,
+                      expiryMonth,
+                      expiryYear,
+                      last4Digits,
+                      additionalProperties.toMutableMap(),
                     )
             }
 
             private var validated: Boolean = false
 
             /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
+             * Validates that the types of all values in this object match their expected types recursively.
              *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
+             * This method is _not_ forwards compatible with new types from the API for existing fields.
              *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
+             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
              */
-            fun validate(): Card = apply {
-                if (validated) {
-                    return@apply
-                }
+            fun validate(): Card =
+                apply {
+                    if (validated) {
+                      return@apply
+                    }
 
-                cardHolderName()
-                cardIssuingCountry().ifPresent { it.validate() }
-                cardNetwork()
-                cardType()
-                expiryMonth()
-                expiryYear()
-                last4Digits()
-                validated = true
-            }
+                    cardHolderName()
+                    cardIssuingCountry().ifPresent { it.validate() }
+                    cardNetwork()
+                    cardType()
+                    expiryMonth()
+                    expiryYear()
+                    last4Digits()
+                    validated = true
+                }
 
             fun isValid(): Boolean =
                 try {
@@ -1200,103 +1122,54 @@ private constructor(
                 }
 
             /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
+             * Returns a score indicating how many valid values are contained in this object recursively.
              *
              * Used for best match union deserialization.
              */
             @JvmSynthetic
-            internal fun validity(): Int =
-                (if (cardHolderName.asKnown().isPresent) 1 else 0) +
-                    (cardIssuingCountry.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (cardNetwork.asKnown().isPresent) 1 else 0) +
-                    (if (cardType.asKnown().isPresent) 1 else 0) +
-                    (if (expiryMonth.asKnown().isPresent) 1 else 0) +
-                    (if (expiryYear.asKnown().isPresent) 1 else 0) +
-                    (if (last4Digits.asKnown().isPresent) 1 else 0)
+            internal fun validity(): Int = (if (cardHolderName.asKnown().isPresent) 1 else 0) + (cardIssuingCountry.asKnown().getOrNull()?.validity() ?: 0) + (if (cardNetwork.asKnown().isPresent) 1 else 0) + (if (cardType.asKnown().isPresent) 1 else 0) + (if (expiryMonth.asKnown().isPresent) 1 else 0) + (if (expiryYear.asKnown().isPresent) 1 else 0) + (if (last4Digits.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
+              if (this === other) {
+                  return true
+              }
 
-                return other is Card &&
-                    cardHolderName == other.cardHolderName &&
-                    cardIssuingCountry == other.cardIssuingCountry &&
-                    cardNetwork == other.cardNetwork &&
-                    cardType == other.cardType &&
-                    expiryMonth == other.expiryMonth &&
-                    expiryYear == other.expiryYear &&
-                    last4Digits == other.last4Digits &&
-                    additionalProperties == other.additionalProperties
+              return other is Card && cardHolderName == other.cardHolderName && cardIssuingCountry == other.cardIssuingCountry && cardNetwork == other.cardNetwork && cardType == other.cardType && expiryMonth == other.expiryMonth && expiryYear == other.expiryYear && last4Digits == other.last4Digits && additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy {
-                Objects.hash(
-                    cardHolderName,
-                    cardIssuingCountry,
-                    cardNetwork,
-                    cardType,
-                    expiryMonth,
-                    expiryYear,
-                    last4Digits,
-                    additionalProperties,
-                )
-            }
+            private val hashCode: Int by lazy { Objects.hash(cardHolderName, cardIssuingCountry, cardNetwork, cardType, expiryMonth, expiryYear, last4Digits, additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
-            override fun toString() =
-                "Card{cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardNetwork=$cardNetwork, cardType=$cardType, expiryMonth=$expiryMonth, expiryYear=$expiryYear, last4Digits=$last4Digits, additionalProperties=$additionalProperties}"
+            override fun toString() = "Card{cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardNetwork=$cardNetwork, cardType=$cardType, expiryMonth=$expiryMonth, expiryYear=$expiryYear, last4Digits=$last4Digits, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Item &&
-                paymentMethod == other.paymentMethod &&
-                paymentMethodId == other.paymentMethodId &&
-                card == other.card &&
-                lastUsedAt == other.lastUsedAt &&
-                paymentMethodType == other.paymentMethodType &&
-                recurringEnabled == other.recurringEnabled &&
-                additionalProperties == other.additionalProperties
+          return other is Item && paymentMethod == other.paymentMethod && paymentMethodId == other.paymentMethodId && card == other.card && lastUsedAt == other.lastUsedAt && paymentMethodType == other.paymentMethodType && recurringEnabled == other.recurringEnabled && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                paymentMethod,
-                paymentMethodId,
-                card,
-                lastUsedAt,
-                paymentMethodType,
-                recurringEnabled,
-                additionalProperties,
-            )
-        }
+        private val hashCode: Int by lazy { Objects.hash(paymentMethod, paymentMethodId, card, lastUsedAt, paymentMethodType, recurringEnabled, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Item{paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, card=$card, lastUsedAt=$lastUsedAt, paymentMethodType=$paymentMethodType, recurringEnabled=$recurringEnabled, additionalProperties=$additionalProperties}"
+        override fun toString() = "Item{paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, card=$card, lastUsedAt=$lastUsedAt, paymentMethodType=$paymentMethodType, recurringEnabled=$recurringEnabled, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is CustomerRetrievePaymentMethodsResponse &&
-            items == other.items &&
-            additionalProperties == other.additionalProperties
+      return other is CustomerRetrievePaymentMethodsResponse && items == other.items && additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy { Objects.hash(items, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "CustomerRetrievePaymentMethodsResponse{items=$items, additionalProperties=$additionalProperties}"
+    override fun toString() = "CustomerRetrievePaymentMethodsResponse{items=$items, additionalProperties=$additionalProperties}"
 }

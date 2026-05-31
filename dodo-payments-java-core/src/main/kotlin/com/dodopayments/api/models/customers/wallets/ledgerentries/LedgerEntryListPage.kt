@@ -5,17 +5,21 @@ package com.dodopayments.api.models.customers.wallets.ledgerentries
 import com.dodopayments.api.core.AutoPager
 import com.dodopayments.api.core.Page
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.customers.wallets.ledgerentries.CustomerWalletTransaction
+import com.dodopayments.api.models.customers.wallets.ledgerentries.LedgerEntryListPageResponse
+import com.dodopayments.api.models.customers.wallets.ledgerentries.LedgerEntryListParams
 import com.dodopayments.api.services.blocking.customers.wallets.LedgerEntryService
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see LedgerEntryService.list */
-class LedgerEntryListPage
-private constructor(
+class LedgerEntryListPage private constructor(
     private val service: LedgerEntryService,
     private val params: LedgerEntryListParams,
     private val response: LedgerEntryListPageResponse,
+
 ) : Page<CustomerWalletTransaction> {
 
     /**
@@ -23,14 +27,15 @@ private constructor(
      *
      * @see LedgerEntryListPageResponse.items
      */
-    override fun items(): List<CustomerWalletTransaction> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<CustomerWalletTransaction> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): LedgerEntryListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
     override fun nextPage(): LedgerEntryListPage = service.list(nextPageParams())
@@ -51,13 +56,15 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [LedgerEntryListPage].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [LedgerEntryListPage]. */
@@ -68,19 +75,29 @@ private constructor(
         private var response: LedgerEntryListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(ledgerEntryListPage: LedgerEntryListPage) = apply {
-            service = ledgerEntryListPage.service
-            params = ledgerEntryListPage.params
-            response = ledgerEntryListPage.response
-        }
+        internal fun from(ledgerEntryListPage: LedgerEntryListPage) =
+            apply {
+                service = ledgerEntryListPage.service
+                params = ledgerEntryListPage.params
+                response = ledgerEntryListPage.response
+            }
 
-        fun service(service: LedgerEntryService) = apply { this.service = service }
+        fun service(service: LedgerEntryService) =
+            apply {
+                this.service = service
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: LedgerEntryListParams) = apply { this.params = params }
+        fun params(params: LedgerEntryListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: LedgerEntryListPageResponse) = apply { this.response = response }
+        fun response(response: LedgerEntryListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [LedgerEntryListPage].
@@ -88,6 +105,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .params()
@@ -98,25 +116,27 @@ private constructor(
          */
         fun build(): LedgerEntryListPage =
             LedgerEntryListPage(
-                checkRequired("service", service),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is LedgerEntryListPage &&
-            service == other.service &&
-            params == other.params &&
-            response == other.response
+      return other is LedgerEntryListPage && service == other.service && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, params, response)
 
-    override fun toString() =
-        "LedgerEntryListPage{service=$service, params=$params, response=$response}"
+    override fun toString() = "LedgerEntryListPage{service=$service, params=$params, response=$response}"
 }

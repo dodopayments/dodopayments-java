@@ -5,20 +5,24 @@ package com.dodopayments.api.models.productcollections
 import com.dodopayments.api.core.AutoPagerAsync
 import com.dodopayments.api.core.PageAsync
 import com.dodopayments.api.core.checkRequired
+import com.dodopayments.api.models.productcollections.ProductCollectionListPageResponse
+import com.dodopayments.api.models.productcollections.ProductCollectionListParams
+import com.dodopayments.api.models.productcollections.ProductCollectionListResponse
 import com.dodopayments.api.services.async.ProductCollectionServiceAsync
 import java.util.Objects
+import java.util.Optional
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 import kotlin.jvm.optionals.getOrDefault
 import kotlin.jvm.optionals.getOrNull
 
 /** @see ProductCollectionServiceAsync.list */
-class ProductCollectionListPageAsync
-private constructor(
+class ProductCollectionListPageAsync private constructor(
     private val service: ProductCollectionServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: ProductCollectionListParams,
     private val response: ProductCollectionListPageResponse,
+
 ) : PageAsync<ProductCollectionListResponse> {
 
     /**
@@ -26,21 +30,23 @@ private constructor(
      *
      * @see ProductCollectionListPageResponse.items
      */
-    override fun items(): List<ProductCollectionListResponse> =
-        response._items().getOptional("items").getOrNull() ?: emptyList()
+    override fun items(): List<ProductCollectionListResponse> = response._items().getOptional("items").getOrNull() ?: emptyList()
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
     fun nextPageParams(): ProductCollectionListParams {
-        val pageNumber = params.pageNumber().getOrDefault(1)
-        return params.toBuilder().pageNumber(pageNumber + 1).build()
+      val pageNumber = params.pageNumber().getOrDefault(1)
+      return params.toBuilder()
+          .pageNumber(pageNumber + 1)
+          .build()
     }
 
-    override fun nextPage(): CompletableFuture<ProductCollectionListPageAsync> =
-        service.list(nextPageParams())
+    override fun nextPage(): CompletableFuture<ProductCollectionListPageAsync> = service.list(nextPageParams())
 
     fun autoPager(): AutoPagerAsync<ProductCollectionListResponse> =
-        AutoPagerAsync.from(this, streamHandlerExecutor)
+        AutoPagerAsync.from(
+          this, streamHandlerExecutor
+        )
 
     /** The parameters that were used to request this page. */
     fun params(): ProductCollectionListParams = params
@@ -53,10 +59,10 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [ProductCollectionListPageAsync].
+         * Returns a mutable builder for constructing an instance of [ProductCollectionListPageAsync].
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -64,7 +70,8 @@ private constructor(
          * .response()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [ProductCollectionListPageAsync]. */
@@ -76,26 +83,35 @@ private constructor(
         private var response: ProductCollectionListPageResponse? = null
 
         @JvmSynthetic
-        internal fun from(productCollectionListPageAsync: ProductCollectionListPageAsync) = apply {
-            service = productCollectionListPageAsync.service
-            streamHandlerExecutor = productCollectionListPageAsync.streamHandlerExecutor
-            params = productCollectionListPageAsync.params
-            response = productCollectionListPageAsync.response
-        }
+        internal fun from(productCollectionListPageAsync: ProductCollectionListPageAsync) =
+            apply {
+                service = productCollectionListPageAsync.service
+                streamHandlerExecutor = productCollectionListPageAsync.streamHandlerExecutor
+                params = productCollectionListPageAsync.params
+                response = productCollectionListPageAsync.response
+            }
 
-        fun service(service: ProductCollectionServiceAsync) = apply { this.service = service }
+        fun service(service: ProductCollectionServiceAsync) =
+            apply {
+                this.service = service
+            }
 
-        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
-            this.streamHandlerExecutor = streamHandlerExecutor
-        }
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) =
+            apply {
+                this.streamHandlerExecutor = streamHandlerExecutor
+            }
 
         /** The parameters that were used to request this page. */
-        fun params(params: ProductCollectionListParams) = apply { this.params = params }
+        fun params(params: ProductCollectionListParams) =
+            apply {
+                this.params = params
+            }
 
         /** The response that this page was parsed from. */
-        fun response(response: ProductCollectionListPageResponse) = apply {
-            this.response = response
-        }
+        fun response(response: ProductCollectionListPageResponse) =
+            apply {
+                this.response = response
+            }
 
         /**
          * Returns an immutable instance of [ProductCollectionListPageAsync].
@@ -103,6 +119,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .service()
          * .streamHandlerExecutor()
@@ -114,27 +131,30 @@ private constructor(
          */
         fun build(): ProductCollectionListPageAsync =
             ProductCollectionListPageAsync(
-                checkRequired("service", service),
-                checkRequired("streamHandlerExecutor", streamHandlerExecutor),
-                checkRequired("params", params),
-                checkRequired("response", response),
+              checkRequired(
+                "service", service
+              ),
+              checkRequired(
+                "streamHandlerExecutor", streamHandlerExecutor
+              ),
+              checkRequired(
+                "params", params
+              ),
+              checkRequired(
+                "response", response
+              ),
             )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is ProductCollectionListPageAsync &&
-            service == other.service &&
-            streamHandlerExecutor == other.streamHandlerExecutor &&
-            params == other.params &&
-            response == other.response
+      return other is ProductCollectionListPageAsync && service == other.service && streamHandlerExecutor == other.streamHandlerExecutor && params == other.params && response == other.response
     }
 
     override fun hashCode(): Int = Objects.hash(service, streamHandlerExecutor, params, response)
 
-    override fun toString() =
-        "ProductCollectionListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
+    override fun toString() = "ProductCollectionListPageAsync{service=$service, streamHandlerExecutor=$streamHandlerExecutor, params=$params, response=$response}"
 }

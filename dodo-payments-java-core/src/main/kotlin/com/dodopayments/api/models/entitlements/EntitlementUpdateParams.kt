@@ -11,6 +11,8 @@ import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
+import com.dodopayments.api.models.entitlements.IntegrationConfig
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -21,41 +23,32 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** PATCH /entitlements/{id} */
-class EntitlementUpdateParams
-private constructor(
+class EntitlementUpdateParams private constructor(
     private val id: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun description(): Optional<String> = body.description()
 
     /**
-     * Integration-specific configuration supplied when creating or updating an entitlement. The
-     * shape required matches the entitlement's `integration_type`.
+     * Integration-specific configuration supplied when creating or updating
+     * an entitlement. The shape required matches the entitlement's
+     * `integration_type`.
      *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
      */
     fun integrationConfig(): Optional<IntegrationConfig> = body.integrationConfig()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun metadata(): Optional<Metadata> = body.metadata()
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun name(): Optional<String> = body.name()
 
     /**
@@ -68,8 +61,7 @@ private constructor(
     /**
      * Returns the raw JSON value of [integrationConfig].
      *
-     * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _integrationConfig(): JsonField<IntegrationConfig> = body._integrationConfig()
 
@@ -99,10 +91,12 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): EntitlementUpdateParams = builder().build()
+        @JvmStatic
+        fun none(): EntitlementUpdateParams = builder().build()
 
         /** Returns a mutable builder for constructing an instance of [EntitlementUpdateParams]. */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [EntitlementUpdateParams]. */
@@ -114,14 +108,18 @@ private constructor(
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
-        internal fun from(entitlementUpdateParams: EntitlementUpdateParams) = apply {
-            id = entitlementUpdateParams.id
-            body = entitlementUpdateParams.body.toBuilder()
-            additionalHeaders = entitlementUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = entitlementUpdateParams.additionalQueryParams.toBuilder()
-        }
+        internal fun from(entitlementUpdateParams: EntitlementUpdateParams) =
+            apply {
+                id = entitlementUpdateParams.id
+                body = entitlementUpdateParams.body.toBuilder()
+                additionalHeaders = entitlementUpdateParams.additionalHeaders.toBuilder()
+                additionalQueryParams = entitlementUpdateParams.additionalQueryParams.toBuilder()
+            }
 
-        fun id(id: String?) = apply { this.id = id }
+        fun id(id: String?) =
+            apply {
+                this.id = id
+            }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
@@ -129,16 +127,22 @@ private constructor(
         /**
          * Sets the entire request body.
          *
-         * This is generally only useful if you are already constructing the body separately.
-         * Otherwise, it's more convenient to use the top-level setters instead:
+         * This is generally only useful if you are already constructing the body separately. Otherwise,
+         * it's more convenient to use the top-level setters instead:
          * - [description]
          * - [integrationConfig]
          * - [metadata]
          * - [name]
          */
-        fun body(body: Body) = apply { this.body = body.toBuilder() }
+        fun body(body: Body) =
+            apply {
+                this.body = body.toBuilder()
+            }
 
-        fun description(description: String?) = apply { body.description(description) }
+        fun description(description: String?) =
+            apply {
+                body.description(description)
+            }
 
         /** Alias for calling [Builder.description] with `description.orElse(null)`. */
         fun description(description: Optional<String>) = description(description.getOrNull())
@@ -146,81 +150,90 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { body.description(description) }
+        fun description(description: JsonField<String>) =
+            apply {
+                body.description(description)
+            }
 
         /**
-         * Integration-specific configuration supplied when creating or updating an entitlement. The
-         * shape required matches the entitlement's `integration_type`.
+         * Integration-specific configuration supplied when creating or updating
+         * an entitlement. The shape required matches the entitlement's
+         * `integration_type`.
          */
-        fun integrationConfig(integrationConfig: IntegrationConfig?) = apply {
-            body.integrationConfig(integrationConfig)
-        }
+        fun integrationConfig(integrationConfig: IntegrationConfig?) =
+            apply {
+                body.integrationConfig(integrationConfig)
+            }
 
         /** Alias for calling [Builder.integrationConfig] with `integrationConfig.orElse(null)`. */
-        fun integrationConfig(integrationConfig: Optional<IntegrationConfig>) =
-            integrationConfig(integrationConfig.getOrNull())
+        fun integrationConfig(integrationConfig: Optional<IntegrationConfig>) = integrationConfig(integrationConfig.getOrNull())
 
         /**
          * Sets [Builder.integrationConfig] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.integrationConfig] with a well-typed [IntegrationConfig]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.integrationConfig] with a well-typed [IntegrationConfig] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun integrationConfig(integrationConfig: JsonField<IntegrationConfig>) = apply {
-            body.integrationConfig(integrationConfig)
-        }
+        fun integrationConfig(integrationConfig: JsonField<IntegrationConfig>) =
+            apply {
+                body.integrationConfig(integrationConfig)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofGitHub(github)`. */
-        fun integrationConfig(github: IntegrationConfig.GitHubConfig) = apply {
-            body.integrationConfig(github)
-        }
+        fun integrationConfig(github: IntegrationConfig.GitHubConfig) =
+            apply {
+                body.integrationConfig(github)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofDiscord(discord)`. */
-        fun integrationConfig(discord: IntegrationConfig.DiscordConfig) = apply {
-            body.integrationConfig(discord)
-        }
+        fun integrationConfig(discord: IntegrationConfig.DiscordConfig) =
+            apply {
+                body.integrationConfig(discord)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofTelegram(telegram)`. */
-        fun integrationConfig(telegram: IntegrationConfig.TelegramConfig) = apply {
-            body.integrationConfig(telegram)
-        }
+        fun integrationConfig(telegram: IntegrationConfig.TelegramConfig) =
+            apply {
+                body.integrationConfig(telegram)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofFigma(figma)`. */
-        fun integrationConfig(figma: IntegrationConfig.FigmaConfig) = apply {
-            body.integrationConfig(figma)
-        }
+        fun integrationConfig(figma: IntegrationConfig.FigmaConfig) =
+            apply {
+                body.integrationConfig(figma)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofFramer(framer)`. */
-        fun integrationConfig(framer: IntegrationConfig.FramerConfig) = apply {
-            body.integrationConfig(framer)
-        }
+        fun integrationConfig(framer: IntegrationConfig.FramerConfig) =
+            apply {
+                body.integrationConfig(framer)
+            }
 
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofNotion(notion)`. */
-        fun integrationConfig(notion: IntegrationConfig.NotionConfig) = apply {
-            body.integrationConfig(notion)
-        }
+        fun integrationConfig(notion: IntegrationConfig.NotionConfig) =
+            apply {
+                body.integrationConfig(notion)
+            }
 
-        /**
-         * Alias for calling [integrationConfig] with
-         * `IntegrationConfig.ofDigitalFiles(digitalFiles)`.
-         */
-        fun integrationConfig(digitalFiles: IntegrationConfig.DigitalFilesConfig) = apply {
-            body.integrationConfig(digitalFiles)
-        }
+        /** Alias for calling [integrationConfig] with `IntegrationConfig.ofDigitalFiles(digitalFiles)`. */
+        fun integrationConfig(digitalFiles: IntegrationConfig.DigitalFilesConfig) =
+            apply {
+                body.integrationConfig(digitalFiles)
+            }
 
-        /**
-         * Alias for calling [integrationConfig] with `IntegrationConfig.ofLicenseKey(licenseKey)`.
-         */
-        fun integrationConfig(licenseKey: IntegrationConfig.LicenseKeyConfig) = apply {
-            body.integrationConfig(licenseKey)
-        }
+        /** Alias for calling [integrationConfig] with `IntegrationConfig.ofLicenseKey(licenseKey)`. */
+        fun integrationConfig(licenseKey: IntegrationConfig.LicenseKeyConfig) =
+            apply {
+                body.integrationConfig(licenseKey)
+            }
 
-        fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
+        fun metadata(metadata: Metadata?) =
+            apply {
+                body.metadata(metadata)
+            }
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
         fun metadata(metadata: Optional<Metadata>) = metadata(metadata.getOrNull())
@@ -228,13 +241,18 @@ private constructor(
         /**
          * Sets [Builder.metadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
+        fun metadata(metadata: JsonField<Metadata>) =
+            apply {
+                body.metadata(metadata)
+            }
 
-        fun name(name: String?) = apply { body.name(name) }
+        fun name(name: String?) =
+            apply {
+                body.name(name)
+            }
 
         /** Alias for calling [Builder.name] with `name.orElse(null)`. */
         fun name(name: Optional<String>) = name(name.getOrNull())
@@ -242,127 +260,164 @@ private constructor(
         /**
          * Sets [Builder.name] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun name(name: JsonField<String>) = apply { body.name(name) }
+        fun name(name: JsonField<String>) =
+            apply {
+                body.name(name)
+            }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            body.additionalProperties(additionalBodyProperties)
-        }
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.additionalProperties(additionalBodyProperties)
+            }
 
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            body.putAdditionalProperty(key, value)
-        }
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) =
+            apply {
+                body.putAdditionalProperty(
+                  key, value
+                )
+            }
 
         fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
             apply {
                 body.putAllAdditionalProperties(additionalBodyProperties)
             }
 
-        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+        fun removeAdditionalBodyProperty(key: String) =
+            apply {
+                body.removeAdditionalProperty(key)
+            }
 
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            body.removeAllAdditionalProperties(keys)
-        }
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) =
+            apply {
+                body.removeAllAdditionalProperties(keys)
+            }
 
-        fun additionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.clear()
-            putAllAdditionalHeaders(additionalHeaders)
-        }
+        fun additionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.clear()
+                putAllAdditionalHeaders(additionalHeaders)
+            }
 
-        fun putAdditionalHeader(name: String, value: String) = apply {
-            additionalHeaders.put(name, value)
-        }
+        fun putAdditionalHeader(name: String, value: String) =
+            apply {
+                additionalHeaders.put(name, value)
+            }
 
-        fun putAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.put(name, values)
-        }
+        fun putAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.put(name, values)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.putAll(additionalHeaders)
-        }
+        fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.putAll(additionalHeaders)
+            }
 
-        fun replaceAdditionalHeaders(name: String, value: String) = apply {
-            additionalHeaders.replace(name, value)
-        }
+        fun replaceAdditionalHeaders(name: String, value: String) =
+            apply {
+                additionalHeaders.replace(name, value)
+            }
 
-        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) = apply {
-            additionalHeaders.replace(name, values)
-        }
+        fun replaceAdditionalHeaders(name: String, values: Iterable<String>) =
+            apply {
+                additionalHeaders.replace(name, values)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Headers) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
-            this.additionalHeaders.replaceAll(additionalHeaders)
-        }
+        fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalHeaders.replaceAll(additionalHeaders)
+            }
 
-        fun removeAdditionalHeaders(name: String) = apply { additionalHeaders.remove(name) }
+        fun removeAdditionalHeaders(name: String) =
+            apply {
+                additionalHeaders.remove(name)
+            }
 
-        fun removeAllAdditionalHeaders(names: Set<String>) = apply {
-            additionalHeaders.removeAll(names)
-        }
+        fun removeAllAdditionalHeaders(names: Set<String>) =
+            apply {
+                additionalHeaders.removeAll(names)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) = apply {
-            this.additionalQueryParams.clear()
-            putAllAdditionalQueryParams(additionalQueryParams)
-        }
+        fun additionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
+            apply {
+                this.additionalQueryParams.clear()
+                putAllAdditionalQueryParams(additionalQueryParams)
+            }
 
-        fun putAdditionalQueryParam(key: String, value: String) = apply {
-            additionalQueryParams.put(key, value)
-        }
+        fun putAdditionalQueryParam(key: String, value: String) =
+            apply {
+                additionalQueryParams.put(key, value)
+            }
 
-        fun putAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.put(key, values)
-        }
+        fun putAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.put(key, values)
+            }
 
-        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.putAll(additionalQueryParams)
-        }
+        fun putAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.putAll(additionalQueryParams)
+            }
 
         fun putAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.putAll(additionalQueryParams)
             }
 
-        fun replaceAdditionalQueryParams(key: String, value: String) = apply {
-            additionalQueryParams.replace(key, value)
-        }
+        fun replaceAdditionalQueryParams(key: String, value: String) =
+            apply {
+                additionalQueryParams.replace(key, value)
+            }
 
-        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) = apply {
-            additionalQueryParams.replace(key, values)
-        }
+        fun replaceAdditionalQueryParams(key: String, values: Iterable<String>) =
+            apply {
+                additionalQueryParams.replace(key, values)
+            }
 
-        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) = apply {
-            this.additionalQueryParams.replaceAll(additionalQueryParams)
-        }
+        fun replaceAllAdditionalQueryParams(additionalQueryParams: QueryParams) =
+            apply {
+                this.additionalQueryParams.replaceAll(additionalQueryParams)
+            }
 
         fun replaceAllAdditionalQueryParams(additionalQueryParams: Map<String, Iterable<String>>) =
             apply {
                 this.additionalQueryParams.replaceAll(additionalQueryParams)
             }
 
-        fun removeAdditionalQueryParams(key: String) = apply { additionalQueryParams.remove(key) }
+        fun removeAdditionalQueryParams(key: String) =
+            apply {
+                additionalQueryParams.remove(key)
+            }
 
-        fun removeAllAdditionalQueryParams(keys: Set<String>) = apply {
-            additionalQueryParams.removeAll(keys)
-        }
+        fun removeAllAdditionalQueryParams(keys: Set<String>) =
+            apply {
+                additionalQueryParams.removeAll(keys)
+            }
 
         /**
          * Returns an immutable instance of [EntitlementUpdateParams].
@@ -371,10 +426,10 @@ private constructor(
          */
         fun build(): EntitlementUpdateParams =
             EntitlementUpdateParams(
-                id,
-                body.build(),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
+              id,
+              body.build(),
+              additionalHeaders.build(),
+              additionalQueryParams.build(),
             )
     }
 
@@ -390,56 +445,45 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    class Body
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
+    class Body @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
         private val description: JsonField<String>,
         private val integrationConfig: JsonField<IntegrationConfig>,
         private val metadata: JsonField<Metadata>,
         private val name: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
+
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("description")
-            @ExcludeMissing
-            description: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("integration_config")
-            @ExcludeMissing
-            integrationConfig: JsonField<IntegrationConfig> = JsonMissing.of(),
-            @JsonProperty("metadata")
-            @ExcludeMissing
-            metadata: JsonField<Metadata> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(description, integrationConfig, metadata, name, mutableMapOf())
+            @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("integration_config") @ExcludeMissing integrationConfig: JsonField<IntegrationConfig> = JsonMissing.of(),
+            @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of()
+        ) : this(
+          description,
+          integrationConfig,
+          metadata,
+          name,
+          mutableMapOf(),
+        )
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun description(): Optional<String> = description.getOptional("description")
 
         /**
-         * Integration-specific configuration supplied when creating or updating an entitlement. The
-         * shape required matches the entitlement's `integration_type`.
+         * Integration-specific configuration supplied when creating or updating
+         * an entitlement. The shape required matches the entitlement's
+         * `integration_type`.
          *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value).
          */
-        fun integrationConfig(): Optional<IntegrationConfig> =
-            integrationConfig.getOptional("integration_config")
+        fun integrationConfig(): Optional<IntegrationConfig> = integrationConfig.getOptional("integration_config")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
 
-        /**
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
-         *   if the server responded with an unexpected value).
-         */
+        /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
@@ -454,8 +498,7 @@ private constructor(
         /**
          * Returns the raw JSON value of [integrationConfig].
          *
-         * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected
-         * type.
+         * Unlike [integrationConfig], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("integration_config")
         @ExcludeMissing
@@ -466,31 +509,35 @@ private constructor(
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
+        @JsonProperty("metadata")
+        @ExcludeMissing
+        fun _metadata(): JsonField<Metadata> = metadata
 
         /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("name")
+        @ExcludeMissing
+        fun _name(): JsonField<String> = name
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
+          additionalProperties.put(key, value)
         }
 
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
+        fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Body]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
@@ -503,13 +550,14 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(body: Body) = apply {
-                description = body.description
-                integrationConfig = body.integrationConfig
-                metadata = body.metadata
-                name = body.name
-                additionalProperties = body.additionalProperties.toMutableMap()
-            }
+            internal fun from(body: Body) =
+                apply {
+                    description = body.description
+                    integrationConfig = body.integrationConfig
+                    metadata = body.metadata
+                    name = body.name
+                    additionalProperties = body.additionalProperties.toMutableMap()
+                }
 
             fun description(description: String?) = description(JsonField.ofNullable(description))
 
@@ -519,79 +567,58 @@ private constructor(
             /**
              * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.description] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun description(description: JsonField<String>) = apply {
-                this.description = description
-            }
+            fun description(description: JsonField<String>) =
+                apply {
+                    this.description = description
+                }
 
             /**
-             * Integration-specific configuration supplied when creating or updating an entitlement.
-             * The shape required matches the entitlement's `integration_type`.
+             * Integration-specific configuration supplied when creating or updating
+             * an entitlement. The shape required matches the entitlement's
+             * `integration_type`.
              */
-            fun integrationConfig(integrationConfig: IntegrationConfig?) =
-                integrationConfig(JsonField.ofNullable(integrationConfig))
+            fun integrationConfig(integrationConfig: IntegrationConfig?) = integrationConfig(JsonField.ofNullable(integrationConfig))
 
-            /**
-             * Alias for calling [Builder.integrationConfig] with `integrationConfig.orElse(null)`.
-             */
-            fun integrationConfig(integrationConfig: Optional<IntegrationConfig>) =
-                integrationConfig(integrationConfig.getOrNull())
+            /** Alias for calling [Builder.integrationConfig] with `integrationConfig.orElse(null)`. */
+            fun integrationConfig(integrationConfig: Optional<IntegrationConfig>) = integrationConfig(integrationConfig.getOrNull())
 
             /**
              * Sets [Builder.integrationConfig] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.integrationConfig] with a well-typed
-             * [IntegrationConfig] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
+             * You should usually call [Builder.integrationConfig] with a well-typed [IntegrationConfig] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun integrationConfig(integrationConfig: JsonField<IntegrationConfig>) = apply {
-                this.integrationConfig = integrationConfig
-            }
+            fun integrationConfig(integrationConfig: JsonField<IntegrationConfig>) =
+                apply {
+                    this.integrationConfig = integrationConfig
+                }
 
             /** Alias for calling [integrationConfig] with `IntegrationConfig.ofGitHub(github)`. */
-            fun integrationConfig(github: IntegrationConfig.GitHubConfig) =
-                integrationConfig(IntegrationConfig.ofGitHub(github))
+            fun integrationConfig(github: IntegrationConfig.GitHubConfig) = integrationConfig(IntegrationConfig.ofGitHub(github))
 
-            /**
-             * Alias for calling [integrationConfig] with `IntegrationConfig.ofDiscord(discord)`.
-             */
-            fun integrationConfig(discord: IntegrationConfig.DiscordConfig) =
-                integrationConfig(IntegrationConfig.ofDiscord(discord))
+            /** Alias for calling [integrationConfig] with `IntegrationConfig.ofDiscord(discord)`. */
+            fun integrationConfig(discord: IntegrationConfig.DiscordConfig) = integrationConfig(IntegrationConfig.ofDiscord(discord))
 
-            /**
-             * Alias for calling [integrationConfig] with `IntegrationConfig.ofTelegram(telegram)`.
-             */
-            fun integrationConfig(telegram: IntegrationConfig.TelegramConfig) =
-                integrationConfig(IntegrationConfig.ofTelegram(telegram))
+            /** Alias for calling [integrationConfig] with `IntegrationConfig.ofTelegram(telegram)`. */
+            fun integrationConfig(telegram: IntegrationConfig.TelegramConfig) = integrationConfig(IntegrationConfig.ofTelegram(telegram))
 
             /** Alias for calling [integrationConfig] with `IntegrationConfig.ofFigma(figma)`. */
-            fun integrationConfig(figma: IntegrationConfig.FigmaConfig) =
-                integrationConfig(IntegrationConfig.ofFigma(figma))
+            fun integrationConfig(figma: IntegrationConfig.FigmaConfig) = integrationConfig(IntegrationConfig.ofFigma(figma))
 
             /** Alias for calling [integrationConfig] with `IntegrationConfig.ofFramer(framer)`. */
-            fun integrationConfig(framer: IntegrationConfig.FramerConfig) =
-                integrationConfig(IntegrationConfig.ofFramer(framer))
+            fun integrationConfig(framer: IntegrationConfig.FramerConfig) = integrationConfig(IntegrationConfig.ofFramer(framer))
 
             /** Alias for calling [integrationConfig] with `IntegrationConfig.ofNotion(notion)`. */
-            fun integrationConfig(notion: IntegrationConfig.NotionConfig) =
-                integrationConfig(IntegrationConfig.ofNotion(notion))
+            fun integrationConfig(notion: IntegrationConfig.NotionConfig) = integrationConfig(IntegrationConfig.ofNotion(notion))
 
-            /**
-             * Alias for calling [integrationConfig] with
-             * `IntegrationConfig.ofDigitalFiles(digitalFiles)`.
-             */
-            fun integrationConfig(digitalFiles: IntegrationConfig.DigitalFilesConfig) =
-                integrationConfig(IntegrationConfig.ofDigitalFiles(digitalFiles))
+            /** Alias for calling [integrationConfig] with `IntegrationConfig.ofDigitalFiles(digitalFiles)`. */
+            fun integrationConfig(digitalFiles: IntegrationConfig.DigitalFilesConfig) = integrationConfig(IntegrationConfig.ofDigitalFiles(digitalFiles))
 
-            /**
-             * Alias for calling [integrationConfig] with
-             * `IntegrationConfig.ofLicenseKey(licenseKey)`.
-             */
-            fun integrationConfig(licenseKey: IntegrationConfig.LicenseKeyConfig) =
-                integrationConfig(IntegrationConfig.ofLicenseKey(licenseKey))
+            /** Alias for calling [integrationConfig] with `IntegrationConfig.ofLicenseKey(licenseKey)`. */
+            fun integrationConfig(licenseKey: IntegrationConfig.LicenseKeyConfig) = integrationConfig(IntegrationConfig.ofLicenseKey(licenseKey))
 
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
@@ -601,11 +628,13 @@ private constructor(
             /**
              * Sets [Builder.metadata] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.metadata] with a well-typed [Metadata] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.metadata] with a well-typed [Metadata] value instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
+            fun metadata(metadata: JsonField<Metadata>) =
+                apply {
+                    this.metadata = metadata
+                }
 
             fun name(name: String?) = name(JsonField.ofNullable(name))
 
@@ -615,30 +644,39 @@ private constructor(
             /**
              * Sets [Builder.name] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun name(name: JsonField<String>) =
+                apply {
+                    this.name = name
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Body].
@@ -647,36 +685,36 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    description,
-                    integrationConfig,
-                    metadata,
-                    name,
-                    additionalProperties.toMutableMap(),
+                  description,
+                  integrationConfig,
+                  metadata,
+                  name,
+                  additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Body = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Body =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            description()
-            integrationConfig().ifPresent { it.validate() }
-            metadata().ifPresent { it.validate() }
-            name()
-            validated = true
-        }
+                description()
+                integrationConfig().ifPresent { it.validate() }
+                metadata().ifPresent { it.validate() }
+                name()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -687,46 +725,31 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (description.asKnown().isPresent) 1 else 0) +
-                (integrationConfig.asKnown().getOrNull()?.validity() ?: 0) +
-                (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (name.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (description.asKnown().isPresent) 1 else 0) + (integrationConfig.asKnown().getOrNull()?.validity() ?: 0) + (metadata.asKnown().getOrNull()?.validity() ?: 0) + (if (name.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Body &&
-                description == other.description &&
-                integrationConfig == other.integrationConfig &&
-                metadata == other.metadata &&
-                name == other.name &&
-                additionalProperties == other.additionalProperties
+          return other is Body && description == other.description && integrationConfig == other.integrationConfig && metadata == other.metadata && name == other.name && additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(description, integrationConfig, metadata, name, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(description, integrationConfig, metadata, name, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() =
-            "Body{description=$description, integrationConfig=$integrationConfig, metadata=$metadata, name=$name, additionalProperties=$additionalProperties}"
+        override fun toString() = "Body{description=$description, integrationConfig=$integrationConfig, metadata=$metadata, name=$name, additionalProperties=$additionalProperties}"
     }
 
-    class Metadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
+    class Metadata @JsonCreator private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue private val additionalProperties: Map<String, JsonValue>,
+
     ) {
 
         @JsonAnyGetter
@@ -738,7 +761,8 @@ private constructor(
         companion object {
 
             /** Returns a mutable builder for constructing an instance of [Metadata]. */
-            @JvmStatic fun builder() = Builder()
+            @JvmStatic
+            fun builder() = Builder()
         }
 
         /** A builder for [Metadata]. */
@@ -747,28 +771,36 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(metadata: Metadata) = apply {
-                additionalProperties = metadata.additionalProperties.toMutableMap()
-            }
+            internal fun from(metadata: Metadata) =
+                apply {
+                    additionalProperties = metadata.additionalProperties.toMutableMap()
+                }
 
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
 
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
+            fun putAdditionalProperty(key: String, value: JsonValue) =
+                apply {
+                    additionalProperties.put(key, value)
+                }
 
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                apply {
+                    this.additionalProperties.putAll(additionalProperties)
+                }
 
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+            fun removeAdditionalProperty(key: String) =
+                apply {
+                    additionalProperties.remove(key)
+                }
 
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
+            fun removeAllAdditionalProperties(keys: Set<String>) =
+                apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
 
             /**
              * Returns an immutable instance of [Metadata].
@@ -781,21 +813,21 @@ private constructor(
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): Metadata = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): Metadata =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            validated = true
-        }
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -806,21 +838,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is Metadata && additionalProperties == other.additionalProperties
+          return other is Metadata && additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
@@ -831,19 +861,14 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is EntitlementUpdateParams &&
-            id == other.id &&
-            body == other.body &&
-            additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams
+      return other is EntitlementUpdateParams && id == other.id && body == other.body && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
 
-    override fun toString() =
-        "EntitlementUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+    override fun toString() = "EntitlementUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

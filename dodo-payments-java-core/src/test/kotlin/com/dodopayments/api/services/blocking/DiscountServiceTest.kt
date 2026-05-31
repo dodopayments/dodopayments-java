@@ -6,6 +6,10 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.discounts.DiscountCreateParams
+import com.dodopayments.api.models.discounts.DiscountDeleteParams
+import com.dodopayments.api.models.discounts.DiscountListParams
+import com.dodopayments.api.models.discounts.DiscountRetrieveByCodeParams
+import com.dodopayments.api.models.discounts.DiscountRetrieveParams
 import com.dodopayments.api.models.discounts.DiscountType
 import com.dodopayments.api.models.discounts.DiscountUpdateParams
 import java.time.OffsetDateTime
@@ -17,120 +21,104 @@ internal class DiscountServiceTest {
 
     @Test
     fun create() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        val discount =
-            discountService.create(
-                DiscountCreateParams.builder()
-                    .amount(0)
-                    .type(DiscountType.PERCENTAGE)
-                    .code("code")
-                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .metadata(
-                        DiscountCreateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .preserveOnPlanChange(true)
-                    .addRestrictedTo("string")
-                    .subscriptionCycles(0)
-                    .usageLimit(0)
-                    .build()
-            )
+      val discount = discountService.create(DiscountCreateParams.builder()
+          .amount(0)
+          .type(DiscountType.PERCENTAGE)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountCreateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .usageLimit(0)
+          .build())
 
-        discount.validate()
+      discount.validate()
     }
 
     @Test
     fun retrieve() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        val discount = discountService.retrieve("discount_id")
+      val discount = discountService.retrieve("discount_id")
 
-        discount.validate()
+      discount.validate()
     }
 
     @Test
     fun update() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        val discount =
-            discountService.update(
-                DiscountUpdateParams.builder()
-                    .discountId("discount_id")
-                    .amount(0)
-                    .code("code")
-                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .metadata(
-                        DiscountUpdateParams.Metadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("string"))
-                            .build()
-                    )
-                    .name("name")
-                    .preserveOnPlanChange(true)
-                    .addRestrictedTo("string")
-                    .subscriptionCycles(0)
-                    .type(DiscountType.PERCENTAGE)
-                    .usageLimit(0)
-                    .build()
-            )
+      val discount = discountService.update(DiscountUpdateParams.builder()
+          .discountId("discount_id")
+          .amount(0)
+          .code("code")
+          .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+          .metadata(DiscountUpdateParams.Metadata.builder()
+              .putAdditionalProperty("foo", JsonValue.from("string"))
+              .build())
+          .name("name")
+          .preserveOnPlanChange(true)
+          .addRestrictedTo("string")
+          .subscriptionCycles(0)
+          .type(DiscountType.PERCENTAGE)
+          .usageLimit(0)
+          .build())
 
-        discount.validate()
+      discount.validate()
     }
 
     @Test
     fun list() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        val page = discountService.list()
+      val page = discountService.list()
 
-        page.response().validate()
+      page.response().validate()
     }
 
     @Test
     fun delete() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        discountService.delete("discount_id")
+      discountService.delete("discount_id")
     }
 
     @Test
     fun retrieveByCode() {
-        val client =
-            DodoPaymentsOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .bearerToken("My Bearer Token")
-                .build()
-        val discountService = client.discounts()
+      val client = DodoPaymentsOkHttpClient.builder()
+          .baseUrl(TestServerExtension.BASE_URL)
+          .bearerToken("My Bearer Token")
+          .build()
+      val discountService = client.discounts()
 
-        val discount = discountService.retrieveByCode("code")
+      val discount = discountService.retrieveByCode("code")
 
-        discount.validate()
+      discount.validate()
     }
 }

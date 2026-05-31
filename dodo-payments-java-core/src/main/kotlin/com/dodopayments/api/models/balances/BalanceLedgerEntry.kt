@@ -9,6 +9,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.balances.BalanceLedgerEntry
 import com.dodopayments.api.models.misc.Currency
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -20,9 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class BalanceLedgerEntry
-@JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
+class BalanceLedgerEntry @JsonCreator(mode = JsonCreator.Mode.DISABLED) private constructor(
     private val id: JsonField<String>,
     private val amount: JsonField<Long>,
     private val businessId: JsonField<String>,
@@ -36,124 +35,73 @@ private constructor(
     private val description: JsonField<String>,
     private val referenceObjectId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
+
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("amount") @ExcludeMissing amount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("business_id")
-        @ExcludeMissing
-        businessId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("created_at")
-        @ExcludeMissing
-        createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("business_id") @ExcludeMissing businessId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created_at") @ExcludeMissing createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
-        @JsonProperty("event_type")
-        @ExcludeMissing
-        eventType: JsonField<EventType> = JsonMissing.of(),
+        @JsonProperty("event_type") @ExcludeMissing eventType: JsonField<EventType> = JsonMissing.of(),
         @JsonProperty("is_credit") @ExcludeMissing isCredit: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("usd_equivalent_amount")
-        @ExcludeMissing
-        usdEquivalentAmount: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("after_balance")
-        @ExcludeMissing
-        afterBalance: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("before_balance")
-        @ExcludeMissing
-        beforeBalance: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("description")
-        @ExcludeMissing
-        description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("reference_object_id")
-        @ExcludeMissing
-        referenceObjectId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("usd_equivalent_amount") @ExcludeMissing usdEquivalentAmount: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("after_balance") @ExcludeMissing afterBalance: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("before_balance") @ExcludeMissing beforeBalance: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("description") @ExcludeMissing description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("reference_object_id") @ExcludeMissing referenceObjectId: JsonField<String> = JsonMissing.of()
     ) : this(
-        id,
-        amount,
-        businessId,
-        createdAt,
-        currency,
-        eventType,
-        isCredit,
-        usdEquivalentAmount,
-        afterBalance,
-        beforeBalance,
-        description,
-        referenceObjectId,
-        mutableMapOf(),
+      id,
+      amount,
+      businessId,
+      createdAt,
+      currency,
+      eventType,
+      isCredit,
+      usdEquivalentAmount,
+      afterBalance,
+      beforeBalance,
+      description,
+      referenceObjectId,
+      mutableMapOf(),
     )
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun id(): String = id.getRequired("id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun amount(): Long = amount.getRequired("amount")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun businessId(): String = businessId.getRequired("business_id")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun currency(): Currency = currency.getRequired("currency")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun eventType(): EventType = eventType.getRequired("event_type")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun isCredit(): Boolean = isCredit.getRequired("is_credit")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is unexpectedly missing or null (e.g. if the server responded with an unexpected value). */
     fun usdEquivalentAmount(): Long = usdEquivalentAmount.getRequired("usd_equivalent_amount")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun afterBalance(): Optional<Long> = afterBalance.getOptional("after_balance")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun beforeBalance(): Optional<Long> = beforeBalance.getOptional("before_balance")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun description(): Optional<String> = description.getOptional("description")
 
-    /**
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
+    /** @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if the server responded with an unexpected value). */
     fun referenceObjectId(): Optional<String> = referenceObjectId.getOptional("reference_object_id")
 
     /**
@@ -161,21 +109,27 @@ private constructor(
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+    @JsonProperty("id")
+    @ExcludeMissing
+    fun _id(): JsonField<String> = id
 
     /**
      * Returns the raw JSON value of [amount].
      *
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<Long> = amount
+    @JsonProperty("amount")
+    @ExcludeMissing
+    fun _amount(): JsonField<Long> = amount
 
     /**
      * Returns the raw JSON value of [businessId].
      *
      * Unlike [businessId], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("business_id") @ExcludeMissing fun _businessId(): JsonField<String> = businessId
+    @JsonProperty("business_id")
+    @ExcludeMissing
+    fun _businessId(): JsonField<String> = businessId
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -191,27 +145,32 @@ private constructor(
      *
      * Unlike [currency], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("currency") @ExcludeMissing fun _currency(): JsonField<Currency> = currency
+    @JsonProperty("currency")
+    @ExcludeMissing
+    fun _currency(): JsonField<Currency> = currency
 
     /**
      * Returns the raw JSON value of [eventType].
      *
      * Unlike [eventType], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("event_type") @ExcludeMissing fun _eventType(): JsonField<EventType> = eventType
+    @JsonProperty("event_type")
+    @ExcludeMissing
+    fun _eventType(): JsonField<EventType> = eventType
 
     /**
      * Returns the raw JSON value of [isCredit].
      *
      * Unlike [isCredit], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("is_credit") @ExcludeMissing fun _isCredit(): JsonField<Boolean> = isCredit
+    @JsonProperty("is_credit")
+    @ExcludeMissing
+    fun _isCredit(): JsonField<Boolean> = isCredit
 
     /**
      * Returns the raw JSON value of [usdEquivalentAmount].
      *
-     * Unlike [usdEquivalentAmount], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [usdEquivalentAmount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("usd_equivalent_amount")
     @ExcludeMissing
@@ -240,13 +199,14 @@ private constructor(
      *
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+    @JsonProperty("description")
+    @ExcludeMissing
+    fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [referenceObjectId].
      *
-     * Unlike [referenceObjectId], this method doesn't throw if the JSON field has an unexpected
-     * type.
+     * Unlike [referenceObjectId], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("reference_object_id")
     @ExcludeMissing
@@ -254,13 +214,12 @@ private constructor(
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
-        additionalProperties.put(key, value)
+      additionalProperties.put(key, value)
     }
 
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> =
-        Collections.unmodifiableMap(additionalProperties)
+    fun _additionalProperties(): Map<String, JsonValue> = Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -270,6 +229,7 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [BalanceLedgerEntry].
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .amount()
@@ -281,7 +241,8 @@ private constructor(
          * .usdEquivalentAmount()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [BalanceLedgerEntry]. */
@@ -302,110 +263,126 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(balanceLedgerEntry: BalanceLedgerEntry) = apply {
-            id = balanceLedgerEntry.id
-            amount = balanceLedgerEntry.amount
-            businessId = balanceLedgerEntry.businessId
-            createdAt = balanceLedgerEntry.createdAt
-            currency = balanceLedgerEntry.currency
-            eventType = balanceLedgerEntry.eventType
-            isCredit = balanceLedgerEntry.isCredit
-            usdEquivalentAmount = balanceLedgerEntry.usdEquivalentAmount
-            afterBalance = balanceLedgerEntry.afterBalance
-            beforeBalance = balanceLedgerEntry.beforeBalance
-            description = balanceLedgerEntry.description
-            referenceObjectId = balanceLedgerEntry.referenceObjectId
-            additionalProperties = balanceLedgerEntry.additionalProperties.toMutableMap()
-        }
+        internal fun from(balanceLedgerEntry: BalanceLedgerEntry) =
+            apply {
+                id = balanceLedgerEntry.id
+                amount = balanceLedgerEntry.amount
+                businessId = balanceLedgerEntry.businessId
+                createdAt = balanceLedgerEntry.createdAt
+                currency = balanceLedgerEntry.currency
+                eventType = balanceLedgerEntry.eventType
+                isCredit = balanceLedgerEntry.isCredit
+                usdEquivalentAmount = balanceLedgerEntry.usdEquivalentAmount
+                afterBalance = balanceLedgerEntry.afterBalance
+                beforeBalance = balanceLedgerEntry.beforeBalance
+                description = balanceLedgerEntry.description
+                referenceObjectId = balanceLedgerEntry.referenceObjectId
+                additionalProperties = balanceLedgerEntry.additionalProperties.toMutableMap()
+            }
 
         fun id(id: String) = id(JsonField.of(id))
 
         /**
          * Sets [Builder.id] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.id] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.id] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        fun id(id: JsonField<String>) =
+            apply {
+                this.id = id
+            }
 
         fun amount(amount: Long) = amount(JsonField.of(amount))
 
         /**
          * Sets [Builder.amount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.amount] with a well-typed [Long] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.amount] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun amount(amount: JsonField<Long>) = apply { this.amount = amount }
+        fun amount(amount: JsonField<Long>) =
+            apply {
+                this.amount = amount
+            }
 
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
 
         /**
          * Sets [Builder.businessId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.businessId] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.businessId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun businessId(businessId: JsonField<String>) = apply { this.businessId = businessId }
+        fun businessId(businessId: JsonField<String>) =
+            apply {
+                this.businessId = businessId
+            }
 
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
          * Sets [Builder.createdAt] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+        fun createdAt(createdAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.createdAt = createdAt
+            }
 
         fun currency(currency: Currency) = currency(JsonField.of(currency))
 
         /**
          * Sets [Builder.currency] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.currency] with a well-typed [Currency] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.currency] with a well-typed [Currency] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
+        fun currency(currency: JsonField<Currency>) =
+            apply {
+                this.currency = currency
+            }
 
         fun eventType(eventType: EventType) = eventType(JsonField.of(eventType))
 
         /**
          * Sets [Builder.eventType] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.eventType] with a well-typed [EventType] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.eventType] with a well-typed [EventType] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun eventType(eventType: JsonField<EventType>) = apply { this.eventType = eventType }
+        fun eventType(eventType: JsonField<EventType>) =
+            apply {
+                this.eventType = eventType
+            }
 
         fun isCredit(isCredit: Boolean) = isCredit(JsonField.of(isCredit))
 
         /**
          * Sets [Builder.isCredit] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.isCredit] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.isCredit] with a well-typed [Boolean] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun isCredit(isCredit: JsonField<Boolean>) = apply { this.isCredit = isCredit }
+        fun isCredit(isCredit: JsonField<Boolean>) =
+            apply {
+                this.isCredit = isCredit
+            }
 
-        fun usdEquivalentAmount(usdEquivalentAmount: Long) =
-            usdEquivalentAmount(JsonField.of(usdEquivalentAmount))
+        fun usdEquivalentAmount(usdEquivalentAmount: Long) = usdEquivalentAmount(JsonField.of(usdEquivalentAmount))
 
         /**
          * Sets [Builder.usdEquivalentAmount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.usdEquivalentAmount] with a well-typed [Long] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.usdEquivalentAmount] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun usdEquivalentAmount(usdEquivalentAmount: JsonField<Long>) = apply {
-            this.usdEquivalentAmount = usdEquivalentAmount
-        }
+        fun usdEquivalentAmount(usdEquivalentAmount: JsonField<Long>) =
+            apply {
+                this.usdEquivalentAmount = usdEquivalentAmount
+            }
 
         fun afterBalance(afterBalance: Long?) = afterBalance(JsonField.ofNullable(afterBalance))
 
@@ -422,11 +399,13 @@ private constructor(
         /**
          * Sets [Builder.afterBalance] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.afterBalance] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.afterBalance] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun afterBalance(afterBalance: JsonField<Long>) = apply { this.afterBalance = afterBalance }
+        fun afterBalance(afterBalance: JsonField<Long>) =
+            apply {
+                this.afterBalance = afterBalance
+            }
 
         fun beforeBalance(beforeBalance: Long?) = beforeBalance(JsonField.ofNullable(beforeBalance))
 
@@ -443,13 +422,13 @@ private constructor(
         /**
          * Sets [Builder.beforeBalance] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.beforeBalance] with a well-typed [Long] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.beforeBalance] with a well-typed [Long] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun beforeBalance(beforeBalance: JsonField<Long>) = apply {
-            this.beforeBalance = beforeBalance
-        }
+        fun beforeBalance(beforeBalance: JsonField<Long>) =
+            apply {
+                this.beforeBalance = beforeBalance
+            }
 
         fun description(description: String?) = description(JsonField.ofNullable(description))
 
@@ -459,48 +438,55 @@ private constructor(
         /**
          * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.description] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun description(description: JsonField<String>) = apply { this.description = description }
+        fun description(description: JsonField<String>) =
+            apply {
+                this.description = description
+            }
 
-        fun referenceObjectId(referenceObjectId: String?) =
-            referenceObjectId(JsonField.ofNullable(referenceObjectId))
+        fun referenceObjectId(referenceObjectId: String?) = referenceObjectId(JsonField.ofNullable(referenceObjectId))
 
         /** Alias for calling [Builder.referenceObjectId] with `referenceObjectId.orElse(null)`. */
-        fun referenceObjectId(referenceObjectId: Optional<String>) =
-            referenceObjectId(referenceObjectId.getOrNull())
+        fun referenceObjectId(referenceObjectId: Optional<String>) = referenceObjectId(referenceObjectId.getOrNull())
 
         /**
          * Sets [Builder.referenceObjectId] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.referenceObjectId] with a well-typed [String] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * You should usually call [Builder.referenceObjectId] with a well-typed [String] value instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun referenceObjectId(referenceObjectId: JsonField<String>) = apply {
-            this.referenceObjectId = referenceObjectId
-        }
+        fun referenceObjectId(referenceObjectId: JsonField<String>) =
+            apply {
+                this.referenceObjectId = referenceObjectId
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         /**
          * Returns an immutable instance of [BalanceLedgerEntry].
@@ -508,6 +494,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          *
          * The following fields are required:
+         *
          * ```java
          * .id()
          * .amount()
@@ -523,19 +510,35 @@ private constructor(
          */
         fun build(): BalanceLedgerEntry =
             BalanceLedgerEntry(
-                checkRequired("id", id),
-                checkRequired("amount", amount),
-                checkRequired("businessId", businessId),
-                checkRequired("createdAt", createdAt),
-                checkRequired("currency", currency),
-                checkRequired("eventType", eventType),
-                checkRequired("isCredit", isCredit),
-                checkRequired("usdEquivalentAmount", usdEquivalentAmount),
-                afterBalance,
-                beforeBalance,
-                description,
-                referenceObjectId,
-                additionalProperties.toMutableMap(),
+              checkRequired(
+                "id", id
+              ),
+              checkRequired(
+                "amount", amount
+              ),
+              checkRequired(
+                "businessId", businessId
+              ),
+              checkRequired(
+                "createdAt", createdAt
+              ),
+              checkRequired(
+                "currency", currency
+              ),
+              checkRequired(
+                "eventType", eventType
+              ),
+              checkRequired(
+                "isCredit", isCredit
+              ),
+              checkRequired(
+                "usdEquivalentAmount", usdEquivalentAmount
+              ),
+              afterBalance,
+              beforeBalance,
+              description,
+              referenceObjectId,
+              additionalProperties.toMutableMap(),
             )
     }
 
@@ -549,25 +552,26 @@ private constructor(
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): BalanceLedgerEntry = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): BalanceLedgerEntry =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        id()
-        amount()
-        businessId()
-        createdAt()
-        currency().validate()
-        eventType().validate()
-        isCredit()
-        usdEquivalentAmount()
-        afterBalance()
-        beforeBalance()
-        description()
-        referenceObjectId()
-        validated = true
-    }
+            id()
+            amount()
+            businessId()
+            createdAt()
+            currency().validate()
+            eventType().validate()
+            isCredit()
+            usdEquivalentAmount()
+            afterBalance()
+            beforeBalance()
+            description()
+            referenceObjectId()
+            validated = true
+        }
 
     fun isValid(): Boolean =
         try {
@@ -583,31 +587,22 @@ private constructor(
      * Used for best match union deserialization.
      */
     @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) +
-            (if (amount.asKnown().isPresent) 1 else 0) +
-            (if (businessId.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (currency.asKnown().getOrNull()?.validity() ?: 0) +
-            (eventType.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (isCredit.asKnown().isPresent) 1 else 0) +
-            (if (usdEquivalentAmount.asKnown().isPresent) 1 else 0) +
-            (if (afterBalance.asKnown().isPresent) 1 else 0) +
-            (if (beforeBalance.asKnown().isPresent) 1 else 0) +
-            (if (description.asKnown().isPresent) 1 else 0) +
-            (if (referenceObjectId.asKnown().isPresent) 1 else 0)
+    internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0) + (if (amount.asKnown().isPresent) 1 else 0) + (if (businessId.asKnown().isPresent) 1 else 0) + (if (createdAt.asKnown().isPresent) 1 else 0) + (currency.asKnown().getOrNull()?.validity() ?: 0) + (eventType.asKnown().getOrNull()?.validity() ?: 0) + (if (isCredit.asKnown().isPresent) 1 else 0) + (if (usdEquivalentAmount.asKnown().isPresent) 1 else 0) + (if (afterBalance.asKnown().isPresent) 1 else 0) + (if (beforeBalance.asKnown().isPresent) 1 else 0) + (if (description.asKnown().isPresent) 1 else 0) + (if (referenceObjectId.asKnown().isPresent) 1 else 0)
 
-    class EventType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+    class EventType @JsonCreator private constructor(
+        private val value: JsonField<String>,
+
+    ) : Enum {
 
         /**
          * Returns this class instance's raw value.
          *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
+         * This is usually only useful if this instance was deserialized from data that doesn't match any known
+         * member, and you want to know that value. For example, if the SDK is on an older version than the
+         * API, then the API may respond with new members that the SDK is unaware of.
          */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+        @com.fasterxml.jackson.annotation.JsonValue
+        fun _value(): JsonField<String> = value
 
         companion object {
 
@@ -682,9 +677,11 @@ private constructor(
          * An enum containing [EventType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [EventType] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the SDK is on
+         *   an older version than the API, then the API may respond with new members that the SDK is unaware
+         *   of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -708,18 +705,16 @@ private constructor(
             CURRENCY_CONVERSION,
             ABANDONED_CART_RECOVERY_FEE,
             DUNNING_FEES,
-            /**
-             * An enum member indicating that [EventType] was instantiated with an unknown value.
-             */
+            /** An enum member indicating that [EventType] was instantiated with an unknown value. */
             _UNKNOWN,
         }
 
         /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN] if the
+         * class was instantiated with an unknown value.
          *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
+         * Use the [known] method instead if you're certain the value is always known or if you want to throw
+         * for the unknown case.
          */
         fun value(): Value =
             when (this) {
@@ -749,11 +744,10 @@ private constructor(
         /**
          * Returns an enum member corresponding to this class instance's value.
          *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
+         * Use the [value] method instead if you're uncertain the value is always known and don't want to throw
+         * for the unknown case.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
-         *   member.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known member.
          */
         fun known(): Known =
             when (this) {
@@ -783,36 +777,33 @@ private constructor(
         /**
          * Returns this class instance's primitive wire representation.
          *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
+         * This differs from the [toString] method because that method is primarily for debugging and generally
+         * doesn't throw.
          *
-         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the expected
+         *   primitive type.
          */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                DodoPaymentsInvalidDataException("Value is not a String")
-            }
+        fun asString(): String = _value().asString().orElseThrow { DodoPaymentsInvalidDataException("Value is not a String") }
 
         private var validated: Boolean = false
 
         /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
+         * Validates that the types of all values in this object match their expected types recursively.
          *
          * This method is _not_ forwards compatible with new types from the API for existing fields.
          *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
          */
-        fun validate(): EventType = apply {
-            if (validated) {
-                return@apply
-            }
+        fun validate(): EventType =
+            apply {
+                if (validated) {
+                  return@apply
+                }
 
-            known()
-            validated = true
-        }
+                known()
+                validated = true
+            }
 
         fun isValid(): Boolean =
             try {
@@ -823,19 +814,19 @@ private constructor(
             }
 
         /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
+         * Returns a score indicating how many valid values are contained in this object recursively.
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+        @JvmSynthetic
+        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
+          if (this === other) {
+              return true
+          }
 
-            return other is EventType && value == other.value
+          return other is EventType && value == other.value
         }
 
         override fun hashCode() = value.hashCode()
@@ -844,46 +835,16 @@ private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return other is BalanceLedgerEntry &&
-            id == other.id &&
-            amount == other.amount &&
-            businessId == other.businessId &&
-            createdAt == other.createdAt &&
-            currency == other.currency &&
-            eventType == other.eventType &&
-            isCredit == other.isCredit &&
-            usdEquivalentAmount == other.usdEquivalentAmount &&
-            afterBalance == other.afterBalance &&
-            beforeBalance == other.beforeBalance &&
-            description == other.description &&
-            referenceObjectId == other.referenceObjectId &&
-            additionalProperties == other.additionalProperties
+      return other is BalanceLedgerEntry && id == other.id && amount == other.amount && businessId == other.businessId && createdAt == other.createdAt && currency == other.currency && eventType == other.eventType && isCredit == other.isCredit && usdEquivalentAmount == other.usdEquivalentAmount && afterBalance == other.afterBalance && beforeBalance == other.beforeBalance && description == other.description && referenceObjectId == other.referenceObjectId && additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy {
-        Objects.hash(
-            id,
-            amount,
-            businessId,
-            createdAt,
-            currency,
-            eventType,
-            isCredit,
-            usdEquivalentAmount,
-            afterBalance,
-            beforeBalance,
-            description,
-            referenceObjectId,
-            additionalProperties,
-        )
-    }
+    private val hashCode: Int by lazy { Objects.hash(id, amount, businessId, createdAt, currency, eventType, isCredit, usdEquivalentAmount, afterBalance, beforeBalance, description, referenceObjectId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "BalanceLedgerEntry{id=$id, amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, eventType=$eventType, isCredit=$isCredit, usdEquivalentAmount=$usdEquivalentAmount, afterBalance=$afterBalance, beforeBalance=$beforeBalance, description=$description, referenceObjectId=$referenceObjectId, additionalProperties=$additionalProperties}"
+    override fun toString() = "BalanceLedgerEntry{id=$id, amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, eventType=$eventType, isCredit=$isCredit, usdEquivalentAmount=$usdEquivalentAmount, afterBalance=$afterBalance, beforeBalance=$beforeBalance, description=$description, referenceObjectId=$referenceObjectId, additionalProperties=$additionalProperties}"
 }
