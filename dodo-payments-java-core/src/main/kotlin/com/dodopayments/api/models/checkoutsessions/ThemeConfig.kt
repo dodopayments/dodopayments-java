@@ -487,7 +487,7 @@ private constructor(
 
             @JvmField val XL = of("xl")
 
-            @JvmField val _2XL = of("2xl")
+            @JvmField val SIZE2_XL = of("2xl")
 
             @JvmStatic fun of(value: String) = FontSize(JsonField.of(value))
         }
@@ -499,18 +499,16 @@ private constructor(
             MD,
             LG,
             XL,
-            _2XL,
+            SIZE2_XL,
         }
 
         /**
          * An enum containing [FontSize]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [FontSize] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -519,7 +517,7 @@ private constructor(
             MD,
             LG,
             XL,
-            _2XL,
+            SIZE2_XL,
             /** An enum member indicating that [FontSize] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -538,7 +536,7 @@ private constructor(
                 MD -> Value.MD
                 LG -> Value.LG
                 XL -> Value.XL
-                _2XL -> Value._2XL
+                SIZE2_XL -> Value.SIZE2_XL
                 else -> Value._UNKNOWN
             }
 
@@ -558,7 +556,7 @@ private constructor(
                 MD -> Known.MD
                 LG -> Known.LG
                 XL -> Known.XL
-                _2XL -> Known._2XL
+                SIZE2_XL -> Known.SIZE2_XL
                 else -> throw DodoPaymentsInvalidDataException("Unknown FontSize: $value")
             }
 
@@ -663,11 +661,9 @@ private constructor(
          * An enum containing [FontWeight]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [FontWeight] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
