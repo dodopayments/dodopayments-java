@@ -90,7 +90,6 @@ private constructor(
 
     /**
      * The discount amount.
-     *
      * - If `discount_type` is `percentage`, this is in **basis points** (e.g., 540 => 5.4%).
      * - Otherwise, this is **USD cents** (e.g., 100 => `$1.00`).
      *
@@ -388,7 +387,6 @@ private constructor(
 
         /**
          * The discount amount.
-         *
          * - If `discount_type` is `percentage`, this is in **basis points** (e.g., 540 => 5.4%).
          * - Otherwise, this is **USD cents** (e.g., 100 => `$1.00`).
          */
@@ -822,9 +820,8 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int = additionalProperties.count { (_, value) ->
-            !value.isNull() && !value.isMissing()
-        }
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
