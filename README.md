@@ -3,7 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.102.0)
-[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.102.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.101.0)
+[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.102.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.102.0)
 
 <!-- x-release-please-end -->
 

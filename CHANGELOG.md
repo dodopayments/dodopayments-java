@@ -1,13 +1,5 @@
 # Changelog
 
-## [1.102.0](https://github.com/dodopayments/dodopayments-java/compare/v1.101.0...v1.102.0) (2026-06-01)
-
-
-### Features
-
-* **readme:** drop 'generated with Stainless' attribution from SDK READMEs ([f99a593](https://github.com/dodopayments/dodopayments-java/commit/f99a5938da4ecd00b54e126254a865abe75279e8))
-* **readme:** drop 'generated with Stainless' attribution from SDK READMEs ([cd0aed9](https://github.com/dodopayments/dodopayments-java/commit/cd0aed949d2ef5fde67141858ad336430a7d3e29))
-
 ## 1.99.1 (2026-05-21)
 
 Full Changelog: [v1.99.0...v1.99.1](https://github.com/dodopayments/dodopayments-java/compare/v1.99.0...v1.99.1)
