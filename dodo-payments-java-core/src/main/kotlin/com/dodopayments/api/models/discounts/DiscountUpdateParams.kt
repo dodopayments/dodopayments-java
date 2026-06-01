@@ -34,10 +34,8 @@ private constructor(
     fun discountId(): Optional<String> = Optional.ofNullable(discountId)
 
     /**
-     * If present, update the discount amount:
-     * - If `discount_type` is `percentage`, this represents **basis points** (e.g., `540` =
-     *   `5.4%`).
-     * - Otherwise, this represents **USD cents** (e.g., `100` = `$1.00`).
+     * If present, update the discount amount in **basis points** (e.g., `540` = `5.4%`, `10000` =
+     * `100%`).
      *
      * Must be at least 1 if provided.
      *
@@ -102,7 +100,7 @@ private constructor(
     fun subscriptionCycles(): Optional<Int> = body.subscriptionCycles()
 
     /**
-     * If present, update the discount type.
+     * If present, update the discount type. Currently only `percentage` is supported.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -241,10 +239,8 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * If present, update the discount amount:
-         * - If `discount_type` is `percentage`, this represents **basis points** (e.g., `540` =
-         *   `5.4%`).
-         * - Otherwise, this represents **USD cents** (e.g., `100` = `$1.00`).
+         * If present, update the discount amount in **basis points** (e.g., `540` = `5.4%`, `10000`
+         * = `100%`).
          *
          * Must be at least 1 if provided.
          */
@@ -420,7 +416,7 @@ private constructor(
             body.subscriptionCycles(subscriptionCycles)
         }
 
-        /** If present, update the discount type. */
+        /** If present, update the discount type. Currently only `percentage` is supported. */
         fun type(type: DiscountType?) = apply { body.type(type) }
 
         /** Alias for calling [Builder.type] with `type.orElse(null)`. */
@@ -658,10 +654,8 @@ private constructor(
         )
 
         /**
-         * If present, update the discount amount:
-         * - If `discount_type` is `percentage`, this represents **basis points** (e.g., `540` =
-         *   `5.4%`).
-         * - Otherwise, this represents **USD cents** (e.g., `100` = `$1.00`).
+         * If present, update the discount amount in **basis points** (e.g., `540` = `5.4%`, `10000`
+         * = `100%`).
          *
          * Must be at least 1 if provided.
          *
@@ -729,7 +723,7 @@ private constructor(
             subscriptionCycles.getOptional("subscription_cycles")
 
         /**
-         * If present, update the discount type.
+         * If present, update the discount type. Currently only `percentage` is supported.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -872,10 +866,8 @@ private constructor(
             }
 
             /**
-             * If present, update the discount amount:
-             * - If `discount_type` is `percentage`, this represents **basis points** (e.g., `540` =
-             *   `5.4%`).
-             * - Otherwise, this represents **USD cents** (e.g., `100` = `$1.00`).
+             * If present, update the discount amount in **basis points** (e.g., `540` = `5.4%`,
+             * `10000` = `100%`).
              *
              * Must be at least 1 if provided.
              */
@@ -1061,7 +1053,7 @@ private constructor(
                 this.subscriptionCycles = subscriptionCycles
             }
 
-            /** If present, update the discount type. */
+            /** If present, update the discount type. Currently only `percentage` is supported. */
             fun type(type: DiscountType?) = type(JsonField.ofNullable(type))
 
             /** Alias for calling [Builder.type] with `type.orElse(null)`. */
