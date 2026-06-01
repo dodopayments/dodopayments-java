@@ -773,11 +773,9 @@ private constructor(
          * An enum containing [Currency]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Currency] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1364,6 +1362,8 @@ private constructor(
 
             @JvmField val DUNNING_FEES = of("dunning_fees")
 
+            @JvmField val PAYMENT_RETRY_FEE = of("payment_retry_fee")
+
             @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
         }
 
@@ -1389,17 +1389,16 @@ private constructor(
             CURRENCY_CONVERSION,
             ABANDONED_CART_RECOVERY_FEE,
             DUNNING_FEES,
+            PAYMENT_RETRY_FEE,
         }
 
         /**
          * An enum containing [EventType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [EventType] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1423,6 +1422,7 @@ private constructor(
             CURRENCY_CONVERSION,
             ABANDONED_CART_RECOVERY_FEE,
             DUNNING_FEES,
+            PAYMENT_RETRY_FEE,
             /**
              * An enum member indicating that [EventType] was instantiated with an unknown value.
              */
@@ -1458,6 +1458,7 @@ private constructor(
                 CURRENCY_CONVERSION -> Value.CURRENCY_CONVERSION
                 ABANDONED_CART_RECOVERY_FEE -> Value.ABANDONED_CART_RECOVERY_FEE
                 DUNNING_FEES -> Value.DUNNING_FEES
+                PAYMENT_RETRY_FEE -> Value.PAYMENT_RETRY_FEE
                 else -> Value._UNKNOWN
             }
 
@@ -1492,6 +1493,7 @@ private constructor(
                 CURRENCY_CONVERSION -> Known.CURRENCY_CONVERSION
                 ABANDONED_CART_RECOVERY_FEE -> Known.ABANDONED_CART_RECOVERY_FEE
                 DUNNING_FEES -> Known.DUNNING_FEES
+                PAYMENT_RETRY_FEE -> Known.PAYMENT_RETRY_FEE
                 else -> throw DodoPaymentsInvalidDataException("Unknown EventType: $value")
             }
 
