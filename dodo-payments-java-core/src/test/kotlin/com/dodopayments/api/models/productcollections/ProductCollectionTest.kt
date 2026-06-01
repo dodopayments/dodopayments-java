@@ -62,7 +62,16 @@ internal class ProductCollectionTest {
                 .name("name")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
+                .effectiveAtOnDowngrade(ProductCollection.EffectiveAtOnDowngrade.IMMEDIATELY)
+                .effectiveAtOnUpgrade(ProductCollection.EffectiveAtOnUpgrade.IMMEDIATELY)
                 .image("image")
+                .onPaymentFailure(ProductCollection.OnPaymentFailure.PREVENT_CHANGE)
+                .prorationBillingModeOnDowngrade(
+                    ProductCollection.ProrationBillingModeOnDowngrade.PRORATED_IMMEDIATELY
+                )
+                .prorationBillingModeOnUpgrade(
+                    ProductCollection.ProrationBillingModeOnUpgrade.PRORATED_IMMEDIATELY
+                )
                 .build()
 
         assertThat(productCollection.id()).isEqualTo("id")
@@ -111,7 +120,17 @@ internal class ProductCollectionTest {
         assertThat(productCollection.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(productCollection.description()).contains("description")
+        assertThat(productCollection.effectiveAtOnDowngrade())
+            .contains(ProductCollection.EffectiveAtOnDowngrade.IMMEDIATELY)
+        assertThat(productCollection.effectiveAtOnUpgrade())
+            .contains(ProductCollection.EffectiveAtOnUpgrade.IMMEDIATELY)
         assertThat(productCollection.image()).contains("image")
+        assertThat(productCollection.onPaymentFailure())
+            .contains(ProductCollection.OnPaymentFailure.PREVENT_CHANGE)
+        assertThat(productCollection.prorationBillingModeOnDowngrade())
+            .contains(ProductCollection.ProrationBillingModeOnDowngrade.PRORATED_IMMEDIATELY)
+        assertThat(productCollection.prorationBillingModeOnUpgrade())
+            .contains(ProductCollection.ProrationBillingModeOnUpgrade.PRORATED_IMMEDIATELY)
     }
 
     @Test
@@ -162,7 +181,16 @@ internal class ProductCollectionTest {
                 .name("name")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
+                .effectiveAtOnDowngrade(ProductCollection.EffectiveAtOnDowngrade.IMMEDIATELY)
+                .effectiveAtOnUpgrade(ProductCollection.EffectiveAtOnUpgrade.IMMEDIATELY)
                 .image("image")
+                .onPaymentFailure(ProductCollection.OnPaymentFailure.PREVENT_CHANGE)
+                .prorationBillingModeOnDowngrade(
+                    ProductCollection.ProrationBillingModeOnDowngrade.PRORATED_IMMEDIATELY
+                )
+                .prorationBillingModeOnUpgrade(
+                    ProductCollection.ProrationBillingModeOnUpgrade.PRORATED_IMMEDIATELY
+                )
                 .build()
 
         val roundtrippedProductCollection =
