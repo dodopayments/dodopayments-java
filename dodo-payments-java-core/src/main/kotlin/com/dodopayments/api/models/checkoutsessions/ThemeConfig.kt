@@ -487,7 +487,7 @@ private constructor(
 
             @JvmField val XL = of("xl")
 
-            @JvmField val _2XL = of("2xl")
+            @JvmField val SIZE2_XL = of("2xl")
 
             @JvmStatic fun of(value: String) = FontSize(JsonField.of(value))
         }
@@ -499,7 +499,7 @@ private constructor(
             MD,
             LG,
             XL,
-            _2XL,
+            SIZE2_XL,
         }
 
         /**
@@ -519,7 +519,7 @@ private constructor(
             MD,
             LG,
             XL,
-            _2XL,
+            SIZE2_XL,
             /** An enum member indicating that [FontSize] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -538,7 +538,7 @@ private constructor(
                 MD -> Value.MD
                 LG -> Value.LG
                 XL -> Value.XL
-                _2XL -> Value._2XL
+                SIZE2_XL -> Value.SIZE2_XL
                 else -> Value._UNKNOWN
             }
 
@@ -558,7 +558,7 @@ private constructor(
                 MD -> Known.MD
                 LG -> Known.LG
                 XL -> Known.XL
-                _2XL -> Known._2XL
+                SIZE2_XL -> Known.SIZE2_XL
                 else -> throw DodoPaymentsInvalidDataException("Unknown FontSize: $value")
             }
 

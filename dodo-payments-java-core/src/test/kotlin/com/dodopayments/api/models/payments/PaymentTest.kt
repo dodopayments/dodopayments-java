@@ -71,6 +71,7 @@ internal class PaymentTest {
                         .build()
                 )
                 .paymentId("payment_id")
+                .paymentProvider(Payment.PaymentProvider.STRIPE)
                 .addRefund(
                     RefundListItem.builder()
                         .businessId("business_id")
@@ -84,6 +85,7 @@ internal class PaymentTest {
                         .reason("reason")
                         .build()
                 )
+                .retryAttempt(0)
                 .settlementAmount(0)
                 .settlementCurrency(Currency.AED)
                 .totalAmount(0)
@@ -190,6 +192,7 @@ internal class PaymentTest {
                     .build()
             )
         assertThat(payment.paymentId()).isEqualTo("payment_id")
+        assertThat(payment.paymentProvider()).isEqualTo(Payment.PaymentProvider.STRIPE)
         assertThat(payment.refunds())
             .containsExactly(
                 RefundListItem.builder()
@@ -204,6 +207,7 @@ internal class PaymentTest {
                     .reason("reason")
                     .build()
             )
+        assertThat(payment.retryAttempt()).isEqualTo(0)
         assertThat(payment.settlementAmount()).isEqualTo(0)
         assertThat(payment.settlementCurrency()).isEqualTo(Currency.AED)
         assertThat(payment.totalAmount()).isEqualTo(0)
@@ -312,6 +316,7 @@ internal class PaymentTest {
                         .build()
                 )
                 .paymentId("payment_id")
+                .paymentProvider(Payment.PaymentProvider.STRIPE)
                 .addRefund(
                     RefundListItem.builder()
                         .businessId("business_id")
@@ -325,6 +330,7 @@ internal class PaymentTest {
                         .reason("reason")
                         .build()
                 )
+                .retryAttempt(0)
                 .settlementAmount(0)
                 .settlementCurrency(Currency.AED)
                 .totalAmount(0)

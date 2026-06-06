@@ -32,12 +32,7 @@ private constructor(
 ) : Params {
 
     /**
-     * The discount amount.
-     *
-     * - If `discount_type` is **not** `percentage`, `amount` is in **USD cents**. For example,
-     *   `100` means `$1.00`. Only USD is allowed.
-     * - If `discount_type` **is** `percentage`, `amount` is in **basis points**. For example, `540`
-     *   means `5.4%`.
+     * The discount amount in **basis points** (e.g. `540` means `5.4%`, `10000` means `100%`).
      *
      * Must be at least 1.
      *
@@ -47,7 +42,7 @@ private constructor(
     fun amount(): Int = body.amount()
 
     /**
-     * The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`).
+     * The discount type. Currently only `percentage` is supported.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -245,12 +240,7 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * The discount amount.
-         *
-         * - If `discount_type` is **not** `percentage`, `amount` is in **USD cents**. For example,
-         *   `100` means `$1.00`. Only USD is allowed.
-         * - If `discount_type` **is** `percentage`, `amount` is in **basis points**. For example,
-         *   `540` means `5.4%`.
+         * The discount amount in **basis points** (e.g. `540` means `5.4%`, `10000` means `100%`).
          *
          * Must be at least 1.
          */
@@ -264,7 +254,7 @@ private constructor(
          */
         fun amount(amount: JsonField<Int>) = apply { body.amount(amount) }
 
-        /** The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`). */
+        /** The discount type. Currently only `percentage` is supported. */
         fun type(type: DiscountType) = apply { body.type(type) }
 
         /**
@@ -637,12 +627,7 @@ private constructor(
         )
 
         /**
-         * The discount amount.
-         *
-         * - If `discount_type` is **not** `percentage`, `amount` is in **USD cents**. For example,
-         *   `100` means `$1.00`. Only USD is allowed.
-         * - If `discount_type` **is** `percentage`, `amount` is in **basis points**. For example,
-         *   `540` means `5.4%`.
+         * The discount amount in **basis points** (e.g. `540` means `5.4%`, `10000` means `100%`).
          *
          * Must be at least 1.
          *
@@ -652,7 +637,7 @@ private constructor(
         fun amount(): Int = amount.getRequired("amount")
 
         /**
-         * The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`).
+         * The discount type. Currently only `percentage` is supported.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -866,12 +851,8 @@ private constructor(
             }
 
             /**
-             * The discount amount.
-             *
-             * - If `discount_type` is **not** `percentage`, `amount` is in **USD cents**. For
-             *   example, `100` means `$1.00`. Only USD is allowed.
-             * - If `discount_type` **is** `percentage`, `amount` is in **basis points**. For
-             *   example, `540` means `5.4%`.
+             * The discount amount in **basis points** (e.g. `540` means `5.4%`, `10000` means
+             * `100%`).
              *
              * Must be at least 1.
              */
@@ -886,7 +867,7 @@ private constructor(
              */
             fun amount(amount: JsonField<Int>) = apply { this.amount = amount }
 
-            /** The discount type (e.g. `percentage`, `flat`, or `flat_per_unit`). */
+            /** The discount type. Currently only `percentage` is supported. */
             fun type(type: DiscountType) = type(JsonField.of(type))
 
             /**
