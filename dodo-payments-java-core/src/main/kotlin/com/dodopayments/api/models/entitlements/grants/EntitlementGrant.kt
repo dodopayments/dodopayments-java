@@ -10,6 +10,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.toImmutable
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
 import com.dodopayments.api.models.products.DigitalProductDelivery
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -33,6 +34,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val customerId: JsonField<String>,
     private val entitlementId: JsonField<String>,
+    private val integrationType: JsonField<EntitlementIntegrationType>,
     private val metadata: JsonField<Metadata>,
     private val status: JsonField<Status>,
     private val updatedAt: JsonField<OffsetDateTime>,
@@ -65,6 +67,9 @@ private constructor(
         @JsonProperty("entitlement_id")
         @ExcludeMissing
         entitlementId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("integration_type")
+        @ExcludeMissing
+        integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
         @JsonProperty("updated_at")
@@ -103,6 +108,7 @@ private constructor(
         createdAt,
         customerId,
         entitlementId,
+        integrationType,
         metadata,
         status,
         updatedAt,
@@ -159,6 +165,15 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun entitlementId(): String = entitlementId.getRequired("entitlement_id")
+
+    /**
+     * The integration type of the grant's entitlement (e.g. `license_key`).
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun integrationType(): EntitlementIntegrationType =
+        integrationType.getRequired("integration_type")
 
     /**
      * Arbitrary key-value metadata recorded on the grant.
@@ -316,6 +331,15 @@ private constructor(
     fun _entitlementId(): JsonField<String> = entitlementId
 
     /**
+     * Returns the raw JSON value of [integrationType].
+     *
+     * Unlike [integrationType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("integration_type")
+    @ExcludeMissing
+    fun _integrationType(): JsonField<EntitlementIntegrationType> = integrationType
+
+    /**
      * Returns the raw JSON value of [metadata].
      *
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -457,6 +481,7 @@ private constructor(
          * .createdAt()
          * .customerId()
          * .entitlementId()
+         * .integrationType()
          * .metadata()
          * .status()
          * .updatedAt()
@@ -473,6 +498,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var customerId: JsonField<String>? = null
         private var entitlementId: JsonField<String>? = null
+        private var integrationType: JsonField<EntitlementIntegrationType>? = null
         private var metadata: JsonField<Metadata>? = null
         private var status: JsonField<Status>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
@@ -496,6 +522,7 @@ private constructor(
             createdAt = entitlementGrant.createdAt
             customerId = entitlementGrant.customerId
             entitlementId = entitlementGrant.entitlementId
+            integrationType = entitlementGrant.integrationType
             metadata = entitlementGrant.metadata
             status = entitlementGrant.status
             updatedAt = entitlementGrant.updatedAt
@@ -572,6 +599,21 @@ private constructor(
          */
         fun entitlementId(entitlementId: JsonField<String>) = apply {
             this.entitlementId = entitlementId
+        }
+
+        /** The integration type of the grant's entitlement (e.g. `license_key`). */
+        fun integrationType(integrationType: EntitlementIntegrationType) =
+            integrationType(JsonField.of(integrationType))
+
+        /**
+         * Sets [Builder.integrationType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.integrationType] with a well-typed
+         * [EntitlementIntegrationType] value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) = apply {
+            this.integrationType = integrationType
         }
 
         /** Arbitrary key-value metadata recorded on the grant. */
@@ -841,6 +883,7 @@ private constructor(
          * .createdAt()
          * .customerId()
          * .entitlementId()
+         * .integrationType()
          * .metadata()
          * .status()
          * .updatedAt()
@@ -855,6 +898,7 @@ private constructor(
                 checkRequired("createdAt", createdAt),
                 checkRequired("customerId", customerId),
                 checkRequired("entitlementId", entitlementId),
+                checkRequired("integrationType", integrationType),
                 checkRequired("metadata", metadata),
                 checkRequired("status", status),
                 checkRequired("updatedAt", updatedAt),
@@ -893,6 +937,7 @@ private constructor(
         createdAt()
         customerId()
         entitlementId()
+        integrationType().validate()
         metadata().validate()
         status().validate()
         updatedAt()
@@ -930,6 +975,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (customerId.asKnown().isPresent) 1 else 0) +
             (if (entitlementId.asKnown().isPresent) 1 else 0) +
+            (integrationType.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
@@ -1214,6 +1260,7 @@ private constructor(
             createdAt == other.createdAt &&
             customerId == other.customerId &&
             entitlementId == other.entitlementId &&
+            integrationType == other.integrationType &&
             metadata == other.metadata &&
             status == other.status &&
             updatedAt == other.updatedAt &&
@@ -1238,6 +1285,7 @@ private constructor(
             createdAt,
             customerId,
             entitlementId,
+            integrationType,
             metadata,
             status,
             updatedAt,
@@ -1259,5 +1307,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }
