@@ -385,10 +385,9 @@ private constructor(
             additionalHeaders.put(name, values)
         }
 
-        fun putAllAdditionalHeaders(additionalHeaders: com.dodopayments.api.core.http.Headers) =
-            apply {
-                this.additionalHeaders.putAll(additionalHeaders)
-            }
+        fun putAllAdditionalHeaders(additionalHeaders: com.dodopayments.api.core.http.Headers) = apply {
+            this.additionalHeaders.putAll(additionalHeaders)
+        }
 
         fun putAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
             this.additionalHeaders.putAll(additionalHeaders)
@@ -402,10 +401,9 @@ private constructor(
             additionalHeaders.replace(name, values)
         }
 
-        fun replaceAllAdditionalHeaders(additionalHeaders: com.dodopayments.api.core.http.Headers) =
-            apply {
-                this.additionalHeaders.replaceAll(additionalHeaders)
-            }
+        fun replaceAllAdditionalHeaders(additionalHeaders: com.dodopayments.api.core.http.Headers) = apply {
+            this.additionalHeaders.replaceAll(additionalHeaders)
+        }
 
         fun replaceAllAdditionalHeaders(additionalHeaders: Map<String, Iterable<String>>) = apply {
             this.additionalHeaders.replaceAll(additionalHeaders)
@@ -1098,8 +1096,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1207,8 +1206,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
