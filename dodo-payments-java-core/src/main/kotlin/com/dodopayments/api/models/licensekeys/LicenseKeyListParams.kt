@@ -320,6 +320,8 @@ private constructor(
 
             @JvmField val IMPORT = of("import")
 
+            @JvmField val MANUAL = of("manual")
+
             @JvmStatic fun of(value: String) = Source(JsonField.of(value))
         }
 
@@ -327,6 +329,7 @@ private constructor(
         enum class Known {
             AUTO,
             IMPORT,
+            MANUAL,
         }
 
         /**
@@ -341,6 +344,7 @@ private constructor(
         enum class Value {
             AUTO,
             IMPORT,
+            MANUAL,
             /** An enum member indicating that [Source] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -356,6 +360,7 @@ private constructor(
             when (this) {
                 AUTO -> Value.AUTO
                 IMPORT -> Value.IMPORT
+                MANUAL -> Value.MANUAL
                 else -> Value._UNKNOWN
             }
 
@@ -372,6 +377,7 @@ private constructor(
             when (this) {
                 AUTO -> Known.AUTO
                 IMPORT -> Known.IMPORT
+                MANUAL -> Known.MANUAL
                 else -> throw DodoPaymentsInvalidDataException("Unknown Source: $value")
             }
 

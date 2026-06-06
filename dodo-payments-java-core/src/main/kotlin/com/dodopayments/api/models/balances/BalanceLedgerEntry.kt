@@ -653,6 +653,8 @@ private constructor(
 
             @JvmField val PAYMENT_RETRY_FEE = of("payment_retry_fee")
 
+            @JvmField val BYOP_FEE = of("byop_fee")
+
             @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
         }
 
@@ -679,6 +681,7 @@ private constructor(
             ABANDONED_CART_RECOVERY_FEE,
             DUNNING_FEES,
             PAYMENT_RETRY_FEE,
+            BYOP_FEE,
         }
 
         /**
@@ -712,6 +715,7 @@ private constructor(
             ABANDONED_CART_RECOVERY_FEE,
             DUNNING_FEES,
             PAYMENT_RETRY_FEE,
+            BYOP_FEE,
             /**
              * An enum member indicating that [EventType] was instantiated with an unknown value.
              */
@@ -748,6 +752,7 @@ private constructor(
                 ABANDONED_CART_RECOVERY_FEE -> Value.ABANDONED_CART_RECOVERY_FEE
                 DUNNING_FEES -> Value.DUNNING_FEES
                 PAYMENT_RETRY_FEE -> Value.PAYMENT_RETRY_FEE
+                BYOP_FEE -> Value.BYOP_FEE
                 else -> Value._UNKNOWN
             }
 
@@ -783,6 +788,7 @@ private constructor(
                 ABANDONED_CART_RECOVERY_FEE -> Known.ABANDONED_CART_RECOVERY_FEE
                 DUNNING_FEES -> Known.DUNNING_FEES
                 PAYMENT_RETRY_FEE -> Known.PAYMENT_RETRY_FEE
+                BYOP_FEE -> Known.BYOP_FEE
                 else -> throw DodoPaymentsInvalidDataException("Unknown EventType: $value")
             }
 
