@@ -29,6 +29,7 @@ private constructor(
     private val billingCountry: JsonField<CountryCode>,
     private val currency: JsonField<Currency>,
     private val currentBreakup: JsonField<CurrentBreakup>,
+    private val isByop: JsonField<Boolean>,
     private val productCart: JsonField<List<ProductCart>>,
     private val totalPrice: JsonField<Int>,
     private val recurringBreakup: JsonField<RecurringBreakup>,
@@ -46,6 +47,7 @@ private constructor(
         @JsonProperty("current_breakup")
         @ExcludeMissing
         currentBreakup: JsonField<CurrentBreakup> = JsonMissing.of(),
+        @JsonProperty("is_byop") @ExcludeMissing isByop: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("product_cart")
         @ExcludeMissing
         productCart: JsonField<List<ProductCart>> = JsonMissing.of(),
@@ -61,6 +63,7 @@ private constructor(
         billingCountry,
         currency,
         currentBreakup,
+        isByop,
         productCart,
         totalPrice,
         recurringBreakup,
@@ -92,6 +95,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun currentBreakup(): CurrentBreakup = currentBreakup.getRequired("current_breakup")
+
+    /**
+     * Whether the payment will be routed through the merchant's own processor (BYOP). True when the
+     * session's business has a BYOP route configured for the billing country; in that case the
+     * quoted amounts exclude Dodo-computed tax because the merchant is MoR and owns tax.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun isByop(): Boolean = isByop.getRequired("is_byop")
 
     /**
      * The total product cart
@@ -160,6 +173,13 @@ private constructor(
     fun _currentBreakup(): JsonField<CurrentBreakup> = currentBreakup
 
     /**
+     * Returns the raw JSON value of [isByop].
+     *
+     * Unlike [isByop], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("is_byop") @ExcludeMissing fun _isByop(): JsonField<Boolean> = isByop
+
+    /**
      * Returns the raw JSON value of [productCart].
      *
      * Unlike [productCart], this method doesn't throw if the JSON field has an unexpected type.
@@ -224,6 +244,7 @@ private constructor(
          * .billingCountry()
          * .currency()
          * .currentBreakup()
+         * .isByop()
          * .productCart()
          * .totalPrice()
          * ```
@@ -237,6 +258,7 @@ private constructor(
         private var billingCountry: JsonField<CountryCode>? = null
         private var currency: JsonField<Currency>? = null
         private var currentBreakup: JsonField<CurrentBreakup>? = null
+        private var isByop: JsonField<Boolean>? = null
         private var productCart: JsonField<MutableList<ProductCart>>? = null
         private var totalPrice: JsonField<Int>? = null
         private var recurringBreakup: JsonField<RecurringBreakup> = JsonMissing.of()
@@ -249,6 +271,7 @@ private constructor(
             billingCountry = checkoutSessionPreviewResponse.billingCountry
             currency = checkoutSessionPreviewResponse.currency
             currentBreakup = checkoutSessionPreviewResponse.currentBreakup
+            isByop = checkoutSessionPreviewResponse.isByop
             productCart = checkoutSessionPreviewResponse.productCart.map { it.toMutableList() }
             totalPrice = checkoutSessionPreviewResponse.totalPrice
             recurringBreakup = checkoutSessionPreviewResponse.recurringBreakup
@@ -299,6 +322,21 @@ private constructor(
         fun currentBreakup(currentBreakup: JsonField<CurrentBreakup>) = apply {
             this.currentBreakup = currentBreakup
         }
+
+        /**
+         * Whether the payment will be routed through the merchant's own processor (BYOP). True when
+         * the session's business has a BYOP route configured for the billing country; in that case
+         * the quoted amounts exclude Dodo-computed tax because the merchant is MoR and owns tax.
+         */
+        fun isByop(isByop: Boolean) = isByop(JsonField.of(isByop))
+
+        /**
+         * Sets [Builder.isByop] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.isByop] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun isByop(isByop: JsonField<Boolean>) = apply { this.isByop = isByop }
 
         /** The total product cart */
         fun productCart(productCart: List<ProductCart>) = productCart(JsonField.of(productCart))
@@ -421,6 +459,7 @@ private constructor(
          * .billingCountry()
          * .currency()
          * .currentBreakup()
+         * .isByop()
          * .productCart()
          * .totalPrice()
          * ```
@@ -432,6 +471,7 @@ private constructor(
                 checkRequired("billingCountry", billingCountry),
                 checkRequired("currency", currency),
                 checkRequired("currentBreakup", currentBreakup),
+                checkRequired("isByop", isByop),
                 checkRequired("productCart", productCart).map { it.toImmutable() },
                 checkRequired("totalPrice", totalPrice),
                 recurringBreakup,
@@ -459,6 +499,7 @@ private constructor(
         billingCountry().validate()
         currency().validate()
         currentBreakup().validate()
+        isByop()
         productCart().forEach { it.validate() }
         totalPrice()
         recurringBreakup().ifPresent { it.validate() }
@@ -485,6 +526,7 @@ private constructor(
         (billingCountry.asKnown().getOrNull()?.validity() ?: 0) +
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (currentBreakup.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (isByop.asKnown().isPresent) 1 else 0) +
             (productCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (totalPrice.asKnown().isPresent) 1 else 0) +
             (recurringBreakup.asKnown().getOrNull()?.validity() ?: 0) +
@@ -3528,6 +3570,7 @@ private constructor(
             billingCountry == other.billingCountry &&
             currency == other.currency &&
             currentBreakup == other.currentBreakup &&
+            isByop == other.isByop &&
             productCart == other.productCart &&
             totalPrice == other.totalPrice &&
             recurringBreakup == other.recurringBreakup &&
@@ -3541,6 +3584,7 @@ private constructor(
             billingCountry,
             currency,
             currentBreakup,
+            isByop,
             productCart,
             totalPrice,
             recurringBreakup,
@@ -3553,5 +3597,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, productCart=$productCart, totalPrice=$totalPrice, recurringBreakup=$recurringBreakup, taxIdErrMsg=$taxIdErrMsg, totalTax=$totalTax, additionalProperties=$additionalProperties}"
+        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, isByop=$isByop, productCart=$productCart, totalPrice=$totalPrice, recurringBreakup=$recurringBreakup, taxIdErrMsg=$taxIdErrMsg, totalTax=$totalTax, additionalProperties=$additionalProperties}"
 }

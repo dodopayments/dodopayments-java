@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.disputes
 
+import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -23,6 +24,7 @@ class GetDispute
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val amount: JsonField<String>,
+    private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val currency: JsonField<String>,
@@ -31,6 +33,7 @@ private constructor(
     private val disputeStage: JsonField<DisputeStage>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val paymentId: JsonField<String>,
+    private val paymentProvider: JsonField<PaymentProvider>,
     private val isResolvedByRdr: JsonField<Boolean>,
     private val reason: JsonField<String>,
     private val remarks: JsonField<String>,
@@ -40,6 +43,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("amount") @ExcludeMissing amount: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("business_id")
         @ExcludeMissing
         businessId: JsonField<String> = JsonMissing.of(),
@@ -58,6 +62,9 @@ private constructor(
         @ExcludeMissing
         disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("payment_provider")
+        @ExcludeMissing
+        paymentProvider: JsonField<PaymentProvider> = JsonMissing.of(),
         @JsonProperty("is_resolved_by_rdr")
         @ExcludeMissing
         isResolvedByRdr: JsonField<Boolean> = JsonMissing.of(),
@@ -65,6 +72,7 @@ private constructor(
         @JsonProperty("remarks") @ExcludeMissing remarks: JsonField<String> = JsonMissing.of(),
     ) : this(
         amount,
+        brandId,
         businessId,
         createdAt,
         currency,
@@ -73,6 +81,7 @@ private constructor(
         disputeStage,
         disputeStatus,
         paymentId,
+        paymentProvider,
         isResolvedByRdr,
         reason,
         remarks,
@@ -86,6 +95,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun amount(): String = amount.getRequired("amount")
+
+    /**
+     * Brand id this dispute belongs to
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun brandId(): String = brandId.getRequired("brand_id")
 
     /**
      * The unique identifier of the business involved in the dispute.
@@ -152,6 +169,15 @@ private constructor(
     fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
+     * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes (the
+     * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun paymentProvider(): PaymentProvider = paymentProvider.getRequired("payment_provider")
+
+    /**
      * Whether the dispute was resolved by Rapid Dispute Resolution
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -181,6 +207,13 @@ private constructor(
      * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<String> = amount
+
+    /**
+     * Returns the raw JSON value of [brandId].
+     *
+     * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
     /**
      * Returns the raw JSON value of [businessId].
@@ -247,6 +280,15 @@ private constructor(
     @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
 
     /**
+     * Returns the raw JSON value of [paymentProvider].
+     *
+     * Unlike [paymentProvider], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("payment_provider")
+    @ExcludeMissing
+    fun _paymentProvider(): JsonField<PaymentProvider> = paymentProvider
+
+    /**
      * Returns the raw JSON value of [isResolvedByRdr].
      *
      * Unlike [isResolvedByRdr], this method doesn't throw if the JSON field has an unexpected type.
@@ -289,6 +331,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .amount()
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .currency()
@@ -297,6 +340,7 @@ private constructor(
          * .disputeStage()
          * .disputeStatus()
          * .paymentId()
+         * .paymentProvider()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -306,6 +350,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var amount: JsonField<String>? = null
+        private var brandId: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var currency: JsonField<String>? = null
@@ -314,6 +359,7 @@ private constructor(
         private var disputeStage: JsonField<DisputeStage>? = null
         private var disputeStatus: JsonField<DisputeStatus>? = null
         private var paymentId: JsonField<String>? = null
+        private var paymentProvider: JsonField<PaymentProvider>? = null
         private var isResolvedByRdr: JsonField<Boolean> = JsonMissing.of()
         private var reason: JsonField<String> = JsonMissing.of()
         private var remarks: JsonField<String> = JsonMissing.of()
@@ -322,6 +368,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(getDispute: GetDispute) = apply {
             amount = getDispute.amount
+            brandId = getDispute.brandId
             businessId = getDispute.businessId
             createdAt = getDispute.createdAt
             currency = getDispute.currency
@@ -330,6 +377,7 @@ private constructor(
             disputeStage = getDispute.disputeStage
             disputeStatus = getDispute.disputeStatus
             paymentId = getDispute.paymentId
+            paymentProvider = getDispute.paymentProvider
             isResolvedByRdr = getDispute.isResolvedByRdr
             reason = getDispute.reason
             remarks = getDispute.remarks
@@ -346,6 +394,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun amount(amount: JsonField<String>) = apply { this.amount = amount }
+
+        /** Brand id this dispute belongs to */
+        fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+        /**
+         * Sets [Builder.brandId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
         /** The unique identifier of the business involved in the dispute. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -448,6 +507,24 @@ private constructor(
          */
         fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
+        /**
+         * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes (the
+         * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
+         */
+        fun paymentProvider(paymentProvider: PaymentProvider) =
+            paymentProvider(JsonField.of(paymentProvider))
+
+        /**
+         * Sets [Builder.paymentProvider] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentProvider] with a well-typed [PaymentProvider]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun paymentProvider(paymentProvider: JsonField<PaymentProvider>) = apply {
+            this.paymentProvider = paymentProvider
+        }
+
         /** Whether the dispute was resolved by Rapid Dispute Resolution */
         fun isResolvedByRdr(isResolvedByRdr: Boolean?) =
             isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
@@ -529,6 +606,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .amount()
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .currency()
@@ -537,6 +615,7 @@ private constructor(
          * .disputeStage()
          * .disputeStatus()
          * .paymentId()
+         * .paymentProvider()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -544,6 +623,7 @@ private constructor(
         fun build(): GetDispute =
             GetDispute(
                 checkRequired("amount", amount),
+                checkRequired("brandId", brandId),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("currency", currency),
@@ -552,6 +632,7 @@ private constructor(
                 checkRequired("disputeStage", disputeStage),
                 checkRequired("disputeStatus", disputeStatus),
                 checkRequired("paymentId", paymentId),
+                checkRequired("paymentProvider", paymentProvider),
                 isResolvedByRdr,
                 reason,
                 remarks,
@@ -575,6 +656,7 @@ private constructor(
         }
 
         amount()
+        brandId()
         businessId()
         createdAt()
         currency()
@@ -583,6 +665,7 @@ private constructor(
         disputeStage().validate()
         disputeStatus().validate()
         paymentId()
+        paymentProvider().validate()
         isResolvedByRdr()
         reason()
         remarks()
@@ -605,6 +688,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (amount.asKnown().isPresent) 1 else 0) +
+            (if (brandId.asKnown().isPresent) 1 else 0) +
             (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (currency.asKnown().isPresent) 1 else 0) +
@@ -613,9 +697,162 @@ private constructor(
             (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
+            (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isResolvedByRdr.asKnown().isPresent) 1 else 0) +
             (if (reason.asKnown().isPresent) 1 else 0) +
             (if (remarks.asKnown().isPresent) 1 else 0)
+
+    /**
+     * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes (the
+     * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
+     */
+    class PaymentProvider @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val STRIPE = of("stripe")
+
+            @JvmField val ADYEN = of("adyen")
+
+            @JvmField val DODO = of("dodo")
+
+            @JvmStatic fun of(value: String) = PaymentProvider(JsonField.of(value))
+        }
+
+        /** An enum containing [PaymentProvider]'s known values. */
+        enum class Known {
+            STRIPE,
+            ADYEN,
+            DODO,
+        }
+
+        /**
+         * An enum containing [PaymentProvider]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [PaymentProvider] can contain an unknown value in a couple of cases:
+         *
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         *
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            STRIPE,
+            ADYEN,
+            DODO,
+            /**
+             * An enum member indicating that [PaymentProvider] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                STRIPE -> Value.STRIPE
+                ADYEN -> Value.ADYEN
+                DODO -> Value.DODO
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                STRIPE -> Known.STRIPE
+                ADYEN -> Known.ADYEN
+                DODO -> Known.DODO
+                else -> throw DodoPaymentsInvalidDataException("Unknown PaymentProvider: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                DodoPaymentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
+         *   its expected type.
+         */
+        fun validate(): PaymentProvider = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is PaymentProvider && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -624,6 +861,7 @@ private constructor(
 
         return other is GetDispute &&
             amount == other.amount &&
+            brandId == other.brandId &&
             businessId == other.businessId &&
             createdAt == other.createdAt &&
             currency == other.currency &&
@@ -632,6 +870,7 @@ private constructor(
             disputeStage == other.disputeStage &&
             disputeStatus == other.disputeStatus &&
             paymentId == other.paymentId &&
+            paymentProvider == other.paymentProvider &&
             isResolvedByRdr == other.isResolvedByRdr &&
             reason == other.reason &&
             remarks == other.remarks &&
@@ -641,6 +880,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             amount,
+            brandId,
             businessId,
             createdAt,
             currency,
@@ -649,6 +889,7 @@ private constructor(
             disputeStage,
             disputeStatus,
             paymentId,
+            paymentProvider,
             isResolvedByRdr,
             reason,
             remarks,
@@ -659,5 +900,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "GetDispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
+        "GetDispute{amount=$amount, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, paymentProvider=$paymentProvider, isResolvedByRdr=$isResolvedByRdr, reason=$reason, remarks=$remarks, additionalProperties=$additionalProperties}"
 }

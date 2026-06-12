@@ -23,6 +23,7 @@ class LicenseKey
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
+    private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customerId: JsonField<String>,
@@ -41,6 +42,7 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("business_id")
         @ExcludeMissing
         businessId: JsonField<String> = JsonMissing.of(),
@@ -71,6 +73,7 @@ private constructor(
         subscriptionId: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
+        brandId,
         businessId,
         createdAt,
         customerId,
@@ -93,6 +96,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * Brand id this license key belongs to
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun brandId(): String = brandId.getRequired("brand_id")
 
     /**
      * The unique identifier of the business associated with the license key.
@@ -197,6 +208,13 @@ private constructor(
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+    /**
+     * Returns the raw JSON value of [brandId].
+     *
+     * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
     /**
      * Returns the raw JSON value of [businessId].
@@ -313,6 +331,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .customerId()
@@ -330,6 +349,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var brandId: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var customerId: JsonField<String>? = null
@@ -347,6 +367,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(licenseKey: LicenseKey) = apply {
             id = licenseKey.id
+            brandId = licenseKey.brandId
             businessId = licenseKey.businessId
             createdAt = licenseKey.createdAt
             customerId = licenseKey.customerId
@@ -372,6 +393,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /** Brand id this license key belongs to */
+        fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+        /**
+         * Sets [Builder.brandId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
         /** The unique identifier of the business associated with the license key. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -574,6 +606,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .customerId()
@@ -589,6 +622,7 @@ private constructor(
         fun build(): LicenseKey =
             LicenseKey(
                 checkRequired("id", id),
+                checkRequired("brandId", brandId),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("customerId", customerId),
@@ -621,6 +655,7 @@ private constructor(
         }
 
         id()
+        brandId()
         businessId()
         createdAt()
         customerId()
@@ -652,6 +687,7 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (if (brandId.asKnown().isPresent) 1 else 0) +
             (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (customerId.asKnown().isPresent) 1 else 0) +
@@ -703,9 +739,11 @@ private constructor(
          * An enum containing [Source]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Source] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -818,6 +856,7 @@ private constructor(
 
         return other is LicenseKey &&
             id == other.id &&
+            brandId == other.brandId &&
             businessId == other.businessId &&
             createdAt == other.createdAt &&
             customerId == other.customerId &&
@@ -836,6 +875,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             id,
+            brandId,
             businessId,
             createdAt,
             customerId,
@@ -855,5 +895,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "LicenseKey{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, instancesCount=$instancesCount, key=$key, productId=$productId, source=$source, status=$status, activationsLimit=$activationsLimit, expiresAt=$expiresAt, paymentId=$paymentId, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "LicenseKey{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, instancesCount=$instancesCount, key=$key, productId=$productId, source=$source, status=$status, activationsLimit=$activationsLimit, expiresAt=$expiresAt, paymentId=$paymentId, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }

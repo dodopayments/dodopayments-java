@@ -296,6 +296,7 @@ private constructor(
     private constructor(
         private val abandonedAt: JsonField<OffsetDateTime>,
         private val abandonmentReason: JsonField<AbandonmentReason>,
+        private val brandId: JsonField<String>,
         private val customerId: JsonField<String>,
         private val paymentId: JsonField<String>,
         private val status: JsonField<Status>,
@@ -311,6 +312,7 @@ private constructor(
             @JsonProperty("abandonment_reason")
             @ExcludeMissing
             abandonmentReason: JsonField<AbandonmentReason> = JsonMissing.of(),
+            @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("customer_id")
             @ExcludeMissing
             customerId: JsonField<String> = JsonMissing.of(),
@@ -324,6 +326,7 @@ private constructor(
         ) : this(
             abandonedAt,
             abandonmentReason,
+            brandId,
             customerId,
             paymentId,
             status,
@@ -343,6 +346,14 @@ private constructor(
          */
         fun abandonmentReason(): AbandonmentReason =
             abandonmentReason.getRequired("abandonment_reason")
+
+        /**
+         * Brand id this abandoned checkout belongs to
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun brandId(): String = brandId.getRequired("brand_id")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -387,6 +398,13 @@ private constructor(
         @JsonProperty("abandonment_reason")
         @ExcludeMissing
         fun _abandonmentReason(): JsonField<AbandonmentReason> = abandonmentReason
+
+        /**
+         * Returns the raw JSON value of [brandId].
+         *
+         * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
         /**
          * Returns the raw JSON value of [customerId].
@@ -442,6 +460,7 @@ private constructor(
              * ```java
              * .abandonedAt()
              * .abandonmentReason()
+             * .brandId()
              * .customerId()
              * .paymentId()
              * .status()
@@ -455,6 +474,7 @@ private constructor(
 
             private var abandonedAt: JsonField<OffsetDateTime>? = null
             private var abandonmentReason: JsonField<AbandonmentReason>? = null
+            private var brandId: JsonField<String>? = null
             private var customerId: JsonField<String>? = null
             private var paymentId: JsonField<String>? = null
             private var status: JsonField<Status>? = null
@@ -465,6 +485,7 @@ private constructor(
             internal fun from(data: Data) = apply {
                 abandonedAt = data.abandonedAt
                 abandonmentReason = data.abandonmentReason
+                brandId = data.brandId
                 customerId = data.customerId
                 paymentId = data.paymentId
                 status = data.status
@@ -498,6 +519,18 @@ private constructor(
             fun abandonmentReason(abandonmentReason: JsonField<AbandonmentReason>) = apply {
                 this.abandonmentReason = abandonmentReason
             }
+
+            /** Brand id this abandoned checkout belongs to */
+            fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+            /**
+             * Sets [Builder.brandId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.brandId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
             fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
@@ -581,6 +614,7 @@ private constructor(
              * ```java
              * .abandonedAt()
              * .abandonmentReason()
+             * .brandId()
              * .customerId()
              * .paymentId()
              * .status()
@@ -592,6 +626,7 @@ private constructor(
                 Data(
                     checkRequired("abandonedAt", abandonedAt),
                     checkRequired("abandonmentReason", abandonmentReason),
+                    checkRequired("brandId", brandId),
                     checkRequired("customerId", customerId),
                     checkRequired("paymentId", paymentId),
                     checkRequired("status", status),
@@ -618,6 +653,7 @@ private constructor(
 
             abandonedAt()
             abandonmentReason().validate()
+            brandId()
             customerId()
             paymentId()
             status().validate()
@@ -643,6 +679,7 @@ private constructor(
         internal fun validity(): Int =
             (if (abandonedAt.asKnown().isPresent) 1 else 0) +
                 (abandonmentReason.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (brandId.asKnown().isPresent) 1 else 0) +
                 (if (customerId.asKnown().isPresent) 1 else 0) +
                 (if (paymentId.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
@@ -682,9 +719,11 @@ private constructor(
              * member.
              *
              * An instance of [AbandonmentReason] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -832,9 +871,11 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -957,6 +998,7 @@ private constructor(
             return other is Data &&
                 abandonedAt == other.abandonedAt &&
                 abandonmentReason == other.abandonmentReason &&
+                brandId == other.brandId &&
                 customerId == other.customerId &&
                 paymentId == other.paymentId &&
                 status == other.status &&
@@ -968,6 +1010,7 @@ private constructor(
             Objects.hash(
                 abandonedAt,
                 abandonmentReason,
+                brandId,
                 customerId,
                 paymentId,
                 status,
@@ -979,7 +1022,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, customerId=$customerId, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
+            "Data{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, brandId=$brandId, customerId=$customerId, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

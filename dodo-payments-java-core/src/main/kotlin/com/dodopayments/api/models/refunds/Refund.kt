@@ -24,6 +24,7 @@ import kotlin.jvm.optionals.getOrNull
 class Refund
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val brandId: JsonField<String>,
     private val businessId: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customer: JsonField<CustomerLimitedDetails>,
@@ -40,6 +41,7 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("business_id")
         @ExcludeMissing
         businessId: JsonField<String> = JsonMissing.of(),
@@ -60,6 +62,7 @@ private constructor(
         @JsonProperty("currency") @ExcludeMissing currency: JsonField<Currency> = JsonMissing.of(),
         @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
     ) : this(
+        brandId,
         businessId,
         createdAt,
         customer,
@@ -73,6 +76,14 @@ private constructor(
         reason,
         mutableMapOf(),
     )
+
+    /**
+     * Brand id this refund belongs to
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun brandId(): String = brandId.getRequired("brand_id")
 
     /**
      * The unique identifier of the business issuing the refund.
@@ -161,6 +172,13 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun reason(): Optional<String> = reason.getOptional("reason")
+
+    /**
+     * Returns the raw JSON value of [brandId].
+     *
+     * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
     /**
      * Returns the raw JSON value of [businessId].
@@ -262,6 +280,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .customer()
@@ -278,6 +297,7 @@ private constructor(
     /** A builder for [Refund]. */
     class Builder internal constructor() {
 
+        private var brandId: JsonField<String>? = null
         private var businessId: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var customer: JsonField<CustomerLimitedDetails>? = null
@@ -293,6 +313,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(refund: Refund) = apply {
+            brandId = refund.brandId
             businessId = refund.businessId
             createdAt = refund.createdAt
             customer = refund.customer
@@ -306,6 +327,17 @@ private constructor(
             reason = refund.reason
             additionalProperties = refund.additionalProperties.toMutableMap()
         }
+
+        /** Brand id this refund belongs to */
+        fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+        /**
+         * Sets [Builder.brandId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.brandId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
         /** The unique identifier of the business issuing the refund. */
         fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -480,6 +512,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
+         * .brandId()
          * .businessId()
          * .createdAt()
          * .customer()
@@ -494,6 +527,7 @@ private constructor(
          */
         fun build(): Refund =
             Refund(
+                checkRequired("brandId", brandId),
                 checkRequired("businessId", businessId),
                 checkRequired("createdAt", createdAt),
                 checkRequired("customer", customer),
@@ -524,6 +558,7 @@ private constructor(
             return@apply
         }
 
+        brandId()
         businessId()
         createdAt()
         customer().validate()
@@ -553,7 +588,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (businessId.asKnown().isPresent) 1 else 0) +
+        (if (brandId.asKnown().isPresent) 1 else 0) +
+            (if (businessId.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isPartial.asKnown().isPresent) 1 else 0) +
@@ -656,8 +692,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -680,6 +717,7 @@ private constructor(
         }
 
         return other is Refund &&
+            brandId == other.brandId &&
             businessId == other.businessId &&
             createdAt == other.createdAt &&
             customer == other.customer &&
@@ -696,6 +734,7 @@ private constructor(
 
     private val hashCode: Int by lazy {
         Objects.hash(
+            brandId,
             businessId,
             createdAt,
             customer,
@@ -714,5 +753,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
+        "Refund{brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, additionalProperties=$additionalProperties}"
 }

@@ -1565,6 +1565,7 @@ private constructor(
 
         /**
          * Three-way patchable list of legacy file identifiers:
+         *
          * * omitted → preserve the current value
          * * `null` → clear
          * * `[...]` → replace
@@ -1730,6 +1731,7 @@ private constructor(
 
             /**
              * Three-way patchable list of legacy file identifiers:
+             *
              * * omitted → preserve the current value
              * * `null` → clear
              * * `[...]` → replace
@@ -1954,8 +1956,9 @@ private constructor(
             durationInterval.getOptional("duration_interval")
 
         /**
-         * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates pending
-         * grants the merchant fulfills via the `POST /grants/{id}/license-key` endpoint.
+         * How license keys are fulfilled. `auto` (default) generates and delivers keys to customers
+         * automatically; `manual` creates pending grants that you fulfill with the supplied key via
+         * `POST /grants/{grant_id}/license-key`.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -2154,9 +2157,9 @@ private constructor(
             }
 
             /**
-             * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates
-             * pending grants the merchant fulfills via the `POST /grants/{id}/license-key`
-             * endpoint.
+             * How license keys are fulfilled. `auto` (default) generates and delivers keys to
+             * customers automatically; `manual` creates pending grants that you fulfill with the
+             * supplied key via `POST /grants/{grant_id}/license-key`.
              */
             fun fulfillmentMode(fulfillmentMode: FulfillmentMode?) =
                 fulfillmentMode(JsonField.ofNullable(fulfillmentMode))
@@ -2258,8 +2261,9 @@ private constructor(
                 (fulfillmentMode.asKnown().getOrNull()?.validity() ?: 0)
 
         /**
-         * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates pending
-         * grants the merchant fulfills via the `POST /grants/{id}/license-key` endpoint.
+         * How license keys are fulfilled. `auto` (default) generates and delivers keys to customers
+         * automatically; `manual` creates pending grants that you fulfill with the supplied key via
+         * `POST /grants/{grant_id}/license-key`.
          */
         class FulfillmentMode
         @JsonCreator
@@ -2294,9 +2298,11 @@ private constructor(
              * An enum containing [FulfillmentMode]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [FulfillmentMode] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
