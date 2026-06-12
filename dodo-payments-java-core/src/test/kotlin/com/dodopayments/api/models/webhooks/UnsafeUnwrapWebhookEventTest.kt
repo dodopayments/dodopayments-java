@@ -12,7 +12,6 @@ import com.dodopayments.api.models.discounts.DiscountType
 import com.dodopayments.api.models.disputes.Dispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
-import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
 import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.LicenseKeyGrant
 import com.dodopayments.api.models.licensekeys.LicenseKey
@@ -2124,7 +2123,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
                             EntitlementGrant.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2229,7 +2227,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
-                            .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
                                 EntitlementGrant.Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2297,7 +2294,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
                             EntitlementGrant.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2402,7 +2398,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
-                            .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
                                 EntitlementGrant.Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2470,7 +2465,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
                             EntitlementGrant.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2575,7 +2569,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
-                            .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
                                 EntitlementGrant.Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2643,7 +2636,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .entitlementId("entitlement_id")
-                        .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
                             EntitlementGrant.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2748,7 +2740,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .entitlementId("entitlement_id")
-                            .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
                                 EntitlementGrant.Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -2964,7 +2955,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -2978,7 +2968,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
@@ -3139,7 +3128,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .paymentId("payment_id")
-                            .paymentProvider(Payment.PaymentProvider.STRIPE)
                             .addRefund(
                                 RefundListItem.builder()
                                     .businessId("business_id")
@@ -3153,7 +3141,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .reason("reason")
                                     .build()
                             )
-                            .retryAttempt(0)
                             .settlementAmount(0)
                             .settlementCurrency(Currency.AED)
                             .totalAmount(0)
@@ -3279,7 +3266,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -3293,7 +3279,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
@@ -3454,7 +3439,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .paymentId("payment_id")
-                            .paymentProvider(Payment.PaymentProvider.STRIPE)
                             .addRefund(
                                 RefundListItem.builder()
                                     .businessId("business_id")
@@ -3468,7 +3452,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .reason("reason")
                                     .build()
                             )
-                            .retryAttempt(0)
                             .settlementAmount(0)
                             .settlementCurrency(Currency.AED)
                             .totalAmount(0)
@@ -3594,7 +3577,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -3608,7 +3590,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
@@ -3770,7 +3751,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .paymentId("payment_id")
-                            .paymentProvider(Payment.PaymentProvider.STRIPE)
                             .addRefund(
                                 RefundListItem.builder()
                                     .businessId("business_id")
@@ -3784,7 +3764,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .reason("reason")
                                     .build()
                             )
-                            .retryAttempt(0)
                             .settlementAmount(0)
                             .settlementCurrency(Currency.AED)
                             .totalAmount(0)
@@ -3910,7 +3889,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -3924,7 +3902,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
@@ -4085,7 +4062,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .paymentId("payment_id")
-                            .paymentProvider(Payment.PaymentProvider.STRIPE)
                             .addRefund(
                                 RefundListItem.builder()
                                     .businessId("business_id")
@@ -4099,7 +4075,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .reason("reason")
                                     .build()
                             )
-                            .retryAttempt(0)
                             .settlementAmount(0)
                             .settlementCurrency(Currency.AED)
                             .totalAmount(0)

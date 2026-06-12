@@ -8,8 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":dodo-payments-java-core"))
-    implementation(project(":dodo-payments-java-client-okhttp"))
+    implementation(project(":dodo-payments-java"))
 }
 
 tasks.withType<JavaCompile>().configureEach {
