@@ -20,7 +20,6 @@ import com.dodopayments.api.models.disputes.Dispute as GlobalDispute
 import com.dodopayments.api.models.disputes.DisputeStage
 import com.dodopayments.api.models.disputes.DisputeStatus
 import com.dodopayments.api.models.disputes.GetDispute
-import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
 import com.dodopayments.api.models.entitlements.grants.EntitlementGrant as GlobalEntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.LicenseKeyGrant
 import com.dodopayments.api.models.licensekeys.LicenseKey as GlobalLicenseKey
@@ -844,9 +843,7 @@ private constructor(
             private val disputes: JsonField<List<GlobalDispute>>,
             private val metadata: JsonField<GlobalPayment.Metadata>,
             private val paymentId: JsonField<String>,
-            private val paymentProvider: JsonField<GlobalPayment.PaymentProvider>,
             private val refunds: JsonField<List<RefundListItem>>,
-            private val retryAttempt: JsonField<Int>,
             private val settlementAmount: JsonField<Int>,
             private val settlementCurrency: JsonField<Currency>,
             private val totalAmount: JsonField<Int>,
@@ -909,15 +906,9 @@ private constructor(
                 @JsonProperty("payment_id")
                 @ExcludeMissing
                 paymentId: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("payment_provider")
-                @ExcludeMissing
-                paymentProvider: JsonField<GlobalPayment.PaymentProvider> = JsonMissing.of(),
                 @JsonProperty("refunds")
                 @ExcludeMissing
                 refunds: JsonField<List<RefundListItem>> = JsonMissing.of(),
-                @JsonProperty("retry_attempt")
-                @ExcludeMissing
-                retryAttempt: JsonField<Int> = JsonMissing.of(),
                 @JsonProperty("settlement_amount")
                 @ExcludeMissing
                 settlementAmount: JsonField<Int> = JsonMissing.of(),
@@ -1008,9 +999,7 @@ private constructor(
                 disputes,
                 metadata,
                 paymentId,
-                paymentProvider,
                 refunds,
-                retryAttempt,
                 settlementAmount,
                 settlementCurrency,
                 totalAmount,
@@ -1053,9 +1042,7 @@ private constructor(
                     .disputes(disputes)
                     .metadata(metadata)
                     .paymentId(paymentId)
-                    .paymentProvider(paymentProvider)
                     .refunds(refunds)
-                    .retryAttempt(retryAttempt)
                     .settlementAmount(settlementAmount)
                     .settlementCurrency(settlementCurrency)
                     .totalAmount(totalAmount)
@@ -1176,17 +1163,6 @@ private constructor(
             fun paymentId(): String = paymentId.getRequired("payment_id")
 
             /**
-             * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the
-             * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
-             *
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun paymentProvider(): GlobalPayment.PaymentProvider =
-                paymentProvider.getRequired("payment_provider")
-
-            /**
              * List of refunds issued for this payment
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -1194,17 +1170,6 @@ private constructor(
              *   value).
              */
             fun refunds(): List<RefundListItem> = refunds.getRequired("refunds")
-
-            /**
-             * Retry attempt number for subscription renewal payments. `0` for the original payment,
-             * `1`+ for each scheduled off-session retry after a failed renewal. Always `0` for
-             * non-subscription payments.
-             *
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun retryAttempt(): Int = retryAttempt.getRequired("retry_attempt")
 
             /**
              * The amount that will be credited to your Dodo balance after currency conversion and
@@ -1542,16 +1507,6 @@ private constructor(
             fun _paymentId(): JsonField<String> = paymentId
 
             /**
-             * Returns the raw JSON value of [paymentProvider].
-             *
-             * Unlike [paymentProvider], this method doesn't throw if the JSON field has an
-             * unexpected type.
-             */
-            @JsonProperty("payment_provider")
-            @ExcludeMissing
-            fun _paymentProvider(): JsonField<GlobalPayment.PaymentProvider> = paymentProvider
-
-            /**
              * Returns the raw JSON value of [refunds].
              *
              * Unlike [refunds], this method doesn't throw if the JSON field has an unexpected type.
@@ -1559,16 +1514,6 @@ private constructor(
             @JsonProperty("refunds")
             @ExcludeMissing
             fun _refunds(): JsonField<List<RefundListItem>> = refunds
-
-            /**
-             * Returns the raw JSON value of [retryAttempt].
-             *
-             * Unlike [retryAttempt], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("retry_attempt")
-            @ExcludeMissing
-            fun _retryAttempt(): JsonField<Int> = retryAttempt
 
             /**
              * Returns the raw JSON value of [settlementAmount].
@@ -1852,9 +1797,7 @@ private constructor(
                  * .disputes()
                  * .metadata()
                  * .paymentId()
-                 * .paymentProvider()
                  * .refunds()
-                 * .retryAttempt()
                  * .settlementAmount()
                  * .settlementCurrency()
                  * .totalAmount()
@@ -1876,9 +1819,7 @@ private constructor(
                 private var disputes: JsonField<MutableList<GlobalDispute>>? = null
                 private var metadata: JsonField<GlobalPayment.Metadata>? = null
                 private var paymentId: JsonField<String>? = null
-                private var paymentProvider: JsonField<GlobalPayment.PaymentProvider>? = null
                 private var refunds: JsonField<MutableList<RefundListItem>>? = null
-                private var retryAttempt: JsonField<Int>? = null
                 private var settlementAmount: JsonField<Int>? = null
                 private var settlementCurrency: JsonField<Currency>? = null
                 private var totalAmount: JsonField<Int>? = null
@@ -1921,9 +1862,7 @@ private constructor(
                     disputes = payment.disputes.map { it.toMutableList() }
                     metadata = payment.metadata
                     paymentId = payment.paymentId
-                    paymentProvider = payment.paymentProvider
                     refunds = payment.refunds.map { it.toMutableList() }
-                    retryAttempt = payment.retryAttempt
                     settlementAmount = payment.settlementAmount
                     settlementCurrency = payment.settlementCurrency
                     totalAmount = payment.totalAmount
@@ -2053,16 +1992,16 @@ private constructor(
                 /**
                  * Sets [Builder.disputes] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.disputes] with a well-typed `List<Dispute>`
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.disputes] with a well-typed
+                 * `List<GlobalDispute>` value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun disputes(disputes: JsonField<List<GlobalDispute>>) = apply {
                     this.disputes = disputes.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Dispute] to [disputes].
+                 * Adds a single [GlobalDispute] to [disputes].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
@@ -2079,9 +2018,9 @@ private constructor(
                 /**
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.metadata] with a well-typed [Payment.Metadata]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.metadata] with a well-typed
+                 * [GlobalPayment.Metadata] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalPayment.Metadata>) = apply {
                     this.metadata = metadata
@@ -2098,26 +2037,6 @@ private constructor(
                  * yet supported value.
                  */
                 fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
-
-                /**
-                 * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the
-                 * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed
-                 * itself.
-                 */
-                fun paymentProvider(paymentProvider: GlobalPayment.PaymentProvider) =
-                    paymentProvider(JsonField.of(paymentProvider))
-
-                /**
-                 * Sets [Builder.paymentProvider] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.paymentProvider] with a well-typed
-                 * [Payment.PaymentProvider] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
-                 */
-                fun paymentProvider(paymentProvider: JsonField<GlobalPayment.PaymentProvider>) =
-                    apply {
-                        this.paymentProvider = paymentProvider
-                    }
 
                 /** List of refunds issued for this payment */
                 fun refunds(refunds: List<RefundListItem>) = refunds(JsonField.of(refunds))
@@ -2143,24 +2062,6 @@ private constructor(
                         (refunds ?: JsonField.of(mutableListOf())).also {
                             checkKnown("refunds", it).add(refund)
                         }
-                }
-
-                /**
-                 * Retry attempt number for subscription renewal payments. `0` for the original
-                 * payment, `1`+ for each scheduled off-session retry after a failed renewal. Always
-                 * `0` for non-subscription payments.
-                 */
-                fun retryAttempt(retryAttempt: Int) = retryAttempt(JsonField.of(retryAttempt))
-
-                /**
-                 * Sets [Builder.retryAttempt] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.retryAttempt] with a well-typed [Int] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun retryAttempt(retryAttempt: JsonField<Int>) = apply {
-                    this.retryAttempt = retryAttempt
                 }
 
                 /**
@@ -2567,15 +2468,15 @@ private constructor(
                  * Sets [Builder.productCart] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.productCart] with a well-typed
-                 * `List<Payment.ProductCart>` value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
+                 * `List<GlobalPayment.ProductCart>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun productCart(productCart: JsonField<List<GlobalPayment.ProductCart>>) = apply {
                     this.productCart = productCart.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Payment.ProductCart] to [Builder.productCart].
+                 * Adds a single [GlobalPayment.ProductCart] to [Builder.productCart].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
@@ -2768,9 +2669,7 @@ private constructor(
                  * .disputes()
                  * .metadata()
                  * .paymentId()
-                 * .paymentProvider()
                  * .refunds()
-                 * .retryAttempt()
                  * .settlementAmount()
                  * .settlementCurrency()
                  * .totalAmount()
@@ -2790,9 +2689,7 @@ private constructor(
                         checkRequired("disputes", disputes).map { it.toImmutable() },
                         checkRequired("metadata", metadata),
                         checkRequired("paymentId", paymentId),
-                        checkRequired("paymentProvider", paymentProvider),
                         checkRequired("refunds", refunds).map { it.toImmutable() },
-                        checkRequired("retryAttempt", retryAttempt),
                         checkRequired("settlementAmount", settlementAmount),
                         checkRequired("settlementCurrency", settlementCurrency),
                         checkRequired("totalAmount", totalAmount),
@@ -2851,9 +2748,7 @@ private constructor(
                 disputes().forEach { it.validate() }
                 metadata().validate()
                 paymentId()
-                paymentProvider().validate()
                 refunds().forEach { it.validate() }
-                retryAttempt()
                 settlementAmount()
                 settlementCurrency().validate()
                 totalAmount()
@@ -2916,9 +2811,7 @@ private constructor(
                     (disputes.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
-                    (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
                     (refunds.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                    (if (retryAttempt.asKnown().isPresent) 1 else 0) +
                     (if (settlementAmount.asKnown().isPresent) 1 else 0) +
                     (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (totalAmount.asKnown().isPresent) 1 else 0) +
@@ -2964,9 +2857,7 @@ private constructor(
                     disputes == other.disputes &&
                     metadata == other.metadata &&
                     paymentId == other.paymentId &&
-                    paymentProvider == other.paymentProvider &&
                     refunds == other.refunds &&
-                    retryAttempt == other.retryAttempt &&
                     settlementAmount == other.settlementAmount &&
                     settlementCurrency == other.settlementCurrency &&
                     totalAmount == other.totalAmount &&
@@ -3009,9 +2900,7 @@ private constructor(
                     disputes,
                     metadata,
                     paymentId,
-                    paymentProvider,
                     refunds,
-                    retryAttempt,
                     settlementAmount,
                     settlementCurrency,
                     totalAmount,
@@ -3046,7 +2935,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, refunds=$refunds, retryAttempt=$retryAttempt, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, metadata=$metadata, paymentId=$paymentId, refunds=$refunds, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         /** Response struct representing subscription details */
@@ -4256,8 +4145,8 @@ private constructor(
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.metadata] with a well-typed
-                 * [Subscription.Metadata] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalSubscription.Metadata] value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalSubscription.Metadata>) = apply {
                     this.metadata = metadata
@@ -5562,9 +5451,9 @@ private constructor(
                 /**
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.metadata] with a well-typed [Refund.Metadata]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.metadata] with a well-typed
+                 * [GlobalRefund.Metadata] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalRefund.Metadata>) = apply {
                     this.metadata = metadata
@@ -7126,9 +7015,9 @@ private constructor(
                 /**
                  * Sets [Builder.source] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.source] with a well-typed [LicenseKey.Source]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.source] with a well-typed
+                 * [GlobalLicenseKey.Source] value instead. This method is primarily for setting the
+                 * field to an undocumented or not yet supported value.
                  */
                 fun source(source: JsonField<GlobalLicenseKey.Source>) = apply {
                     this.source = source
@@ -8050,8 +7939,8 @@ private constructor(
                  * Sets [Builder.transactionType] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.transactionType] with a well-typed
-                 * [CreditLedgerEntry.TransactionType] value instead. This method is primarily for
-                 * setting the field to an undocumented or not yet supported value.
+                 * [GlobalCreditLedgerEntry.TransactionType] value instead. This method is primarily
+                 * for setting the field to an undocumented or not yet supported value.
                  */
                 fun transactionType(
                     transactionType: JsonField<GlobalCreditLedgerEntry.TransactionType>
@@ -10400,7 +10289,6 @@ private constructor(
             private val createdAt: JsonField<OffsetDateTime>,
             private val customerId: JsonField<String>,
             private val entitlementId: JsonField<String>,
-            private val integrationType: JsonField<EntitlementIntegrationType>,
             private val metadata: JsonField<GlobalEntitlementGrant.Metadata>,
             private val status: JsonField<GlobalEntitlementGrant.Status>,
             private val updatedAt: JsonField<OffsetDateTime>,
@@ -10434,9 +10322,6 @@ private constructor(
                 @JsonProperty("entitlement_id")
                 @ExcludeMissing
                 entitlementId: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("integration_type")
-                @ExcludeMissing
-                integrationType: JsonField<EntitlementIntegrationType> = JsonMissing.of(),
                 @JsonProperty("metadata")
                 @ExcludeMissing
                 metadata: JsonField<GlobalEntitlementGrant.Metadata> = JsonMissing.of(),
@@ -10488,7 +10373,6 @@ private constructor(
                 createdAt,
                 customerId,
                 entitlementId,
-                integrationType,
                 metadata,
                 status,
                 updatedAt,
@@ -10514,7 +10398,6 @@ private constructor(
                     .createdAt(createdAt)
                     .customerId(customerId)
                     .entitlementId(entitlementId)
-                    .integrationType(integrationType)
                     .metadata(metadata)
                     .status(status)
                     .updatedAt(updatedAt)
@@ -10575,16 +10458,6 @@ private constructor(
              *   value).
              */
             fun entitlementId(): String = entitlementId.getRequired("entitlement_id")
-
-            /**
-             * The integration type of the grant's entitlement (e.g. `license_key`).
-             *
-             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
-             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun integrationType(): EntitlementIntegrationType =
-                integrationType.getRequired("integration_type")
 
             /**
              * Arbitrary key-value metadata recorded on the grant.
@@ -10769,16 +10642,6 @@ private constructor(
             fun _entitlementId(): JsonField<String> = entitlementId
 
             /**
-             * Returns the raw JSON value of [integrationType].
-             *
-             * Unlike [integrationType], this method doesn't throw if the JSON field has an
-             * unexpected type.
-             */
-            @JsonProperty("integration_type")
-            @ExcludeMissing
-            fun _integrationType(): JsonField<EntitlementIntegrationType> = integrationType
-
-            /**
              * Returns the raw JSON value of [metadata].
              *
              * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected
@@ -10940,7 +10803,6 @@ private constructor(
                  * .createdAt()
                  * .customerId()
                  * .entitlementId()
-                 * .integrationType()
                  * .metadata()
                  * .status()
                  * .updatedAt()
@@ -10957,7 +10819,6 @@ private constructor(
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customerId: JsonField<String>? = null
                 private var entitlementId: JsonField<String>? = null
-                private var integrationType: JsonField<EntitlementIntegrationType>? = null
                 private var metadata: JsonField<GlobalEntitlementGrant.Metadata>? = null
                 private var status: JsonField<GlobalEntitlementGrant.Status>? = null
                 private var updatedAt: JsonField<OffsetDateTime>? = null
@@ -10983,7 +10844,6 @@ private constructor(
                     createdAt = entitlementGrant.createdAt
                     customerId = entitlementGrant.customerId
                     entitlementId = entitlementGrant.entitlementId
-                    integrationType = entitlementGrant.integrationType
                     metadata = entitlementGrant.metadata
                     status = entitlementGrant.status
                     updatedAt = entitlementGrant.updatedAt
@@ -11071,22 +10931,6 @@ private constructor(
                     this.entitlementId = entitlementId
                 }
 
-                /** The integration type of the grant's entitlement (e.g. `license_key`). */
-                fun integrationType(integrationType: EntitlementIntegrationType) =
-                    integrationType(JsonField.of(integrationType))
-
-                /**
-                 * Sets [Builder.integrationType] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.integrationType] with a well-typed
-                 * [EntitlementIntegrationType] value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
-                 */
-                fun integrationType(integrationType: JsonField<EntitlementIntegrationType>) =
-                    apply {
-                        this.integrationType = integrationType
-                    }
-
                 /** Arbitrary key-value metadata recorded on the grant. */
                 fun metadata(metadata: GlobalEntitlementGrant.Metadata) =
                     metadata(JsonField.of(metadata))
@@ -11095,8 +10939,8 @@ private constructor(
                  * Sets [Builder.metadata] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.metadata] with a well-typed
-                 * [EntitlementGrant.Metadata] value instead. This method is primarily for setting
-                 * the field to an undocumented or not yet supported value.
+                 * [GlobalEntitlementGrant.Metadata] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun metadata(metadata: JsonField<GlobalEntitlementGrant.Metadata>) = apply {
                     this.metadata = metadata
@@ -11109,8 +10953,8 @@ private constructor(
                  * Sets [Builder.status] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.status] with a well-typed
-                 * [EntitlementGrant.Status] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalEntitlementGrant.Status] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
                 fun status(status: JsonField<GlobalEntitlementGrant.Status>) = apply {
                     this.status = status
@@ -11396,7 +11240,6 @@ private constructor(
                  * .createdAt()
                  * .customerId()
                  * .entitlementId()
-                 * .integrationType()
                  * .metadata()
                  * .status()
                  * .updatedAt()
@@ -11411,7 +11254,6 @@ private constructor(
                         checkRequired("createdAt", createdAt),
                         checkRequired("customerId", customerId),
                         checkRequired("entitlementId", entitlementId),
-                        checkRequired("integrationType", integrationType),
                         checkRequired("metadata", metadata),
                         checkRequired("status", status),
                         checkRequired("updatedAt", updatedAt),
@@ -11453,7 +11295,6 @@ private constructor(
                 createdAt()
                 customerId()
                 entitlementId()
-                integrationType().validate()
                 metadata().validate()
                 status().validate()
                 updatedAt()
@@ -11499,7 +11340,6 @@ private constructor(
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
                     (if (entitlementId.asKnown().isPresent) 1 else 0) +
-                    (integrationType.asKnown().getOrNull()?.validity() ?: 0) +
                     (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                     (status.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (updatedAt.asKnown().isPresent) 1 else 0) +
@@ -11527,7 +11367,6 @@ private constructor(
                     createdAt == other.createdAt &&
                     customerId == other.customerId &&
                     entitlementId == other.entitlementId &&
-                    integrationType == other.integrationType &&
                     metadata == other.metadata &&
                     status == other.status &&
                     updatedAt == other.updatedAt &&
@@ -11553,7 +11392,6 @@ private constructor(
                     createdAt,
                     customerId,
                     entitlementId,
-                    integrationType,
                     metadata,
                     status,
                     updatedAt,
@@ -11576,7 +11414,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
     }
 

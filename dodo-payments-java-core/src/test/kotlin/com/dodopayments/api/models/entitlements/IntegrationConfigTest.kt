@@ -282,7 +282,6 @@ internal class IntegrationConfigTest {
                 .activationsLimit(0)
                 .durationCount(0)
                 .durationInterval(TimeInterval.DAY)
-                .fulfillmentMode(IntegrationConfig.LicenseKeyConfig.FulfillmentMode.AUTO)
                 .build()
 
         val integrationConfig = IntegrationConfig.ofLicenseKey(licenseKey)
@@ -307,7 +306,6 @@ internal class IntegrationConfigTest {
                     .activationsLimit(0)
                     .durationCount(0)
                     .durationInterval(TimeInterval.DAY)
-                    .fulfillmentMode(IntegrationConfig.LicenseKeyConfig.FulfillmentMode.AUTO)
                     .build()
             )
 

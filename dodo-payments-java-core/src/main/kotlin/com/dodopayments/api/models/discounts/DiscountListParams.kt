@@ -28,7 +28,7 @@ private constructor(
     /** Filter by discount code (partial match, case-insensitive) */
     fun code(): Optional<String> = Optional.ofNullable(code)
 
-    /** Filter by discount type */
+    /** Filter by discount type (percentage) */
     fun discountType(): Optional<DiscountType> = Optional.ofNullable(discountType)
 
     /** Page number (default = 0). */
@@ -99,7 +99,7 @@ private constructor(
         /** Alias for calling [Builder.code] with `code.orElse(null)`. */
         fun code(code: Optional<String>) = code(code.getOrNull())
 
-        /** Filter by discount type */
+        /** Filter by discount type (percentage) */
         fun discountType(discountType: DiscountType?) = apply { this.discountType = discountType }
 
         /** Alias for calling [Builder.discountType] with `discountType.orElse(null)`. */
