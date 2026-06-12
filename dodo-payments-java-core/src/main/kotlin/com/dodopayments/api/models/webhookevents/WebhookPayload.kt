@@ -1229,8 +1229,8 @@ private constructor(
                 settlementCurrency.getRequired("settlement_currency")
 
             /**
-             * Total amount charged to the customer including tax, in smallest currency unit (e.g.
-             * cents)
+             * Total amount charged to the customer including tax, in the currency's smallest unit
+             * (e.g. cents for USD, yen for JPY, fils for KWD — see the currency's decimal places)
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -1417,7 +1417,8 @@ private constructor(
             fun subscriptionId(): Optional<String> = subscriptionId.getOptional("subscription_id")
 
             /**
-             * Amount of tax collected in smallest currency unit (e.g. cents)
+             * Amount of tax collected in the currency's smallest unit (e.g. cents for USD, yen for
+             * JPY, fils for KWD)
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
@@ -2202,8 +2203,9 @@ private constructor(
                 }
 
                 /**
-                 * Total amount charged to the customer including tax, in smallest currency unit
-                 * (e.g. cents)
+                 * Total amount charged to the customer including tax, in the currency's smallest
+                 * unit (e.g. cents for USD, yen for JPY, fils for KWD — see the currency's decimal
+                 * places)
                  */
                 fun totalAmount(totalAmount: Int) = totalAmount(JsonField.of(totalAmount))
 
@@ -2674,7 +2676,10 @@ private constructor(
                     this.subscriptionId = subscriptionId
                 }
 
-                /** Amount of tax collected in smallest currency unit (e.g. cents) */
+                /**
+                 * Amount of tax collected in the currency's smallest unit (e.g. cents for USD, yen
+                 * for JPY, fils for KWD)
+                 */
                 fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
                 /**
@@ -3055,6 +3060,7 @@ private constructor(
         private constructor(
             private val addons: JsonField<List<AddonCartResponseItem>>,
             private val billing: JsonField<BillingAddress>,
+            private val brandId: JsonField<String>,
             private val cancelAtNextBillingDate: JsonField<Boolean>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val creditEntitlementCart: JsonField<List<CreditEntitlementCartResponse>>,
@@ -3102,6 +3108,9 @@ private constructor(
                 @JsonProperty("billing")
                 @ExcludeMissing
                 billing: JsonField<BillingAddress> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("cancel_at_next_billing_date")
                 @ExcludeMissing
                 cancelAtNextBillingDate: JsonField<Boolean> = JsonMissing.of(),
@@ -3210,6 +3219,7 @@ private constructor(
             ) : this(
                 addons,
                 billing,
+                brandId,
                 cancelAtNextBillingDate,
                 createdAt,
                 creditEntitlementCart,
@@ -3252,6 +3262,7 @@ private constructor(
                 GlobalSubscription.builder()
                     .addons(addons)
                     .billing(billing)
+                    .brandId(brandId)
                     .cancelAtNextBillingDate(cancelAtNextBillingDate)
                     .createdAt(createdAt)
                     .creditEntitlementCart(creditEntitlementCart)
@@ -3305,6 +3316,15 @@ private constructor(
              *   value).
              */
             fun billing(): BillingAddress = billing.getRequired("billing")
+
+            /**
+             * Brand id this subscription belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * Indicates if the subscription will cancel at the next billing date
@@ -3448,8 +3468,8 @@ private constructor(
             fun quantity(): Int = quantity.getRequired("quantity")
 
             /**
-             * Amount charged before tax for each recurring payment in smallest currency unit (e.g.
-             * cents)
+             * Amount charged before tax for each recurring payment in the currency's smallest unit
+             * (cents for USD, yen for JPY, fils for KWD)
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -3648,6 +3668,13 @@ private constructor(
             @JsonProperty("billing")
             @ExcludeMissing
             fun _billing(): JsonField<BillingAddress> = billing
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [cancelAtNextBillingDate].
@@ -4005,6 +4032,7 @@ private constructor(
                  * ```java
                  * .addons()
                  * .billing()
+                 * .brandId()
                  * .cancelAtNextBillingDate()
                  * .createdAt()
                  * .creditEntitlementCart()
@@ -4037,6 +4065,7 @@ private constructor(
 
                 private var addons: JsonField<MutableList<AddonCartResponseItem>>? = null
                 private var billing: JsonField<BillingAddress>? = null
+                private var brandId: JsonField<String>? = null
                 private var cancelAtNextBillingDate: JsonField<Boolean>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var creditEntitlementCart:
@@ -4083,6 +4112,7 @@ private constructor(
                 internal fun from(subscription: Subscription) = apply {
                     addons = subscription.addons.map { it.toMutableList() }
                     billing = subscription.billing
+                    brandId = subscription.brandId
                     cancelAtNextBillingDate = subscription.cancelAtNextBillingDate
                     createdAt = subscription.createdAt
                     creditEntitlementCart =
@@ -4161,6 +4191,18 @@ private constructor(
                  * or not yet supported value.
                  */
                 fun billing(billing: JsonField<BillingAddress>) = apply { this.billing = billing }
+
+                /** Brand id this subscription belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 /** Indicates if the subscription will cancel at the next billing date */
                 fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) =
@@ -4278,8 +4320,9 @@ private constructor(
                 fun meterCreditEntitlementCart(
                     meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>>
                 ) = apply {
-                    this.meterCreditEntitlementCart =
-                        meterCreditEntitlementCart.map { it.toMutableList() }
+                    this.meterCreditEntitlementCart = meterCreditEntitlementCart.map {
+                        it.toMutableList()
+                    }
                 }
 
                 /**
@@ -4425,8 +4468,8 @@ private constructor(
                 fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
 
                 /**
-                 * Amount charged before tax for each recurring payment in smallest currency unit
-                 * (e.g. cents)
+                 * Amount charged before tax for each recurring payment in the currency's smallest
+                 * unit (cents for USD, yen for JPY, fils for KWD)
                  */
                 fun recurringPreTaxAmount(recurringPreTaxAmount: Int) =
                     recurringPreTaxAmount(JsonField.of(recurringPreTaxAmount))
@@ -4855,6 +4898,7 @@ private constructor(
                  * ```java
                  * .addons()
                  * .billing()
+                 * .brandId()
                  * .cancelAtNextBillingDate()
                  * .createdAt()
                  * .creditEntitlementCart()
@@ -4885,6 +4929,7 @@ private constructor(
                     Subscription(
                         checkRequired("addons", addons).map { it.toImmutable() },
                         checkRequired("billing", billing),
+                        checkRequired("brandId", brandId),
                         checkRequired("cancelAtNextBillingDate", cancelAtNextBillingDate),
                         checkRequired("createdAt", createdAt),
                         checkRequired("creditEntitlementCart", creditEntitlementCart).map {
@@ -4946,6 +4991,7 @@ private constructor(
 
                 addons().forEach { it.validate() }
                 billing().validate()
+                brandId()
                 cancelAtNextBillingDate()
                 createdAt()
                 creditEntitlementCart().forEach { it.validate() }
@@ -5008,6 +5054,7 @@ private constructor(
             internal fun validity(): Int =
                 (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                     (billing.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (cancelAtNextBillingDate.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (creditEntitlementCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
@@ -5056,6 +5103,7 @@ private constructor(
                 return other is Subscription &&
                     addons == other.addons &&
                     billing == other.billing &&
+                    brandId == other.brandId &&
                     cancelAtNextBillingDate == other.cancelAtNextBillingDate &&
                     createdAt == other.createdAt &&
                     creditEntitlementCart == other.creditEntitlementCart &&
@@ -5098,6 +5146,7 @@ private constructor(
                 Objects.hash(
                     addons,
                     billing,
+                    brandId,
                     cancelAtNextBillingDate,
                     createdAt,
                     creditEntitlementCart,
@@ -5140,12 +5189,13 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Refund
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
+            private val brandId: JsonField<String>,
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val customer: JsonField<CustomerLimitedDetails>,
@@ -5163,6 +5213,9 @@ private constructor(
 
             @JsonCreator
             private constructor(
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("business_id")
                 @ExcludeMissing
                 businessId: JsonField<String> = JsonMissing.of(),
@@ -5198,6 +5251,7 @@ private constructor(
                 @ExcludeMissing
                 payloadType: JsonValue = JsonMissing.of(),
             ) : this(
+                brandId,
                 businessId,
                 createdAt,
                 customer,
@@ -5215,6 +5269,7 @@ private constructor(
 
             fun toRefund(): GlobalRefund =
                 GlobalRefund.builder()
+                    .brandId(brandId)
                     .businessId(businessId)
                     .createdAt(createdAt)
                     .customer(customer)
@@ -5227,6 +5282,15 @@ private constructor(
                     .currency(currency)
                     .reason(reason)
                     .build()
+
+            /**
+             * Brand id this refund belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * The unique identifier of the business issuing the refund.
@@ -5336,6 +5400,13 @@ private constructor(
             @JsonProperty("payload_type")
             @ExcludeMissing
             fun _payloadType(): JsonValue = payloadType
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [businessId].
@@ -5455,6 +5526,7 @@ private constructor(
                  *
                  * The following fields are required:
                  * ```java
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customer()
@@ -5471,6 +5543,7 @@ private constructor(
             /** A builder for [Refund]. */
             class Builder internal constructor() {
 
+                private var brandId: JsonField<String>? = null
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customer: JsonField<CustomerLimitedDetails>? = null
@@ -5487,6 +5560,7 @@ private constructor(
 
                 @JvmSynthetic
                 internal fun from(refund: Refund) = apply {
+                    brandId = refund.brandId
                     businessId = refund.businessId
                     createdAt = refund.createdAt
                     customer = refund.customer
@@ -5501,6 +5575,18 @@ private constructor(
                     payloadType = refund.payloadType
                     additionalProperties = refund.additionalProperties.toMutableMap()
                 }
+
+                /** Brand id this refund belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 /** The unique identifier of the business issuing the refund. */
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -5701,6 +5787,7 @@ private constructor(
                  *
                  * The following fields are required:
                  * ```java
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customer()
@@ -5715,6 +5802,7 @@ private constructor(
                  */
                 fun build(): Refund =
                     Refund(
+                        checkRequired("brandId", brandId),
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("customer", customer),
@@ -5748,6 +5836,7 @@ private constructor(
                     return@apply
                 }
 
+                brandId()
                 businessId()
                 createdAt()
                 customer().validate()
@@ -5785,7 +5874,8 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                (if (businessId.asKnown().isPresent) 1 else 0) +
+                (if (brandId.asKnown().isPresent) 1 else 0) +
+                    (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (customer.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (isPartial.asKnown().isPresent) 1 else 0) +
@@ -5804,6 +5894,7 @@ private constructor(
                 }
 
                 return other is Refund &&
+                    brandId == other.brandId &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
                     customer == other.customer &&
@@ -5821,6 +5912,7 @@ private constructor(
 
             private val hashCode: Int by lazy {
                 Objects.hash(
+                    brandId,
                     businessId,
                     createdAt,
                     customer,
@@ -5840,13 +5932,14 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Refund{businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Refund{brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customer=$customer, isPartial=$isPartial, metadata=$metadata, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, reason=$reason, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class Dispute
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val amount: JsonField<String>,
+            private val brandId: JsonField<String>,
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val currency: JsonField<String>,
@@ -5855,6 +5948,7 @@ private constructor(
             private val disputeStage: JsonField<DisputeStage>,
             private val disputeStatus: JsonField<DisputeStatus>,
             private val paymentId: JsonField<String>,
+            private val paymentProvider: JsonField<GetDispute.PaymentProvider>,
             private val isResolvedByRdr: JsonField<Boolean>,
             private val reason: JsonField<String>,
             private val remarks: JsonField<String>,
@@ -5867,6 +5961,9 @@ private constructor(
                 @JsonProperty("amount")
                 @ExcludeMissing
                 amount: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("business_id")
                 @ExcludeMissing
                 businessId: JsonField<String> = JsonMissing.of(),
@@ -5891,6 +5988,9 @@ private constructor(
                 @JsonProperty("payment_id")
                 @ExcludeMissing
                 paymentId: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("payment_provider")
+                @ExcludeMissing
+                paymentProvider: JsonField<GetDispute.PaymentProvider> = JsonMissing.of(),
                 @JsonProperty("is_resolved_by_rdr")
                 @ExcludeMissing
                 isResolvedByRdr: JsonField<Boolean> = JsonMissing.of(),
@@ -5905,6 +6005,7 @@ private constructor(
                 payloadType: JsonValue = JsonMissing.of(),
             ) : this(
                 amount,
+                brandId,
                 businessId,
                 createdAt,
                 currency,
@@ -5913,6 +6014,7 @@ private constructor(
                 disputeStage,
                 disputeStatus,
                 paymentId,
+                paymentProvider,
                 isResolvedByRdr,
                 reason,
                 remarks,
@@ -5923,6 +6025,7 @@ private constructor(
             fun toGetDispute(): GetDispute =
                 GetDispute.builder()
                     .amount(amount)
+                    .brandId(brandId)
                     .businessId(businessId)
                     .createdAt(createdAt)
                     .currency(currency)
@@ -5931,6 +6034,7 @@ private constructor(
                     .disputeStage(disputeStage)
                     .disputeStatus(disputeStatus)
                     .paymentId(paymentId)
+                    .paymentProvider(paymentProvider)
                     .isResolvedByRdr(isResolvedByRdr)
                     .reason(reason)
                     .remarks(remarks)
@@ -5944,6 +6048,15 @@ private constructor(
              *   value).
              */
             fun amount(): String = amount.getRequired("amount")
+
+            /**
+             * Brand id this dispute belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * The unique identifier of the business involved in the dispute.
@@ -6018,6 +6131,18 @@ private constructor(
             fun paymentId(): String = paymentId.getRequired("payment_id")
 
             /**
+             * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes
+             * (the merchant's own Hyperswitch connector); `dodo` for everything Dodo processed
+             * itself.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun paymentProvider(): GetDispute.PaymentProvider =
+                paymentProvider.getRequired("payment_provider")
+
+            /**
              * Whether the dispute was resolved by Rapid Dispute Resolution
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
@@ -6061,6 +6186,13 @@ private constructor(
              * Unlike [amount], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("amount") @ExcludeMissing fun _amount(): JsonField<String> = amount
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [businessId].
@@ -6141,6 +6273,16 @@ private constructor(
             fun _paymentId(): JsonField<String> = paymentId
 
             /**
+             * Returns the raw JSON value of [paymentProvider].
+             *
+             * Unlike [paymentProvider], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("payment_provider")
+            @ExcludeMissing
+            fun _paymentProvider(): JsonField<GetDispute.PaymentProvider> = paymentProvider
+
+            /**
              * Returns the raw JSON value of [isResolvedByRdr].
              *
              * Unlike [isResolvedByRdr], this method doesn't throw if the JSON field has an
@@ -6184,6 +6326,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .amount()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .currency()
@@ -6192,6 +6335,7 @@ private constructor(
                  * .disputeStage()
                  * .disputeStatus()
                  * .paymentId()
+                 * .paymentProvider()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -6201,6 +6345,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var amount: JsonField<String>? = null
+                private var brandId: JsonField<String>? = null
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var currency: JsonField<String>? = null
@@ -6209,6 +6354,7 @@ private constructor(
                 private var disputeStage: JsonField<DisputeStage>? = null
                 private var disputeStatus: JsonField<DisputeStatus>? = null
                 private var paymentId: JsonField<String>? = null
+                private var paymentProvider: JsonField<GetDispute.PaymentProvider>? = null
                 private var isResolvedByRdr: JsonField<Boolean> = JsonMissing.of()
                 private var reason: JsonField<String> = JsonMissing.of()
                 private var remarks: JsonField<String> = JsonMissing.of()
@@ -6218,6 +6364,7 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(dispute: Dispute) = apply {
                     amount = dispute.amount
+                    brandId = dispute.brandId
                     businessId = dispute.businessId
                     createdAt = dispute.createdAt
                     currency = dispute.currency
@@ -6226,6 +6373,7 @@ private constructor(
                     disputeStage = dispute.disputeStage
                     disputeStatus = dispute.disputeStatus
                     paymentId = dispute.paymentId
+                    paymentProvider = dispute.paymentProvider
                     isResolvedByRdr = dispute.isResolvedByRdr
                     reason = dispute.reason
                     remarks = dispute.remarks
@@ -6247,6 +6395,18 @@ private constructor(
                  * yet supported value.
                  */
                 fun amount(amount: JsonField<String>) = apply { this.amount = amount }
+
+                /** Brand id this dispute belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 /** The unique identifier of the business involved in the dispute. */
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -6358,6 +6518,26 @@ private constructor(
                  */
                 fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
+                /**
+                 * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP
+                 * routes (the merchant's own Hyperswitch connector); `dodo` for everything Dodo
+                 * processed itself.
+                 */
+                fun paymentProvider(paymentProvider: GetDispute.PaymentProvider) =
+                    paymentProvider(JsonField.of(paymentProvider))
+
+                /**
+                 * Sets [Builder.paymentProvider] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.paymentProvider] with a well-typed
+                 * [GetDispute.PaymentProvider] value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
+                 */
+                fun paymentProvider(paymentProvider: JsonField<GetDispute.PaymentProvider>) =
+                    apply {
+                        this.paymentProvider = paymentProvider
+                    }
+
                 /** Whether the dispute was resolved by Rapid Dispute Resolution */
                 fun isResolvedByRdr(isResolvedByRdr: Boolean?) =
                     isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
@@ -6461,6 +6641,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .amount()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .currency()
@@ -6469,6 +6650,7 @@ private constructor(
                  * .disputeStage()
                  * .disputeStatus()
                  * .paymentId()
+                 * .paymentProvider()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -6476,6 +6658,7 @@ private constructor(
                 fun build(): Dispute =
                     Dispute(
                         checkRequired("amount", amount),
+                        checkRequired("brandId", brandId),
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("currency", currency),
@@ -6484,6 +6667,7 @@ private constructor(
                         checkRequired("disputeStage", disputeStage),
                         checkRequired("disputeStatus", disputeStatus),
                         checkRequired("paymentId", paymentId),
+                        checkRequired("paymentProvider", paymentProvider),
                         isResolvedByRdr,
                         reason,
                         remarks,
@@ -6510,6 +6694,7 @@ private constructor(
                 }
 
                 amount()
+                brandId()
                 businessId()
                 createdAt()
                 currency()
@@ -6518,6 +6703,7 @@ private constructor(
                 disputeStage().validate()
                 disputeStatus().validate()
                 paymentId()
+                paymentProvider().validate()
                 isResolvedByRdr()
                 reason()
                 remarks()
@@ -6548,6 +6734,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (amount.asKnown().isPresent) 1 else 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (currency.asKnown().isPresent) 1 else 0) +
@@ -6556,6 +6743,7 @@ private constructor(
                     (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
                     (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
+                    (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (isResolvedByRdr.asKnown().isPresent) 1 else 0) +
                     (if (reason.asKnown().isPresent) 1 else 0) +
                     (if (remarks.asKnown().isPresent) 1 else 0) +
@@ -6568,6 +6756,7 @@ private constructor(
 
                 return other is Dispute &&
                     amount == other.amount &&
+                    brandId == other.brandId &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
                     currency == other.currency &&
@@ -6576,6 +6765,7 @@ private constructor(
                     disputeStage == other.disputeStage &&
                     disputeStatus == other.disputeStatus &&
                     paymentId == other.paymentId &&
+                    paymentProvider == other.paymentProvider &&
                     isResolvedByRdr == other.isResolvedByRdr &&
                     reason == other.reason &&
                     remarks == other.remarks &&
@@ -6586,6 +6776,7 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     amount,
+                    brandId,
                     businessId,
                     createdAt,
                     currency,
@@ -6594,6 +6785,7 @@ private constructor(
                     disputeStage,
                     disputeStatus,
                     paymentId,
+                    paymentProvider,
                     isResolvedByRdr,
                     reason,
                     remarks,
@@ -6605,13 +6797,14 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Dispute{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, reason=$reason, remarks=$remarks, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Dispute{amount=$amount, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, paymentProvider=$paymentProvider, isResolvedByRdr=$isResolvedByRdr, reason=$reason, remarks=$remarks, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class LicenseKey
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
+            private val brandId: JsonField<String>,
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val customerId: JsonField<String>,
@@ -6631,6 +6824,9 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("business_id")
                 @ExcludeMissing
                 businessId: JsonField<String> = JsonMissing.of(),
@@ -6670,6 +6866,7 @@ private constructor(
                 payloadType: JsonValue = JsonMissing.of(),
             ) : this(
                 id,
+                brandId,
                 businessId,
                 createdAt,
                 customerId,
@@ -6689,6 +6886,7 @@ private constructor(
             fun toLicenseKey(): GlobalLicenseKey =
                 GlobalLicenseKey.builder()
                     .id(id)
+                    .brandId(brandId)
                     .businessId(businessId)
                     .createdAt(createdAt)
                     .customerId(customerId)
@@ -6711,6 +6909,15 @@ private constructor(
              *   value).
              */
             fun id(): String = id.getRequired("id")
+
+            /**
+             * Brand id this license key belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * The unique identifier of the business associated with the license key.
@@ -6837,6 +7044,13 @@ private constructor(
              * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [businessId].
@@ -6973,6 +7187,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .id()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customerId()
@@ -6990,6 +7205,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var id: JsonField<String>? = null
+                private var brandId: JsonField<String>? = null
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customerId: JsonField<String>? = null
@@ -7008,6 +7224,7 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(licenseKey: LicenseKey) = apply {
                     id = licenseKey.id
+                    brandId = licenseKey.brandId
                     businessId = licenseKey.businessId
                     createdAt = licenseKey.createdAt
                     customerId = licenseKey.customerId
@@ -7035,6 +7252,18 @@ private constructor(
                  * supported value.
                  */
                 fun id(id: JsonField<String>) = apply { this.id = id }
+
+                /** Brand id this license key belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 /** The unique identifier of the business associated with the license key. */
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -7278,6 +7507,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .id()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customerId()
@@ -7293,6 +7523,7 @@ private constructor(
                 fun build(): LicenseKey =
                     LicenseKey(
                         checkRequired("id", id),
+                        checkRequired("brandId", brandId),
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("customerId", customerId),
@@ -7328,6 +7559,7 @@ private constructor(
                 }
 
                 id()
+                brandId()
                 businessId()
                 createdAt()
                 customerId()
@@ -7367,6 +7599,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (id.asKnown().isPresent) 1 else 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
@@ -7388,6 +7621,7 @@ private constructor(
 
                 return other is LicenseKey &&
                     id == other.id &&
+                    brandId == other.brandId &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
                     customerId == other.customerId &&
@@ -7407,6 +7641,7 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     id,
+                    brandId,
                     businessId,
                     createdAt,
                     customerId,
@@ -7427,7 +7662,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "LicenseKey{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, instancesCount=$instancesCount, key=$key, productId=$productId, source=$source, status=$status, activationsLimit=$activationsLimit, expiresAt=$expiresAt, paymentId=$paymentId, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "LicenseKey{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, instancesCount=$instancesCount, key=$key, productId=$productId, source=$source, status=$status, activationsLimit=$activationsLimit, expiresAt=$expiresAt, paymentId=$paymentId, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         /** Response for a ledger entry */
@@ -7438,6 +7673,7 @@ private constructor(
             private val amount: JsonField<String>,
             private val balanceAfter: JsonField<String>,
             private val balanceBefore: JsonField<String>,
+            private val brandId: JsonField<String>,
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val creditEntitlementId: JsonField<String>,
@@ -7466,6 +7702,9 @@ private constructor(
                 @JsonProperty("balance_before")
                 @ExcludeMissing
                 balanceBefore: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("business_id")
                 @ExcludeMissing
                 businessId: JsonField<String> = JsonMissing.of(),
@@ -7511,6 +7750,7 @@ private constructor(
                 amount,
                 balanceAfter,
                 balanceBefore,
+                brandId,
                 businessId,
                 createdAt,
                 creditEntitlementId,
@@ -7533,6 +7773,7 @@ private constructor(
                     .amount(amount)
                     .balanceAfter(balanceAfter)
                     .balanceBefore(balanceBefore)
+                    .brandId(brandId)
                     .businessId(businessId)
                     .createdAt(createdAt)
                     .creditEntitlementId(creditEntitlementId)
@@ -7574,6 +7815,15 @@ private constructor(
              *   value).
              */
             fun balanceBefore(): String = balanceBefore.getRequired("balance_before")
+
+            /**
+             * Brand id this credit ledger entry belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -7703,6 +7953,13 @@ private constructor(
             @JsonProperty("balance_before")
             @ExcludeMissing
             fun _balanceBefore(): JsonField<String> = balanceBefore
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [businessId].
@@ -7845,6 +8102,7 @@ private constructor(
                  * .amount()
                  * .balanceAfter()
                  * .balanceBefore()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .creditEntitlementId()
@@ -7865,6 +8123,7 @@ private constructor(
                 private var amount: JsonField<String>? = null
                 private var balanceAfter: JsonField<String>? = null
                 private var balanceBefore: JsonField<String>? = null
+                private var brandId: JsonField<String>? = null
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var creditEntitlementId: JsonField<String>? = null
@@ -7887,6 +8146,7 @@ private constructor(
                     amount = creditLedgerEntry.amount
                     balanceAfter = creditLedgerEntry.balanceAfter
                     balanceBefore = creditLedgerEntry.balanceBefore
+                    brandId = creditLedgerEntry.brandId
                     businessId = creditLedgerEntry.businessId
                     createdAt = creditLedgerEntry.createdAt
                     creditEntitlementId = creditLedgerEntry.creditEntitlementId
@@ -7951,6 +8211,18 @@ private constructor(
                 fun balanceBefore(balanceBefore: JsonField<String>) = apply {
                     this.balanceBefore = balanceBefore
                 }
+
+                /** Brand id this credit ledger entry belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
 
@@ -8172,6 +8444,7 @@ private constructor(
                  * .amount()
                  * .balanceAfter()
                  * .balanceBefore()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .creditEntitlementId()
@@ -8190,6 +8463,7 @@ private constructor(
                         checkRequired("amount", amount),
                         checkRequired("balanceAfter", balanceAfter),
                         checkRequired("balanceBefore", balanceBefore),
+                        checkRequired("brandId", brandId),
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("creditEntitlementId", creditEntitlementId),
@@ -8228,6 +8502,7 @@ private constructor(
                 amount()
                 balanceAfter()
                 balanceBefore()
+                brandId()
                 businessId()
                 createdAt()
                 creditEntitlementId()
@@ -8270,6 +8545,7 @@ private constructor(
                     (if (amount.asKnown().isPresent) 1 else 0) +
                     (if (balanceAfter.asKnown().isPresent) 1 else 0) +
                     (if (balanceBefore.asKnown().isPresent) 1 else 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
@@ -8294,6 +8570,7 @@ private constructor(
                     amount == other.amount &&
                     balanceAfter == other.balanceAfter &&
                     balanceBefore == other.balanceBefore &&
+                    brandId == other.brandId &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
                     creditEntitlementId == other.creditEntitlementId &&
@@ -8316,6 +8593,7 @@ private constructor(
                     amount,
                     balanceAfter,
                     balanceBefore,
+                    brandId,
                     businessId,
                     createdAt,
                     creditEntitlementId,
@@ -8336,13 +8614,14 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "CreditLedgerEntry{id=$id, amount=$amount, balanceAfter=$balanceAfter, balanceBefore=$balanceBefore, businessId=$businessId, createdAt=$createdAt, creditEntitlementId=$creditEntitlementId, customerId=$customerId, isCredit=$isCredit, overageAfter=$overageAfter, overageBefore=$overageBefore, transactionType=$transactionType, description=$description, grantId=$grantId, referenceId=$referenceId, referenceType=$referenceType, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "CreditLedgerEntry{id=$id, amount=$amount, balanceAfter=$balanceAfter, balanceBefore=$balanceBefore, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, creditEntitlementId=$creditEntitlementId, customerId=$customerId, isCredit=$isCredit, overageAfter=$overageAfter, overageBefore=$overageBefore, transactionType=$transactionType, description=$description, grantId=$grantId, referenceId=$referenceId, referenceType=$referenceType, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
 
         class CreditBalanceLow
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val availableBalance: JsonField<String>,
+            private val brandId: JsonField<String>,
             private val creditEntitlementId: JsonField<String>,
             private val creditEntitlementName: JsonField<String>,
             private val customerId: JsonField<String>,
@@ -8359,6 +8638,9 @@ private constructor(
                 @JsonProperty("available_balance")
                 @ExcludeMissing
                 availableBalance: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("credit_entitlement_id")
                 @ExcludeMissing
                 creditEntitlementId: JsonField<String> = JsonMissing.of(),
@@ -8385,6 +8667,7 @@ private constructor(
                 thresholdPercent: JsonField<Int> = JsonMissing.of(),
             ) : this(
                 availableBalance,
+                brandId,
                 creditEntitlementId,
                 creditEntitlementName,
                 customerId,
@@ -8402,6 +8685,15 @@ private constructor(
              *   value).
              */
             fun availableBalance(): String = availableBalance.getRequired("available_balance")
+
+            /**
+             * Brand id this credit entitlement belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -8477,6 +8769,13 @@ private constructor(
             @JsonProperty("available_balance")
             @ExcludeMissing
             fun _availableBalance(): JsonField<String> = availableBalance
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [creditEntitlementId].
@@ -8568,6 +8867,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .availableBalance()
+                 * .brandId()
                  * .creditEntitlementId()
                  * .creditEntitlementName()
                  * .customerId()
@@ -8584,6 +8884,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var availableBalance: JsonField<String>? = null
+                private var brandId: JsonField<String>? = null
                 private var creditEntitlementId: JsonField<String>? = null
                 private var creditEntitlementName: JsonField<String>? = null
                 private var customerId: JsonField<String>? = null
@@ -8597,6 +8898,7 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(creditBalanceLow: CreditBalanceLow) = apply {
                     availableBalance = creditBalanceLow.availableBalance
+                    brandId = creditBalanceLow.brandId
                     creditEntitlementId = creditBalanceLow.creditEntitlementId
                     creditEntitlementName = creditBalanceLow.creditEntitlementName
                     customerId = creditBalanceLow.customerId
@@ -8621,6 +8923,18 @@ private constructor(
                 fun availableBalance(availableBalance: JsonField<String>) = apply {
                     this.availableBalance = availableBalance
                 }
+
+                /** Brand id this credit entitlement belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 fun creditEntitlementId(creditEntitlementId: String) =
                     creditEntitlementId(JsonField.of(creditEntitlementId))
@@ -8764,6 +9078,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .availableBalance()
+                 * .brandId()
                  * .creditEntitlementId()
                  * .creditEntitlementName()
                  * .customerId()
@@ -8778,6 +9093,7 @@ private constructor(
                 fun build(): CreditBalanceLow =
                     CreditBalanceLow(
                         checkRequired("availableBalance", availableBalance),
+                        checkRequired("brandId", brandId),
                         checkRequired("creditEntitlementId", creditEntitlementId),
                         checkRequired("creditEntitlementName", creditEntitlementName),
                         checkRequired("customerId", customerId),
@@ -8808,6 +9124,7 @@ private constructor(
                 }
 
                 availableBalance()
+                brandId()
                 creditEntitlementId()
                 creditEntitlementName()
                 customerId()
@@ -8842,6 +9159,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (availableBalance.asKnown().isPresent) 1 else 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (creditEntitlementId.asKnown().isPresent) 1 else 0) +
                     (if (creditEntitlementName.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
@@ -8858,6 +9176,7 @@ private constructor(
 
                 return other is CreditBalanceLow &&
                     availableBalance == other.availableBalance &&
+                    brandId == other.brandId &&
                     creditEntitlementId == other.creditEntitlementId &&
                     creditEntitlementName == other.creditEntitlementName &&
                     customerId == other.customerId &&
@@ -8872,6 +9191,7 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     availableBalance,
+                    brandId,
                     creditEntitlementId,
                     creditEntitlementName,
                     customerId,
@@ -8887,7 +9207,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "CreditBalanceLow{availableBalance=$availableBalance, creditEntitlementId=$creditEntitlementId, creditEntitlementName=$creditEntitlementName, customerId=$customerId, payloadType=$payloadType, subscriptionCreditsAmount=$subscriptionCreditsAmount, subscriptionId=$subscriptionId, thresholdAmount=$thresholdAmount, thresholdPercent=$thresholdPercent, additionalProperties=$additionalProperties}"
+                "CreditBalanceLow{availableBalance=$availableBalance, brandId=$brandId, creditEntitlementId=$creditEntitlementId, creditEntitlementName=$creditEntitlementName, customerId=$customerId, payloadType=$payloadType, subscriptionCreditsAmount=$subscriptionCreditsAmount, subscriptionId=$subscriptionId, thresholdAmount=$thresholdAmount, thresholdPercent=$thresholdPercent, additionalProperties=$additionalProperties}"
         }
 
         class AbandonedCheckout
@@ -8895,6 +9215,7 @@ private constructor(
         private constructor(
             private val abandonedAt: JsonField<OffsetDateTime>,
             private val abandonmentReason: JsonField<AbandonmentReason>,
+            private val brandId: JsonField<String>,
             private val customerId: JsonField<String>,
             private val payloadType: JsonValue,
             private val paymentId: JsonField<String>,
@@ -8911,6 +9232,9 @@ private constructor(
                 @JsonProperty("abandonment_reason")
                 @ExcludeMissing
                 abandonmentReason: JsonField<AbandonmentReason> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("customer_id")
                 @ExcludeMissing
                 customerId: JsonField<String> = JsonMissing.of(),
@@ -8929,6 +9253,7 @@ private constructor(
             ) : this(
                 abandonedAt,
                 abandonmentReason,
+                brandId,
                 customerId,
                 payloadType,
                 paymentId,
@@ -8951,6 +9276,15 @@ private constructor(
              */
             fun abandonmentReason(): AbandonmentReason =
                 abandonmentReason.getRequired("abandonment_reason")
+
+            /**
+             * Brand id this abandoned checkout belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -9014,6 +9348,13 @@ private constructor(
             fun _abandonmentReason(): JsonField<AbandonmentReason> = abandonmentReason
 
             /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
+
+            /**
              * Returns the raw JSON value of [customerId].
              *
              * Unlike [customerId], this method doesn't throw if the JSON field has an unexpected
@@ -9071,6 +9412,7 @@ private constructor(
                  * ```java
                  * .abandonedAt()
                  * .abandonmentReason()
+                 * .brandId()
                  * .customerId()
                  * .paymentId()
                  * .status()
@@ -9084,6 +9426,7 @@ private constructor(
 
                 private var abandonedAt: JsonField<OffsetDateTime>? = null
                 private var abandonmentReason: JsonField<AbandonmentReason>? = null
+                private var brandId: JsonField<String>? = null
                 private var customerId: JsonField<String>? = null
                 private var payloadType: JsonValue = JsonValue.from("AbandonedCheckout")
                 private var paymentId: JsonField<String>? = null
@@ -9095,6 +9438,7 @@ private constructor(
                 internal fun from(abandonedCheckout: AbandonedCheckout) = apply {
                     abandonedAt = abandonedCheckout.abandonedAt
                     abandonmentReason = abandonedCheckout.abandonmentReason
+                    brandId = abandonedCheckout.brandId
                     customerId = abandonedCheckout.customerId
                     payloadType = abandonedCheckout.payloadType
                     paymentId = abandonedCheckout.paymentId
@@ -9130,6 +9474,18 @@ private constructor(
                 fun abandonmentReason(abandonmentReason: JsonField<AbandonmentReason>) = apply {
                     this.abandonmentReason = abandonmentReason
                 }
+
+                /** Brand id this abandoned checkout belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 fun customerId(customerId: String) = customerId(JsonField.of(customerId))
 
@@ -9232,6 +9588,7 @@ private constructor(
                  * ```java
                  * .abandonedAt()
                  * .abandonmentReason()
+                 * .brandId()
                  * .customerId()
                  * .paymentId()
                  * .status()
@@ -9243,6 +9600,7 @@ private constructor(
                     AbandonedCheckout(
                         checkRequired("abandonedAt", abandonedAt),
                         checkRequired("abandonmentReason", abandonmentReason),
+                        checkRequired("brandId", brandId),
                         checkRequired("customerId", customerId),
                         payloadType,
                         checkRequired("paymentId", paymentId),
@@ -9271,6 +9629,7 @@ private constructor(
 
                 abandonedAt()
                 abandonmentReason().validate()
+                brandId()
                 customerId()
                 _payloadType().let {
                     if (it != JsonValue.from("AbandonedCheckout")) {
@@ -9303,6 +9662,7 @@ private constructor(
             internal fun validity(): Int =
                 (if (abandonedAt.asKnown().isPresent) 1 else 0) +
                     (abandonmentReason.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
                     payloadType.let { if (it == JsonValue.from("AbandonedCheckout")) 1 else 0 } +
                     (if (paymentId.asKnown().isPresent) 1 else 0) +
@@ -9344,9 +9704,11 @@ private constructor(
                  *
                  * An instance of [AbandonmentReason] can contain an unknown value in a couple of
                  * cases:
+                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
+                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -9497,9 +9859,11 @@ private constructor(
                  * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
                  *
                  * An instance of [Status] can contain an unknown value in a couple of cases:
+                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
+                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -9623,6 +9987,7 @@ private constructor(
                 return other is AbandonedCheckout &&
                     abandonedAt == other.abandonedAt &&
                     abandonmentReason == other.abandonmentReason &&
+                    brandId == other.brandId &&
                     customerId == other.customerId &&
                     payloadType == other.payloadType &&
                     paymentId == other.paymentId &&
@@ -9635,6 +10000,7 @@ private constructor(
                 Objects.hash(
                     abandonedAt,
                     abandonmentReason,
+                    brandId,
                     customerId,
                     payloadType,
                     paymentId,
@@ -9647,12 +10013,13 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "AbandonedCheckout{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, customerId=$customerId, payloadType=$payloadType, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
+                "AbandonedCheckout{abandonedAt=$abandonedAt, abandonmentReason=$abandonmentReason, brandId=$brandId, customerId=$customerId, payloadType=$payloadType, paymentId=$paymentId, status=$status, recoveredPaymentId=$recoveredPaymentId, additionalProperties=$additionalProperties}"
         }
 
         class DunningAttempt
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
+            private val brandId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val customerId: JsonField<String>,
             private val payloadType: JsonValue,
@@ -9665,6 +10032,9 @@ private constructor(
 
             @JsonCreator
             private constructor(
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("created_at")
                 @ExcludeMissing
                 createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -9687,6 +10057,7 @@ private constructor(
                 @ExcludeMissing
                 paymentId: JsonField<String> = JsonMissing.of(),
             ) : this(
+                brandId,
                 createdAt,
                 customerId,
                 payloadType,
@@ -9696,6 +10067,15 @@ private constructor(
                 paymentId,
                 mutableMapOf(),
             )
+
+            /**
+             * Brand id this dunning attempt belongs to
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -9750,6 +10130,13 @@ private constructor(
              *   (e.g. if the server responded with an unexpected value).
              */
             fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [createdAt].
@@ -9827,6 +10214,7 @@ private constructor(
                  *
                  * The following fields are required:
                  * ```java
+                 * .brandId()
                  * .createdAt()
                  * .customerId()
                  * .status()
@@ -9840,6 +10228,7 @@ private constructor(
             /** A builder for [DunningAttempt]. */
             class Builder internal constructor() {
 
+                private var brandId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customerId: JsonField<String>? = null
                 private var payloadType: JsonValue = JsonValue.from("DunningAttempt")
@@ -9851,6 +10240,7 @@ private constructor(
 
                 @JvmSynthetic
                 internal fun from(dunningAttempt: DunningAttempt) = apply {
+                    brandId = dunningAttempt.brandId
                     createdAt = dunningAttempt.createdAt
                     customerId = dunningAttempt.customerId
                     payloadType = dunningAttempt.payloadType
@@ -9860,6 +10250,18 @@ private constructor(
                     paymentId = dunningAttempt.paymentId
                     additionalProperties = dunningAttempt.additionalProperties.toMutableMap()
                 }
+
+                /** Brand id this dunning attempt belongs to */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
@@ -9983,6 +10385,7 @@ private constructor(
                  *
                  * The following fields are required:
                  * ```java
+                 * .brandId()
                  * .createdAt()
                  * .customerId()
                  * .status()
@@ -9994,6 +10397,7 @@ private constructor(
                  */
                 fun build(): DunningAttempt =
                     DunningAttempt(
+                        checkRequired("brandId", brandId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("customerId", customerId),
                         payloadType,
@@ -10022,6 +10426,7 @@ private constructor(
                     return@apply
                 }
 
+                brandId()
                 createdAt()
                 customerId()
                 _payloadType().let {
@@ -10054,7 +10459,8 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (brandId.asKnown().isPresent) 1 else 0) +
+                    (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
                     payloadType.let { if (it == JsonValue.from("DunningAttempt")) 1 else 0 } +
                     (status.asKnown().getOrNull()?.validity() ?: 0) +
@@ -10097,9 +10503,11 @@ private constructor(
                  * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
                  *
                  * An instance of [Status] can contain an unknown value in a couple of cases:
+                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
+                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -10243,9 +10651,11 @@ private constructor(
                  * member.
                  *
                  * An instance of [TriggerState] can contain an unknown value in a couple of cases:
+                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
+                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -10359,6 +10769,7 @@ private constructor(
                 }
 
                 return other is DunningAttempt &&
+                    brandId == other.brandId &&
                     createdAt == other.createdAt &&
                     customerId == other.customerId &&
                     payloadType == other.payloadType &&
@@ -10371,6 +10782,7 @@ private constructor(
 
             private val hashCode: Int by lazy {
                 Objects.hash(
+                    brandId,
                     createdAt,
                     customerId,
                     payloadType,
@@ -10385,7 +10797,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "DunningAttempt{createdAt=$createdAt, customerId=$customerId, payloadType=$payloadType, status=$status, subscriptionId=$subscriptionId, triggerState=$triggerState, paymentId=$paymentId, additionalProperties=$additionalProperties}"
+                "DunningAttempt{brandId=$brandId, createdAt=$createdAt, customerId=$customerId, payloadType=$payloadType, status=$status, subscriptionId=$subscriptionId, triggerState=$triggerState, paymentId=$paymentId, additionalProperties=$additionalProperties}"
         }
 
         /**
@@ -10396,6 +10808,7 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
+            private val brandId: JsonField<String>,
             private val businessId: JsonField<String>,
             private val createdAt: JsonField<OffsetDateTime>,
             private val customerId: JsonField<String>,
@@ -10422,6 +10835,9 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("brand_id")
+                @ExcludeMissing
+                brandId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("business_id")
                 @ExcludeMissing
                 businessId: JsonField<String> = JsonMissing.of(),
@@ -10484,6 +10900,7 @@ private constructor(
                 payloadType: JsonValue = JsonMissing.of(),
             ) : this(
                 id,
+                brandId,
                 businessId,
                 createdAt,
                 customerId,
@@ -10510,6 +10927,7 @@ private constructor(
             fun toEntitlementGrant(): GlobalEntitlementGrant =
                 GlobalEntitlementGrant.builder()
                     .id(id)
+                    .brandId(brandId)
                     .businessId(businessId)
                     .createdAt(createdAt)
                     .customerId(customerId)
@@ -10539,6 +10957,15 @@ private constructor(
              *   value).
              */
             fun id(): String = id.getRequired("id")
+
+            /**
+             * Brand id this grant belongs to.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun brandId(): String = brandId.getRequired("brand_id")
 
             /**
              * Identifier of the business that owns the grant.
@@ -10727,6 +11154,13 @@ private constructor(
              * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            /**
+             * Returns the raw JSON value of [brandId].
+             *
+             * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
             /**
              * Returns the raw JSON value of [businessId].
@@ -10936,6 +11370,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .id()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customerId()
@@ -10953,6 +11388,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var id: JsonField<String>? = null
+                private var brandId: JsonField<String>? = null
                 private var businessId: JsonField<String>? = null
                 private var createdAt: JsonField<OffsetDateTime>? = null
                 private var customerId: JsonField<String>? = null
@@ -10979,6 +11415,7 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(entitlementGrant: EntitlementGrant) = apply {
                     id = entitlementGrant.id
+                    brandId = entitlementGrant.brandId
                     businessId = entitlementGrant.businessId
                     createdAt = entitlementGrant.createdAt
                     customerId = entitlementGrant.customerId
@@ -11013,6 +11450,18 @@ private constructor(
                  * supported value.
                  */
                 fun id(id: JsonField<String>) = apply { this.id = id }
+
+                /** Brand id this grant belongs to. */
+                fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+                /**
+                 * Sets [Builder.brandId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brandId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
                 /** Identifier of the business that owns the grant. */
                 fun businessId(businessId: String) = businessId(JsonField.of(businessId))
@@ -11392,6 +11841,7 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .id()
+                 * .brandId()
                  * .businessId()
                  * .createdAt()
                  * .customerId()
@@ -11407,6 +11857,7 @@ private constructor(
                 fun build(): EntitlementGrant =
                     EntitlementGrant(
                         checkRequired("id", id),
+                        checkRequired("brandId", brandId),
                         checkRequired("businessId", businessId),
                         checkRequired("createdAt", createdAt),
                         checkRequired("customerId", customerId),
@@ -11449,6 +11900,7 @@ private constructor(
                 }
 
                 id()
+                brandId()
                 businessId()
                 createdAt()
                 customerId()
@@ -11495,6 +11947,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (id.asKnown().isPresent) 1 else 0) +
+                    (if (brandId.asKnown().isPresent) 1 else 0) +
                     (if (businessId.asKnown().isPresent) 1 else 0) +
                     (if (createdAt.asKnown().isPresent) 1 else 0) +
                     (if (customerId.asKnown().isPresent) 1 else 0) +
@@ -11523,6 +11976,7 @@ private constructor(
 
                 return other is EntitlementGrant &&
                     id == other.id &&
+                    brandId == other.brandId &&
                     businessId == other.businessId &&
                     createdAt == other.createdAt &&
                     customerId == other.customerId &&
@@ -11549,6 +12003,7 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     id,
+                    brandId,
                     businessId,
                     createdAt,
                     customerId,
@@ -11576,7 +12031,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "EntitlementGrant{id=$id, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "EntitlementGrant{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
     }
 

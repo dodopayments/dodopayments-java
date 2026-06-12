@@ -73,6 +73,7 @@ internal class ProductCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+            .pricingMode(ProductCreateParams.PricingMode.BY_CURRENCY)
             .build()
     }
 
@@ -137,6 +138,7 @@ internal class ProductCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .pricingMode(ProductCreateParams.PricingMode.BY_CURRENCY)
                 .build()
 
         val body = params._body()
@@ -204,6 +206,7 @@ internal class ProductCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+        assertThat(body.pricingMode()).contains(ProductCreateParams.PricingMode.BY_CURRENCY)
     }
 
     @Test

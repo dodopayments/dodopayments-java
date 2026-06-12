@@ -61,6 +61,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             AbandonedCheckoutDetectedWebhookEvent.Data.AbandonmentReason
                                 .PAYMENT_FAILED
                         )
+                        .brandId("brand_id")
                         .customerId("customer_id")
                         .paymentId("payment_id")
                         .status(AbandonedCheckoutDetectedWebhookEvent.Data.Status.ABANDONED)
@@ -129,6 +130,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 AbandonedCheckoutDetectedWebhookEvent.Data.AbandonmentReason
                                     .PAYMENT_FAILED
                             )
+                            .brandId("brand_id")
                             .customerId("customer_id")
                             .paymentId("payment_id")
                             .status(AbandonedCheckoutDetectedWebhookEvent.Data.Status.ABANDONED)
@@ -160,6 +162,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
                                 .PAYMENT_FAILED
                         )
+                        .brandId("brand_id")
                         .customerId("customer_id")
                         .paymentId("payment_id")
                         .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
@@ -228,6 +231,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 AbandonedCheckoutRecoveredWebhookEvent.Data.AbandonmentReason
                                     .PAYMENT_FAILED
                             )
+                            .brandId("brand_id")
                             .customerId("customer_id")
                             .paymentId("payment_id")
                             .status(AbandonedCheckoutRecoveredWebhookEvent.Data.Status.ABANDONED)
@@ -258,6 +262,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -331,6 +336,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -366,6 +372,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     CreditBalanceLowWebhookEvent.Data.builder()
                         .availableBalance("available_balance")
+                        .brandId("brand_id")
                         .creditEntitlementId("credit_entitlement_id")
                         .creditEntitlementName("credit_entitlement_name")
                         .customerId("customer_id")
@@ -431,6 +438,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         CreditBalanceLowWebhookEvent.Data.builder()
                             .availableBalance("available_balance")
+                            .brandId("brand_id")
                             .creditEntitlementId("credit_entitlement_id")
                             .creditEntitlementName("credit_entitlement_name")
                             .customerId("customer_id")
@@ -464,6 +472,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -537,6 +546,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -575,6 +585,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -648,6 +659,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -686,6 +698,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -761,6 +774,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -799,6 +813,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -873,6 +888,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -911,6 +927,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -985,6 +1002,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -1023,6 +1041,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -1096,6 +1115,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -1134,6 +1154,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .amount("amount")
                         .balanceAfter("balance_after")
                         .balanceBefore("balance_before")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .creditEntitlementId("credit_entitlement_id")
@@ -1209,6 +1230,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .amount("amount")
                             .balanceAfter("balance_after")
                             .balanceBefore("balance_before")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .creditEntitlementId("credit_entitlement_id")
@@ -1937,6 +1959,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .businessId("business_id")
                 .data(
                     DunningRecoveredWebhookEvent.Data.builder()
+                        .brandId("brand_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .status(DunningRecoveredWebhookEvent.Data.Status.RECOVERING)
@@ -2000,6 +2023,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .businessId("business_id")
                     .data(
                         DunningRecoveredWebhookEvent.Data.builder()
+                            .brandId("brand_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .status(DunningRecoveredWebhookEvent.Data.Status.RECOVERING)
@@ -2028,6 +2052,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .businessId("business_id")
                 .data(
                     DunningStartedWebhookEvent.Data.builder()
+                        .brandId("brand_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
                         .status(DunningStartedWebhookEvent.Data.Status.RECOVERING)
@@ -2091,6 +2116,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .businessId("business_id")
                     .data(
                         DunningStartedWebhookEvent.Data.builder()
+                            .brandId("brand_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
                             .status(DunningStartedWebhookEvent.Data.Status.RECOVERING)
@@ -2120,6 +2146,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     EntitlementGrant.builder()
                         .id("id")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
@@ -2225,6 +2252,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         EntitlementGrant.builder()
                             .id("id")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
@@ -2293,6 +2321,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     EntitlementGrant.builder()
                         .id("id")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
@@ -2398,6 +2427,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         EntitlementGrant.builder()
                             .id("id")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
@@ -2466,6 +2496,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     EntitlementGrant.builder()
                         .id("id")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
@@ -2571,6 +2602,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         EntitlementGrant.builder()
                             .id("id")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
@@ -2639,6 +2671,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     EntitlementGrant.builder()
                         .id("id")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customerId("customer_id")
@@ -2744,6 +2777,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         EntitlementGrant.builder()
                             .id("id")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customerId("customer_id")
@@ -2812,6 +2846,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     LicenseKey.builder()
                         .id("lic_123")
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
                         .customerId("cus_123")
@@ -2883,6 +2918,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         LicenseKey.builder()
                             .id("lic_123")
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2024-01-01T00:00:00Z"))
                             .customerId("cus_123")
@@ -4178,6 +4214,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .businessId("business_id")
                 .data(
                     Refund.builder()
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customer(
@@ -4262,6 +4299,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .businessId("business_id")
                     .data(
                         Refund.builder()
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customer(
@@ -4311,6 +4349,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .businessId("business_id")
                 .data(
                     Refund.builder()
+                        .brandId("brand_id")
                         .businessId("business_id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customer(
@@ -4395,6 +4434,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .businessId("business_id")
                     .data(
                         Refund.builder()
+                            .brandId("brand_id")
                             .businessId("business_id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .customer(
@@ -4456,6 +4496,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -4659,6 +4700,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -4823,6 +4865,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -5026,6 +5069,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -5190,6 +5234,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -5393,6 +5438,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -5557,6 +5603,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -5760,6 +5807,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -5924,6 +5972,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -6127,6 +6176,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -6291,6 +6341,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -6495,6 +6546,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -6659,6 +6711,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -6862,6 +6915,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(
@@ -7026,6 +7080,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .addCreditEntitlementCart(
@@ -7229,6 +7284,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .addCreditEntitlementCart(

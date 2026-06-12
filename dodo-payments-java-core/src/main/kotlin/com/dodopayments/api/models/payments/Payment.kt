@@ -342,7 +342,8 @@ private constructor(
     fun settlementCurrency(): Currency = settlementCurrency.getRequired("settlement_currency")
 
     /**
-     * Total amount charged to the customer including tax, in smallest currency unit (e.g. cents)
+     * Total amount charged to the customer including tax, in the currency's smallest unit (e.g.
+     * cents for USD, yen for JPY, fils for KWD — see the currency's decimal places)
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -523,7 +524,8 @@ private constructor(
     fun subscriptionId(): Optional<String> = subscriptionId.getOptional("subscription_id")
 
     /**
-     * Amount of tax collected in smallest currency unit (e.g. cents)
+     * Amount of tax collected in the currency's smallest unit (e.g. cents for USD, yen for JPY,
+     * fils for KWD)
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -1233,8 +1235,8 @@ private constructor(
         }
 
         /**
-         * Total amount charged to the customer including tax, in smallest currency unit (e.g.
-         * cents)
+         * Total amount charged to the customer including tax, in the currency's smallest unit (e.g.
+         * cents for USD, yen for JPY, fils for KWD — see the currency's decimal places)
          */
         fun totalAmount(totalAmount: Int) = totalAmount(JsonField.of(totalAmount))
 
@@ -1662,7 +1664,10 @@ private constructor(
             this.subscriptionId = subscriptionId
         }
 
-        /** Amount of tax collected in smallest currency unit (e.g. cents) */
+        /**
+         * Amount of tax collected in the currency's smallest unit (e.g. cents for USD, yen for JPY,
+         * fils for KWD)
+         */
         fun tax(tax: Int?) = tax(JsonField.ofNullable(tax))
 
         /**
@@ -1992,8 +1997,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2049,9 +2055,11 @@ private constructor(
          * An enum containing [PaymentProvider]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [PaymentProvider] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
