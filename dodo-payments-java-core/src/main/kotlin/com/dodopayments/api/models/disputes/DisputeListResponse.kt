@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.disputes
 
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -30,7 +29,6 @@ private constructor(
     private val disputeStage: JsonField<DisputeStage>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val paymentId: JsonField<String>,
-    private val paymentProvider: JsonField<PaymentProvider>,
     private val isResolvedByRdr: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -53,9 +51,6 @@ private constructor(
         @ExcludeMissing
         disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("payment_provider")
-        @ExcludeMissing
-        paymentProvider: JsonField<PaymentProvider> = JsonMissing.of(),
         @JsonProperty("is_resolved_by_rdr")
         @ExcludeMissing
         isResolvedByRdr: JsonField<Boolean> = JsonMissing.of(),
@@ -68,7 +63,6 @@ private constructor(
         disputeStage,
         disputeStatus,
         paymentId,
-        paymentProvider,
         isResolvedByRdr,
         mutableMapOf(),
     )
@@ -136,15 +130,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = paymentId.getRequired("payment_id")
-
-    /**
-     * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes (the
-     * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun paymentProvider(): PaymentProvider = paymentProvider.getRequired("payment_provider")
 
     /**
      * Whether the dispute was resolved by Rapid Dispute Resolution
@@ -217,15 +202,6 @@ private constructor(
     @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
 
     /**
-     * Returns the raw JSON value of [paymentProvider].
-     *
-     * Unlike [paymentProvider], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("payment_provider")
-    @ExcludeMissing
-    fun _paymentProvider(): JsonField<PaymentProvider> = paymentProvider
-
-    /**
      * Returns the raw JSON value of [isResolvedByRdr].
      *
      * Unlike [isResolvedByRdr], this method doesn't throw if the JSON field has an unexpected type.
@@ -261,7 +237,6 @@ private constructor(
          * .disputeStage()
          * .disputeStatus()
          * .paymentId()
-         * .paymentProvider()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -278,7 +253,6 @@ private constructor(
         private var disputeStage: JsonField<DisputeStage>? = null
         private var disputeStatus: JsonField<DisputeStatus>? = null
         private var paymentId: JsonField<String>? = null
-        private var paymentProvider: JsonField<PaymentProvider>? = null
         private var isResolvedByRdr: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -292,7 +266,6 @@ private constructor(
             disputeStage = disputeListResponse.disputeStage
             disputeStatus = disputeListResponse.disputeStatus
             paymentId = disputeListResponse.paymentId
-            paymentProvider = disputeListResponse.paymentProvider
             isResolvedByRdr = disputeListResponse.isResolvedByRdr
             additionalProperties = disputeListResponse.additionalProperties.toMutableMap()
         }
@@ -395,24 +368,6 @@ private constructor(
          */
         fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
-        /**
-         * Which processor handled the underlying payment. `stripe` / `adyen` for BYOP routes (the
-         * merchant's own Hyperswitch connector); `dodo` for everything Dodo processed itself.
-         */
-        fun paymentProvider(paymentProvider: PaymentProvider) =
-            paymentProvider(JsonField.of(paymentProvider))
-
-        /**
-         * Sets [Builder.paymentProvider] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.paymentProvider] with a well-typed [PaymentProvider]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun paymentProvider(paymentProvider: JsonField<PaymentProvider>) = apply {
-            this.paymentProvider = paymentProvider
-        }
-
         /** Whether the dispute was resolved by Rapid Dispute Resolution */
         fun isResolvedByRdr(isResolvedByRdr: Boolean?) =
             isResolvedByRdr(JsonField.ofNullable(isResolvedByRdr))
@@ -473,7 +428,6 @@ private constructor(
          * .disputeStage()
          * .disputeStatus()
          * .paymentId()
-         * .paymentProvider()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -488,7 +442,6 @@ private constructor(
                 checkRequired("disputeStage", disputeStage),
                 checkRequired("disputeStatus", disputeStatus),
                 checkRequired("paymentId", paymentId),
-                checkRequired("paymentProvider", paymentProvider),
                 isResolvedByRdr,
                 additionalProperties.toMutableMap(),
             )
@@ -517,7 +470,6 @@ private constructor(
         disputeStage().validate()
         disputeStatus().validate()
         paymentId()
-        paymentProvider().validate()
         isResolvedByRdr()
         validated = true
     }
@@ -545,7 +497,6 @@ private constructor(
             (disputeStage.asKnown().getOrNull()?.validity() ?: 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isResolvedByRdr.asKnown().isPresent) 1 else 0)
 
     /**
@@ -587,9 +538,11 @@ private constructor(
          * An enum containing [PaymentProvider]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [PaymentProvider] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -712,7 +665,6 @@ private constructor(
             disputeStage == other.disputeStage &&
             disputeStatus == other.disputeStatus &&
             paymentId == other.paymentId &&
-            paymentProvider == other.paymentProvider &&
             isResolvedByRdr == other.isResolvedByRdr &&
             additionalProperties == other.additionalProperties
     }
@@ -727,7 +679,6 @@ private constructor(
             disputeStage,
             disputeStatus,
             paymentId,
-            paymentProvider,
             isResolvedByRdr,
             additionalProperties,
         )
@@ -736,5 +687,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "DisputeListResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, paymentProvider=$paymentProvider, isResolvedByRdr=$isResolvedByRdr, additionalProperties=$additionalProperties}"
+        "DisputeListResponse{amount=$amount, businessId=$businessId, createdAt=$createdAt, currency=$currency, disputeId=$disputeId, disputeStage=$disputeStage, disputeStatus=$disputeStatus, paymentId=$paymentId, isResolvedByRdr=$isResolvedByRdr, additionalProperties=$additionalProperties}"
 }

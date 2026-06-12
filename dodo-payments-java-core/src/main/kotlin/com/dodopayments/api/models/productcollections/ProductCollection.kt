@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.productcollections
 
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -32,12 +31,7 @@ private constructor(
     private val name: JsonField<String>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val description: JsonField<String>,
-    private val effectiveAtOnDowngrade: JsonField<EffectiveAtOnDowngrade>,
-    private val effectiveAtOnUpgrade: JsonField<EffectiveAtOnUpgrade>,
     private val image: JsonField<String>,
-    private val onPaymentFailure: JsonField<OnPaymentFailure>,
-    private val prorationBillingModeOnDowngrade: JsonField<ProrationBillingModeOnDowngrade>,
-    private val prorationBillingModeOnUpgrade: JsonField<ProrationBillingModeOnUpgrade>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -58,39 +52,8 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("effective_at_on_downgrade")
-        @ExcludeMissing
-        effectiveAtOnDowngrade: JsonField<EffectiveAtOnDowngrade> = JsonMissing.of(),
-        @JsonProperty("effective_at_on_upgrade")
-        @ExcludeMissing
-        effectiveAtOnUpgrade: JsonField<EffectiveAtOnUpgrade> = JsonMissing.of(),
         @JsonProperty("image") @ExcludeMissing image: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("on_payment_failure")
-        @ExcludeMissing
-        onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of(),
-        @JsonProperty("proration_billing_mode_on_downgrade")
-        @ExcludeMissing
-        prorationBillingModeOnDowngrade: JsonField<ProrationBillingModeOnDowngrade> =
-            JsonMissing.of(),
-        @JsonProperty("proration_billing_mode_on_upgrade")
-        @ExcludeMissing
-        prorationBillingModeOnUpgrade: JsonField<ProrationBillingModeOnUpgrade> = JsonMissing.of(),
-    ) : this(
-        id,
-        brandId,
-        createdAt,
-        groups,
-        name,
-        updatedAt,
-        description,
-        effectiveAtOnDowngrade,
-        effectiveAtOnUpgrade,
-        image,
-        onPaymentFailure,
-        prorationBillingModeOnDowngrade,
-        prorationBillingModeOnUpgrade,
-        mutableMapOf(),
-    )
+    ) : this(id, brandId, createdAt, groups, name, updatedAt, description, image, mutableMapOf())
 
     /**
      * Unique identifier for the product collection
@@ -149,59 +112,12 @@ private constructor(
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
-     * Default effective_at setting for subscription plan downgrades (null = inherit from business)
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun effectiveAtOnDowngrade(): Optional<EffectiveAtOnDowngrade> =
-        effectiveAtOnDowngrade.getOptional("effective_at_on_downgrade")
-
-    /**
-     * Default effective_at setting for subscription plan upgrades (null = inherit from business)
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun effectiveAtOnUpgrade(): Optional<EffectiveAtOnUpgrade> =
-        effectiveAtOnUpgrade.getOptional("effective_at_on_upgrade")
-
-    /**
      * URL of the collection image
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun image(): Optional<String> = image.getOptional("image")
-
-    /**
-     * Default behavior for subscription plan changes on payment failure (null = inherit from
-     * business)
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun onPaymentFailure(): Optional<OnPaymentFailure> =
-        onPaymentFailure.getOptional("on_payment_failure")
-
-    /**
-     * Default proration billing mode for subscription plan downgrades (null = inherit from
-     * business)
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun prorationBillingModeOnDowngrade(): Optional<ProrationBillingModeOnDowngrade> =
-        prorationBillingModeOnDowngrade.getOptional("proration_billing_mode_on_downgrade")
-
-    /**
-     * Default proration billing mode for subscription plan upgrades (null = inherit from business)
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun prorationBillingModeOnUpgrade(): Optional<ProrationBillingModeOnUpgrade> =
-        prorationBillingModeOnUpgrade.getOptional("proration_billing_mode_on_upgrade")
 
     /**
      * Returns the raw JSON value of [id].
@@ -259,63 +175,11 @@ private constructor(
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
     /**
-     * Returns the raw JSON value of [effectiveAtOnDowngrade].
-     *
-     * Unlike [effectiveAtOnDowngrade], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("effective_at_on_downgrade")
-    @ExcludeMissing
-    fun _effectiveAtOnDowngrade(): JsonField<EffectiveAtOnDowngrade> = effectiveAtOnDowngrade
-
-    /**
-     * Returns the raw JSON value of [effectiveAtOnUpgrade].
-     *
-     * Unlike [effectiveAtOnUpgrade], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("effective_at_on_upgrade")
-    @ExcludeMissing
-    fun _effectiveAtOnUpgrade(): JsonField<EffectiveAtOnUpgrade> = effectiveAtOnUpgrade
-
-    /**
      * Returns the raw JSON value of [image].
      *
      * Unlike [image], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("image") @ExcludeMissing fun _image(): JsonField<String> = image
-
-    /**
-     * Returns the raw JSON value of [onPaymentFailure].
-     *
-     * Unlike [onPaymentFailure], this method doesn't throw if the JSON field has an unexpected
-     * type.
-     */
-    @JsonProperty("on_payment_failure")
-    @ExcludeMissing
-    fun _onPaymentFailure(): JsonField<OnPaymentFailure> = onPaymentFailure
-
-    /**
-     * Returns the raw JSON value of [prorationBillingModeOnDowngrade].
-     *
-     * Unlike [prorationBillingModeOnDowngrade], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("proration_billing_mode_on_downgrade")
-    @ExcludeMissing
-    fun _prorationBillingModeOnDowngrade(): JsonField<ProrationBillingModeOnDowngrade> =
-        prorationBillingModeOnDowngrade
-
-    /**
-     * Returns the raw JSON value of [prorationBillingModeOnUpgrade].
-     *
-     * Unlike [prorationBillingModeOnUpgrade], this method doesn't throw if the JSON field has an
-     * unexpected type.
-     */
-    @JsonProperty("proration_billing_mode_on_upgrade")
-    @ExcludeMissing
-    fun _prorationBillingModeOnUpgrade(): JsonField<ProrationBillingModeOnUpgrade> =
-        prorationBillingModeOnUpgrade
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -357,14 +221,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var description: JsonField<String> = JsonMissing.of()
-        private var effectiveAtOnDowngrade: JsonField<EffectiveAtOnDowngrade> = JsonMissing.of()
-        private var effectiveAtOnUpgrade: JsonField<EffectiveAtOnUpgrade> = JsonMissing.of()
         private var image: JsonField<String> = JsonMissing.of()
-        private var onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
-        private var prorationBillingModeOnDowngrade: JsonField<ProrationBillingModeOnDowngrade> =
-            JsonMissing.of()
-        private var prorationBillingModeOnUpgrade: JsonField<ProrationBillingModeOnUpgrade> =
-            JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -376,12 +233,7 @@ private constructor(
             name = productCollection.name
             updatedAt = productCollection.updatedAt
             description = productCollection.description
-            effectiveAtOnDowngrade = productCollection.effectiveAtOnDowngrade
-            effectiveAtOnUpgrade = productCollection.effectiveAtOnUpgrade
             image = productCollection.image
-            onPaymentFailure = productCollection.onPaymentFailure
-            prorationBillingModeOnDowngrade = productCollection.prorationBillingModeOnDowngrade
-            prorationBillingModeOnUpgrade = productCollection.prorationBillingModeOnUpgrade
             additionalProperties = productCollection.additionalProperties.toMutableMap()
         }
 
@@ -483,57 +335,6 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
-        /**
-         * Default effective_at setting for subscription plan downgrades (null = inherit from
-         * business)
-         */
-        fun effectiveAtOnDowngrade(effectiveAtOnDowngrade: EffectiveAtOnDowngrade?) =
-            effectiveAtOnDowngrade(JsonField.ofNullable(effectiveAtOnDowngrade))
-
-        /**
-         * Alias for calling [Builder.effectiveAtOnDowngrade] with
-         * `effectiveAtOnDowngrade.orElse(null)`.
-         */
-        fun effectiveAtOnDowngrade(effectiveAtOnDowngrade: Optional<EffectiveAtOnDowngrade>) =
-            effectiveAtOnDowngrade(effectiveAtOnDowngrade.getOrNull())
-
-        /**
-         * Sets [Builder.effectiveAtOnDowngrade] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.effectiveAtOnDowngrade] with a well-typed
-         * [EffectiveAtOnDowngrade] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
-         */
-        fun effectiveAtOnDowngrade(effectiveAtOnDowngrade: JsonField<EffectiveAtOnDowngrade>) =
-            apply {
-                this.effectiveAtOnDowngrade = effectiveAtOnDowngrade
-            }
-
-        /**
-         * Default effective_at setting for subscription plan upgrades (null = inherit from
-         * business)
-         */
-        fun effectiveAtOnUpgrade(effectiveAtOnUpgrade: EffectiveAtOnUpgrade?) =
-            effectiveAtOnUpgrade(JsonField.ofNullable(effectiveAtOnUpgrade))
-
-        /**
-         * Alias for calling [Builder.effectiveAtOnUpgrade] with
-         * `effectiveAtOnUpgrade.orElse(null)`.
-         */
-        fun effectiveAtOnUpgrade(effectiveAtOnUpgrade: Optional<EffectiveAtOnUpgrade>) =
-            effectiveAtOnUpgrade(effectiveAtOnUpgrade.getOrNull())
-
-        /**
-         * Sets [Builder.effectiveAtOnUpgrade] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.effectiveAtOnUpgrade] with a well-typed
-         * [EffectiveAtOnUpgrade] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
-         */
-        fun effectiveAtOnUpgrade(effectiveAtOnUpgrade: JsonField<EffectiveAtOnUpgrade>) = apply {
-            this.effectiveAtOnUpgrade = effectiveAtOnUpgrade
-        }
-
         /** URL of the collection image */
         fun image(image: String?) = image(JsonField.ofNullable(image))
 
@@ -547,82 +348,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun image(image: JsonField<String>) = apply { this.image = image }
-
-        /**
-         * Default behavior for subscription plan changes on payment failure (null = inherit from
-         * business)
-         */
-        fun onPaymentFailure(onPaymentFailure: OnPaymentFailure?) =
-            onPaymentFailure(JsonField.ofNullable(onPaymentFailure))
-
-        /** Alias for calling [Builder.onPaymentFailure] with `onPaymentFailure.orElse(null)`. */
-        fun onPaymentFailure(onPaymentFailure: Optional<OnPaymentFailure>) =
-            onPaymentFailure(onPaymentFailure.getOrNull())
-
-        /**
-         * Sets [Builder.onPaymentFailure] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.onPaymentFailure] with a well-typed [OnPaymentFailure]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun onPaymentFailure(onPaymentFailure: JsonField<OnPaymentFailure>) = apply {
-            this.onPaymentFailure = onPaymentFailure
-        }
-
-        /**
-         * Default proration billing mode for subscription plan downgrades (null = inherit from
-         * business)
-         */
-        fun prorationBillingModeOnDowngrade(
-            prorationBillingModeOnDowngrade: ProrationBillingModeOnDowngrade?
-        ) = prorationBillingModeOnDowngrade(JsonField.ofNullable(prorationBillingModeOnDowngrade))
-
-        /**
-         * Alias for calling [Builder.prorationBillingModeOnDowngrade] with
-         * `prorationBillingModeOnDowngrade.orElse(null)`.
-         */
-        fun prorationBillingModeOnDowngrade(
-            prorationBillingModeOnDowngrade: Optional<ProrationBillingModeOnDowngrade>
-        ) = prorationBillingModeOnDowngrade(prorationBillingModeOnDowngrade.getOrNull())
-
-        /**
-         * Sets [Builder.prorationBillingModeOnDowngrade] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.prorationBillingModeOnDowngrade] with a well-typed
-         * [ProrationBillingModeOnDowngrade] value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
-         */
-        fun prorationBillingModeOnDowngrade(
-            prorationBillingModeOnDowngrade: JsonField<ProrationBillingModeOnDowngrade>
-        ) = apply { this.prorationBillingModeOnDowngrade = prorationBillingModeOnDowngrade }
-
-        /**
-         * Default proration billing mode for subscription plan upgrades (null = inherit from
-         * business)
-         */
-        fun prorationBillingModeOnUpgrade(
-            prorationBillingModeOnUpgrade: ProrationBillingModeOnUpgrade?
-        ) = prorationBillingModeOnUpgrade(JsonField.ofNullable(prorationBillingModeOnUpgrade))
-
-        /**
-         * Alias for calling [Builder.prorationBillingModeOnUpgrade] with
-         * `prorationBillingModeOnUpgrade.orElse(null)`.
-         */
-        fun prorationBillingModeOnUpgrade(
-            prorationBillingModeOnUpgrade: Optional<ProrationBillingModeOnUpgrade>
-        ) = prorationBillingModeOnUpgrade(prorationBillingModeOnUpgrade.getOrNull())
-
-        /**
-         * Sets [Builder.prorationBillingModeOnUpgrade] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.prorationBillingModeOnUpgrade] with a well-typed
-         * [ProrationBillingModeOnUpgrade] value instead. This method is primarily for setting the
-         * field to an undocumented or not yet supported value.
-         */
-        fun prorationBillingModeOnUpgrade(
-            prorationBillingModeOnUpgrade: JsonField<ProrationBillingModeOnUpgrade>
-        ) = apply { this.prorationBillingModeOnUpgrade = prorationBillingModeOnUpgrade }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -669,12 +394,7 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("updatedAt", updatedAt),
                 description,
-                effectiveAtOnDowngrade,
-                effectiveAtOnUpgrade,
                 image,
-                onPaymentFailure,
-                prorationBillingModeOnDowngrade,
-                prorationBillingModeOnUpgrade,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -701,12 +421,7 @@ private constructor(
         name()
         updatedAt()
         description()
-        effectiveAtOnDowngrade().ifPresent { it.validate() }
-        effectiveAtOnUpgrade().ifPresent { it.validate() }
         image()
-        onPaymentFailure().ifPresent { it.validate() }
-        prorationBillingModeOnDowngrade().ifPresent { it.validate() }
-        prorationBillingModeOnUpgrade().ifPresent { it.validate() }
         validated = true
     }
 
@@ -777,9 +492,11 @@ private constructor(
          *
          * An instance of [EffectiveAtOnDowngrade] can contain an unknown value in a couple of
          * cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -923,9 +640,11 @@ private constructor(
          * member.
          *
          * An instance of [EffectiveAtOnUpgrade] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1068,9 +787,11 @@ private constructor(
          * An enum containing [OnPaymentFailure]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [OnPaymentFailure] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1221,9 +942,11 @@ private constructor(
          *
          * An instance of [ProrationBillingModeOnDowngrade] can contain an unknown value in a couple
          * of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1382,9 +1105,11 @@ private constructor(
          *
          * An instance of [ProrationBillingModeOnUpgrade] can contain an unknown value in a couple
          * of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1512,12 +1237,7 @@ private constructor(
             name == other.name &&
             updatedAt == other.updatedAt &&
             description == other.description &&
-            effectiveAtOnDowngrade == other.effectiveAtOnDowngrade &&
-            effectiveAtOnUpgrade == other.effectiveAtOnUpgrade &&
             image == other.image &&
-            onPaymentFailure == other.onPaymentFailure &&
-            prorationBillingModeOnDowngrade == other.prorationBillingModeOnDowngrade &&
-            prorationBillingModeOnUpgrade == other.prorationBillingModeOnUpgrade &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1530,12 +1250,7 @@ private constructor(
             name,
             updatedAt,
             description,
-            effectiveAtOnDowngrade,
-            effectiveAtOnUpgrade,
             image,
-            onPaymentFailure,
-            prorationBillingModeOnDowngrade,
-            prorationBillingModeOnUpgrade,
             additionalProperties,
         )
     }
@@ -1543,5 +1258,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ProductCollection{id=$id, brandId=$brandId, createdAt=$createdAt, groups=$groups, name=$name, updatedAt=$updatedAt, description=$description, effectiveAtOnDowngrade=$effectiveAtOnDowngrade, effectiveAtOnUpgrade=$effectiveAtOnUpgrade, image=$image, onPaymentFailure=$onPaymentFailure, prorationBillingModeOnDowngrade=$prorationBillingModeOnDowngrade, prorationBillingModeOnUpgrade=$prorationBillingModeOnUpgrade, additionalProperties=$additionalProperties}"
+        "ProductCollection{id=$id, brandId=$brandId, createdAt=$createdAt, groups=$groups, name=$name, updatedAt=$updatedAt, description=$description, image=$image, additionalProperties=$additionalProperties}"
 }

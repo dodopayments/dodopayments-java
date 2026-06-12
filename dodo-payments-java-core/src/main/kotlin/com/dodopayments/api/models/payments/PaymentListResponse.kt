@@ -2,7 +2,6 @@
 
 package com.dodopayments.api.models.payments
 
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -33,10 +32,7 @@ private constructor(
     private val hasLicenseKey: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
-    private val paymentProvider: JsonField<PaymentProvider>,
     private val totalAmount: JsonField<Int>,
-    private val cardLastFour: JsonField<String>,
-    private val cardNetwork: JsonField<String>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val invoiceId: JsonField<String>,
     private val invoiceUrl: JsonField<String>,
@@ -66,18 +62,9 @@ private constructor(
         hasLicenseKey: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("payment_provider")
-        @ExcludeMissing
-        paymentProvider: JsonField<PaymentProvider> = JsonMissing.of(),
         @JsonProperty("total_amount")
         @ExcludeMissing
         totalAmount: JsonField<Int> = JsonMissing.of(),
-        @JsonProperty("card_last_four")
-        @ExcludeMissing
-        cardLastFour: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("card_network")
-        @ExcludeMissing
-        cardNetwork: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dispute_status")
         @ExcludeMissing
         disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
@@ -107,10 +94,7 @@ private constructor(
         hasLicenseKey,
         metadata,
         paymentId,
-        paymentProvider,
         totalAmount,
-        cardLastFour,
-        cardNetwork,
         disputeStatus,
         invoiceId,
         invoiceUrl,
@@ -172,35 +156,10 @@ private constructor(
     fun paymentId(): String = paymentId.getRequired("payment_id")
 
     /**
-     * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's own
-     * Hyperswitch connector); `dodo` for everything Dodo processed itself.
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun paymentProvider(): PaymentProvider = paymentProvider.getRequired("payment_provider")
-
-    /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun totalAmount(): Int = totalAmount.getRequired("total_amount")
-
-    /**
-     * The last four digits of the card
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun cardLastFour(): Optional<String> = cardLastFour.getOptional("card_last_four")
-
-    /**
-     * Card network like VISA, MASTERCARD etc.
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun cardNetwork(): Optional<String> = cardNetwork.getOptional("card_network")
 
     /**
      * The most recent dispute status for this payment. None if no disputes exist.
@@ -324,38 +283,11 @@ private constructor(
     @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
 
     /**
-     * Returns the raw JSON value of [paymentProvider].
-     *
-     * Unlike [paymentProvider], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("payment_provider")
-    @ExcludeMissing
-    fun _paymentProvider(): JsonField<PaymentProvider> = paymentProvider
-
-    /**
      * Returns the raw JSON value of [totalAmount].
      *
      * Unlike [totalAmount], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("total_amount") @ExcludeMissing fun _totalAmount(): JsonField<Int> = totalAmount
-
-    /**
-     * Returns the raw JSON value of [cardLastFour].
-     *
-     * Unlike [cardLastFour], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("card_last_four")
-    @ExcludeMissing
-    fun _cardLastFour(): JsonField<String> = cardLastFour
-
-    /**
-     * Returns the raw JSON value of [cardNetwork].
-     *
-     * Unlike [cardNetwork], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("card_network")
-    @ExcludeMissing
-    fun _cardNetwork(): JsonField<String> = cardNetwork
 
     /**
      * Returns the raw JSON value of [disputeStatus].
@@ -451,7 +383,6 @@ private constructor(
          * .hasLicenseKey()
          * .metadata()
          * .paymentId()
-         * .paymentProvider()
          * .totalAmount()
          * ```
          */
@@ -469,10 +400,7 @@ private constructor(
         private var hasLicenseKey: JsonField<Boolean>? = null
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
-        private var paymentProvider: JsonField<PaymentProvider>? = null
         private var totalAmount: JsonField<Int>? = null
-        private var cardLastFour: JsonField<String> = JsonMissing.of()
-        private var cardNetwork: JsonField<String> = JsonMissing.of()
         private var disputeStatus: JsonField<DisputeStatus> = JsonMissing.of()
         private var invoiceId: JsonField<String> = JsonMissing.of()
         private var invoiceUrl: JsonField<String> = JsonMissing.of()
@@ -493,10 +421,7 @@ private constructor(
             hasLicenseKey = paymentListResponse.hasLicenseKey
             metadata = paymentListResponse.metadata
             paymentId = paymentListResponse.paymentId
-            paymentProvider = paymentListResponse.paymentProvider
             totalAmount = paymentListResponse.totalAmount
-            cardLastFour = paymentListResponse.cardLastFour
-            cardNetwork = paymentListResponse.cardNetwork
             disputeStatus = paymentListResponse.disputeStatus
             invoiceId = paymentListResponse.invoiceId
             invoiceUrl = paymentListResponse.invoiceUrl
@@ -602,24 +527,6 @@ private constructor(
          */
         fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
 
-        /**
-         * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's
-         * own Hyperswitch connector); `dodo` for everything Dodo processed itself.
-         */
-        fun paymentProvider(paymentProvider: PaymentProvider) =
-            paymentProvider(JsonField.of(paymentProvider))
-
-        /**
-         * Sets [Builder.paymentProvider] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.paymentProvider] with a well-typed [PaymentProvider]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
-         */
-        fun paymentProvider(paymentProvider: JsonField<PaymentProvider>) = apply {
-            this.paymentProvider = paymentProvider
-        }
-
         fun totalAmount(totalAmount: Int) = totalAmount(JsonField.of(totalAmount))
 
         /**
@@ -629,38 +536,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun totalAmount(totalAmount: JsonField<Int>) = apply { this.totalAmount = totalAmount }
-
-        /** The last four digits of the card */
-        fun cardLastFour(cardLastFour: String?) = cardLastFour(JsonField.ofNullable(cardLastFour))
-
-        /** Alias for calling [Builder.cardLastFour] with `cardLastFour.orElse(null)`. */
-        fun cardLastFour(cardLastFour: Optional<String>) = cardLastFour(cardLastFour.getOrNull())
-
-        /**
-         * Sets [Builder.cardLastFour] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.cardLastFour] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun cardLastFour(cardLastFour: JsonField<String>) = apply {
-            this.cardLastFour = cardLastFour
-        }
-
-        /** Card network like VISA, MASTERCARD etc. */
-        fun cardNetwork(cardNetwork: String?) = cardNetwork(JsonField.ofNullable(cardNetwork))
-
-        /** Alias for calling [Builder.cardNetwork] with `cardNetwork.orElse(null)`. */
-        fun cardNetwork(cardNetwork: Optional<String>) = cardNetwork(cardNetwork.getOrNull())
-
-        /**
-         * Sets [Builder.cardNetwork] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.cardNetwork] with a well-typed [String] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun cardNetwork(cardNetwork: JsonField<String>) = apply { this.cardNetwork = cardNetwork }
 
         /** The most recent dispute status for this payment. None if no disputes exist. */
         fun disputeStatus(disputeStatus: DisputeStatus?) =
@@ -832,7 +707,6 @@ private constructor(
          * .hasLicenseKey()
          * .metadata()
          * .paymentId()
-         * .paymentProvider()
          * .totalAmount()
          * ```
          *
@@ -848,10 +722,7 @@ private constructor(
                 checkRequired("hasLicenseKey", hasLicenseKey),
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
-                checkRequired("paymentProvider", paymentProvider),
                 checkRequired("totalAmount", totalAmount),
-                cardLastFour,
-                cardNetwork,
                 disputeStatus,
                 invoiceId,
                 invoiceUrl,
@@ -887,10 +758,7 @@ private constructor(
         hasLicenseKey()
         metadata().validate()
         paymentId()
-        paymentProvider().validate()
         totalAmount()
-        cardLastFour()
-        cardNetwork()
         disputeStatus().ifPresent { it.validate() }
         invoiceId()
         invoiceUrl()
@@ -925,10 +793,7 @@ private constructor(
             (if (hasLicenseKey.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
             (if (totalAmount.asKnown().isPresent) 1 else 0) +
-            (if (cardLastFour.asKnown().isPresent) 1 else 0) +
-            (if (cardNetwork.asKnown().isPresent) 1 else 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (invoiceId.asKnown().isPresent) 1 else 0) +
             (if (invoiceUrl.asKnown().isPresent) 1 else 0) +
@@ -1028,8 +893,9 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+        internal fun validity(): Int = additionalProperties.count { (_, value) ->
+            !value.isNull() && !value.isMissing()
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1085,9 +951,11 @@ private constructor(
          * An enum containing [PaymentProvider]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [PaymentProvider] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1210,10 +1078,7 @@ private constructor(
             hasLicenseKey == other.hasLicenseKey &&
             metadata == other.metadata &&
             paymentId == other.paymentId &&
-            paymentProvider == other.paymentProvider &&
             totalAmount == other.totalAmount &&
-            cardLastFour == other.cardLastFour &&
-            cardNetwork == other.cardNetwork &&
             disputeStatus == other.disputeStatus &&
             invoiceId == other.invoiceId &&
             invoiceUrl == other.invoiceUrl &&
@@ -1235,10 +1100,7 @@ private constructor(
             hasLicenseKey,
             metadata,
             paymentId,
-            paymentProvider,
             totalAmount,
-            cardLastFour,
-            cardNetwork,
             disputeStatus,
             invoiceId,
             invoiceUrl,
@@ -1254,5 +1116,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, totalAmount=$totalAmount, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, metadata=$metadata, paymentId=$paymentId, totalAmount=$totalAmount, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }

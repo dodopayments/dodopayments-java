@@ -110,6 +110,7 @@ internal class ProductTest {
                     LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
                 )
                 .name("name")
+                .pricingMode(Product.PricingMode.BY_CURRENCY)
                 .productCollectionId("product_collection_id")
                 .build()
 
@@ -206,6 +207,7 @@ internal class ProductTest {
         assertThat(product.licenseKeyDuration())
             .contains(LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build())
         assertThat(product.name()).contains("name")
+        assertThat(product.pricingMode()).contains(Product.PricingMode.BY_CURRENCY)
         assertThat(product.productCollectionId()).contains("product_collection_id")
     }
 
@@ -301,6 +303,7 @@ internal class ProductTest {
                     LicenseKeyDuration.builder().count(0).interval(TimeInterval.DAY).build()
                 )
                 .name("name")
+                .pricingMode(Product.PricingMode.BY_CURRENCY)
                 .productCollectionId("product_collection_id")
                 .build()
 

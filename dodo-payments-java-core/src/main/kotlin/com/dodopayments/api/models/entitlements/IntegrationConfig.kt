@@ -4,7 +4,6 @@ package com.dodopayments.api.models.entitlements
 
 import com.dodopayments.api.core.BaseDeserializer
 import com.dodopayments.api.core.BaseSerializer
-import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -1565,6 +1564,7 @@ private constructor(
 
         /**
          * Three-way patchable list of legacy file identifiers:
+         *
          * * omitted → preserve the current value
          * * `null` → clear
          * * `[...]` → replace
@@ -1730,6 +1730,7 @@ private constructor(
 
             /**
              * Three-way patchable list of legacy file identifiers:
+             *
              * * omitted → preserve the current value
              * * `null` → clear
              * * `[...]` → replace
@@ -1888,7 +1889,6 @@ private constructor(
         private val activationsLimit: JsonField<Int>,
         private val durationCount: JsonField<Int>,
         private val durationInterval: JsonField<TimeInterval>,
-        private val fulfillmentMode: JsonField<FulfillmentMode>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1906,15 +1906,11 @@ private constructor(
             @JsonProperty("duration_interval")
             @ExcludeMissing
             durationInterval: JsonField<TimeInterval> = JsonMissing.of(),
-            @JsonProperty("fulfillment_mode")
-            @ExcludeMissing
-            fulfillmentMode: JsonField<FulfillmentMode> = JsonMissing.of(),
         ) : this(
             activationMessage,
             activationsLimit,
             durationCount,
             durationInterval,
-            fulfillmentMode,
             mutableMapOf(),
         )
 
@@ -1954,8 +1950,9 @@ private constructor(
             durationInterval.getOptional("duration_interval")
 
         /**
-         * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates pending
-         * grants the merchant fulfills via the `POST /grants/{id}/license-key` endpoint.
+         * How license keys are fulfilled. `auto` (default) generates and delivers keys to customers
+         * automatically; `manual` creates pending grants that you fulfill with the supplied key via
+         * `POST /grants/{grant_id}/license-key`.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -2003,16 +2000,6 @@ private constructor(
         @ExcludeMissing
         fun _durationInterval(): JsonField<TimeInterval> = durationInterval
 
-        /**
-         * Returns the raw JSON value of [fulfillmentMode].
-         *
-         * Unlike [fulfillmentMode], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("fulfillment_mode")
-        @ExcludeMissing
-        fun _fulfillmentMode(): JsonField<FulfillmentMode> = fulfillmentMode
-
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -2038,7 +2025,6 @@ private constructor(
             private var activationsLimit: JsonField<Int> = JsonMissing.of()
             private var durationCount: JsonField<Int> = JsonMissing.of()
             private var durationInterval: JsonField<TimeInterval> = JsonMissing.of()
-            private var fulfillmentMode: JsonField<FulfillmentMode> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -2047,7 +2033,6 @@ private constructor(
                 activationsLimit = licenseKeyConfig.activationsLimit
                 durationCount = licenseKeyConfig.durationCount
                 durationInterval = licenseKeyConfig.durationInterval
-                fulfillmentMode = licenseKeyConfig.fulfillmentMode
                 additionalProperties = licenseKeyConfig.additionalProperties.toMutableMap()
             }
 
@@ -2154,9 +2139,9 @@ private constructor(
             }
 
             /**
-             * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates
-             * pending grants the merchant fulfills via the `POST /grants/{id}/license-key`
-             * endpoint.
+             * How license keys are fulfilled. `auto` (default) generates and delivers keys to
+             * customers automatically; `manual` creates pending grants that you fulfill with the
+             * supplied key via `POST /grants/{grant_id}/license-key`.
              */
             fun fulfillmentMode(fulfillmentMode: FulfillmentMode?) =
                 fulfillmentMode(JsonField.ofNullable(fulfillmentMode))
@@ -2206,7 +2191,6 @@ private constructor(
                     activationsLimit,
                     durationCount,
                     durationInterval,
-                    fulfillmentMode,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -2231,7 +2215,6 @@ private constructor(
             activationsLimit()
             durationCount()
             durationInterval().ifPresent { it.validate() }
-            fulfillmentMode().ifPresent { it.validate() }
             validated = true
         }
 
@@ -2258,8 +2241,9 @@ private constructor(
                 (fulfillmentMode.asKnown().getOrNull()?.validity() ?: 0)
 
         /**
-         * Fulfillment mode: `auto` (default) generates keys automatically; `manual` creates pending
-         * grants the merchant fulfills via the `POST /grants/{id}/license-key` endpoint.
+         * How license keys are fulfilled. `auto` (default) generates and delivers keys to customers
+         * automatically; `manual` creates pending grants that you fulfill with the supplied key via
+         * `POST /grants/{grant_id}/license-key`.
          */
         class FulfillmentMode
         @JsonCreator
@@ -2294,9 +2278,11 @@ private constructor(
              * An enum containing [FulfillmentMode]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [FulfillmentMode] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -2414,7 +2400,6 @@ private constructor(
                 activationsLimit == other.activationsLimit &&
                 durationCount == other.durationCount &&
                 durationInterval == other.durationInterval &&
-                fulfillmentMode == other.fulfillmentMode &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -2424,7 +2409,6 @@ private constructor(
                 activationsLimit,
                 durationCount,
                 durationInterval,
-                fulfillmentMode,
                 additionalProperties,
             )
         }
@@ -2432,6 +2416,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "LicenseKeyConfig{activationMessage=$activationMessage, activationsLimit=$activationsLimit, durationCount=$durationCount, durationInterval=$durationInterval, fulfillmentMode=$fulfillmentMode, additionalProperties=$additionalProperties}"
+            "LicenseKeyConfig{activationMessage=$activationMessage, activationsLimit=$activationsLimit, durationCount=$durationCount, durationInterval=$durationInterval, additionalProperties=$additionalProperties}"
     }
 }

@@ -288,6 +288,7 @@ private constructor(
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val brandId: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
         private val customerId: JsonField<String>,
         private val status: JsonField<Status>,
@@ -299,6 +300,7 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("brand_id") @ExcludeMissing brandId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("created_at")
             @ExcludeMissing
             createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -316,6 +318,7 @@ private constructor(
             @ExcludeMissing
             paymentId: JsonField<String> = JsonMissing.of(),
         ) : this(
+            brandId,
             createdAt,
             customerId,
             status,
@@ -324,6 +327,14 @@ private constructor(
             paymentId,
             mutableMapOf(),
         )
+
+        /**
+         * Brand id this dunning attempt belongs to
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun brandId(): String = brandId.getRequired("brand_id")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -360,6 +371,13 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
+
+        /**
+         * Returns the raw JSON value of [brandId].
+         *
+         * Unlike [brandId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("brand_id") @ExcludeMissing fun _brandId(): JsonField<String> = brandId
 
         /**
          * Returns the raw JSON value of [createdAt].
@@ -432,6 +450,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .brandId()
              * .createdAt()
              * .customerId()
              * .status()
@@ -445,6 +464,7 @@ private constructor(
         /** A builder for [Data]. */
         class Builder internal constructor() {
 
+            private var brandId: JsonField<String>? = null
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var customerId: JsonField<String>? = null
             private var status: JsonField<Status>? = null
@@ -455,6 +475,7 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(data: Data) = apply {
+                brandId = data.brandId
                 createdAt = data.createdAt
                 customerId = data.customerId
                 status = data.status
@@ -463,6 +484,18 @@ private constructor(
                 paymentId = data.paymentId
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
+
+            /** Brand id this dunning attempt belongs to */
+            fun brandId(brandId: String) = brandId(JsonField.of(brandId))
+
+            /**
+             * Sets [Builder.brandId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.brandId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun brandId(brandId: JsonField<String>) = apply { this.brandId = brandId }
 
             fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
@@ -566,6 +599,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .brandId()
              * .createdAt()
              * .customerId()
              * .status()
@@ -577,6 +611,7 @@ private constructor(
              */
             fun build(): Data =
                 Data(
+                    checkRequired("brandId", brandId),
                     checkRequired("createdAt", createdAt),
                     checkRequired("customerId", customerId),
                     checkRequired("status", status),
@@ -603,6 +638,7 @@ private constructor(
                 return@apply
             }
 
+            brandId()
             createdAt()
             customerId()
             status().validate()
@@ -628,7 +664,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (brandId.asKnown().isPresent) 1 else 0) +
+                (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (customerId.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (subscriptionId.asKnown().isPresent) 1 else 0) +
@@ -669,9 +706,11 @@ private constructor(
              * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Status] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -812,9 +851,11 @@ private constructor(
              * An enum containing [TriggerState]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [TriggerState] can contain an unknown value in a couple of cases:
+             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
+             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -927,6 +968,7 @@ private constructor(
             }
 
             return other is Data &&
+                brandId == other.brandId &&
                 createdAt == other.createdAt &&
                 customerId == other.customerId &&
                 status == other.status &&
@@ -938,6 +980,7 @@ private constructor(
 
         private val hashCode: Int by lazy {
             Objects.hash(
+                brandId,
                 createdAt,
                 customerId,
                 status,
@@ -951,7 +994,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{createdAt=$createdAt, customerId=$customerId, status=$status, subscriptionId=$subscriptionId, triggerState=$triggerState, paymentId=$paymentId, additionalProperties=$additionalProperties}"
+            "Data{brandId=$brandId, createdAt=$createdAt, customerId=$customerId, status=$status, subscriptionId=$subscriptionId, triggerState=$triggerState, paymentId=$paymentId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

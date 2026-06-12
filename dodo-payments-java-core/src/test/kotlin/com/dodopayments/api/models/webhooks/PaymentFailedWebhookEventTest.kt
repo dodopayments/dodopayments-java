@@ -80,7 +80,6 @@ internal class PaymentFailedWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -94,7 +93,6 @@ internal class PaymentFailedWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
@@ -207,7 +205,6 @@ internal class PaymentFailedWebhookEventTest {
                             .build()
                     )
                     .paymentId("payment_id")
-                    .paymentProvider(Payment.PaymentProvider.STRIPE)
                     .addRefund(
                         RefundListItem.builder()
                             .businessId("business_id")
@@ -221,7 +218,6 @@ internal class PaymentFailedWebhookEventTest {
                             .reason("reason")
                             .build()
                     )
-                    .retryAttempt(0)
                     .settlementAmount(0)
                     .settlementCurrency(Currency.AED)
                     .totalAmount(0)
@@ -336,7 +332,6 @@ internal class PaymentFailedWebhookEventTest {
                                 .build()
                         )
                         .paymentId("payment_id")
-                        .paymentProvider(Payment.PaymentProvider.STRIPE)
                         .addRefund(
                             RefundListItem.builder()
                                 .businessId("business_id")
@@ -350,7 +345,6 @@ internal class PaymentFailedWebhookEventTest {
                                 .reason("reason")
                                 .build()
                         )
-                        .retryAttempt(0)
                         .settlementAmount(0)
                         .settlementCurrency(Currency.AED)
                         .totalAmount(0)
