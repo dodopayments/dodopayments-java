@@ -297,7 +297,7 @@ private constructor(
 
     /**
      * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's own
-     * Hyperswitch connector); `dodo` for everything Dodo processed itself.
+     * payment connector); `dodo` for everything Dodo processed itself.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1139,7 +1139,7 @@ private constructor(
 
         /**
          * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's
-         * own Hyperswitch connector); `dodo` for everything Dodo processed itself.
+         * own payment connector); `dodo` for everything Dodo processed itself.
          */
         fun paymentProvider(paymentProvider: PaymentProvider) =
             paymentProvider(JsonField.of(paymentProvider))
@@ -2017,7 +2017,7 @@ private constructor(
 
     /**
      * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's own
-     * Hyperswitch connector); `dodo` for everything Dodo processed itself.
+     * payment connector); `dodo` for everything Dodo processed itself.
      */
     class PaymentProvider @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
