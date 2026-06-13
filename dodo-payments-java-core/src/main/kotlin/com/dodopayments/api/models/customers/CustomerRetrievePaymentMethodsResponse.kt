@@ -251,7 +251,7 @@ private constructor(
         fun lastUsedAt(): Optional<OffsetDateTime> = lastUsedAt.getOptional("last_used_at")
 
         /**
-         * All supported payment method types (from Hyperswitch).
+         * All supported payment method types.
          *
          * Used for disabled-payment-methods filtering and validation.
          *
@@ -433,7 +433,7 @@ private constructor(
             }
 
             /**
-             * All supported payment method types (from Hyperswitch).
+             * All supported payment method types.
              *
              * Used for disabled-payment-methods filtering and validation.
              */
