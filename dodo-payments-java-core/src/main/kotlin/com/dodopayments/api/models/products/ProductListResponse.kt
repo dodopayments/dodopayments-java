@@ -2,6 +2,7 @@
 
 package com.dodopayments.api.models.products
 
+import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.ExcludeMissing
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.core.JsonMissing
@@ -39,6 +40,7 @@ private constructor(
     private val name: JsonField<String>,
     private val price: JsonField<Int>,
     private val priceDetail: JsonField<Price>,
+    private val pricingMode: JsonField<PricingMode>,
     private val taxInclusive: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -75,6 +77,9 @@ private constructor(
         @JsonProperty("price_detail")
         @ExcludeMissing
         priceDetail: JsonField<Price> = JsonMissing.of(),
+        @JsonProperty("pricing_mode")
+        @ExcludeMissing
+        pricingMode: JsonField<PricingMode> = JsonMissing.of(),
         @JsonProperty("tax_inclusive")
         @ExcludeMissing
         taxInclusive: JsonField<Boolean> = JsonMissing.of(),
@@ -93,6 +98,7 @@ private constructor(
         name,
         price,
         priceDetail,
+        pricingMode,
         taxInclusive,
         mutableMapOf(),
     )
@@ -217,6 +223,14 @@ private constructor(
     fun priceDetail(): Optional<Price> = priceDetail.getOptional("price_detail")
 
     /**
+     * Pricing mode for localized pricing. NULL means base-only (no localized rules apply).
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun pricingMode(): Optional<PricingMode> = pricingMode.getOptional("pricing_mode")
+
+    /**
      * Indicates if the price is tax inclusive
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -333,6 +347,15 @@ private constructor(
     @JsonProperty("price_detail") @ExcludeMissing fun _priceDetail(): JsonField<Price> = priceDetail
 
     /**
+     * Returns the raw JSON value of [pricingMode].
+     *
+     * Unlike [pricingMode], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("pricing_mode")
+    @ExcludeMissing
+    fun _pricingMode(): JsonField<PricingMode> = pricingMode
+
+    /**
      * Returns the raw JSON value of [taxInclusive].
      *
      * Unlike [taxInclusive], this method doesn't throw if the JSON field has an unexpected type.
@@ -390,6 +413,7 @@ private constructor(
         private var name: JsonField<String> = JsonMissing.of()
         private var price: JsonField<Int> = JsonMissing.of()
         private var priceDetail: JsonField<Price> = JsonMissing.of()
+        private var pricingMode: JsonField<PricingMode> = JsonMissing.of()
         private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -409,6 +433,7 @@ private constructor(
             name = productListResponse.name
             price = productListResponse.price
             priceDetail = productListResponse.priceDetail
+            pricingMode = productListResponse.pricingMode
             taxInclusive = productListResponse.taxInclusive
             additionalProperties = productListResponse.additionalProperties.toMutableMap()
         }
@@ -639,6 +664,23 @@ private constructor(
         fun priceDetail(usageBased: Price.UsageBasedPrice) =
             priceDetail(Price.ofUsageBased(usageBased))
 
+        /** Pricing mode for localized pricing. NULL means base-only (no localized rules apply). */
+        fun pricingMode(pricingMode: PricingMode?) = pricingMode(JsonField.ofNullable(pricingMode))
+
+        /** Alias for calling [Builder.pricingMode] with `pricingMode.orElse(null)`. */
+        fun pricingMode(pricingMode: Optional<PricingMode>) = pricingMode(pricingMode.getOrNull())
+
+        /**
+         * Sets [Builder.pricingMode] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.pricingMode] with a well-typed [PricingMode] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun pricingMode(pricingMode: JsonField<PricingMode>) = apply {
+            this.pricingMode = pricingMode
+        }
+
         /** Indicates if the price is tax inclusive */
         fun taxInclusive(taxInclusive: Boolean?) = taxInclusive(JsonField.ofNullable(taxInclusive))
 
@@ -717,6 +759,7 @@ private constructor(
                 name,
                 price,
                 priceDetail,
+                pricingMode,
                 taxInclusive,
                 additionalProperties.toMutableMap(),
             )
@@ -751,6 +794,7 @@ private constructor(
         name()
         price()
         priceDetail().ifPresent { it.validate() }
+        pricingMode().ifPresent { it.validate() }
         taxInclusive()
         validated = true
     }
@@ -784,6 +828,7 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (price.asKnown().isPresent) 1 else 0) +
             (priceDetail.asKnown().getOrNull()?.validity() ?: 0) +
+            (pricingMode.asKnown().getOrNull()?.validity() ?: 0) +
             (if (taxInclusive.asKnown().isPresent) 1 else 0)
 
     /** Additional custom data associated with the product */
@@ -895,6 +940,146 @@ private constructor(
         override fun toString() = "Metadata{additionalProperties=$additionalProperties}"
     }
 
+    /** Pricing mode for localized pricing. NULL means base-only (no localized rules apply). */
+    class PricingMode @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val BY_CURRENCY = of("by_currency")
+
+            @JvmField val BY_COUNTRY = of("by_country")
+
+            @JvmStatic fun of(value: String) = PricingMode(JsonField.of(value))
+        }
+
+        /** An enum containing [PricingMode]'s known values. */
+        enum class Known {
+            BY_CURRENCY,
+            BY_COUNTRY,
+        }
+
+        /**
+         * An enum containing [PricingMode]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [PricingMode] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            BY_CURRENCY,
+            BY_COUNTRY,
+            /**
+             * An enum member indicating that [PricingMode] was instantiated with an unknown value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                BY_CURRENCY -> Value.BY_CURRENCY
+                BY_COUNTRY -> Value.BY_COUNTRY
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                BY_CURRENCY -> Known.BY_CURRENCY
+                BY_COUNTRY -> Known.BY_COUNTRY
+                else -> throw DodoPaymentsInvalidDataException("Unknown PricingMode: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws DodoPaymentsInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow {
+                DodoPaymentsInvalidDataException("Value is not a String")
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
+         *   its expected type.
+         */
+        fun validate(): PricingMode = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is PricingMode && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -915,6 +1100,7 @@ private constructor(
             name == other.name &&
             price == other.price &&
             priceDetail == other.priceDetail &&
+            pricingMode == other.pricingMode &&
             taxInclusive == other.taxInclusive &&
             additionalProperties == other.additionalProperties
     }
@@ -935,6 +1121,7 @@ private constructor(
             name,
             price,
             priceDetail,
+            pricingMode,
             taxInclusive,
             additionalProperties,
         )
@@ -943,5 +1130,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ProductListResponse{businessId=$businessId, createdAt=$createdAt, entitlements=$entitlements, isRecurring=$isRecurring, metadata=$metadata, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, currency=$currency, description=$description, image=$image, name=$name, price=$price, priceDetail=$priceDetail, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
+        "ProductListResponse{businessId=$businessId, createdAt=$createdAt, entitlements=$entitlements, isRecurring=$isRecurring, metadata=$metadata, productId=$productId, taxCategory=$taxCategory, updatedAt=$updatedAt, currency=$currency, description=$description, image=$image, name=$name, price=$price, priceDetail=$priceDetail, pricingMode=$pricingMode, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
 }
