@@ -1,13 +1,5 @@
 # Changelog
 
-## [1.104.0](https://github.com/dodopayments/dodopayments-java/compare/v1.103.0...v1.104.0) (2026-06-13)
-
-
-### Features
-
-* **spec:** update OpenAPI to 1.105.0 — localized prices ([5f80800](https://github.com/dodopayments/dodopayments-java/commit/5f8080034397a92f0fc21ef2e2b85f8bcb74d95c))
-* **spec:** update OpenAPI to 1.105.0 — localized prices ([40f360c](https://github.com/dodopayments/dodopayments-java/commit/40f360c7ad5aa8c45f01b89552d13ebb9c06e06f))
-
 ## [1.103.0](https://github.com/dodopayments/dodopayments-java/compare/v1.102.1...v1.103.0) (2026-06-12)
 
 
