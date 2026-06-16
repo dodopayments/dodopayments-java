@@ -90,7 +90,9 @@ internal class CheckoutSessionPreviewResponseTest {
                         .tax(0)
                         .build()
                 )
+                .taxIdBusinessName("tax_id_business_name")
                 .taxIdErrMsg("tax_id_err_msg")
+                .taxIdFormatName("tax_id_format_name")
                 .totalTax(0)
                 .build()
 
@@ -171,7 +173,10 @@ internal class CheckoutSessionPreviewResponseTest {
                     .tax(0)
                     .build()
             )
+        assertThat(checkoutSessionPreviewResponse.taxIdBusinessName())
+            .contains("tax_id_business_name")
         assertThat(checkoutSessionPreviewResponse.taxIdErrMsg()).contains("tax_id_err_msg")
+        assertThat(checkoutSessionPreviewResponse.taxIdFormatName()).contains("tax_id_format_name")
         assertThat(checkoutSessionPreviewResponse.totalTax()).contains(0)
     }
 
@@ -254,7 +259,9 @@ internal class CheckoutSessionPreviewResponseTest {
                         .tax(0)
                         .build()
                 )
+                .taxIdBusinessName("tax_id_business_name")
                 .taxIdErrMsg("tax_id_err_msg")
+                .taxIdFormatName("tax_id_format_name")
                 .totalTax(0)
                 .build()
 
