@@ -21,7 +21,12 @@ internal class ImageServiceAsyncTest {
         val imageServiceAsync = client.products().images()
 
         val imageFuture =
-            imageServiceAsync.update(ImageUpdateParams.builder().id("id").forceUpdate(true).build())
+            imageServiceAsync.update(
+                ImageUpdateParams.builder()
+                    .id("pdt_R8AWMPiV8RyJElcCKvAID")
+                    .forceUpdate(true)
+                    .build()
+            )
 
         val image = imageFuture.get()
         image.validate()

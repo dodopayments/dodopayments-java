@@ -45,7 +45,7 @@ internal class BrandServiceAsyncTest {
                 .build()
         val brandServiceAsync = client.brands()
 
-        val brandFuture = brandServiceAsync.retrieve("id")
+        val brandFuture = brandServiceAsync.retrieve("brnd_8dFiAW42v28JzhlVSocjq")
 
         val brand = brandFuture.get()
         brand.validate()
@@ -63,7 +63,7 @@ internal class BrandServiceAsyncTest {
         val brandFuture =
             brandServiceAsync.update(
                 BrandUpdateParams.builder()
-                    .id("id")
+                    .id("brnd_8dFiAW42v28JzhlVSocjq")
                     .description("description")
                     .imageId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .name("name")
@@ -101,7 +101,7 @@ internal class BrandServiceAsyncTest {
                 .build()
         val brandServiceAsync = client.brands()
 
-        val responseFuture = brandServiceAsync.updateImages("id")
+        val responseFuture = brandServiceAsync.updateImages("brnd_8dFiAW42v28JzhlVSocjq")
 
         val response = responseFuture.get()
         response.validate()

@@ -21,7 +21,9 @@ internal class FileServiceAsyncTest {
         val fileServiceAsync = client.entitlements().files()
 
         val future =
-            fileServiceAsync.delete(FileDeleteParams.builder().id("id").fileId("file_id").build())
+            fileServiceAsync.delete(
+                FileDeleteParams.builder().id("ent_jt7jcvI79Xh8eehqgWdcm").fileId("file_id").build()
+            )
 
         val response = future.get()
     }
@@ -35,7 +37,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.entitlements().files()
 
-        val responseFuture = fileServiceAsync.upload("id")
+        val responseFuture = fileServiceAsync.upload("ent_jt7jcvI79Xh8eehqgWdcm")
 
         val response = responseFuture.get()
         response.validate()
