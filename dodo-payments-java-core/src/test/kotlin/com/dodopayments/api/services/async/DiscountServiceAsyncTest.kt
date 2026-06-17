@@ -57,7 +57,7 @@ internal class DiscountServiceAsyncTest {
                 .build()
         val discountServiceAsync = client.discounts()
 
-        val discountFuture = discountServiceAsync.retrieve("discount_id")
+        val discountFuture = discountServiceAsync.retrieve("dsc_qxxEmg5PuM1uNTE0LgkP9")
 
         val discount = discountFuture.get()
         discount.validate()
@@ -75,7 +75,7 @@ internal class DiscountServiceAsyncTest {
         val discountFuture =
             discountServiceAsync.update(
                 DiscountUpdateParams.builder()
-                    .discountId("discount_id")
+                    .discountId("dsc_qxxEmg5PuM1uNTE0LgkP9")
                     .amount(0)
                     .code("code")
                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -121,7 +121,7 @@ internal class DiscountServiceAsyncTest {
                 .build()
         val discountServiceAsync = client.discounts()
 
-        val future = discountServiceAsync.delete("discount_id")
+        val future = discountServiceAsync.delete("dsc_qxxEmg5PuM1uNTE0LgkP9")
 
         val response = future.get()
     }
