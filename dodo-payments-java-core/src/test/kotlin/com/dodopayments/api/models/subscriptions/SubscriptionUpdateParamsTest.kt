@@ -15,7 +15,7 @@ internal class SubscriptionUpdateParamsTest {
     @Test
     fun create() {
         SubscriptionUpdateParams.builder()
-            .subscriptionId("subscription_id")
+            .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
             .billing(
                 BillingAddress.builder()
                     .country(CountryCode.AF)
@@ -64,9 +64,10 @@ internal class SubscriptionUpdateParamsTest {
 
     @Test
     fun pathParams() {
-        val params = SubscriptionUpdateParams.builder().subscriptionId("subscription_id").build()
+        val params =
+            SubscriptionUpdateParams.builder().subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("subscription_id")
+        assertThat(params._pathParam(0)).isEqualTo("sub_Iuaq622bbmmfOGrVTqdXv")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -75,7 +76,7 @@ internal class SubscriptionUpdateParamsTest {
     fun body() {
         val params =
             SubscriptionUpdateParams.builder()
-                .subscriptionId("subscription_id")
+                .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                 .billing(
                     BillingAddress.builder()
                         .country(CountryCode.AF)
@@ -176,7 +177,8 @@ internal class SubscriptionUpdateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = SubscriptionUpdateParams.builder().subscriptionId("subscription_id").build()
+        val params =
+            SubscriptionUpdateParams.builder().subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv").build()
 
         val body = params._body()
     }

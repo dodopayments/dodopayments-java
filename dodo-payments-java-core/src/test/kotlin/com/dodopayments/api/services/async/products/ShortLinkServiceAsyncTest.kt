@@ -24,7 +24,7 @@ internal class ShortLinkServiceAsyncTest {
         val shortLinkFuture =
             shortLinkServiceAsync.create(
                 ShortLinkCreateParams.builder()
-                    .id("id")
+                    .id("pdt_R8AWMPiV8RyJElcCKvAID")
                     .slug("slug")
                     .staticCheckoutParams(
                         ShortLinkCreateParams.StaticCheckoutParams.builder()
