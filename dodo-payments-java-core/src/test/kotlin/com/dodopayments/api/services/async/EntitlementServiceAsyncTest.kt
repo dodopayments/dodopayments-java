@@ -58,7 +58,7 @@ internal class EntitlementServiceAsyncTest {
                 .build()
         val entitlementServiceAsync = client.entitlements()
 
-        val entitlementFuture = entitlementServiceAsync.retrieve("id")
+        val entitlementFuture = entitlementServiceAsync.retrieve("ent_jt7jcvI79Xh8eehqgWdcm")
 
         val entitlement = entitlementFuture.get()
         entitlement.validate()
@@ -76,7 +76,7 @@ internal class EntitlementServiceAsyncTest {
         val entitlementFuture =
             entitlementServiceAsync.update(
                 EntitlementUpdateParams.builder()
-                    .id("id")
+                    .id("ent_jt7jcvI79Xh8eehqgWdcm")
                     .description("description")
                     .integrationConfig(
                         IntegrationConfig.GitHubConfig.builder()
@@ -121,7 +121,7 @@ internal class EntitlementServiceAsyncTest {
                 .build()
         val entitlementServiceAsync = client.entitlements()
 
-        val future = entitlementServiceAsync.delete("id")
+        val future = entitlementServiceAsync.delete("ent_jt7jcvI79Xh8eehqgWdcm")
 
         val response = future.get()
     }

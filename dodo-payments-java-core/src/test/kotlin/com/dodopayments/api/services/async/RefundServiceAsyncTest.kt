@@ -54,7 +54,7 @@ internal class RefundServiceAsyncTest {
                 .build()
         val refundServiceAsync = client.refunds()
 
-        val refundFuture = refundServiceAsync.retrieve("refund_id")
+        val refundFuture = refundServiceAsync.retrieve("ref_F0gZetLvTxxBrMU2CZcmy")
 
         val refund = refundFuture.get()
         refund.validate()
