@@ -27,7 +27,7 @@ internal class GroupServiceAsyncTest {
         val productCollectionGroupResponseFuture =
             groupServiceAsync.create(
                 GroupCreateParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .productCollectionGroupDetails(
                         ProductCollectionGroupDetails.builder()
                             .addProduct(
@@ -56,7 +56,7 @@ internal class GroupServiceAsyncTest {
         val future =
             groupServiceAsync.update(
                 GroupUpdateParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .groupName("group_name")
                     .addProductOrder("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
@@ -79,7 +79,7 @@ internal class GroupServiceAsyncTest {
         val future =
             groupServiceAsync.delete(
                 GroupDeleteParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .build()
             )

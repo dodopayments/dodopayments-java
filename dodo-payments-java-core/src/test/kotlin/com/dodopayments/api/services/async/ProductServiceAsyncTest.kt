@@ -109,7 +109,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val productFuture = productServiceAsync.retrieve("id")
+        val productFuture = productServiceAsync.retrieve("pdt_R8AWMPiV8RyJElcCKvAID")
 
         val product = productFuture.get()
         product.validate()
@@ -127,7 +127,7 @@ internal class ProductServiceAsyncTest {
         val future =
             productServiceAsync.update(
                 ProductUpdateParams.builder()
-                    .id("id")
+                    .id("pdt_R8AWMPiV8RyJElcCKvAID")
                     .addAddon("string")
                     .brandId("brand_id")
                     .addCreditEntitlement(
@@ -218,7 +218,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val future = productServiceAsync.archive("id")
+        val future = productServiceAsync.archive("pdt_R8AWMPiV8RyJElcCKvAID")
 
         val response = future.get()
     }
@@ -232,7 +232,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val future = productServiceAsync.unarchive("id")
+        val future = productServiceAsync.unarchive("pdt_R8AWMPiV8RyJElcCKvAID")
 
         val response = future.get()
     }
@@ -248,7 +248,10 @@ internal class ProductServiceAsyncTest {
 
         val responseFuture =
             productServiceAsync.updateFiles(
-                ProductUpdateFilesParams.builder().id("id").fileName("file_name").build()
+                ProductUpdateFilesParams.builder()
+                    .id("pdt_R8AWMPiV8RyJElcCKvAID")
+                    .fileName("file_name")
+                    .build()
             )
 
         val response = responseFuture.get()

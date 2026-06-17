@@ -29,8 +29,8 @@ internal class BalanceServiceAsyncTest {
         val customerCreditBalanceFuture =
             balanceServiceAsync.retrieve(
                 BalanceRetrieveParams.builder()
-                    .creditEntitlementId("credit_entitlement_id")
-                    .customerId("customer_id")
+                    .creditEntitlementId("cde_ztxm5XJsKxWucRWA3rjdM")
+                    .customerId("cus_TV52uJWWXt2yIoBBxpjaa")
                     .build()
             )
 
@@ -47,7 +47,7 @@ internal class BalanceServiceAsyncTest {
                 .build()
         val balanceServiceAsync = client.creditEntitlements().balances()
 
-        val pageFuture = balanceServiceAsync.list("credit_entitlement_id")
+        val pageFuture = balanceServiceAsync.list("cde_ztxm5XJsKxWucRWA3rjdM")
 
         val page = pageFuture.get()
         page.response().validate()
@@ -65,8 +65,8 @@ internal class BalanceServiceAsyncTest {
         val responseFuture =
             balanceServiceAsync.createLedgerEntry(
                 BalanceCreateLedgerEntryParams.builder()
-                    .creditEntitlementId("credit_entitlement_id")
-                    .customerId("customer_id")
+                    .creditEntitlementId("cde_ztxm5XJsKxWucRWA3rjdM")
+                    .customerId("cus_TV52uJWWXt2yIoBBxpjaa")
                     .amount("amount")
                     .entryType(LedgerEntryType.CREDIT)
                     .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -96,8 +96,8 @@ internal class BalanceServiceAsyncTest {
         val pageFuture =
             balanceServiceAsync.listGrants(
                 BalanceListGrantsParams.builder()
-                    .creditEntitlementId("credit_entitlement_id")
-                    .customerId("customer_id")
+                    .creditEntitlementId("cde_ztxm5XJsKxWucRWA3rjdM")
+                    .customerId("cus_TV52uJWWXt2yIoBBxpjaa")
                     .build()
             )
 
@@ -117,8 +117,8 @@ internal class BalanceServiceAsyncTest {
         val pageFuture =
             balanceServiceAsync.listLedger(
                 BalanceListLedgerParams.builder()
-                    .creditEntitlementId("credit_entitlement_id")
-                    .customerId("customer_id")
+                    .creditEntitlementId("cde_ztxm5XJsKxWucRWA3rjdM")
+                    .customerId("cus_TV52uJWWXt2yIoBBxpjaa")
                     .build()
             )
 

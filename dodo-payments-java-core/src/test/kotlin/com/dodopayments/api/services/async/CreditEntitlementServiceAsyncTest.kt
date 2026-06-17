@@ -58,7 +58,8 @@ internal class CreditEntitlementServiceAsyncTest {
                 .build()
         val creditEntitlementServiceAsync = client.creditEntitlements()
 
-        val creditEntitlementFuture = creditEntitlementServiceAsync.retrieve("id")
+        val creditEntitlementFuture =
+            creditEntitlementServiceAsync.retrieve("cde_ztxm5XJsKxWucRWA3rjdM")
 
         val creditEntitlement = creditEntitlementFuture.get()
         creditEntitlement.validate()
@@ -76,7 +77,7 @@ internal class CreditEntitlementServiceAsyncTest {
         val future =
             creditEntitlementServiceAsync.update(
                 CreditEntitlementUpdateParams.builder()
-                    .id("id")
+                    .id("cde_ztxm5XJsKxWucRWA3rjdM")
                     .currency(Currency.AED)
                     .description("description")
                     .expiresAfterDays(0)
@@ -121,7 +122,7 @@ internal class CreditEntitlementServiceAsyncTest {
                 .build()
         val creditEntitlementServiceAsync = client.creditEntitlements()
 
-        val future = creditEntitlementServiceAsync.delete("id")
+        val future = creditEntitlementServiceAsync.delete("cde_ztxm5XJsKxWucRWA3rjdM")
 
         val response = future.get()
     }
@@ -135,7 +136,7 @@ internal class CreditEntitlementServiceAsyncTest {
                 .build()
         val creditEntitlementServiceAsync = client.creditEntitlements()
 
-        val future = creditEntitlementServiceAsync.undelete("id")
+        val future = creditEntitlementServiceAsync.undelete("cde_ztxm5XJsKxWucRWA3rjdM")
 
         val response = future.get()
     }

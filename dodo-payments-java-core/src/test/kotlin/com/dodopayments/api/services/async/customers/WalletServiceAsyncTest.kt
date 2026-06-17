@@ -19,7 +19,7 @@ internal class WalletServiceAsyncTest {
                 .build()
         val walletServiceAsync = client.customers().wallets()
 
-        val walletsFuture = walletServiceAsync.list("customer_id")
+        val walletsFuture = walletServiceAsync.list("cus_TV52uJWWXt2yIoBBxpjaa")
 
         val wallets = walletsFuture.get()
         wallets.validate()
