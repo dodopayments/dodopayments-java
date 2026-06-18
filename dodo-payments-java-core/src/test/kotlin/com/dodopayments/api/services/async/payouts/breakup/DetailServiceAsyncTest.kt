@@ -19,7 +19,7 @@ internal class DetailServiceAsyncTest {
                 .build()
         val detailServiceAsync = client.payouts().breakup().details()
 
-        val pageFuture = detailServiceAsync.list("payout_id")
+        val pageFuture = detailServiceAsync.list("pyt_zFTrrn4sk3x3y2vjDBW3T")
 
         val page = pageFuture.get()
         page.response().validate()
@@ -34,7 +34,7 @@ internal class DetailServiceAsyncTest {
                 .build()
         val detailServiceAsync = client.payouts().breakup().details()
 
-        val future = detailServiceAsync.downloadCsv("payout_id")
+        val future = detailServiceAsync.downloadCsv("pyt_zFTrrn4sk3x3y2vjDBW3T")
 
         val response = future.get()
     }

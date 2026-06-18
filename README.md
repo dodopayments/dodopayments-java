@@ -214,7 +214,7 @@ These methods return [`HttpResponse`](dodo-payments-java-core/src/main/kotlin/co
 import com.dodopayments.api.core.http.HttpResponse;
 import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams;
 
-HttpResponse payment = client.invoices().payments().retrieve("payment_id");
+HttpResponse payment = client.invoices().payments().retrieve("pay_gr4RizvMOXFJ6xca3y2tU");
 ```
 
 To save the response content to a file, use the [`Files.copy(...)`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#copy-java.io.InputStream-java.nio.file.Path-java.nio.file.CopyOption...-) method:
