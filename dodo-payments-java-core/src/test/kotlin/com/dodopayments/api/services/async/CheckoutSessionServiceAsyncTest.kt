@@ -201,7 +201,8 @@ internal class CheckoutSessionServiceAsyncTest {
                 .build()
         val checkoutSessionServiceAsync = client.checkoutSessions()
 
-        val checkoutSessionStatusFuture = checkoutSessionServiceAsync.retrieve("id")
+        val checkoutSessionStatusFuture =
+            checkoutSessionServiceAsync.retrieve("cks_n010SZaY4NXc7F1ck3Tq1")
 
         val checkoutSessionStatus = checkoutSessionStatusFuture.get()
         checkoutSessionStatus.validate()

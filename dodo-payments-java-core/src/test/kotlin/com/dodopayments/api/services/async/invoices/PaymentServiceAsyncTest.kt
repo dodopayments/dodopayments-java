@@ -30,7 +30,7 @@ internal class PaymentServiceAsyncTest {
         val paymentServiceAsync = client.invoices().payments()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val paymentFuture = paymentServiceAsync.retrieve("payment_id")
+        val paymentFuture = paymentServiceAsync.retrieve("pay_gr4RizvMOXFJ6xca3y2tU")
 
         val payment = paymentFuture.get()
         assertThat(payment.body()).hasContent("abc")
@@ -46,7 +46,7 @@ internal class PaymentServiceAsyncTest {
         val paymentServiceAsync = client.invoices().payments()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val responseFuture = paymentServiceAsync.retrievePayout("payout_id")
+        val responseFuture = paymentServiceAsync.retrievePayout("pyt_zFTrrn4sk3x3y2vjDBW3T")
 
         val response = responseFuture.get()
         assertThat(response.body()).hasContent("abc")
@@ -62,7 +62,7 @@ internal class PaymentServiceAsyncTest {
         val paymentServiceAsync = client.invoices().payments()
         stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val responseFuture = paymentServiceAsync.retrieveRefund("refund_id")
+        val responseFuture = paymentServiceAsync.retrieveRefund("ref_F0gZetLvTxxBrMU2CZcmy")
 
         val response = responseFuture.get()
         assertThat(response.body()).hasContent("abc")

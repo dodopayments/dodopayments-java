@@ -26,7 +26,7 @@ internal class ItemServiceAsyncTest {
         val productCollectionProductsFuture =
             itemServiceAsync.create(
                 ItemCreateParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .addProduct(GroupProduct.builder().productId("product_id").status(true).build())
                     .build()
@@ -48,7 +48,7 @@ internal class ItemServiceAsyncTest {
         val future =
             itemServiceAsync.update(
                 ItemUpdateParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .status(true)
@@ -70,7 +70,7 @@ internal class ItemServiceAsyncTest {
         val future =
             itemServiceAsync.delete(
                 ItemDeleteParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .groupId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .itemId("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e")
                     .build()
