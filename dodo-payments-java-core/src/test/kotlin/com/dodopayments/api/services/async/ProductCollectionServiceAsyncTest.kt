@@ -70,7 +70,8 @@ internal class ProductCollectionServiceAsyncTest {
                 .build()
         val productCollectionServiceAsync = client.productCollections()
 
-        val productCollectionFuture = productCollectionServiceAsync.retrieve("id")
+        val productCollectionFuture =
+            productCollectionServiceAsync.retrieve("pdc_8BWv0hojwUH7iCDabr0NI")
 
         val productCollection = productCollectionFuture.get()
         productCollection.validate()
@@ -88,7 +89,7 @@ internal class ProductCollectionServiceAsyncTest {
         val future =
             productCollectionServiceAsync.update(
                 ProductCollectionUpdateParams.builder()
-                    .id("id")
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
                     .brandId("brand_id")
                     .description("description")
                     .effectiveAtOnDowngrade(
@@ -139,7 +140,7 @@ internal class ProductCollectionServiceAsyncTest {
                 .build()
         val productCollectionServiceAsync = client.productCollections()
 
-        val future = productCollectionServiceAsync.delete("id")
+        val future = productCollectionServiceAsync.delete("pdc_8BWv0hojwUH7iCDabr0NI")
 
         val response = future.get()
     }
@@ -153,7 +154,7 @@ internal class ProductCollectionServiceAsyncTest {
                 .build()
         val productCollectionServiceAsync = client.productCollections()
 
-        val responseFuture = productCollectionServiceAsync.unarchive("id")
+        val responseFuture = productCollectionServiceAsync.unarchive("pdc_8BWv0hojwUH7iCDabr0NI")
 
         val response = responseFuture.get()
         response.validate()
@@ -170,7 +171,10 @@ internal class ProductCollectionServiceAsyncTest {
 
         val responseFuture =
             productCollectionServiceAsync.updateImages(
-                ProductCollectionUpdateImagesParams.builder().id("id").forceUpdate(true).build()
+                ProductCollectionUpdateImagesParams.builder()
+                    .id("pdc_8BWv0hojwUH7iCDabr0NI")
+                    .forceUpdate(true)
+                    .build()
             )
 
         val response = responseFuture.get()

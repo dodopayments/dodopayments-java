@@ -108,7 +108,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture = subscriptionServiceAsync.retrieve("subscription_id")
+        val subscriptionFuture = subscriptionServiceAsync.retrieve("sub_Iuaq622bbmmfOGrVTqdXv")
 
         val subscription = subscriptionFuture.get()
         subscription.validate()
@@ -126,7 +126,7 @@ internal class SubscriptionServiceAsyncTest {
         val subscriptionFuture =
             subscriptionServiceAsync.update(
                 SubscriptionUpdateParams.builder()
-                    .subscriptionId("subscription_id")
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                     .billing(
                         BillingAddress.builder()
                             .country(CountryCode.AF)
@@ -201,7 +201,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val future = subscriptionServiceAsync.cancelChangePlan("subscription_id")
+        val future = subscriptionServiceAsync.cancelChangePlan("sub_Iuaq622bbmmfOGrVTqdXv")
 
         val response = future.get()
     }
@@ -218,7 +218,7 @@ internal class SubscriptionServiceAsyncTest {
         val future =
             subscriptionServiceAsync.changePlan(
                 SubscriptionChangePlanParams.builder()
-                    .subscriptionId("subscription_id")
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                     .updateSubscriptionPlanReq(
                         UpdateSubscriptionPlanReq.builder()
                             .productId("product_id")
@@ -259,7 +259,7 @@ internal class SubscriptionServiceAsyncTest {
         val responseFuture =
             subscriptionServiceAsync.charge(
                 SubscriptionChargeParams.builder()
-                    .subscriptionId("subscription_id")
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                     .productPrice(0)
                     .adaptiveCurrencyFeesInclusive(true)
                     .customerBalanceConfig(
@@ -294,7 +294,7 @@ internal class SubscriptionServiceAsyncTest {
         val responseFuture =
             subscriptionServiceAsync.previewChangePlan(
                 SubscriptionPreviewChangePlanParams.builder()
-                    .subscriptionId("subscription_id")
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                     .updateSubscriptionPlanReq(
                         UpdateSubscriptionPlanReq.builder()
                             .productId("product_id")
@@ -333,7 +333,8 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val responseFuture = subscriptionServiceAsync.retrieveCreditUsage("subscription_id")
+        val responseFuture =
+            subscriptionServiceAsync.retrieveCreditUsage("sub_Iuaq622bbmmfOGrVTqdXv")
 
         val response = responseFuture.get()
         response.validate()
@@ -348,7 +349,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val pageFuture = subscriptionServiceAsync.retrieveUsageHistory("subscription_id")
+        val pageFuture = subscriptionServiceAsync.retrieveUsageHistory("sub_Iuaq622bbmmfOGrVTqdXv")
 
         val page = pageFuture.get()
         page.response().validate()
@@ -366,7 +367,7 @@ internal class SubscriptionServiceAsyncTest {
         val responseFuture =
             subscriptionServiceAsync.updatePaymentMethod(
                 SubscriptionUpdatePaymentMethodParams.builder()
-                    .subscriptionId("subscription_id")
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
                     .paymentMethod(
                         SubscriptionUpdatePaymentMethodParams.PaymentMethod.New.builder()
                             .addAllowedPaymentMethodType(PaymentMethodTypes.ACH)
