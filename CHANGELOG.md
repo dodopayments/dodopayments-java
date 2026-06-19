@@ -1,12 +1,5 @@
 # Changelog
 
-## [1.105.1](https://github.com/dodopayments/dodopayments-java/compare/v1.105.0...v1.105.1) (2026-06-17)
-
-
-### Chores
-
-* restore release-please-owned files from main ([e1ceb68](https://github.com/dodopayments/dodopayments-java/commit/e1ceb6892094ba253e8724668979906d7a0a93e9))
-
 ## [1.105.0](https://github.com/dodopayments/dodopayments-java/compare/v1.104.0...v1.105.0) (2026-06-16)
 
 
