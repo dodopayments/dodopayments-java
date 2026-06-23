@@ -5,6 +5,7 @@ package com.dodopayments.api.models.payments
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.Metadata
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -39,9 +40,7 @@ internal class PaymentCreateParamsTest {
             .addDiscountCode("string")
             .force3ds(true)
             .metadata(
-                PaymentCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
             .paymentLink(true)
             .paymentMethodId("payment_method_id")
@@ -83,7 +82,7 @@ internal class PaymentCreateParamsTest {
                 .addDiscountCode("string")
                 .force3ds(true)
                 .metadata(
-                    PaymentCreateParams.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -133,9 +132,7 @@ internal class PaymentCreateParamsTest {
         assertThat(body.force3ds()).contains(true)
         assertThat(body.metadata())
             .contains(
-                PaymentCreateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
         assertThat(body.paymentLink()).contains(true)
         assertThat(body.paymentMethodId()).contains("payment_method_id")
