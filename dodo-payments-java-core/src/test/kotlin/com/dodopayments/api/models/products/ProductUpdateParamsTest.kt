@@ -6,6 +6,7 @@ import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
+import com.dodopayments.api.models.products.localizedprices.PricingMode
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -75,7 +76,7 @@ internal class ProductUpdateParamsTest {
                     .taxInclusive(true)
                     .build()
             )
-            .pricingMode(ProductUpdateParams.PricingMode.BY_CURRENCY)
+            .pricingMode(PricingMode.BY_CURRENCY)
             .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
             .build()
     }
@@ -152,7 +153,7 @@ internal class ProductUpdateParamsTest {
                         .taxInclusive(true)
                         .build()
                 )
-                .pricingMode(ProductUpdateParams.PricingMode.BY_CURRENCY)
+                .pricingMode(PricingMode.BY_CURRENCY)
                 .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                 .build()
 
@@ -222,7 +223,7 @@ internal class ProductUpdateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.pricingMode()).contains(ProductUpdateParams.PricingMode.BY_CURRENCY)
+        assertThat(body.pricingMode()).contains(PricingMode.BY_CURRENCY)
         assertThat(body.taxCategory()).contains(TaxCategory.DIGITAL_PRODUCTS)
     }
 

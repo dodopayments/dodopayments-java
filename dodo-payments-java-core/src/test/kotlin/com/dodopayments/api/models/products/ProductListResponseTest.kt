@@ -9,6 +9,7 @@ import com.dodopayments.api.models.entitlements.GitHubPermission
 import com.dodopayments.api.models.entitlements.IntegrationConfigResponse
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
+import com.dodopayments.api.models.products.localizedprices.PricingMode
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -61,7 +62,7 @@ internal class ProductListResponseTest {
                         .taxInclusive(true)
                         .build()
                 )
-                .pricingMode(ProductListResponse.PricingMode.BY_CURRENCY)
+                .pricingMode(PricingMode.BY_CURRENCY)
                 .taxInclusive(true)
                 .build()
 
@@ -113,8 +114,7 @@ internal class ProductListResponseTest {
                         .build()
                 )
             )
-        assertThat(productListResponse.pricingMode())
-            .contains(ProductListResponse.PricingMode.BY_CURRENCY)
+        assertThat(productListResponse.pricingMode()).contains(PricingMode.BY_CURRENCY)
         assertThat(productListResponse.taxInclusive()).contains(true)
     }
 
@@ -164,7 +164,7 @@ internal class ProductListResponseTest {
                         .taxInclusive(true)
                         .build()
                 )
-                .pricingMode(ProductListResponse.PricingMode.BY_CURRENCY)
+                .pricingMode(PricingMode.BY_CURRENCY)
                 .taxInclusive(true)
                 .build()
 
