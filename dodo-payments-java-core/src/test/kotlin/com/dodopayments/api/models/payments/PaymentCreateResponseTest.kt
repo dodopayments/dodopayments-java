@@ -4,6 +4,7 @@ package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.misc.Metadata
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
@@ -23,7 +24,7 @@ internal class PaymentCreateResponseTest {
                         .email("email")
                         .name("name")
                         .metadata(
-                            CustomerLimitedDetails.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -31,7 +32,7 @@ internal class PaymentCreateResponseTest {
                         .build()
                 )
                 .metadata(
-                    PaymentCreateResponse.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -58,7 +59,7 @@ internal class PaymentCreateResponseTest {
                     .email("email")
                     .name("name")
                     .metadata(
-                        CustomerLimitedDetails.Metadata.builder()
+                        Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
@@ -67,9 +68,7 @@ internal class PaymentCreateResponseTest {
             )
         assertThat(paymentCreateResponse.metadata())
             .isEqualTo(
-                PaymentCreateResponse.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
         assertThat(paymentCreateResponse.paymentId()).isEqualTo("payment_id")
         assertThat(paymentCreateResponse.totalAmount()).isEqualTo(0)
@@ -100,7 +99,7 @@ internal class PaymentCreateResponseTest {
                         .email("email")
                         .name("name")
                         .metadata(
-                            CustomerLimitedDetails.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -108,7 +107,7 @@ internal class PaymentCreateResponseTest {
                         .build()
                 )
                 .metadata(
-                    PaymentCreateResponse.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
