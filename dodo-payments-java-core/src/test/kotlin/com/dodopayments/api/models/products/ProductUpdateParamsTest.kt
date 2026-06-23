@@ -5,7 +5,9 @@ package com.dodopayments.api.models.products
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.Metadata
 import com.dodopayments.api.models.misc.TaxCategory
+import com.dodopayments.api.models.products.localizedprices.PricingMode
 import com.dodopayments.api.models.subscriptions.TimeInterval
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -59,9 +61,7 @@ internal class ProductUpdateParamsTest {
             )
             .licenseKeyEnabled(true)
             .metadata(
-                ProductUpdateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
             .name("name")
             .price(
@@ -75,7 +75,7 @@ internal class ProductUpdateParamsTest {
                     .taxInclusive(true)
                     .build()
             )
-            .pricingMode(ProductUpdateParams.PricingMode.BY_CURRENCY)
+            .pricingMode(PricingMode.BY_CURRENCY)
             .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
             .build()
     }
@@ -136,7 +136,7 @@ internal class ProductUpdateParamsTest {
                 )
                 .licenseKeyEnabled(true)
                 .metadata(
-                    ProductUpdateParams.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -152,7 +152,7 @@ internal class ProductUpdateParamsTest {
                         .taxInclusive(true)
                         .build()
                 )
-                .pricingMode(ProductUpdateParams.PricingMode.BY_CURRENCY)
+                .pricingMode(PricingMode.BY_CURRENCY)
                 .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                 .build()
 
@@ -203,9 +203,7 @@ internal class ProductUpdateParamsTest {
         assertThat(body.licenseKeyEnabled()).contains(true)
         assertThat(body.metadata())
             .contains(
-                ProductUpdateParams.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
         assertThat(body.name()).contains("name")
         assertThat(body.price())
@@ -222,7 +220,7 @@ internal class ProductUpdateParamsTest {
                         .build()
                 )
             )
-        assertThat(body.pricingMode()).contains(ProductUpdateParams.PricingMode.BY_CURRENCY)
+        assertThat(body.pricingMode()).contains(PricingMode.BY_CURRENCY)
         assertThat(body.taxCategory()).contains(TaxCategory.DIGITAL_PRODUCTS)
     }
 

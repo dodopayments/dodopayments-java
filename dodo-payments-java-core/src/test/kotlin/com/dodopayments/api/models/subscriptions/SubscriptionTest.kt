@@ -9,6 +9,7 @@ import com.dodopayments.api.models.discounts.DiscountDetail
 import com.dodopayments.api.models.discounts.DiscountType
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.Metadata
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
@@ -65,7 +66,7 @@ internal class SubscriptionTest {
                         .email("email")
                         .name("name")
                         .metadata(
-                            CustomerLimitedDetails.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -73,7 +74,7 @@ internal class SubscriptionTest {
                         .build()
                 )
                 .metadata(
-                    Subscription.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -128,7 +129,7 @@ internal class SubscriptionTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .discountId("discount_id")
                         .metadata(
-                            DiscountDetail.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -215,7 +216,7 @@ internal class SubscriptionTest {
                     .email("email")
                     .name("name")
                     .metadata(
-                        CustomerLimitedDetails.Metadata.builder()
+                        Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
@@ -224,9 +225,7 @@ internal class SubscriptionTest {
             )
         assertThat(subscription.metadata())
             .isEqualTo(
-                Subscription.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
         assertThat(subscription.meterCreditEntitlementCart())
             .containsExactly(
@@ -284,7 +283,7 @@ internal class SubscriptionTest {
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .discountId("discount_id")
                     .metadata(
-                        DiscountDetail.Metadata.builder()
+                        Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
@@ -371,7 +370,7 @@ internal class SubscriptionTest {
                         .email("email")
                         .name("name")
                         .metadata(
-                            CustomerLimitedDetails.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -379,7 +378,7 @@ internal class SubscriptionTest {
                         .build()
                 )
                 .metadata(
-                    Subscription.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -434,7 +433,7 @@ internal class SubscriptionTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .discountId("discount_id")
                         .metadata(
-                            DiscountDetail.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )

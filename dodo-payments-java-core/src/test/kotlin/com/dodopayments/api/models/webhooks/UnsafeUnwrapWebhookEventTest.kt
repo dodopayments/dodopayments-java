@@ -19,6 +19,7 @@ import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
+import com.dodopayments.api.models.misc.Metadata
 import com.dodopayments.api.models.payments.BillingAddress
 import com.dodopayments.api.models.payments.CustomFieldResponse
 import com.dodopayments.api.models.payments.CustomerLimitedDetails
@@ -268,6 +269,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -342,6 +348,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -478,6 +489,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -552,6 +568,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -591,6 +612,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -665,6 +691,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -704,6 +735,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -780,6 +816,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -819,6 +860,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -894,6 +940,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -933,6 +984,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -1008,6 +1064,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -1047,6 +1108,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -1121,6 +1187,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -1160,6 +1231,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .creditEntitlementId("credit_entitlement_id")
                         .customerId("customer_id")
                         .isCredit(true)
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
                         .overageAfter("overage_after")
                         .overageBefore("overage_before")
                         .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -1236,6 +1312,11 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .creditEntitlementId("credit_entitlement_id")
                             .customerId("customer_id")
                             .isCredit(true)
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
                             .overageAfter("overage_after")
                             .overageBefore("overage_before")
                             .transactionType(CreditLedgerEntry.TransactionType.CREDIT_ADDED)
@@ -2153,7 +2234,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .entitlementId("entitlement_id")
                         .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
-                            EntitlementGrant.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -2259,7 +2340,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .entitlementId("entitlement_id")
                             .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
-                                EntitlementGrant.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -2328,7 +2409,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .entitlementId("entitlement_id")
                         .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
-                            EntitlementGrant.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -2434,7 +2515,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .entitlementId("entitlement_id")
                             .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
-                                EntitlementGrant.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -2503,7 +2584,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .entitlementId("entitlement_id")
                         .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
-                            EntitlementGrant.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -2609,7 +2690,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .entitlementId("entitlement_id")
                             .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
-                                EntitlementGrant.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -2678,7 +2759,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .entitlementId("entitlement_id")
                         .integrationType(EntitlementIntegrationType.DISCORD)
                         .metadata(
-                            EntitlementGrant.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -2784,7 +2865,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .entitlementId("entitlement_id")
                             .integrationType(EntitlementIntegrationType.DISCORD)
                             .metadata(
-                                EntitlementGrant.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -2972,7 +3053,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -2995,7 +3076,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Payment.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -3036,7 +3117,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3147,7 +3228,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3170,7 +3251,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Payment.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -3211,7 +3292,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3287,7 +3368,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3310,7 +3391,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Payment.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -3351,7 +3432,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3462,7 +3543,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3485,7 +3566,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Payment.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -3526,7 +3607,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3602,7 +3683,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3625,7 +3706,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Payment.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -3666,7 +3747,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3778,7 +3859,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3801,7 +3882,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Payment.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -3842,7 +3923,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -3918,7 +3999,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -3941,7 +4022,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Payment.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -3982,7 +4063,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4093,7 +4174,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4116,7 +4197,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Payment.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -4157,7 +4238,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4223,7 +4304,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4232,7 +4313,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .isPartial(true)
                         .metadata(
-                            Refund.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -4308,7 +4389,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4317,7 +4398,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .isPartial(true)
                             .metadata(
-                                Refund.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -4358,7 +4439,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4367,7 +4448,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .isPartial(true)
                         .metadata(
-                            Refund.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -4443,7 +4524,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4452,7 +4533,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .isPartial(true)
                             .metadata(
-                                Refund.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -4527,7 +4608,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4535,7 +4616,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -4590,7 +4671,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4731,7 +4812,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4739,7 +4820,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -4794,7 +4875,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -4896,7 +4977,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -4904,7 +4985,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -4959,7 +5040,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -5100,7 +5181,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -5108,7 +5189,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -5163,7 +5244,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -5265,7 +5346,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -5273,7 +5354,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -5328,7 +5409,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -5469,7 +5550,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -5477,7 +5558,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -5532,7 +5613,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -5634,7 +5715,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -5642,7 +5723,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -5697,7 +5778,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -5838,7 +5919,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -5846,7 +5927,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -5901,7 +5982,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6003,7 +6084,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6011,7 +6092,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -6066,7 +6147,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6207,7 +6288,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6215,7 +6296,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -6270,7 +6351,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6372,7 +6453,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6380,7 +6461,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -6435,7 +6516,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6577,7 +6658,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6585,7 +6666,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -6640,7 +6721,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6742,7 +6823,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6750,7 +6831,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -6805,7 +6886,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -6946,7 +7027,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -6954,7 +7035,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -7009,7 +7090,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -7111,7 +7192,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .email("email")
                                 .name("name")
                                 .metadata(
-                                    CustomerLimitedDetails.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -7119,7 +7200,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .metadata(
-                            Subscription.Metadata.builder()
+                            Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -7174,7 +7255,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .discountId("discount_id")
                                 .metadata(
-                                    DiscountDetail.Metadata.builder()
+                                    Metadata.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -7315,7 +7396,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .email("email")
                                     .name("name")
                                     .metadata(
-                                        CustomerLimitedDetails.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
@@ -7323,7 +7404,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .metadata(
-                                Subscription.Metadata.builder()
+                                Metadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -7378,7 +7459,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .discountId("discount_id")
                                     .metadata(
-                                        DiscountDetail.Metadata.builder()
+                                        Metadata.builder()
                                             .putAdditionalProperty("foo", JsonValue.from("string"))
                                             .build()
                                     )
