@@ -17,6 +17,7 @@ import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
+import com.dodopayments.api.services.blocking.products.LocalizedPriceService
 import com.dodopayments.api.services.blocking.products.ShortLinkService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
@@ -38,6 +39,8 @@ interface ProductService {
     fun images(): ImageService
 
     fun shortLinks(): ShortLinkService
+
+    fun localizedPrices(): LocalizedPriceService
 
     fun create(params: ProductCreateParams): Product = create(params, RequestOptions.none())
 
@@ -199,6 +202,8 @@ interface ProductService {
         fun images(): ImageService.WithRawResponse
 
         fun shortLinks(): ShortLinkService.WithRawResponse
+
+        fun localizedPrices(): LocalizedPriceService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /products`, but is otherwise the same as
