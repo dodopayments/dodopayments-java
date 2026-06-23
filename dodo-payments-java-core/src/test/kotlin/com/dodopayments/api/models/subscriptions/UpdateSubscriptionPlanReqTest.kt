@@ -4,6 +4,7 @@ package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.misc.Metadata
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -26,7 +27,7 @@ internal class UpdateSubscriptionPlanReqTest {
                 .addDiscountCode("string")
                 .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
                 .metadata(
-                    UpdateSubscriptionPlanReq.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
@@ -46,9 +47,7 @@ internal class UpdateSubscriptionPlanReqTest {
             .contains(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
         assertThat(updateSubscriptionPlanReq.metadata())
             .contains(
-                UpdateSubscriptionPlanReq.Metadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("string"))
-                    .build()
+                Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
         assertThat(updateSubscriptionPlanReq.onPaymentFailure())
             .contains(UpdateSubscriptionPlanReq.OnPaymentFailure.PREVENT_CHANGE)
@@ -70,7 +69,7 @@ internal class UpdateSubscriptionPlanReqTest {
                 .addDiscountCode("string")
                 .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
                 .metadata(
-                    UpdateSubscriptionPlanReq.Metadata.builder()
+                    Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )

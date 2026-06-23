@@ -30,6 +30,8 @@ import com.dodopayments.api.models.products.ProductUpdateFilesResponse
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.ImageServiceImpl
+import com.dodopayments.api.services.blocking.products.LocalizedPriceService
+import com.dodopayments.api.services.blocking.products.LocalizedPriceServiceImpl
 import com.dodopayments.api.services.blocking.products.ShortLinkService
 import com.dodopayments.api.services.blocking.products.ShortLinkServiceImpl
 import java.util.function.Consumer
@@ -46,6 +48,10 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
 
     private val shortLinks: ShortLinkService by lazy { ShortLinkServiceImpl(clientOptions) }
 
+    private val localizedPrices: LocalizedPriceService by lazy {
+        LocalizedPriceServiceImpl(clientOptions)
+    }
+
     override fun withRawResponse(): ProductService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService =
@@ -54,6 +60,8 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
     override fun images(): ImageService = images
 
     override fun shortLinks(): ShortLinkService = shortLinks
+
+    override fun localizedPrices(): LocalizedPriceService = localizedPrices
 
     override fun create(params: ProductCreateParams, requestOptions: RequestOptions): Product =
         // post /products
@@ -103,6 +111,10 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
             ShortLinkServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val localizedPrices: LocalizedPriceService.WithRawResponse by lazy {
+            LocalizedPriceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ProductService.WithRawResponse =
@@ -113,6 +125,8 @@ class ProductServiceImpl internal constructor(private val clientOptions: ClientO
         override fun images(): ImageService.WithRawResponse = images
 
         override fun shortLinks(): ShortLinkService.WithRawResponse = shortLinks
+
+        override fun localizedPrices(): LocalizedPriceService.WithRawResponse = localizedPrices
 
         private val createHandler: Handler<Product> = jsonHandler<Product>(clientOptions.jsonMapper)
 
