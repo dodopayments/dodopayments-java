@@ -29,6 +29,7 @@ private constructor(
     private val allowCustomerEditingTaxId: JsonField<Boolean>,
     private val allowCustomerEditingZipcode: JsonField<Boolean>,
     private val allowDiscountCode: JsonField<Boolean>,
+    private val allowEditingAddons: JsonField<Boolean>,
     private val allowPhoneNumberCollection: JsonField<Boolean>,
     private val allowTaxId: JsonField<Boolean>,
     private val alwaysCreateNewCustomer: JsonField<Boolean>,
@@ -72,6 +73,9 @@ private constructor(
         @JsonProperty("allow_discount_code")
         @ExcludeMissing
         allowDiscountCode: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("allow_editing_addons")
+        @ExcludeMissing
+        allowEditingAddons: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("allow_phone_number_collection")
         @ExcludeMissing
         allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of(),
@@ -99,6 +103,7 @@ private constructor(
         allowCustomerEditingTaxId,
         allowCustomerEditingZipcode,
         allowDiscountCode,
+        allowEditingAddons,
         allowPhoneNumberCollection,
         allowTaxId,
         alwaysCreateNewCustomer,
@@ -198,6 +203,17 @@ private constructor(
      */
     fun allowDiscountCode(): Optional<Boolean> =
         allowDiscountCode.getOptional("allow_discount_code")
+
+    /**
+     * If true, the customer can add or remove addons on a subscription product during checkout.
+     *
+     * Default is false
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun allowEditingAddons(): Optional<Boolean> =
+        allowEditingAddons.getOptional("allow_editing_addons")
 
     /**
      * If phone number is collected from customer, set it to rue
@@ -366,6 +382,16 @@ private constructor(
     fun _allowDiscountCode(): JsonField<Boolean> = allowDiscountCode
 
     /**
+     * Returns the raw JSON value of [allowEditingAddons].
+     *
+     * Unlike [allowEditingAddons], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("allow_editing_addons")
+    @ExcludeMissing
+    fun _allowEditingAddons(): JsonField<Boolean> = allowEditingAddons
+
+    /**
      * Returns the raw JSON value of [allowPhoneNumberCollection].
      *
      * Unlike [allowPhoneNumberCollection], this method doesn't throw if the JSON field has an
@@ -444,6 +470,7 @@ private constructor(
         private var allowCustomerEditingTaxId: JsonField<Boolean> = JsonMissing.of()
         private var allowCustomerEditingZipcode: JsonField<Boolean> = JsonMissing.of()
         private var allowDiscountCode: JsonField<Boolean> = JsonMissing.of()
+        private var allowEditingAddons: JsonField<Boolean> = JsonMissing.of()
         private var allowPhoneNumberCollection: JsonField<Boolean> = JsonMissing.of()
         private var allowTaxId: JsonField<Boolean> = JsonMissing.of()
         private var alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of()
@@ -464,6 +491,7 @@ private constructor(
             allowCustomerEditingTaxId = checkoutSessionFlags.allowCustomerEditingTaxId
             allowCustomerEditingZipcode = checkoutSessionFlags.allowCustomerEditingZipcode
             allowDiscountCode = checkoutSessionFlags.allowDiscountCode
+            allowEditingAddons = checkoutSessionFlags.allowEditingAddons
             allowPhoneNumberCollection = checkoutSessionFlags.allowPhoneNumberCollection
             allowTaxId = checkoutSessionFlags.allowTaxId
             alwaysCreateNewCustomer = checkoutSessionFlags.alwaysCreateNewCustomer
@@ -646,6 +674,25 @@ private constructor(
         }
 
         /**
+         * If true, the customer can add or remove addons on a subscription product during checkout.
+         *
+         * Default is false
+         */
+        fun allowEditingAddons(allowEditingAddons: Boolean) =
+            allowEditingAddons(JsonField.of(allowEditingAddons))
+
+        /**
+         * Sets [Builder.allowEditingAddons] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.allowEditingAddons] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun allowEditingAddons(allowEditingAddons: JsonField<Boolean>) = apply {
+            this.allowEditingAddons = allowEditingAddons
+        }
+
+        /**
          * If phone number is collected from customer, set it to rue
          *
          * Default is true
@@ -776,6 +823,7 @@ private constructor(
                 allowCustomerEditingTaxId,
                 allowCustomerEditingZipcode,
                 allowDiscountCode,
+                allowEditingAddons,
                 allowPhoneNumberCollection,
                 allowTaxId,
                 alwaysCreateNewCustomer,
@@ -811,6 +859,7 @@ private constructor(
         allowCustomerEditingTaxId()
         allowCustomerEditingZipcode()
         allowDiscountCode()
+        allowEditingAddons()
         allowPhoneNumberCollection()
         allowTaxId()
         alwaysCreateNewCustomer()
@@ -845,6 +894,7 @@ private constructor(
             (if (allowCustomerEditingTaxId.asKnown().isPresent) 1 else 0) +
             (if (allowCustomerEditingZipcode.asKnown().isPresent) 1 else 0) +
             (if (allowDiscountCode.asKnown().isPresent) 1 else 0) +
+            (if (allowEditingAddons.asKnown().isPresent) 1 else 0) +
             (if (allowPhoneNumberCollection.asKnown().isPresent) 1 else 0) +
             (if (allowTaxId.asKnown().isPresent) 1 else 0) +
             (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) +
@@ -868,6 +918,7 @@ private constructor(
             allowCustomerEditingTaxId == other.allowCustomerEditingTaxId &&
             allowCustomerEditingZipcode == other.allowCustomerEditingZipcode &&
             allowDiscountCode == other.allowDiscountCode &&
+            allowEditingAddons == other.allowEditingAddons &&
             allowPhoneNumberCollection == other.allowPhoneNumberCollection &&
             allowTaxId == other.allowTaxId &&
             alwaysCreateNewCustomer == other.alwaysCreateNewCustomer &&
@@ -889,6 +940,7 @@ private constructor(
             allowCustomerEditingTaxId,
             allowCustomerEditingZipcode,
             allowDiscountCode,
+            allowEditingAddons,
             allowPhoneNumberCollection,
             allowTaxId,
             alwaysCreateNewCustomer,
@@ -901,5 +953,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
+        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowEditingAddons=$allowEditingAddons, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
 }
