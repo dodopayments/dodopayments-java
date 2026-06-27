@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.106.1](https://github.com/dodopayments/dodopayments-java/compare/v1.106.0...v1.106.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **api:** add allow_editing_addons checkout flag and refine schema descriptions ([0d260a8](https://github.com/dodopayments/dodopayments-java/commit/0d260a8383a0b58d06fa4eaaf6dd0ca5b2002c35))
+* **api:** add allow_editing_addons checkout flag and refine schema descriptions ([c5c8ae9](https://github.com/dodopayments/dodopayments-java/commit/c5c8ae9365635ceff6a42a967e13c7cf4d3502ca))
+
 ## [1.106.0](https://github.com/dodopayments/dodopayments-java/compare/v1.105.1...v1.106.0) (2026-06-23)
 
 
