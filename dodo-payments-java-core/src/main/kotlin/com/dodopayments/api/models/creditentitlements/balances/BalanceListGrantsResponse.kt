@@ -175,6 +175,8 @@ private constructor(
     fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expires_at")
 
     /**
+     * Arbitrary key-value metadata. Values can be string, integer, number, or boolean.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -539,6 +541,7 @@ private constructor(
          */
         fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
+        /** Arbitrary key-value metadata. Values can be string, integer, number, or boolean. */
         fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
@@ -750,9 +753,11 @@ private constructor(
          * An enum containing [SourceType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [SourceType] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {

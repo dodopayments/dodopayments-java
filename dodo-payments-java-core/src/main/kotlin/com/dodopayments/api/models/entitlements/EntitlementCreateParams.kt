@@ -174,6 +174,14 @@ private constructor(
             body.integrationConfig(integrationConfig)
         }
 
+        /**
+         * Alias for calling [integrationConfig] with
+         * `IntegrationConfig.ofFeatureFlag(featureFlag)`.
+         */
+        fun integrationConfig(featureFlag: IntegrationConfig.FeatureFlagConfig) = apply {
+            body.integrationConfig(featureFlag)
+        }
+
         /** Alias for calling [integrationConfig] with `IntegrationConfig.ofGitHub(github)`. */
         fun integrationConfig(github: IntegrationConfig.GitHubConfig) = apply {
             body.integrationConfig(github)
@@ -592,6 +600,13 @@ private constructor(
             fun integrationConfig(integrationConfig: JsonField<IntegrationConfig>) = apply {
                 this.integrationConfig = integrationConfig
             }
+
+            /**
+             * Alias for calling [integrationConfig] with
+             * `IntegrationConfig.ofFeatureFlag(featureFlag)`.
+             */
+            fun integrationConfig(featureFlag: IntegrationConfig.FeatureFlagConfig) =
+                integrationConfig(IntegrationConfig.ofFeatureFlag(featureFlag))
 
             /** Alias for calling [integrationConfig] with `IntegrationConfig.ofGitHub(github)`. */
             fun integrationConfig(github: IntegrationConfig.GitHubConfig) =

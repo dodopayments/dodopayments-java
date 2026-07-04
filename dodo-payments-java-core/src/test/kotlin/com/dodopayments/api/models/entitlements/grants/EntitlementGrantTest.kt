@@ -5,6 +5,8 @@ package com.dodopayments.api.models.entitlements.grants
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
 import com.dodopayments.api.models.entitlements.EntitlementIntegrationType
+import com.dodopayments.api.models.entitlements.Feature
+import com.dodopayments.api.models.entitlements.FeatureType
 import com.dodopayments.api.models.misc.Metadata
 import com.dodopayments.api.models.products.DigitalProductDelivery
 import com.dodopayments.api.models.products.DigitalProductDeliveryFile
@@ -52,6 +54,12 @@ internal class EntitlementGrantTest {
                 )
                 .errorCode("error_code")
                 .errorMessage("error_message")
+                .feature(
+                    Feature.builder()
+                        .featureId("feature_id")
+                        .featureType(FeatureType.BOOLEAN)
+                        .build()
+                )
                 .licenseKey(
                     LicenseKeyGrant.builder()
                         .activationsUsed(0)
@@ -104,6 +112,10 @@ internal class EntitlementGrantTest {
             )
         assertThat(entitlementGrant.errorCode()).contains("error_code")
         assertThat(entitlementGrant.errorMessage()).contains("error_message")
+        assertThat(entitlementGrant.feature())
+            .contains(
+                Feature.builder().featureId("feature_id").featureType(FeatureType.BOOLEAN).build()
+            )
         assertThat(entitlementGrant.licenseKey())
             .contains(
                 LicenseKeyGrant.builder()
@@ -161,6 +173,12 @@ internal class EntitlementGrantTest {
                 )
                 .errorCode("error_code")
                 .errorMessage("error_message")
+                .feature(
+                    Feature.builder()
+                        .featureId("feature_id")
+                        .featureType(FeatureType.BOOLEAN)
+                        .build()
+                )
                 .licenseKey(
                     LicenseKeyGrant.builder()
                         .activationsUsed(0)
