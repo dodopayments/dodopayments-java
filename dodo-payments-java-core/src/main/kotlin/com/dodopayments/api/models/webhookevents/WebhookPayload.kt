@@ -10856,6 +10856,7 @@ private constructor(
             private val digitalProductDelivery: JsonField<DigitalProductDelivery>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
+            private val feature: JsonField<EntitlementGrant.Feature>,
             private val licenseKey: JsonField<LicenseKeyGrant>,
             private val oauthExpiresAt: JsonField<OffsetDateTime>,
             private val oauthUrl: JsonField<String>,
@@ -10909,6 +10910,9 @@ private constructor(
                 @JsonProperty("error_message")
                 @ExcludeMissing
                 errorMessage: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("feature")
+                @ExcludeMissing
+                feature: JsonField<EntitlementGrant.Feature> = JsonMissing.of(),
                 @JsonProperty("license_key")
                 @ExcludeMissing
                 licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of(),
@@ -10948,6 +10952,7 @@ private constructor(
                 digitalProductDelivery,
                 errorCode,
                 errorMessage,
+                feature,
                 licenseKey,
                 oauthExpiresAt,
                 oauthUrl,
@@ -10975,6 +10980,7 @@ private constructor(
                     .digitalProductDelivery(digitalProductDelivery)
                     .errorCode(errorCode)
                     .errorMessage(errorMessage)
+                    .feature(feature)
                     .licenseKey(licenseKey)
                     .oauthExpiresAt(oauthExpiresAt)
                     .oauthUrl(oauthUrl)
@@ -11108,6 +11114,15 @@ private constructor(
              *   (e.g. if the server responded with an unexpected value).
              */
             fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
+
+            /**
+             * Typed feature payload, present only when the entitlement integration is
+             * `feature_flag`; `null` for every other integration type.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun feature(): Optional<EntitlementGrant.Feature> = feature.getOptional("feature")
 
             /**
              * License-key delivery payload, present when the entitlement integration is
@@ -11318,6 +11333,15 @@ private constructor(
             fun _errorMessage(): JsonField<String> = errorMessage
 
             /**
+             * Returns the raw JSON value of [feature].
+             *
+             * Unlike [feature], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("feature")
+            @ExcludeMissing
+            fun _feature(): JsonField<EntitlementGrant.Feature> = feature
+
+            /**
              * Returns the raw JSON value of [licenseKey].
              *
              * Unlike [licenseKey], this method doesn't throw if the JSON field has an unexpected
@@ -11437,6 +11461,7 @@ private constructor(
                     JsonMissing.of()
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
+                private var feature: JsonField<EntitlementGrant.Feature> = JsonMissing.of()
                 private var licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of()
                 private var oauthExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var oauthUrl: JsonField<String> = JsonMissing.of()
@@ -11463,6 +11488,7 @@ private constructor(
                     digitalProductDelivery = entitlementGrant.digitalProductDelivery
                     errorCode = entitlementGrant.errorCode
                     errorMessage = entitlementGrant.errorMessage
+                    feature = entitlementGrant.feature
                     licenseKey = entitlementGrant.licenseKey
                     oauthExpiresAt = entitlementGrant.oauthExpiresAt
                     oauthUrl = entitlementGrant.oauthUrl
@@ -11691,6 +11717,28 @@ private constructor(
                 }
 
                 /**
+                 * Typed feature payload, present only when the entitlement integration is
+                 * `feature_flag`; `null` for every other integration type.
+                 */
+                fun feature(feature: EntitlementGrant.Feature?) =
+                    feature(JsonField.ofNullable(feature))
+
+                /** Alias for calling [Builder.feature] with `feature.orElse(null)`. */
+                fun feature(feature: Optional<EntitlementGrant.Feature>) =
+                    feature(feature.getOrNull())
+
+                /**
+                 * Sets [Builder.feature] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.feature] with a well-typed
+                 * [EntitlementGrant.Feature] value instead. This method is primarily for setting
+                 * the field to an undocumented or not yet supported value.
+                 */
+                fun feature(feature: JsonField<EntitlementGrant.Feature>) = apply {
+                    this.feature = feature
+                }
+
+                /**
                  * License-key delivery payload, present when the entitlement integration is
                  * `license_key`.
                  */
@@ -11902,6 +11950,7 @@ private constructor(
                         digitalProductDelivery,
                         errorCode,
                         errorMessage,
+                        feature,
                         licenseKey,
                         oauthExpiresAt,
                         oauthUrl,
@@ -11945,6 +11994,7 @@ private constructor(
                 digitalProductDelivery().ifPresent { it.validate() }
                 errorCode()
                 errorMessage()
+                feature().ifPresent { it.validate() }
                 licenseKey().ifPresent { it.validate() }
                 oauthExpiresAt()
                 oauthUrl()
@@ -11992,6 +12042,7 @@ private constructor(
                     (digitalProductDelivery.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (errorCode.asKnown().isPresent) 1 else 0) +
                     (if (errorMessage.asKnown().isPresent) 1 else 0) +
+                    (feature.asKnown().getOrNull()?.validity() ?: 0) +
                     (licenseKey.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (oauthExpiresAt.asKnown().isPresent) 1 else 0) +
                     (if (oauthUrl.asKnown().isPresent) 1 else 0) +
@@ -12021,6 +12072,7 @@ private constructor(
                     digitalProductDelivery == other.digitalProductDelivery &&
                     errorCode == other.errorCode &&
                     errorMessage == other.errorMessage &&
+                    feature == other.feature &&
                     licenseKey == other.licenseKey &&
                     oauthExpiresAt == other.oauthExpiresAt &&
                     oauthUrl == other.oauthUrl &&
@@ -12048,6 +12100,7 @@ private constructor(
                     digitalProductDelivery,
                     errorCode,
                     errorMessage,
+                    feature,
                     licenseKey,
                     oauthExpiresAt,
                     oauthUrl,
@@ -12063,7 +12116,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "EntitlementGrant{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "EntitlementGrant{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, feature=$feature, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, payloadType=$payloadType, additionalProperties=$additionalProperties}"
         }
     }
 

@@ -258,6 +258,8 @@ private constructor(
 
             @JvmField val LICENSE_KEY = of("license_key")
 
+            @JvmField val FEATURE_FLAG = of("feature_flag")
+
             @JvmStatic fun of(value: String) = IntegrationType(JsonField.of(value))
         }
 
@@ -271,6 +273,7 @@ private constructor(
             NOTION,
             DIGITAL_FILES,
             LICENSE_KEY,
+            FEATURE_FLAG,
         }
 
         /**
@@ -291,6 +294,7 @@ private constructor(
             NOTION,
             DIGITAL_FILES,
             LICENSE_KEY,
+            FEATURE_FLAG,
             /**
              * An enum member indicating that [IntegrationType] was instantiated with an unknown
              * value.
@@ -315,6 +319,7 @@ private constructor(
                 NOTION -> Value.NOTION
                 DIGITAL_FILES -> Value.DIGITAL_FILES
                 LICENSE_KEY -> Value.LICENSE_KEY
+                FEATURE_FLAG -> Value.FEATURE_FLAG
                 else -> Value._UNKNOWN
             }
 
@@ -337,6 +342,7 @@ private constructor(
                 NOTION -> Known.NOTION
                 DIGITAL_FILES -> Known.DIGITAL_FILES
                 LICENSE_KEY -> Known.LICENSE_KEY
+                FEATURE_FLAG -> Known.FEATURE_FLAG
                 else -> throw DodoPaymentsInvalidDataException("Unknown IntegrationType: $value")
             }
 

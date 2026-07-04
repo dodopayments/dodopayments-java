@@ -43,6 +43,7 @@ private constructor(
     private val digitalProductDelivery: JsonField<DigitalProductDelivery>,
     private val errorCode: JsonField<String>,
     private val errorMessage: JsonField<String>,
+    private val feature: JsonField<Feature>,
     private val licenseKey: JsonField<LicenseKeyGrant>,
     private val oauthExpiresAt: JsonField<OffsetDateTime>,
     private val oauthUrl: JsonField<String>,
@@ -87,6 +88,7 @@ private constructor(
         @JsonProperty("error_message")
         @ExcludeMissing
         errorMessage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("feature") @ExcludeMissing feature: JsonField<Feature> = JsonMissing.of(),
         @JsonProperty("license_key")
         @ExcludeMissing
         licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of(),
@@ -119,6 +121,7 @@ private constructor(
         digitalProductDelivery,
         errorCode,
         errorMessage,
+        feature,
         licenseKey,
         oauthExpiresAt,
         oauthUrl,
@@ -243,6 +246,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
+
+    /**
+     * Typed feature payload, present only when the entitlement integration is `feature_flag`;
+     * `null` for every other integration type.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun feature(): Optional<Feature> = feature.getOptional("feature")
 
     /**
      * License-key delivery payload, present when the entitlement integration is `license_key`.
@@ -416,6 +428,13 @@ private constructor(
     fun _errorMessage(): JsonField<String> = errorMessage
 
     /**
+     * Returns the raw JSON value of [feature].
+     *
+     * Unlike [feature], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("feature") @ExcludeMissing fun _feature(): JsonField<Feature> = feature
+
+    /**
      * Returns the raw JSON value of [licenseKey].
      *
      * Unlike [licenseKey], this method doesn't throw if the JSON field has an unexpected type.
@@ -526,6 +545,7 @@ private constructor(
         private var digitalProductDelivery: JsonField<DigitalProductDelivery> = JsonMissing.of()
         private var errorCode: JsonField<String> = JsonMissing.of()
         private var errorMessage: JsonField<String> = JsonMissing.of()
+        private var feature: JsonField<Feature> = JsonMissing.of()
         private var licenseKey: JsonField<LicenseKeyGrant> = JsonMissing.of()
         private var oauthExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var oauthUrl: JsonField<String> = JsonMissing.of()
@@ -551,6 +571,7 @@ private constructor(
             digitalProductDelivery = entitlementGrant.digitalProductDelivery
             errorCode = entitlementGrant.errorCode
             errorMessage = entitlementGrant.errorMessage
+            feature = entitlementGrant.feature
             licenseKey = entitlementGrant.licenseKey
             oauthExpiresAt = entitlementGrant.oauthExpiresAt
             oauthUrl = entitlementGrant.oauthUrl
@@ -761,6 +782,23 @@ private constructor(
         }
 
         /**
+         * Typed feature payload, present only when the entitlement integration is `feature_flag`;
+         * `null` for every other integration type.
+         */
+        fun feature(feature: Feature?) = feature(JsonField.ofNullable(feature))
+
+        /** Alias for calling [Builder.feature] with `feature.orElse(null)`. */
+        fun feature(feature: Optional<Feature>) = feature(feature.getOrNull())
+
+        /**
+         * Sets [Builder.feature] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.feature] with a well-typed [Feature] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun feature(feature: JsonField<Feature>) = apply { this.feature = feature }
+
+        /**
          * License-key delivery payload, present when the entitlement integration is `license_key`.
          */
         fun licenseKey(licenseKey: LicenseKeyGrant?) = licenseKey(JsonField.ofNullable(licenseKey))
@@ -940,6 +978,7 @@ private constructor(
                 digitalProductDelivery,
                 errorCode,
                 errorMessage,
+                feature,
                 licenseKey,
                 oauthExpiresAt,
                 oauthUrl,
@@ -980,6 +1019,7 @@ private constructor(
         digitalProductDelivery().ifPresent { it.validate() }
         errorCode()
         errorMessage()
+        feature().ifPresent { it.validate() }
         licenseKey().ifPresent { it.validate() }
         oauthExpiresAt()
         oauthUrl()
@@ -1019,6 +1059,7 @@ private constructor(
             (digitalProductDelivery.asKnown().getOrNull()?.validity() ?: 0) +
             (if (errorCode.asKnown().isPresent) 1 else 0) +
             (if (errorMessage.asKnown().isPresent) 1 else 0) +
+            (feature.asKnown().getOrNull()?.validity() ?: 0) +
             (licenseKey.asKnown().getOrNull()?.validity() ?: 0) +
             (if (oauthExpiresAt.asKnown().isPresent) 1 else 0) +
             (if (oauthUrl.asKnown().isPresent) 1 else 0) +
@@ -1176,6 +1217,223 @@ private constructor(
         override fun toString() = value.toString()
     }
 
+    /**
+     * Typed feature payload, present only when the entitlement integration is `feature_flag`;
+     * `null` for every other integration type.
+     */
+    class Feature
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val featureId: JsonField<String>,
+        private val featureType: JsonValue,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("feature_id")
+            @ExcludeMissing
+            featureId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("feature_type") @ExcludeMissing featureType: JsonValue = JsonMissing.of(),
+        ) : this(featureId, featureType, mutableMapOf())
+
+        /**
+         * Identifier of the capability this grant confers.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun featureId(): String = featureId.getRequired("feature_id")
+
+        /**
+         * Type of capability conferred.
+         *
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("boolean")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
+        @JsonProperty("feature_type") @ExcludeMissing fun _featureType(): JsonValue = featureType
+
+        /**
+         * Returns the raw JSON value of [featureId].
+         *
+         * Unlike [featureId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("feature_id") @ExcludeMissing fun _featureId(): JsonField<String> = featureId
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Feature].
+             *
+             * The following fields are required:
+             * ```java
+             * .featureId()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Feature]. */
+        class Builder internal constructor() {
+
+            private var featureId: JsonField<String>? = null
+            private var featureType: JsonValue = JsonValue.from("boolean")
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(feature: Feature) = apply {
+                featureId = feature.featureId
+                featureType = feature.featureType
+                additionalProperties = feature.additionalProperties.toMutableMap()
+            }
+
+            /** Identifier of the capability this grant confers. */
+            fun featureId(featureId: String) = featureId(JsonField.of(featureId))
+
+            /**
+             * Sets [Builder.featureId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.featureId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun featureId(featureId: JsonField<String>) = apply { this.featureId = featureId }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("boolean")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun featureType(featureType: JsonValue) = apply { this.featureType = featureType }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Feature].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .featureId()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Feature =
+                Feature(
+                    checkRequired("featureId", featureId),
+                    featureType,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
+         *   its expected type.
+         */
+        fun validate(): Feature = apply {
+            if (validated) {
+                return@apply
+            }
+
+            featureId()
+            _featureType().let {
+                if (it != JsonValue.from("boolean")) {
+                    throw DodoPaymentsInvalidDataException("'featureType' is invalid, received $it")
+                }
+            }
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (featureId.asKnown().isPresent) 1 else 0) +
+                featureType.let { if (it == JsonValue.from("boolean")) 1 else 0 }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Feature &&
+                featureId == other.featureId &&
+                featureType == other.featureType &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(featureId, featureType, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Feature{featureId=$featureId, featureType=$featureType, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1196,6 +1454,7 @@ private constructor(
             digitalProductDelivery == other.digitalProductDelivery &&
             errorCode == other.errorCode &&
             errorMessage == other.errorMessage &&
+            feature == other.feature &&
             licenseKey == other.licenseKey &&
             oauthExpiresAt == other.oauthExpiresAt &&
             oauthUrl == other.oauthUrl &&
@@ -1222,6 +1481,7 @@ private constructor(
             digitalProductDelivery,
             errorCode,
             errorMessage,
+            feature,
             licenseKey,
             oauthExpiresAt,
             oauthUrl,
@@ -1236,5 +1496,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "EntitlementGrant{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "EntitlementGrant{id=$id, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, customerId=$customerId, entitlementId=$entitlementId, integrationType=$integrationType, metadata=$metadata, status=$status, updatedAt=$updatedAt, deliveredAt=$deliveredAt, digitalProductDelivery=$digitalProductDelivery, errorCode=$errorCode, errorMessage=$errorMessage, feature=$feature, licenseKey=$licenseKey, oauthExpiresAt=$oauthExpiresAt, oauthUrl=$oauthUrl, paymentId=$paymentId, revocationReason=$revocationReason, revokedAt=$revokedAt, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }

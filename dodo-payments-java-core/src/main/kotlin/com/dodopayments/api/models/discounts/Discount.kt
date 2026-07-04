@@ -130,6 +130,8 @@ private constructor(
     fun discountId(): String = discountId.getRequired("discount_id")
 
     /**
+     * Arbitrary key-value metadata. Values can be string, integer, number, or boolean.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -442,6 +444,7 @@ private constructor(
          */
         fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
 
+        /** Arbitrary key-value metadata. Values can be string, integer, number, or boolean. */
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
         /**
