@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.107.0](https://github.com/dodopayments/dodopayments-java/compare/v1.106.1...v1.107.0) (2026-07-04)
+
+
+### Features
+
+* **api:** register Feature/FeatureType models and expose customer entitlement-grants list endpoint ([4592662](https://github.com/dodopayments/dodopayments-java/commit/459266233bab28933acbea3bf318bd246fe0da33))
+* **api:** register Feature/FeatureType models and expose customer entitlement-grants list endpoint ([3eb5200](https://github.com/dodopayments/dodopayments-java/commit/3eb5200413a483a355215fa5be490cb4cce2fdc8))
+
 ## [1.106.1](https://github.com/dodopayments/dodopayments-java/compare/v1.106.0...v1.106.1) (2026-06-27)
 
 
