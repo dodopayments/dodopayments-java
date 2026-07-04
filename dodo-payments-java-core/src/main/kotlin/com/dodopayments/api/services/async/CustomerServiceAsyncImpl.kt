@@ -22,6 +22,9 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
+import com.dodopayments.api.models.customers.CustomerListEntitlementGrantsPageAsync
+import com.dodopayments.api.models.customers.CustomerListEntitlementGrantsPageResponse
+import com.dodopayments.api.models.customers.CustomerListEntitlementGrantsParams
 import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
@@ -102,6 +105,13 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
     ): CompletableFuture<CustomerListCreditEntitlementsResponse> =
         // get /customers/{customer_id}/credit-entitlements
         withRawResponse().listCreditEntitlements(params, requestOptions).thenApply { it.parse() }
+
+    override fun listEntitlementGrants(
+        params: CustomerListEntitlementGrantsParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        // get /customers/{customer_id}/entitlement-grants
+        withRawResponse().listEntitlementGrants(params, requestOptions).thenApply { it.parse() }
 
     override fun listEntitlements(
         params: CustomerListEntitlementsParams,
@@ -338,6 +348,48 @@ class CustomerServiceAsyncImpl internal constructor(private val clientOptions: C
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                    }
+                }
+        }
+
+        private val listEntitlementGrantsHandler:
+            Handler<CustomerListEntitlementGrantsPageResponse> =
+            jsonHandler<CustomerListEntitlementGrantsPageResponse>(clientOptions.jsonMapper)
+
+        override fun listEntitlementGrants(
+            params: CustomerListEntitlementGrantsParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("customerId", params.customerId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("customers", params._pathParam(0), "entitlement-grants")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listEntitlementGrantsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                            .let {
+                                CustomerListEntitlementGrantsPageAsync.builder()
+                                    .service(CustomerServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

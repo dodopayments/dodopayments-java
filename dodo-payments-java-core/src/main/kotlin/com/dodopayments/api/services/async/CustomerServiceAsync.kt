@@ -11,6 +11,8 @@ import com.dodopayments.api.models.customers.CustomerCreateParams
 import com.dodopayments.api.models.customers.CustomerDeletePaymentMethodParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListCreditEntitlementsResponse
+import com.dodopayments.api.models.customers.CustomerListEntitlementGrantsPageAsync
+import com.dodopayments.api.models.customers.CustomerListEntitlementGrantsParams
 import com.dodopayments.api.models.customers.CustomerListEntitlementsParams
 import com.dodopayments.api.models.customers.CustomerListEntitlementsResponse
 import com.dodopayments.api.models.customers.CustomerListPageAsync
@@ -198,6 +200,50 @@ interface CustomerServiceAsync {
         listCreditEntitlements(
             customerId,
             CustomerListCreditEntitlementsParams.none(),
+            requestOptions,
+        )
+
+    /** List all of a customer's entitlement grants across every entitlement. One row per grant. */
+    fun listEntitlementGrants(
+        customerId: String
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        listEntitlementGrants(customerId, CustomerListEntitlementGrantsParams.none())
+
+    /** @see listEntitlementGrants */
+    fun listEntitlementGrants(
+        customerId: String,
+        params: CustomerListEntitlementGrantsParams = CustomerListEntitlementGrantsParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        listEntitlementGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+    /** @see listEntitlementGrants */
+    fun listEntitlementGrants(
+        customerId: String,
+        params: CustomerListEntitlementGrantsParams = CustomerListEntitlementGrantsParams.none(),
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        listEntitlementGrants(customerId, params, RequestOptions.none())
+
+    /** @see listEntitlementGrants */
+    fun listEntitlementGrants(
+        params: CustomerListEntitlementGrantsParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync>
+
+    /** @see listEntitlementGrants */
+    fun listEntitlementGrants(
+        params: CustomerListEntitlementGrantsParams
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        listEntitlementGrants(params, RequestOptions.none())
+
+    /** @see listEntitlementGrants */
+    fun listEntitlementGrants(
+        customerId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CustomerListEntitlementGrantsPageAsync> =
+        listEntitlementGrants(
+            customerId,
+            CustomerListEntitlementGrantsParams.none(),
             requestOptions,
         )
 
@@ -498,6 +544,54 @@ interface CustomerServiceAsync {
             listCreditEntitlements(
                 customerId,
                 CustomerListCreditEntitlementsParams.none(),
+                requestOptions,
+            )
+
+        /**
+         * Returns a raw HTTP response for `get /customers/{customer_id}/entitlement-grants`, but is
+         * otherwise the same as [CustomerServiceAsync.listEntitlementGrants].
+         */
+        fun listEntitlementGrants(
+            customerId: String
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> =
+            listEntitlementGrants(customerId, CustomerListEntitlementGrantsParams.none())
+
+        /** @see listEntitlementGrants */
+        fun listEntitlementGrants(
+            customerId: String,
+            params: CustomerListEntitlementGrantsParams =
+                CustomerListEntitlementGrantsParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> =
+            listEntitlementGrants(params.toBuilder().customerId(customerId).build(), requestOptions)
+
+        /** @see listEntitlementGrants */
+        fun listEntitlementGrants(
+            customerId: String,
+            params: CustomerListEntitlementGrantsParams = CustomerListEntitlementGrantsParams.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> =
+            listEntitlementGrants(customerId, params, RequestOptions.none())
+
+        /** @see listEntitlementGrants */
+        fun listEntitlementGrants(
+            params: CustomerListEntitlementGrantsParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>>
+
+        /** @see listEntitlementGrants */
+        fun listEntitlementGrants(
+            params: CustomerListEntitlementGrantsParams
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> =
+            listEntitlementGrants(params, RequestOptions.none())
+
+        /** @see listEntitlementGrants */
+        fun listEntitlementGrants(
+            customerId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CustomerListEntitlementGrantsPageAsync>> =
+            listEntitlementGrants(
+                customerId,
+                CustomerListEntitlementGrantsParams.none(),
                 requestOptions,
             )
 

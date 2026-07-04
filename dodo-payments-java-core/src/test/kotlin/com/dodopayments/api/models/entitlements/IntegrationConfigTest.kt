@@ -16,6 +16,47 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class IntegrationConfigTest {
 
     @Test
+    fun ofFeatureFlag() {
+        val featureFlag =
+            IntegrationConfig.FeatureFlagConfig.builder()
+                .featureId("feature_id")
+                .featureType(FeatureType.BOOLEAN)
+                .build()
+
+        val integrationConfig = IntegrationConfig.ofFeatureFlag(featureFlag)
+
+        assertThat(integrationConfig.featureFlag()).contains(featureFlag)
+        assertThat(integrationConfig.github()).isEmpty
+        assertThat(integrationConfig.discord()).isEmpty
+        assertThat(integrationConfig.telegram()).isEmpty
+        assertThat(integrationConfig.figma()).isEmpty
+        assertThat(integrationConfig.framer()).isEmpty
+        assertThat(integrationConfig.notion()).isEmpty
+        assertThat(integrationConfig.digitalFiles()).isEmpty
+        assertThat(integrationConfig.licenseKey()).isEmpty
+    }
+
+    @Test
+    fun ofFeatureFlagRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val integrationConfig =
+            IntegrationConfig.ofFeatureFlag(
+                IntegrationConfig.FeatureFlagConfig.builder()
+                    .featureId("feature_id")
+                    .featureType(FeatureType.BOOLEAN)
+                    .build()
+            )
+
+        val roundtrippedIntegrationConfig =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(integrationConfig),
+                jacksonTypeRef<IntegrationConfig>(),
+            )
+
+        assertThat(roundtrippedIntegrationConfig).isEqualTo(integrationConfig)
+    }
+
+    @Test
     fun ofGitHub() {
         val github =
             IntegrationConfig.GitHubConfig.builder()
@@ -25,6 +66,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofGitHub(github)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).contains(github)
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
@@ -62,6 +104,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofDiscord(discord)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).contains(discord)
         assertThat(integrationConfig.telegram()).isEmpty
@@ -98,6 +141,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofTelegram(telegram)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).contains(telegram)
@@ -131,6 +175,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofFigma(figma)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
@@ -165,6 +210,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofFramer(framer)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
@@ -201,6 +247,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofNotion(notion)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
@@ -242,6 +289,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofDigitalFiles(digitalFiles)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
@@ -287,6 +335,7 @@ internal class IntegrationConfigTest {
 
         val integrationConfig = IntegrationConfig.ofLicenseKey(licenseKey)
 
+        assertThat(integrationConfig.featureFlag()).isEmpty
         assertThat(integrationConfig.github()).isEmpty
         assertThat(integrationConfig.discord()).isEmpty
         assertThat(integrationConfig.telegram()).isEmpty
