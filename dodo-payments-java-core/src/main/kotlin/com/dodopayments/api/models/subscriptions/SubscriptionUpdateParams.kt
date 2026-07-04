@@ -104,6 +104,8 @@ private constructor(
     fun disableOnDemand(): Optional<DisableOnDemand> = body.disableOnDemand()
 
     /**
+     * Arbitrary key-value metadata. Values can be string, integer, number, or boolean.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -484,6 +486,7 @@ private constructor(
             body.disableOnDemand(disableOnDemand)
         }
 
+        /** Arbitrary key-value metadata. Values can be string, integer, number, or boolean. */
         fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
@@ -835,6 +838,8 @@ private constructor(
             disableOnDemand.getOptional("disable_on_demand")
 
         /**
+         * Arbitrary key-value metadata. Values can be string, integer, number, or boolean.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -1246,6 +1251,7 @@ private constructor(
                 this.disableOnDemand = disableOnDemand
             }
 
+            /** Arbitrary key-value metadata. Values can be string, integer, number, or boolean. */
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
             /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
