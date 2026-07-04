@@ -1,14 +1,14 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.dodopayments.api.models.creditentitlements.balances
+package com.dodopayments.api.models.entitlements
 
 import com.dodopayments.api.core.Enum
 import com.dodopayments.api.core.JsonField
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
 import com.fasterxml.jackson.annotation.JsonCreator
 
-class LedgerEntryType @JsonCreator private constructor(private val value: JsonField<String>) :
-    Enum {
+/** Type of capability a `feature_flag` entitlement confers. */
+class FeatureType @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
     /**
      * Returns this class instance's raw value.
@@ -21,23 +21,20 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
 
     companion object {
 
-        @JvmField val CREDIT = of("credit")
+        @JvmField val BOOLEAN = of("boolean")
 
-        @JvmField val DEBIT = of("debit")
-
-        @JvmStatic fun of(value: String) = LedgerEntryType(JsonField.of(value))
+        @JvmStatic fun of(value: String) = FeatureType(JsonField.of(value))
     }
 
-    /** An enum containing [LedgerEntryType]'s known values. */
+    /** An enum containing [FeatureType]'s known values. */
     enum class Known {
-        CREDIT,
-        DEBIT,
+        BOOLEAN
     }
 
     /**
-     * An enum containing [LedgerEntryType]'s known values, as well as an [_UNKNOWN] member.
+     * An enum containing [FeatureType]'s known values, as well as an [_UNKNOWN] member.
      *
-     * An instance of [LedgerEntryType] can contain an unknown value in a couple of cases:
+     * An instance of [FeatureType] can contain an unknown value in a couple of cases:
      *
      * - It was deserialized from data that doesn't match any known member. For example, if the SDK
      *   is on an older version than the API, then the API may respond with new members that the SDK
@@ -46,11 +43,8 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
-        CREDIT,
-        DEBIT,
-        /**
-         * An enum member indicating that [LedgerEntryType] was instantiated with an unknown value.
-         */
+        BOOLEAN,
+        /** An enum member indicating that [FeatureType] was instantiated with an unknown value. */
         _UNKNOWN,
     }
 
@@ -63,8 +57,7 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
      */
     fun value(): Value =
         when (this) {
-            CREDIT -> Value.CREDIT
-            DEBIT -> Value.DEBIT
+            BOOLEAN -> Value.BOOLEAN
             else -> Value._UNKNOWN
         }
 
@@ -79,9 +72,8 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
      */
     fun known(): Known =
         when (this) {
-            CREDIT -> Known.CREDIT
-            DEBIT -> Known.DEBIT
-            else -> throw DodoPaymentsInvalidDataException("Unknown LedgerEntryType: $value")
+            BOOLEAN -> Known.BOOLEAN
+            else -> throw DodoPaymentsInvalidDataException("Unknown FeatureType: $value")
         }
 
     /**
@@ -108,7 +100,7 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
      * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): LedgerEntryType = apply {
+    fun validate(): FeatureType = apply {
         if (validated) {
             return@apply
         }
@@ -137,7 +129,7 @@ class LedgerEntryType @JsonCreator private constructor(private val value: JsonFi
             return true
         }
 
-        return other is LedgerEntryType && value == other.value
+        return other is FeatureType && value == other.value
     }
 
     override fun hashCode() = value.hashCode()
