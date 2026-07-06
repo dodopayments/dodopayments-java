@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.108.0](https://github.com/dodopayments/dodopayments-java/compare/v1.107.0...v1.108.0) (2026-07-06)
+
+
+### Features
+
+* **api:** add subscription period override fields to subscription update ([9c322d9](https://github.com/dodopayments/dodopayments-java/commit/9c322d9124906914ba72f6abdb771ad3286f0c8a))
+* **api:** add subscription period override fields to subscription update ([def4bcb](https://github.com/dodopayments/dodopayments-java/commit/def4bcb4e37bfa111b8fa9c673219d6fe878416e))
+
 ## [1.107.0](https://github.com/dodopayments/dodopayments-java/compare/v1.106.1...v1.107.0) (2026-07-04)
 
 
