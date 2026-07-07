@@ -124,6 +124,25 @@ private constructor(
     fun status(): Optional<SubscriptionStatus> = body.status()
 
     /**
+     * New number of `subscription_period_interval` units the subscription entitlement should span.
+     * Used together with `subscription_period_interval` to extend the subscription period. The
+     * resulting period must not be shorter than the current one (this endpoint only extends).
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun subscriptionPeriodCount(): Optional<Int> = body.subscriptionPeriodCount()
+
+    /**
+     * New interval unit for the subscription period. When changing the period, this may be supplied
+     * alongside `subscription_period_count`; if omitted the existing interval is retained.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun subscriptionPeriodInterval(): Optional<TimeInterval> = body.subscriptionPeriodInterval()
+
+    /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -218,6 +237,22 @@ private constructor(
      * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _status(): JsonField<SubscriptionStatus> = body._status()
+
+    /**
+     * Returns the raw JSON value of [subscriptionPeriodCount].
+     *
+     * Unlike [subscriptionPeriodCount], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _subscriptionPeriodCount(): JsonField<Int> = body._subscriptionPeriodCount()
+
+    /**
+     * Returns the raw JSON value of [subscriptionPeriodInterval].
+     *
+     * Unlike [subscriptionPeriodInterval], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    fun _subscriptionPeriodInterval(): JsonField<TimeInterval> = body._subscriptionPeriodInterval()
 
     /**
      * Returns the raw JSON value of [taxId].
@@ -534,6 +569,70 @@ private constructor(
          */
         fun status(status: JsonField<SubscriptionStatus>) = apply { body.status(status) }
 
+        /**
+         * New number of `subscription_period_interval` units the subscription entitlement should
+         * span. Used together with `subscription_period_interval` to extend the subscription
+         * period. The resulting period must not be shorter than the current one (this endpoint only
+         * extends).
+         */
+        fun subscriptionPeriodCount(subscriptionPeriodCount: Int?) = apply {
+            body.subscriptionPeriodCount(subscriptionPeriodCount)
+        }
+
+        /**
+         * Alias for [Builder.subscriptionPeriodCount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun subscriptionPeriodCount(subscriptionPeriodCount: Int) =
+            subscriptionPeriodCount(subscriptionPeriodCount as Int?)
+
+        /**
+         * Alias for calling [Builder.subscriptionPeriodCount] with
+         * `subscriptionPeriodCount.orElse(null)`.
+         */
+        fun subscriptionPeriodCount(subscriptionPeriodCount: Optional<Int>) =
+            subscriptionPeriodCount(subscriptionPeriodCount.getOrNull())
+
+        /**
+         * Sets [Builder.subscriptionPeriodCount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.subscriptionPeriodCount] with a well-typed [Int] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun subscriptionPeriodCount(subscriptionPeriodCount: JsonField<Int>) = apply {
+            body.subscriptionPeriodCount(subscriptionPeriodCount)
+        }
+
+        /**
+         * New interval unit for the subscription period. When changing the period, this may be
+         * supplied alongside `subscription_period_count`; if omitted the existing interval is
+         * retained.
+         */
+        fun subscriptionPeriodInterval(subscriptionPeriodInterval: TimeInterval?) = apply {
+            body.subscriptionPeriodInterval(subscriptionPeriodInterval)
+        }
+
+        /**
+         * Alias for calling [Builder.subscriptionPeriodInterval] with
+         * `subscriptionPeriodInterval.orElse(null)`.
+         */
+        fun subscriptionPeriodInterval(subscriptionPeriodInterval: Optional<TimeInterval>) =
+            subscriptionPeriodInterval(subscriptionPeriodInterval.getOrNull())
+
+        /**
+         * Sets [Builder.subscriptionPeriodInterval] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.subscriptionPeriodInterval] with a well-typed
+         * [TimeInterval] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun subscriptionPeriodInterval(subscriptionPeriodInterval: JsonField<TimeInterval>) =
+            apply {
+                body.subscriptionPeriodInterval(subscriptionPeriodInterval)
+            }
+
         fun taxId(taxId: String?) = apply { body.taxId(taxId) }
 
         /** Alias for calling [Builder.taxId] with `taxId.orElse(null)`. */
@@ -705,6 +804,8 @@ private constructor(
         private val metadata: JsonField<Metadata>,
         private val nextBillingDate: JsonField<OffsetDateTime>,
         private val status: JsonField<SubscriptionStatus>,
+        private val subscriptionPeriodCount: JsonField<Int>,
+        private val subscriptionPeriodInterval: JsonField<TimeInterval>,
         private val taxId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -747,6 +848,12 @@ private constructor(
             @JsonProperty("status")
             @ExcludeMissing
             status: JsonField<SubscriptionStatus> = JsonMissing.of(),
+            @JsonProperty("subscription_period_count")
+            @ExcludeMissing
+            subscriptionPeriodCount: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("subscription_period_interval")
+            @ExcludeMissing
+            subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of(),
             @JsonProperty("tax_id") @ExcludeMissing taxId: JsonField<String> = JsonMissing.of(),
         ) : this(
             billing,
@@ -761,6 +868,8 @@ private constructor(
             metadata,
             nextBillingDate,
             status,
+            subscriptionPeriodCount,
+            subscriptionPeriodInterval,
             taxId,
             mutableMapOf(),
         )
@@ -857,6 +966,29 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun status(): Optional<SubscriptionStatus> = status.getOptional("status")
+
+        /**
+         * New number of `subscription_period_interval` units the subscription entitlement should
+         * span. Used together with `subscription_period_interval` to extend the subscription
+         * period. The resulting period must not be shorter than the current one (this endpoint only
+         * extends).
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun subscriptionPeriodCount(): Optional<Int> =
+            subscriptionPeriodCount.getOptional("subscription_period_count")
+
+        /**
+         * New interval unit for the subscription period. When changing the period, this may be
+         * supplied alongside `subscription_period_count`; if omitted the existing interval is
+         * retained.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun subscriptionPeriodInterval(): Optional<TimeInterval> =
+            subscriptionPeriodInterval.getOptional("subscription_period_interval")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -978,6 +1110,26 @@ private constructor(
         fun _status(): JsonField<SubscriptionStatus> = status
 
         /**
+         * Returns the raw JSON value of [subscriptionPeriodCount].
+         *
+         * Unlike [subscriptionPeriodCount], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("subscription_period_count")
+        @ExcludeMissing
+        fun _subscriptionPeriodCount(): JsonField<Int> = subscriptionPeriodCount
+
+        /**
+         * Returns the raw JSON value of [subscriptionPeriodInterval].
+         *
+         * Unlike [subscriptionPeriodInterval], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("subscription_period_interval")
+        @ExcludeMissing
+        fun _subscriptionPeriodInterval(): JsonField<TimeInterval> = subscriptionPeriodInterval
+
+        /**
          * Returns the raw JSON value of [taxId].
          *
          * Unlike [taxId], this method doesn't throw if the JSON field has an unexpected type.
@@ -1017,6 +1169,8 @@ private constructor(
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
             private var status: JsonField<SubscriptionStatus> = JsonMissing.of()
+            private var subscriptionPeriodCount: JsonField<Int> = JsonMissing.of()
+            private var subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1034,6 +1188,8 @@ private constructor(
                 metadata = body.metadata
                 nextBillingDate = body.nextBillingDate
                 status = body.status
+                subscriptionPeriodCount = body.subscriptionPeriodCount
+                subscriptionPeriodInterval = body.subscriptionPeriodInterval
                 taxId = body.taxId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -1298,6 +1454,68 @@ private constructor(
              */
             fun status(status: JsonField<SubscriptionStatus>) = apply { this.status = status }
 
+            /**
+             * New number of `subscription_period_interval` units the subscription entitlement
+             * should span. Used together with `subscription_period_interval` to extend the
+             * subscription period. The resulting period must not be shorter than the current one
+             * (this endpoint only extends).
+             */
+            fun subscriptionPeriodCount(subscriptionPeriodCount: Int?) =
+                subscriptionPeriodCount(JsonField.ofNullable(subscriptionPeriodCount))
+
+            /**
+             * Alias for [Builder.subscriptionPeriodCount].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun subscriptionPeriodCount(subscriptionPeriodCount: Int) =
+                subscriptionPeriodCount(subscriptionPeriodCount as Int?)
+
+            /**
+             * Alias for calling [Builder.subscriptionPeriodCount] with
+             * `subscriptionPeriodCount.orElse(null)`.
+             */
+            fun subscriptionPeriodCount(subscriptionPeriodCount: Optional<Int>) =
+                subscriptionPeriodCount(subscriptionPeriodCount.getOrNull())
+
+            /**
+             * Sets [Builder.subscriptionPeriodCount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.subscriptionPeriodCount] with a well-typed [Int]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun subscriptionPeriodCount(subscriptionPeriodCount: JsonField<Int>) = apply {
+                this.subscriptionPeriodCount = subscriptionPeriodCount
+            }
+
+            /**
+             * New interval unit for the subscription period. When changing the period, this may be
+             * supplied alongside `subscription_period_count`; if omitted the existing interval is
+             * retained.
+             */
+            fun subscriptionPeriodInterval(subscriptionPeriodInterval: TimeInterval?) =
+                subscriptionPeriodInterval(JsonField.ofNullable(subscriptionPeriodInterval))
+
+            /**
+             * Alias for calling [Builder.subscriptionPeriodInterval] with
+             * `subscriptionPeriodInterval.orElse(null)`.
+             */
+            fun subscriptionPeriodInterval(subscriptionPeriodInterval: Optional<TimeInterval>) =
+                subscriptionPeriodInterval(subscriptionPeriodInterval.getOrNull())
+
+            /**
+             * Sets [Builder.subscriptionPeriodInterval] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.subscriptionPeriodInterval] with a well-typed
+             * [TimeInterval] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun subscriptionPeriodInterval(subscriptionPeriodInterval: JsonField<TimeInterval>) =
+                apply {
+                    this.subscriptionPeriodInterval = subscriptionPeriodInterval
+                }
+
             fun taxId(taxId: String?) = taxId(JsonField.ofNullable(taxId))
 
             /** Alias for calling [Builder.taxId] with `taxId.orElse(null)`. */
@@ -1350,6 +1568,8 @@ private constructor(
                     metadata,
                     nextBillingDate,
                     status,
+                    subscriptionPeriodCount,
+                    subscriptionPeriodInterval,
                     taxId,
                     additionalProperties.toMutableMap(),
                 )
@@ -1383,6 +1603,8 @@ private constructor(
             metadata().ifPresent { it.validate() }
             nextBillingDate()
             status().ifPresent { it.validate() }
+            subscriptionPeriodCount()
+            subscriptionPeriodInterval().ifPresent { it.validate() }
             taxId()
             validated = true
         }
@@ -1416,6 +1638,8 @@ private constructor(
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
+                (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -1436,6 +1660,8 @@ private constructor(
                 metadata == other.metadata &&
                 nextBillingDate == other.nextBillingDate &&
                 status == other.status &&
+                subscriptionPeriodCount == other.subscriptionPeriodCount &&
+                subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
                 taxId == other.taxId &&
                 additionalProperties == other.additionalProperties
         }
@@ -1454,6 +1680,8 @@ private constructor(
                 metadata,
                 nextBillingDate,
                 status,
+                subscriptionPeriodCount,
+                subscriptionPeriodInterval,
                 taxId,
                 additionalProperties,
             )
@@ -1462,7 +1690,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     class CancelReason @JsonCreator private constructor(private val value: JsonField<String>) :
