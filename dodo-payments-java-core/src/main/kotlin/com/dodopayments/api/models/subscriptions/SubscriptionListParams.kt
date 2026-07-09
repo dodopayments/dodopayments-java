@@ -18,6 +18,7 @@ import kotlin.jvm.optionals.getOrNull
 class SubscriptionListParams
 private constructor(
     private val brandId: String?,
+    private val cancelAtNextBillingDate: Boolean?,
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
     private val customerId: String?,
@@ -31,6 +32,9 @@ private constructor(
 
     /** filter by Brand id */
     fun brandId(): Optional<String> = Optional.ofNullable(brandId)
+
+    /** Filter by cancel_at_next_billing_date (subscriptions scheduled for cancellation) */
+    fun cancelAtNextBillingDate(): Optional<Boolean> = Optional.ofNullable(cancelAtNextBillingDate)
 
     /** Get events after this created time */
     fun createdAtGte(): Optional<OffsetDateTime> = Optional.ofNullable(createdAtGte)
@@ -73,6 +77,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var brandId: String? = null
+        private var cancelAtNextBillingDate: Boolean? = null
         private var createdAtGte: OffsetDateTime? = null
         private var createdAtLte: OffsetDateTime? = null
         private var customerId: String? = null
@@ -86,6 +91,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(subscriptionListParams: SubscriptionListParams) = apply {
             brandId = subscriptionListParams.brandId
+            cancelAtNextBillingDate = subscriptionListParams.cancelAtNextBillingDate
             createdAtGte = subscriptionListParams.createdAtGte
             createdAtLte = subscriptionListParams.createdAtLte
             customerId = subscriptionListParams.customerId
@@ -102,6 +108,26 @@ private constructor(
 
         /** Alias for calling [Builder.brandId] with `brandId.orElse(null)`. */
         fun brandId(brandId: Optional<String>) = brandId(brandId.getOrNull())
+
+        /** Filter by cancel_at_next_billing_date (subscriptions scheduled for cancellation) */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean?) = apply {
+            this.cancelAtNextBillingDate = cancelAtNextBillingDate
+        }
+
+        /**
+         * Alias for [Builder.cancelAtNextBillingDate].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Boolean) =
+            cancelAtNextBillingDate(cancelAtNextBillingDate as Boolean?)
+
+        /**
+         * Alias for calling [Builder.cancelAtNextBillingDate] with
+         * `cancelAtNextBillingDate.orElse(null)`.
+         */
+        fun cancelAtNextBillingDate(cancelAtNextBillingDate: Optional<Boolean>) =
+            cancelAtNextBillingDate(cancelAtNextBillingDate.getOrNull())
 
         /** Get events after this created time */
         fun createdAtGte(createdAtGte: OffsetDateTime?) = apply { this.createdAtGte = createdAtGte }
@@ -267,6 +293,7 @@ private constructor(
         fun build(): SubscriptionListParams =
             SubscriptionListParams(
                 brandId,
+                cancelAtNextBillingDate,
                 createdAtGte,
                 createdAtLte,
                 customerId,
@@ -285,6 +312,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 brandId?.let { put("brand_id", it) }
+                cancelAtNextBillingDate?.let { put("cancel_at_next_billing_date", it.toString()) }
                 createdAtGte?.let {
                     put("created_at_gte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
                 }
@@ -344,9 +372,11 @@ private constructor(
          * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Status] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -468,6 +498,7 @@ private constructor(
 
         return other is SubscriptionListParams &&
             brandId == other.brandId &&
+            cancelAtNextBillingDate == other.cancelAtNextBillingDate &&
             createdAtGte == other.createdAtGte &&
             createdAtLte == other.createdAtLte &&
             customerId == other.customerId &&
@@ -482,6 +513,7 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             brandId,
+            cancelAtNextBillingDate,
             createdAtGte,
             createdAtLte,
             customerId,
@@ -494,5 +526,5 @@ private constructor(
         )
 
     override fun toString() =
-        "SubscriptionListParams{brandId=$brandId, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SubscriptionListParams{brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

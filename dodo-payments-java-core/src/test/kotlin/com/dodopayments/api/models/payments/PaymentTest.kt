@@ -66,6 +66,7 @@ internal class PaymentTest {
                         .remarks("remarks")
                         .build()
                 )
+                .isUpdatePaymentMethod(true)
                 .metadata(
                     Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -130,6 +131,7 @@ internal class PaymentTest {
                 .invoiceUrl("invoice_url")
                 .paymentLink("payment_link")
                 .paymentMethod("payment_method")
+                .paymentMethodId("payment_method_id")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
                     Payment.ProductCart.builder().productId("product_id").quantity(0).build()
@@ -186,6 +188,7 @@ internal class PaymentTest {
                     .remarks("remarks")
                     .build()
             )
+        assertThat(payment.isUpdatePaymentMethod()).isEqualTo(true)
         assertThat(payment.metadata())
             .isEqualTo(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
@@ -250,6 +253,7 @@ internal class PaymentTest {
         assertThat(payment.invoiceUrl()).contains("invoice_url")
         assertThat(payment.paymentLink()).contains("payment_link")
         assertThat(payment.paymentMethod()).contains("payment_method")
+        assertThat(payment.paymentMethodId()).contains("payment_method_id")
         assertThat(payment.paymentMethodType()).contains("payment_method_type")
         assertThat(payment.productCart().getOrNull())
             .containsExactly(
@@ -309,6 +313,7 @@ internal class PaymentTest {
                         .remarks("remarks")
                         .build()
                 )
+                .isUpdatePaymentMethod(true)
                 .metadata(
                     Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -373,6 +378,7 @@ internal class PaymentTest {
                 .invoiceUrl("invoice_url")
                 .paymentLink("payment_link")
                 .paymentMethod("payment_method")
+                .paymentMethodId("payment_method_id")
                 .paymentMethodType("payment_method_type")
                 .addProductCart(
                     Payment.ProductCart.builder().productId("product_id").quantity(0).build()
