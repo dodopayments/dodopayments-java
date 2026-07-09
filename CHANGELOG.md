@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.108.1](https://github.com/dodopayments/dodopayments-java/compare/v1.108.0...v1.108.1) (2026-07-09)
+
+
+### Bug Fixes
+
+* **api:** add subscription.update_payment_method webhook and payment-method fields ([5b1d118](https://github.com/dodopayments/dodopayments-java/commit/5b1d11895866d84f5c24ebc0eb349447e8213477))
+* **api:** add subscription.update_payment_method webhook and payment-method fields ([d0ad931](https://github.com/dodopayments/dodopayments-java/commit/d0ad93153ce00dec63805b205af12b807100f252))
+
 ## [1.108.0](https://github.com/dodopayments/dodopayments-java/compare/v1.107.0...v1.108.0) (2026-07-06)
 
 
