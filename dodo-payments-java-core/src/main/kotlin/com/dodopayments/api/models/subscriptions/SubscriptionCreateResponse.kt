@@ -37,6 +37,7 @@ private constructor(
     private val expiresOn: JsonField<OffsetDateTime>,
     private val oneTimeProductCart: JsonField<List<OneTimeProductCart>>,
     private val paymentLink: JsonField<String>,
+    private val trialAmount: JsonField<Int>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -74,6 +75,7 @@ private constructor(
         @JsonProperty("payment_link")
         @ExcludeMissing
         paymentLink: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("trial_amount") @ExcludeMissing trialAmount: JsonField<Int> = JsonMissing.of(),
     ) : this(
         addons,
         customer,
@@ -87,6 +89,7 @@ private constructor(
         expiresOn,
         oneTimeProductCart,
         paymentLink,
+        trialAmount,
         mutableMapOf(),
     )
 
@@ -187,6 +190,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun paymentLink(): Optional<String> = paymentLink.getOptional("payment_link")
+
+    /**
+     * Per-unit trial amount after discounts, in the price currency's minor units (pre-quantity,
+     * pre-tax). Null for a free trial or no trial.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun trialAmount(): Optional<Int> = trialAmount.getOptional("trial_amount")
 
     /**
      * Returns the raw JSON value of [addons].
@@ -295,6 +307,13 @@ private constructor(
     @ExcludeMissing
     fun _paymentLink(): JsonField<String> = paymentLink
 
+    /**
+     * Returns the raw JSON value of [trialAmount].
+     *
+     * Unlike [trialAmount], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("trial_amount") @ExcludeMissing fun _trialAmount(): JsonField<Int> = trialAmount
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -340,6 +359,7 @@ private constructor(
         private var expiresOn: JsonField<OffsetDateTime> = JsonMissing.of()
         private var oneTimeProductCart: JsonField<MutableList<OneTimeProductCart>>? = null
         private var paymentLink: JsonField<String> = JsonMissing.of()
+        private var trialAmount: JsonField<Int> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -357,6 +377,7 @@ private constructor(
             oneTimeProductCart =
                 subscriptionCreateResponse.oneTimeProductCart.map { it.toMutableList() }
             paymentLink = subscriptionCreateResponse.paymentLink
+            trialAmount = subscriptionCreateResponse.trialAmount
             additionalProperties = subscriptionCreateResponse.additionalProperties.toMutableMap()
         }
 
@@ -582,6 +603,30 @@ private constructor(
          */
         fun paymentLink(paymentLink: JsonField<String>) = apply { this.paymentLink = paymentLink }
 
+        /**
+         * Per-unit trial amount after discounts, in the price currency's minor units (pre-quantity,
+         * pre-tax). Null for a free trial or no trial.
+         */
+        fun trialAmount(trialAmount: Int?) = trialAmount(JsonField.ofNullable(trialAmount))
+
+        /**
+         * Alias for [Builder.trialAmount].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun trialAmount(trialAmount: Int) = trialAmount(trialAmount as Int?)
+
+        /** Alias for calling [Builder.trialAmount] with `trialAmount.orElse(null)`. */
+        fun trialAmount(trialAmount: Optional<Int>) = trialAmount(trialAmount.getOrNull())
+
+        /**
+         * Sets [Builder.trialAmount] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.trialAmount] with a well-typed [Int] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun trialAmount(trialAmount: JsonField<Int>) = apply { this.trialAmount = trialAmount }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -632,6 +677,7 @@ private constructor(
                 expiresOn,
                 (oneTimeProductCart ?: JsonMissing.of()).map { it.toImmutable() },
                 paymentLink,
+                trialAmount,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -663,6 +709,7 @@ private constructor(
         expiresOn()
         oneTimeProductCart().ifPresent { it.forEach { it.validate() } }
         paymentLink()
+        trialAmount()
         validated = true
     }
 
@@ -692,7 +739,8 @@ private constructor(
             (discountIds.asKnown().getOrNull()?.size ?: 0) +
             (if (expiresOn.asKnown().isPresent) 1 else 0) +
             (oneTimeProductCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (if (paymentLink.asKnown().isPresent) 1 else 0)
+            (if (paymentLink.asKnown().isPresent) 1 else 0) +
+            (if (trialAmount.asKnown().isPresent) 1 else 0)
 
     class OneTimeProductCart
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -917,6 +965,7 @@ private constructor(
             expiresOn == other.expiresOn &&
             oneTimeProductCart == other.oneTimeProductCart &&
             paymentLink == other.paymentLink &&
+            trialAmount == other.trialAmount &&
             additionalProperties == other.additionalProperties
     }
 
@@ -934,6 +983,7 @@ private constructor(
             expiresOn,
             oneTimeProductCart,
             paymentLink,
+            trialAmount,
             additionalProperties,
         )
     }
@@ -941,5 +991,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, discountIds=$discountIds, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
+        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, discountIds=$discountIds, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, trialAmount=$trialAmount, additionalProperties=$additionalProperties}"
 }
