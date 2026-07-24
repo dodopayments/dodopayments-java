@@ -1980,7 +1980,8 @@ private constructor(
                 private var discounts: JsonField<MutableList<DiscountDetail>>? = null
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
-                private var failureDetails: JsonField<GlobalPayment.FailureDetails> = JsonMissing.of()
+                private var failureDetails: JsonField<GlobalPayment.FailureDetails> =
+                    JsonMissing.of()
                 private var invoiceId: JsonField<String> = JsonMissing.of()
                 private var invoiceUrl: JsonField<String> = JsonMissing.of()
                 private var paymentLink: JsonField<String> = JsonMissing.of()
@@ -2590,12 +2591,13 @@ private constructor(
                  * Sets [Builder.failureDetails] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.failureDetails] with a well-typed
-                 * [GlobalPayment.FailureDetails] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalPayment.FailureDetails] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
-                fun failureDetails(failureDetails: JsonField<GlobalPayment.FailureDetails>) = apply {
-                    this.failureDetails = failureDetails
-                }
+                fun failureDetails(failureDetails: JsonField<GlobalPayment.FailureDetails>) =
+                    apply {
+                        this.failureDetails = failureDetails
+                    }
 
                 /** Invoice ID for this payment. Uses India-specific invoice ID if available. */
                 fun invoiceId(invoiceId: String?) = invoiceId(JsonField.ofNullable(invoiceId))
@@ -4513,9 +4515,8 @@ private constructor(
                 fun meterCreditEntitlementCart(
                     meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>>
                 ) = apply {
-                    this.meterCreditEntitlementCart = meterCreditEntitlementCart.map {
-                        it.toMutableList()
-                    }
+                    this.meterCreditEntitlementCart =
+                        meterCreditEntitlementCart.map { it.toMutableList() }
                 }
 
                 /**
@@ -9979,11 +9980,9 @@ private constructor(
                  *
                  * An instance of [AbandonmentReason] can contain an unknown value in a couple of
                  * cases:
-                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
-                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -10134,11 +10133,9 @@ private constructor(
                  * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
                  *
                  * An instance of [Status] can contain an unknown value in a couple of cases:
-                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
-                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -10778,11 +10775,9 @@ private constructor(
                  * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
                  *
                  * An instance of [Status] can contain an unknown value in a couple of cases:
-                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
-                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
@@ -10926,11 +10921,9 @@ private constructor(
                  * member.
                  *
                  * An instance of [TriggerState] can contain an unknown value in a couple of cases:
-                 *
                  * - It was deserialized from data that doesn't match any known member. For example,
                  *   if the SDK is on an older version than the API, then the API may respond with
                  *   new members that the SDK is unaware of.
-                 *
                  * - It was constructed with an arbitrary value using the [of] method.
                  */
                 enum class Value {
