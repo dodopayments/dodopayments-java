@@ -1980,7 +1980,8 @@ private constructor(
                 private var discounts: JsonField<MutableList<DiscountDetail>>? = null
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
-                private var failureDetails: JsonField<GlobalPayment.FailureDetails> = JsonMissing.of()
+                private var failureDetails: JsonField<GlobalPayment.FailureDetails> =
+                    JsonMissing.of()
                 private var invoiceId: JsonField<String> = JsonMissing.of()
                 private var invoiceUrl: JsonField<String> = JsonMissing.of()
                 private var paymentLink: JsonField<String> = JsonMissing.of()
@@ -2590,12 +2591,13 @@ private constructor(
                  * Sets [Builder.failureDetails] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.failureDetails] with a well-typed
-                 * [GlobalPayment.FailureDetails] value instead. This method is primarily for setting the
-                 * field to an undocumented or not yet supported value.
+                 * [GlobalPayment.FailureDetails] value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
-                fun failureDetails(failureDetails: JsonField<GlobalPayment.FailureDetails>) = apply {
-                    this.failureDetails = failureDetails
-                }
+                fun failureDetails(failureDetails: JsonField<GlobalPayment.FailureDetails>) =
+                    apply {
+                        this.failureDetails = failureDetails
+                    }
 
                 /** Invoice ID for this payment. Uses India-specific invoice ID if available. */
                 fun invoiceId(invoiceId: String?) = invoiceId(JsonField.ofNullable(invoiceId))
