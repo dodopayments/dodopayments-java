@@ -61,7 +61,9 @@ private constructor(
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
 
     /**
-     * Amount to credit or debit
+     * Amount to credit or debit. Bounded to a `NUMERIC(38,28)` column, so the integer part must
+     * have fewer than 10 digits (< 10^10); larger values previously reached the DB and failed with
+     * a 22003 overflow surfaced as a 500.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -217,7 +219,11 @@ private constructor(
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Amount to credit or debit */
+        /**
+         * Amount to credit or debit. Bounded to a `NUMERIC(38,28)` column, so the integer part must
+         * have fewer than 10 digits (< 10^10); larger values previously reached the DB and failed
+         * with a 22003 overflow surfaced as a 500.
+         */
         fun amount(amount: String) = apply { body.amount(amount) }
 
         /**
@@ -488,7 +494,9 @@ private constructor(
         ) : this(amount, entryType, expiresAt, idempotencyKey, metadata, reason, mutableMapOf())
 
         /**
-         * Amount to credit or debit
+         * Amount to credit or debit. Bounded to a `NUMERIC(38,28)` column, so the integer part must
+         * have fewer than 10 digits (< 10^10); larger values previously reached the DB and failed
+         * with a 22003 overflow surfaced as a 500.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -632,7 +640,11 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Amount to credit or debit */
+            /**
+             * Amount to credit or debit. Bounded to a `NUMERIC(38,28)` column, so the integer part
+             * must have fewer than 10 digits (< 10^10); larger values previously reached the DB and
+             * failed with a 22003 overflow surfaced as a 500.
+             */
             fun amount(amount: String) = amount(JsonField.of(amount))
 
             /**

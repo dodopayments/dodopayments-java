@@ -95,6 +95,7 @@ internal class SubscriptionListResponseTest {
                         .build()
                 )
                 .taxId("tax_id")
+                .trialAmount(0)
                 .build()
 
         assertThat(subscriptionListResponse.billing())
@@ -181,6 +182,7 @@ internal class SubscriptionListResponseTest {
                     .build()
             )
         assertThat(subscriptionListResponse.taxId()).contains("tax_id")
+        assertThat(subscriptionListResponse.trialAmount()).contains(0)
     }
 
     @Test
@@ -263,6 +265,7 @@ internal class SubscriptionListResponseTest {
                         .build()
                 )
                 .taxId("tax_id")
+                .trialAmount(0)
                 .build()
 
         val roundtrippedSubscriptionListResponse =
