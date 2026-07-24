@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.109.0](https://github.com/dodopayments/dodopayments-java/compare/v1.108.1...v1.109.0) (2026-07-24)
+
+
+### Features
+
+* **api:** add discount customers endpoints, trial support, currency options, and failure details ([6c612c3](https://github.com/dodopayments/dodopayments-java/commit/6c612c3a4554ea33d6a06503a2cbff0b97f86ac3))
+* **api:** add discount customers endpoints, trial support, currency options, and failure details ([8166ef9](https://github.com/dodopayments/dodopayments-java/commit/8166ef9068618f22708d6287a7861f51dd1f5031))
+* **api:** add discount customers endpoints, trial support, currency options, and failure details ([310b7a4](https://github.com/dodopayments/dodopayments-java/commit/310b7a4bc85cde9cf13085bc4a9208e3d5c1e2c7))
+* **api:** add discount customers endpoints, trial support, currency options, and failure details ([837dbdf](https://github.com/dodopayments/dodopayments-java/commit/837dbdfcbcadfe4cd548431629abb7de6b1a7adb))
+
 ## [1.108.1](https://github.com/dodopayments/dodopayments-java/compare/v1.108.0...v1.108.1) (2026-07-09)
 
 
