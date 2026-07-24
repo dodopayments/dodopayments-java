@@ -864,7 +864,7 @@ private constructor(
             private val discounts: JsonField<List<DiscountDetail>>,
             private val errorCode: JsonField<String>,
             private val errorMessage: JsonField<String>,
-            private val failureDetails: JsonField<Payment.FailureDetails>,
+            private val failureDetails: JsonField<GlobalPayment.FailureDetails>,
             private val invoiceId: JsonField<String>,
             private val invoiceUrl: JsonField<String>,
             private val paymentLink: JsonField<String>,
@@ -970,7 +970,7 @@ private constructor(
                 errorMessage: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("failure_details")
                 @ExcludeMissing
-                failureDetails: JsonField<Payment.FailureDetails> = JsonMissing.of(),
+                failureDetails: JsonField<GlobalPayment.FailureDetails> = JsonMissing.of(),
                 @JsonProperty("invoice_id")
                 @ExcludeMissing
                 invoiceId: JsonField<String> = JsonMissing.of(),
@@ -1372,7 +1372,7 @@ private constructor(
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
              *   (e.g. if the server responded with an unexpected value).
              */
-            fun failureDetails(): Optional<Payment.FailureDetails> =
+            fun failureDetails(): Optional<GlobalPayment.FailureDetails> =
                 failureDetails.getOptional("failure_details")
 
             /**
@@ -1781,7 +1781,7 @@ private constructor(
              */
             @JsonProperty("failure_details")
             @ExcludeMissing
-            fun _failureDetails(): JsonField<Payment.FailureDetails> = failureDetails
+            fun _failureDetails(): JsonField<GlobalPayment.FailureDetails> = failureDetails
 
             /**
              * Returns the raw JSON value of [invoiceId].
@@ -1980,7 +1980,7 @@ private constructor(
                 private var discounts: JsonField<MutableList<DiscountDetail>>? = null
                 private var errorCode: JsonField<String> = JsonMissing.of()
                 private var errorMessage: JsonField<String> = JsonMissing.of()
-                private var failureDetails: JsonField<Payment.FailureDetails> = JsonMissing.of()
+                private var failureDetails: JsonField<GlobalPayment.FailureDetails> = JsonMissing.of()
                 private var invoiceId: JsonField<String> = JsonMissing.of()
                 private var invoiceUrl: JsonField<String> = JsonMissing.of()
                 private var paymentLink: JsonField<String> = JsonMissing.of()
@@ -2577,23 +2577,23 @@ private constructor(
                  * omitted. The customer copy is always generic for fraud-sensitive declines
                  * (lost/stolen/pickup/fraudulent) so the true reason is never leaked.
                  */
-                fun failureDetails(failureDetails: Payment.FailureDetails?) =
+                fun failureDetails(failureDetails: GlobalPayment.FailureDetails?) =
                     failureDetails(JsonField.ofNullable(failureDetails))
 
                 /**
                  * Alias for calling [Builder.failureDetails] with `failureDetails.orElse(null)`.
                  */
-                fun failureDetails(failureDetails: Optional<Payment.FailureDetails>) =
+                fun failureDetails(failureDetails: Optional<GlobalPayment.FailureDetails>) =
                     failureDetails(failureDetails.getOrNull())
 
                 /**
                  * Sets [Builder.failureDetails] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.failureDetails] with a well-typed
-                 * [Payment.FailureDetails] value instead. This method is primarily for setting the
+                 * [GlobalPayment.FailureDetails] value instead. This method is primarily for setting the
                  * field to an undocumented or not yet supported value.
                  */
-                fun failureDetails(failureDetails: JsonField<Payment.FailureDetails>) = apply {
+                fun failureDetails(failureDetails: JsonField<GlobalPayment.FailureDetails>) = apply {
                     this.failureDetails = failureDetails
                 }
 
