@@ -2098,11 +2098,9 @@ private constructor(
          * An enum containing [PaymentProvider]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [PaymentProvider] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -2691,11 +2689,9 @@ private constructor(
              * An enum containing [CustomerCta]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [CustomerCta] can contain an unknown value in a couple of cases:
-             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
-             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -2906,11 +2902,9 @@ private constructor(
              * member.
              *
              * An instance of [CustomerTemplate] can contain an unknown value in a couple of cases:
-             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
-             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -3105,11 +3099,9 @@ private constructor(
              * An enum containing [DeclineType]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [DeclineType] can contain an unknown value in a couple of cases:
-             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
-             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
