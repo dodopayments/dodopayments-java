@@ -46,7 +46,10 @@ private constructor(
     /** Filter by customer id */
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
 
-    /** Page number default is 0 */
+    /**
+     * Page number default is 0. Capped to bound OFFSET-based deep pagination, which forces Postgres
+     * to scan and discard every preceding row.
+     */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
 
     /** Page size default is 10 max is 100 */
@@ -141,7 +144,10 @@ private constructor(
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
 
-        /** Page number default is 0 */
+        /**
+         * Page number default is 0. Capped to bound OFFSET-based deep pagination, which forces
+         * Postgres to scan and discard every preceding row.
+         */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
 
         /**

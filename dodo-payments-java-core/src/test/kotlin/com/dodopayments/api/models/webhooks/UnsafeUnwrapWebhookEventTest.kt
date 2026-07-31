@@ -107,6 +107,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -209,6 +214,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -321,6 +331,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -432,6 +447,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -543,6 +563,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -667,6 +692,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -793,6 +823,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -918,6 +953,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1043,6 +1083,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1167,6 +1212,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1293,6 +1343,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1405,6 +1460,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1505,6 +1565,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1606,6 +1671,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1706,6 +1776,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1806,6 +1881,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -1906,6 +1986,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2006,6 +2091,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2103,6 +2193,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2197,6 +2292,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2339,6 +2439,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2527,6 +2632,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2715,6 +2825,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -2903,6 +3018,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -3051,6 +3171,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -3211,17 +3336,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .errorCode("error_code")
                         .errorMessage("error_message")
-                        .failureDetails(
-                            Payment.FailureDetails.builder()
-                                .code("code")
-                                .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                .customerFixable(true)
-                                .customerMessage("customer_message")
-                                .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                .merchantMessage("merchant_message")
-                                .build()
-                        )
                         .invoiceId("invoice_id")
                         .invoiceUrl("invoice_url")
                         .paymentLink("payment_link")
@@ -3276,6 +3390,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -3400,17 +3519,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .errorCode("error_code")
                             .errorMessage("error_message")
-                            .failureDetails(
-                                Payment.FailureDetails.builder()
-                                    .code("code")
-                                    .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                    .customerFixable(true)
-                                    .customerMessage("customer_message")
-                                    .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                    .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                    .merchantMessage("merchant_message")
-                                    .build()
-                            )
                             .invoiceId("invoice_id")
                             .invoiceUrl("invoice_url")
                             .paymentLink("payment_link")
@@ -3553,17 +3661,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .errorCode("error_code")
                         .errorMessage("error_message")
-                        .failureDetails(
-                            Payment.FailureDetails.builder()
-                                .code("code")
-                                .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                .customerFixable(true)
-                                .customerMessage("customer_message")
-                                .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                .merchantMessage("merchant_message")
-                                .build()
-                        )
                         .invoiceId("invoice_id")
                         .invoiceUrl("invoice_url")
                         .paymentLink("payment_link")
@@ -3618,6 +3715,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).contains(paymentFailed)
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -3742,17 +3844,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .errorCode("error_code")
                             .errorMessage("error_message")
-                            .failureDetails(
-                                Payment.FailureDetails.builder()
-                                    .code("code")
-                                    .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                    .customerFixable(true)
-                                    .customerMessage("customer_message")
-                                    .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                    .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                    .merchantMessage("merchant_message")
-                                    .build()
-                            )
                             .invoiceId("invoice_id")
                             .invoiceUrl("invoice_url")
                             .paymentLink("payment_link")
@@ -3895,17 +3986,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .errorCode("error_code")
                         .errorMessage("error_message")
-                        .failureDetails(
-                            Payment.FailureDetails.builder()
-                                .code("code")
-                                .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                .customerFixable(true)
-                                .customerMessage("customer_message")
-                                .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                .merchantMessage("merchant_message")
-                                .build()
-                        )
                         .invoiceId("invoice_id")
                         .invoiceUrl("invoice_url")
                         .paymentLink("payment_link")
@@ -3961,6 +4041,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).contains(paymentProcessing)
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -4085,17 +4170,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .errorCode("error_code")
                             .errorMessage("error_message")
-                            .failureDetails(
-                                Payment.FailureDetails.builder()
-                                    .code("code")
-                                    .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                    .customerFixable(true)
-                                    .customerMessage("customer_message")
-                                    .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                    .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                    .merchantMessage("merchant_message")
-                                    .build()
-                            )
                             .invoiceId("invoice_id")
                             .invoiceUrl("invoice_url")
                             .paymentLink("payment_link")
@@ -4238,17 +4312,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         )
                         .errorCode("error_code")
                         .errorMessage("error_message")
-                        .failureDetails(
-                            Payment.FailureDetails.builder()
-                                .code("code")
-                                .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                .customerFixable(true)
-                                .customerMessage("customer_message")
-                                .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                .merchantMessage("merchant_message")
-                                .build()
-                        )
                         .invoiceId("invoice_id")
                         .invoiceUrl("invoice_url")
                         .paymentLink("payment_link")
@@ -4303,6 +4366,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).contains(paymentSucceeded)
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -4427,17 +4495,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             )
                             .errorCode("error_code")
                             .errorMessage("error_message")
-                            .failureDetails(
-                                Payment.FailureDetails.builder()
-                                    .code("code")
-                                    .customerCta(Payment.FailureDetails.CustomerCta.EDIT_AND_RETRY)
-                                    .customerFixable(true)
-                                    .customerMessage("customer_message")
-                                    .customerTemplate(Payment.FailureDetails.CustomerTemplate.C1)
-                                    .declineType(Payment.FailureDetails.DeclineType.SOFT)
-                                    .merchantMessage("merchant_message")
-                                    .build()
-                            )
                             .invoiceId("invoice_id")
                             .invoiceUrl("invoice_url")
                             .paymentLink("payment_link")
@@ -4456,6 +4513,581 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .subscriptionId("subscription_id")
                             .tax(0)
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofPayoutCreated() {
+        val payoutCreated =
+            PayoutCreatedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    PayoutCreatedWebhookEvent.Data.builder()
+                        .amount(0L)
+                        .businessId("business_id")
+                        .chargebacks(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .currency(Currency.AED)
+                        .fee(0L)
+                        .paymentMethod("payment_method")
+                        .payoutId("payout_id")
+                        .refunds(0L)
+                        .status(PayoutCreatedWebhookEvent.Data.Status.NOT_INITIATED)
+                        .tax(0L)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .name("name")
+                        .payoutDocumentUrl("payout_document_url")
+                        .remarks("remarks")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPayoutCreated(payoutCreated)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).contains(payoutCreated)
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofPayoutCreatedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofPayoutCreated(
+                PayoutCreatedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        PayoutCreatedWebhookEvent.Data.builder()
+                            .amount(0L)
+                            .businessId("business_id")
+                            .chargebacks(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .currency(Currency.AED)
+                            .fee(0L)
+                            .paymentMethod("payment_method")
+                            .payoutId("payout_id")
+                            .refunds(0L)
+                            .status(PayoutCreatedWebhookEvent.Data.Status.NOT_INITIATED)
+                            .tax(0L)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .name("name")
+                            .payoutDocumentUrl("payout_document_url")
+                            .remarks("remarks")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofPayoutFailed() {
+        val payoutFailed =
+            PayoutFailedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    PayoutFailedWebhookEvent.Data.builder()
+                        .amount(0L)
+                        .businessId("business_id")
+                        .chargebacks(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .currency(Currency.AED)
+                        .fee(0L)
+                        .paymentMethod("payment_method")
+                        .payoutId("payout_id")
+                        .refunds(0L)
+                        .status(PayoutFailedWebhookEvent.Data.Status.NOT_INITIATED)
+                        .tax(0L)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .name("name")
+                        .payoutDocumentUrl("payout_document_url")
+                        .remarks("remarks")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPayoutFailed(payoutFailed)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).contains(payoutFailed)
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofPayoutFailedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofPayoutFailed(
+                PayoutFailedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        PayoutFailedWebhookEvent.Data.builder()
+                            .amount(0L)
+                            .businessId("business_id")
+                            .chargebacks(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .currency(Currency.AED)
+                            .fee(0L)
+                            .paymentMethod("payment_method")
+                            .payoutId("payout_id")
+                            .refunds(0L)
+                            .status(PayoutFailedWebhookEvent.Data.Status.NOT_INITIATED)
+                            .tax(0L)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .name("name")
+                            .payoutDocumentUrl("payout_document_url")
+                            .remarks("remarks")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofPayoutInProgress() {
+        val payoutInProgress =
+            PayoutInProgressWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    PayoutInProgressWebhookEvent.Data.builder()
+                        .amount(0L)
+                        .businessId("business_id")
+                        .chargebacks(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .currency(Currency.AED)
+                        .fee(0L)
+                        .paymentMethod("payment_method")
+                        .payoutId("payout_id")
+                        .refunds(0L)
+                        .status(PayoutInProgressWebhookEvent.Data.Status.NOT_INITIATED)
+                        .tax(0L)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .name("name")
+                        .payoutDocumentUrl("payout_document_url")
+                        .remarks("remarks")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPayoutInProgress(payoutInProgress)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).contains(payoutInProgress)
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofPayoutInProgressRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofPayoutInProgress(
+                PayoutInProgressWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        PayoutInProgressWebhookEvent.Data.builder()
+                            .amount(0L)
+                            .businessId("business_id")
+                            .chargebacks(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .currency(Currency.AED)
+                            .fee(0L)
+                            .paymentMethod("payment_method")
+                            .payoutId("payout_id")
+                            .refunds(0L)
+                            .status(PayoutInProgressWebhookEvent.Data.Status.NOT_INITIATED)
+                            .tax(0L)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .name("name")
+                            .payoutDocumentUrl("payout_document_url")
+                            .remarks("remarks")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofPayoutOnHold() {
+        val payoutOnHold =
+            PayoutOnHoldWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    PayoutOnHoldWebhookEvent.Data.builder()
+                        .amount(0L)
+                        .businessId("business_id")
+                        .chargebacks(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .currency(Currency.AED)
+                        .fee(0L)
+                        .paymentMethod("payment_method")
+                        .payoutId("payout_id")
+                        .refunds(0L)
+                        .status(PayoutOnHoldWebhookEvent.Data.Status.NOT_INITIATED)
+                        .tax(0L)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .name("name")
+                        .payoutDocumentUrl("payout_document_url")
+                        .remarks("remarks")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPayoutOnHold(payoutOnHold)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).contains(payoutOnHold)
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofPayoutOnHoldRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofPayoutOnHold(
+                PayoutOnHoldWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        PayoutOnHoldWebhookEvent.Data.builder()
+                            .amount(0L)
+                            .businessId("business_id")
+                            .chargebacks(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .currency(Currency.AED)
+                            .fee(0L)
+                            .paymentMethod("payment_method")
+                            .payoutId("payout_id")
+                            .refunds(0L)
+                            .status(PayoutOnHoldWebhookEvent.Data.Status.NOT_INITIATED)
+                            .tax(0L)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .name("name")
+                            .payoutDocumentUrl("payout_document_url")
+                            .remarks("remarks")
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofPayoutSuccess() {
+        val payoutSuccess =
+            PayoutSuccessWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    PayoutSuccessWebhookEvent.Data.builder()
+                        .amount(0L)
+                        .businessId("business_id")
+                        .chargebacks(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .currency(Currency.AED)
+                        .fee(0L)
+                        .paymentMethod("payment_method")
+                        .payoutId("payout_id")
+                        .refunds(0L)
+                        .status(PayoutSuccessWebhookEvent.Data.Status.NOT_INITIATED)
+                        .tax(0L)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .name("name")
+                        .payoutDocumentUrl("payout_document_url")
+                        .remarks("remarks")
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofPayoutSuccess(payoutSuccess)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).contains(payoutSuccess)
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofPayoutSuccessRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofPayoutSuccess(
+                PayoutSuccessWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        PayoutSuccessWebhookEvent.Data.builder()
+                            .amount(0L)
+                            .businessId("business_id")
+                            .chargebacks(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .currency(Currency.AED)
+                            .fee(0L)
+                            .paymentMethod("payment_method")
+                            .payoutId("payout_id")
+                            .refunds(0L)
+                            .status(PayoutSuccessWebhookEvent.Data.Status.NOT_INITIATED)
+                            .tax(0L)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .name("name")
+                            .payoutDocumentUrl("payout_document_url")
+                            .remarks("remarks")
                             .build()
                     )
                     .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -4542,6 +5174,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).contains(refundFailed)
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -4678,6 +5315,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).contains(refundSucceeded)
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -4931,6 +5573,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).contains(subscriptionActive)
@@ -5303,6 +5950,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -5675,6 +6327,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -6047,6 +6704,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -6419,6 +7081,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -6791,6 +7458,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -7164,6 +7836,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -7538,6 +8215,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
@@ -7911,6 +8593,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
