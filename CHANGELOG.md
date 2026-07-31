@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.110.0](https://github.com/dodopayments/dodopayments-java/compare/v1.109.0...v1.110.0) (2026-07-31)
+
+
+### Features
+
+* **api:** add payout webhook events and remove payment failure_details ([012861c](https://github.com/dodopayments/dodopayments-java/commit/012861c38eb49f741c4567cebd952b6b5c27771b))
+* **api:** add payout webhook events and remove payment failure_details ([5a9b4e4](https://github.com/dodopayments/dodopayments-java/commit/5a9b4e492e6e7f3df1ef3d62610585a239f43cac))
+
 ## [1.109.0](https://github.com/dodopayments/dodopayments-java/compare/v1.108.1...v1.109.0) (2026-07-24)
 
 
