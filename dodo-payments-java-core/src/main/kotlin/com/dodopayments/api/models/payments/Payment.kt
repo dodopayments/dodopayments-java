@@ -57,7 +57,6 @@ private constructor(
     private val discounts: JsonField<List<DiscountDetail>>,
     private val errorCode: JsonField<String>,
     private val errorMessage: JsonField<String>,
-    private val failureDetails: JsonField<FailureDetails>,
     private val invoiceId: JsonField<String>,
     private val invoiceUrl: JsonField<String>,
     private val paymentLink: JsonField<String>,
@@ -148,9 +147,6 @@ private constructor(
         @JsonProperty("error_message")
         @ExcludeMissing
         errorMessage: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("failure_details")
-        @ExcludeMissing
-        failureDetails: JsonField<FailureDetails> = JsonMissing.of(),
         @JsonProperty("invoice_id") @ExcludeMissing invoiceId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("invoice_url")
         @ExcludeMissing
@@ -213,7 +209,6 @@ private constructor(
         discounts,
         errorCode,
         errorMessage,
-        failureDetails,
         invoiceId,
         invoiceUrl,
         paymentLink,
@@ -460,24 +455,14 @@ private constructor(
     fun errorCode(): Optional<String> = errorCode.getOptional("error_code")
 
     /**
-     * An error message if the payment failed
+     * An error message if the payment failed. When `error_code` is a recognised unified code, this
+     * is the merchant-facing headline + recommended action (Payment Details copy) rather than the
+     * raw connector text.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun errorMessage(): Optional<String> = errorMessage.getOptional("error_message")
-
-    /**
-     * Purpose-built failure messaging for the merchant and the customer, derived from `error_code`.
-     * Present whenever `error_code` is set, regardless of payment status; unrecognised codes still
-     * resolve via a generic fallback rather than being omitted. The customer copy is always generic
-     * for fraud-sensitive declines (lost/stolen/pickup/fraudulent) so the true reason is never
-     * leaked.
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun failureDetails(): Optional<FailureDetails> = failureDetails.getOptional("failure_details")
 
     /**
      * Invoice ID for this payment. Uses India-specific invoice ID if available.
@@ -827,15 +812,6 @@ private constructor(
     fun _errorMessage(): JsonField<String> = errorMessage
 
     /**
-     * Returns the raw JSON value of [failureDetails].
-     *
-     * Unlike [failureDetails], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("failure_details")
-    @ExcludeMissing
-    fun _failureDetails(): JsonField<FailureDetails> = failureDetails
-
-    /**
      * Returns the raw JSON value of [invoiceId].
      *
      * Unlike [invoiceId], this method doesn't throw if the JSON field has an unexpected type.
@@ -1017,7 +993,6 @@ private constructor(
         private var discounts: JsonField<MutableList<DiscountDetail>>? = null
         private var errorCode: JsonField<String> = JsonMissing.of()
         private var errorMessage: JsonField<String> = JsonMissing.of()
-        private var failureDetails: JsonField<FailureDetails> = JsonMissing.of()
         private var invoiceId: JsonField<String> = JsonMissing.of()
         private var invoiceUrl: JsonField<String> = JsonMissing.of()
         private var paymentLink: JsonField<String> = JsonMissing.of()
@@ -1063,7 +1038,6 @@ private constructor(
             discounts = payment.discounts.map { it.toMutableList() }
             errorCode = payment.errorCode
             errorMessage = payment.errorMessage
-            failureDetails = payment.failureDetails
             invoiceId = payment.invoiceId
             invoiceUrl = payment.invoiceUrl
             paymentLink = payment.paymentLink
@@ -1551,7 +1525,11 @@ private constructor(
          */
         fun errorCode(errorCode: JsonField<String>) = apply { this.errorCode = errorCode }
 
-        /** An error message if the payment failed */
+        /**
+         * An error message if the payment failed. When `error_code` is a recognised unified code,
+         * this is the merchant-facing headline + recommended action (Payment Details copy) rather
+         * than the raw connector text.
+         */
         fun errorMessage(errorMessage: String?) = errorMessage(JsonField.ofNullable(errorMessage))
 
         /** Alias for calling [Builder.errorMessage] with `errorMessage.orElse(null)`. */
@@ -1566,31 +1544,6 @@ private constructor(
          */
         fun errorMessage(errorMessage: JsonField<String>) = apply {
             this.errorMessage = errorMessage
-        }
-
-        /**
-         * Purpose-built failure messaging for the merchant and the customer, derived from
-         * `error_code`. Present whenever `error_code` is set, regardless of payment status;
-         * unrecognised codes still resolve via a generic fallback rather than being omitted. The
-         * customer copy is always generic for fraud-sensitive declines
-         * (lost/stolen/pickup/fraudulent) so the true reason is never leaked.
-         */
-        fun failureDetails(failureDetails: FailureDetails?) =
-            failureDetails(JsonField.ofNullable(failureDetails))
-
-        /** Alias for calling [Builder.failureDetails] with `failureDetails.orElse(null)`. */
-        fun failureDetails(failureDetails: Optional<FailureDetails>) =
-            failureDetails(failureDetails.getOrNull())
-
-        /**
-         * Sets [Builder.failureDetails] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.failureDetails] with a well-typed [FailureDetails] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun failureDetails(failureDetails: JsonField<FailureDetails>) = apply {
-            this.failureDetails = failureDetails
         }
 
         /** Invoice ID for this payment. Uses India-specific invoice ID if available. */
@@ -1923,7 +1876,6 @@ private constructor(
                 (discounts ?: JsonMissing.of()).map { it.toImmutable() },
                 errorCode,
                 errorMessage,
-                failureDetails,
                 invoiceId,
                 invoiceUrl,
                 paymentLink,
@@ -1984,7 +1936,6 @@ private constructor(
         discounts().ifPresent { it.forEach { it.validate() } }
         errorCode()
         errorMessage()
-        failureDetails().ifPresent { it.validate() }
         invoiceId()
         invoiceUrl()
         paymentLink()
@@ -2044,7 +1995,6 @@ private constructor(
             (discounts.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (errorCode.asKnown().isPresent) 1 else 0) +
             (if (errorMessage.asKnown().isPresent) 1 else 0) +
-            (failureDetails.asKnown().getOrNull()?.validity() ?: 0) +
             (if (invoiceId.asKnown().isPresent) 1 else 0) +
             (if (invoiceUrl.asKnown().isPresent) 1 else 0) +
             (if (paymentLink.asKnown().isPresent) 1 else 0) +
@@ -2207,1040 +2157,6 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
-    }
-
-    /**
-     * Purpose-built failure messaging for the merchant and the customer, derived from `error_code`.
-     * Present whenever `error_code` is set, regardless of payment status; unrecognised codes still
-     * resolve via a generic fallback rather than being omitted. The customer copy is always generic
-     * for fraud-sensitive declines (lost/stolen/pickup/fraudulent) so the true reason is never
-     * leaked.
-     */
-    class FailureDetails
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val code: JsonField<String>,
-        private val customerCta: JsonField<CustomerCta>,
-        private val customerFixable: JsonField<Boolean>,
-        private val customerMessage: JsonField<String>,
-        private val customerTemplate: JsonField<CustomerTemplate>,
-        private val declineType: JsonField<DeclineType>,
-        private val merchantMessage: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("code") @ExcludeMissing code: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("customer_cta")
-            @ExcludeMissing
-            customerCta: JsonField<CustomerCta> = JsonMissing.of(),
-            @JsonProperty("customer_fixable")
-            @ExcludeMissing
-            customerFixable: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("customer_message")
-            @ExcludeMissing
-            customerMessage: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("customer_template")
-            @ExcludeMissing
-            customerTemplate: JsonField<CustomerTemplate> = JsonMissing.of(),
-            @JsonProperty("decline_type")
-            @ExcludeMissing
-            declineType: JsonField<DeclineType> = JsonMissing.of(),
-            @JsonProperty("merchant_message")
-            @ExcludeMissing
-            merchantMessage: JsonField<String> = JsonMissing.of(),
-        ) : this(
-            code,
-            customerCta,
-            customerFixable,
-            customerMessage,
-            customerTemplate,
-            declineType,
-            merchantMessage,
-            mutableMapOf(),
-        )
-
-        /**
-         * The unified error code (echoes `error_code`).
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun code(): String = code.getRequired("code")
-
-        /**
-         * The primary CTA to show the customer.
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun customerCta(): CustomerCta = customerCta.getRequired("customer_cta")
-
-        /**
-         * Whether the customer can resolve this themselves (e.g. fix CVC).
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun customerFixable(): Boolean = customerFixable.getRequired("customer_fixable")
-
-        /**
-         * The customer-facing string. Always generic (`C11`) for the fraud-4.
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun customerMessage(): String = customerMessage.getRequired("customer_message")
-
-        /**
-         * The customer message template identifier (C1..C20).
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun customerTemplate(): CustomerTemplate = customerTemplate.getRequired("customer_template")
-
-        /**
-         * Soft or hard decline.
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun declineType(): DeclineType = declineType.getRequired("decline_type")
-
-        /**
-         * Merchant-facing headline + recommended action (Payment Details). For the fraud-4 this
-         * includes the operator "do not reveal" warning.
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun merchantMessage(): String = merchantMessage.getRequired("merchant_message")
-
-        /**
-         * Returns the raw JSON value of [code].
-         *
-         * Unlike [code], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("code") @ExcludeMissing fun _code(): JsonField<String> = code
-
-        /**
-         * Returns the raw JSON value of [customerCta].
-         *
-         * Unlike [customerCta], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("customer_cta")
-        @ExcludeMissing
-        fun _customerCta(): JsonField<CustomerCta> = customerCta
-
-        /**
-         * Returns the raw JSON value of [customerFixable].
-         *
-         * Unlike [customerFixable], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("customer_fixable")
-        @ExcludeMissing
-        fun _customerFixable(): JsonField<Boolean> = customerFixable
-
-        /**
-         * Returns the raw JSON value of [customerMessage].
-         *
-         * Unlike [customerMessage], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("customer_message")
-        @ExcludeMissing
-        fun _customerMessage(): JsonField<String> = customerMessage
-
-        /**
-         * Returns the raw JSON value of [customerTemplate].
-         *
-         * Unlike [customerTemplate], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("customer_template")
-        @ExcludeMissing
-        fun _customerTemplate(): JsonField<CustomerTemplate> = customerTemplate
-
-        /**
-         * Returns the raw JSON value of [declineType].
-         *
-         * Unlike [declineType], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("decline_type")
-        @ExcludeMissing
-        fun _declineType(): JsonField<DeclineType> = declineType
-
-        /**
-         * Returns the raw JSON value of [merchantMessage].
-         *
-         * Unlike [merchantMessage], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("merchant_message")
-        @ExcludeMissing
-        fun _merchantMessage(): JsonField<String> = merchantMessage
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [FailureDetails].
-             *
-             * The following fields are required:
-             * ```java
-             * .code()
-             * .customerCta()
-             * .customerFixable()
-             * .customerMessage()
-             * .customerTemplate()
-             * .declineType()
-             * .merchantMessage()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [FailureDetails]. */
-        class Builder internal constructor() {
-
-            private var code: JsonField<String>? = null
-            private var customerCta: JsonField<CustomerCta>? = null
-            private var customerFixable: JsonField<Boolean>? = null
-            private var customerMessage: JsonField<String>? = null
-            private var customerTemplate: JsonField<CustomerTemplate>? = null
-            private var declineType: JsonField<DeclineType>? = null
-            private var merchantMessage: JsonField<String>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(failureDetails: FailureDetails) = apply {
-                code = failureDetails.code
-                customerCta = failureDetails.customerCta
-                customerFixable = failureDetails.customerFixable
-                customerMessage = failureDetails.customerMessage
-                customerTemplate = failureDetails.customerTemplate
-                declineType = failureDetails.declineType
-                merchantMessage = failureDetails.merchantMessage
-                additionalProperties = failureDetails.additionalProperties.toMutableMap()
-            }
-
-            /** The unified error code (echoes `error_code`). */
-            fun code(code: String) = code(JsonField.of(code))
-
-            /**
-             * Sets [Builder.code] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.code] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun code(code: JsonField<String>) = apply { this.code = code }
-
-            /** The primary CTA to show the customer. */
-            fun customerCta(customerCta: CustomerCta) = customerCta(JsonField.of(customerCta))
-
-            /**
-             * Sets [Builder.customerCta] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.customerCta] with a well-typed [CustomerCta] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun customerCta(customerCta: JsonField<CustomerCta>) = apply {
-                this.customerCta = customerCta
-            }
-
-            /** Whether the customer can resolve this themselves (e.g. fix CVC). */
-            fun customerFixable(customerFixable: Boolean) =
-                customerFixable(JsonField.of(customerFixable))
-
-            /**
-             * Sets [Builder.customerFixable] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.customerFixable] with a well-typed [Boolean] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun customerFixable(customerFixable: JsonField<Boolean>) = apply {
-                this.customerFixable = customerFixable
-            }
-
-            /** The customer-facing string. Always generic (`C11`) for the fraud-4. */
-            fun customerMessage(customerMessage: String) =
-                customerMessage(JsonField.of(customerMessage))
-
-            /**
-             * Sets [Builder.customerMessage] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.customerMessage] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun customerMessage(customerMessage: JsonField<String>) = apply {
-                this.customerMessage = customerMessage
-            }
-
-            /** The customer message template identifier (C1..C20). */
-            fun customerTemplate(customerTemplate: CustomerTemplate) =
-                customerTemplate(JsonField.of(customerTemplate))
-
-            /**
-             * Sets [Builder.customerTemplate] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.customerTemplate] with a well-typed
-             * [CustomerTemplate] value instead. This method is primarily for setting the field to
-             * an undocumented or not yet supported value.
-             */
-            fun customerTemplate(customerTemplate: JsonField<CustomerTemplate>) = apply {
-                this.customerTemplate = customerTemplate
-            }
-
-            /** Soft or hard decline. */
-            fun declineType(declineType: DeclineType) = declineType(JsonField.of(declineType))
-
-            /**
-             * Sets [Builder.declineType] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.declineType] with a well-typed [DeclineType] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun declineType(declineType: JsonField<DeclineType>) = apply {
-                this.declineType = declineType
-            }
-
-            /**
-             * Merchant-facing headline + recommended action (Payment Details). For the fraud-4 this
-             * includes the operator "do not reveal" warning.
-             */
-            fun merchantMessage(merchantMessage: String) =
-                merchantMessage(JsonField.of(merchantMessage))
-
-            /**
-             * Sets [Builder.merchantMessage] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.merchantMessage] with a well-typed [String] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun merchantMessage(merchantMessage: JsonField<String>) = apply {
-                this.merchantMessage = merchantMessage
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [FailureDetails].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .code()
-             * .customerCta()
-             * .customerFixable()
-             * .customerMessage()
-             * .customerTemplate()
-             * .declineType()
-             * .merchantMessage()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): FailureDetails =
-                FailureDetails(
-                    checkRequired("code", code),
-                    checkRequired("customerCta", customerCta),
-                    checkRequired("customerFixable", customerFixable),
-                    checkRequired("customerMessage", customerMessage),
-                    checkRequired("customerTemplate", customerTemplate),
-                    checkRequired("declineType", declineType),
-                    checkRequired("merchantMessage", merchantMessage),
-                    additionalProperties.toMutableMap(),
-                )
-        }
-
-        private var validated: Boolean = false
-
-        /**
-         * Validates that the types of all values in this object match their expected types
-         * recursively.
-         *
-         * This method is _not_ forwards compatible with new types from the API for existing fields.
-         *
-         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
-         *   its expected type.
-         */
-        fun validate(): FailureDetails = apply {
-            if (validated) {
-                return@apply
-            }
-
-            code()
-            customerCta().validate()
-            customerFixable()
-            customerMessage()
-            customerTemplate().validate()
-            declineType().validate()
-            merchantMessage()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: DodoPaymentsInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (code.asKnown().isPresent) 1 else 0) +
-                (customerCta.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (customerFixable.asKnown().isPresent) 1 else 0) +
-                (if (customerMessage.asKnown().isPresent) 1 else 0) +
-                (customerTemplate.asKnown().getOrNull()?.validity() ?: 0) +
-                (declineType.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (merchantMessage.asKnown().isPresent) 1 else 0)
-
-        /** The primary CTA to show the customer. */
-        class CustomerCta @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val EDIT_AND_RETRY = of("edit_and_retry")
-
-                @JvmField val USE_ANOTHER_METHOD = of("use_another_method")
-
-                @JvmField val TRY_AGAIN = of("try_again")
-
-                @JvmField val TRY_LATER = of("try_later")
-
-                @JvmField val RETRY_AND_VERIFY = of("retry_and_verify")
-
-                @JvmField val RESTART = of("restart")
-
-                @JvmField val UPDATE_METHOD = of("update_method")
-
-                @JvmStatic fun of(value: String) = CustomerCta(JsonField.of(value))
-            }
-
-            /** An enum containing [CustomerCta]'s known values. */
-            enum class Known {
-                EDIT_AND_RETRY,
-                USE_ANOTHER_METHOD,
-                TRY_AGAIN,
-                TRY_LATER,
-                RETRY_AND_VERIFY,
-                RESTART,
-                UPDATE_METHOD,
-            }
-
-            /**
-             * An enum containing [CustomerCta]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [CustomerCta] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                EDIT_AND_RETRY,
-                USE_ANOTHER_METHOD,
-                TRY_AGAIN,
-                TRY_LATER,
-                RETRY_AND_VERIFY,
-                RESTART,
-                UPDATE_METHOD,
-                /**
-                 * An enum member indicating that [CustomerCta] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    EDIT_AND_RETRY -> Value.EDIT_AND_RETRY
-                    USE_ANOTHER_METHOD -> Value.USE_ANOTHER_METHOD
-                    TRY_AGAIN -> Value.TRY_AGAIN
-                    TRY_LATER -> Value.TRY_LATER
-                    RETRY_AND_VERIFY -> Value.RETRY_AND_VERIFY
-                    RESTART -> Value.RESTART
-                    UPDATE_METHOD -> Value.UPDATE_METHOD
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    EDIT_AND_RETRY -> Known.EDIT_AND_RETRY
-                    USE_ANOTHER_METHOD -> Known.USE_ANOTHER_METHOD
-                    TRY_AGAIN -> Known.TRY_AGAIN
-                    TRY_LATER -> Known.TRY_LATER
-                    RETRY_AND_VERIFY -> Known.RETRY_AND_VERIFY
-                    RESTART -> Known.RESTART
-                    UPDATE_METHOD -> Known.UPDATE_METHOD
-                    else -> throw DodoPaymentsInvalidDataException("Unknown CustomerCta: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): CustomerCta = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is CustomerCta && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        /** The customer message template identifier (C1..C20). */
-        class CustomerTemplate
-        @JsonCreator
-        private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val C1 = of("C1")
-
-                @JvmField val C2 = of("C2")
-
-                @JvmField val C3 = of("C3")
-
-                @JvmField val C4 = of("C4")
-
-                @JvmField val C5 = of("C5")
-
-                @JvmField val C6 = of("C6")
-
-                @JvmField val C7 = of("C7")
-
-                @JvmField val C8 = of("C8")
-
-                @JvmField val C9 = of("C9")
-
-                @JvmField val C10 = of("C10")
-
-                @JvmField val C11 = of("C11")
-
-                @JvmField val C12 = of("C12")
-
-                @JvmField val C13 = of("C13")
-
-                @JvmField val C14 = of("C14")
-
-                @JvmField val C15 = of("C15")
-
-                @JvmField val C16 = of("C16")
-
-                @JvmField val C17 = of("C17")
-
-                @JvmField val C18 = of("C18")
-
-                @JvmField val C19 = of("C19")
-
-                @JvmField val C20 = of("C20")
-
-                @JvmStatic fun of(value: String) = CustomerTemplate(JsonField.of(value))
-            }
-
-            /** An enum containing [CustomerTemplate]'s known values. */
-            enum class Known {
-                C1,
-                C2,
-                C3,
-                C4,
-                C5,
-                C6,
-                C7,
-                C8,
-                C9,
-                C10,
-                C11,
-                C12,
-                C13,
-                C14,
-                C15,
-                C16,
-                C17,
-                C18,
-                C19,
-                C20,
-            }
-
-            /**
-             * An enum containing [CustomerTemplate]'s known values, as well as an [_UNKNOWN]
-             * member.
-             *
-             * An instance of [CustomerTemplate] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                C1,
-                C2,
-                C3,
-                C4,
-                C5,
-                C6,
-                C7,
-                C8,
-                C9,
-                C10,
-                C11,
-                C12,
-                C13,
-                C14,
-                C15,
-                C16,
-                C17,
-                C18,
-                C19,
-                C20,
-                /**
-                 * An enum member indicating that [CustomerTemplate] was instantiated with an
-                 * unknown value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    C1 -> Value.C1
-                    C2 -> Value.C2
-                    C3 -> Value.C3
-                    C4 -> Value.C4
-                    C5 -> Value.C5
-                    C6 -> Value.C6
-                    C7 -> Value.C7
-                    C8 -> Value.C8
-                    C9 -> Value.C9
-                    C10 -> Value.C10
-                    C11 -> Value.C11
-                    C12 -> Value.C12
-                    C13 -> Value.C13
-                    C14 -> Value.C14
-                    C15 -> Value.C15
-                    C16 -> Value.C16
-                    C17 -> Value.C17
-                    C18 -> Value.C18
-                    C19 -> Value.C19
-                    C20 -> Value.C20
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    C1 -> Known.C1
-                    C2 -> Known.C2
-                    C3 -> Known.C3
-                    C4 -> Known.C4
-                    C5 -> Known.C5
-                    C6 -> Known.C6
-                    C7 -> Known.C7
-                    C8 -> Known.C8
-                    C9 -> Known.C9
-                    C10 -> Known.C10
-                    C11 -> Known.C11
-                    C12 -> Known.C12
-                    C13 -> Known.C13
-                    C14 -> Known.C14
-                    C15 -> Known.C15
-                    C16 -> Known.C16
-                    C17 -> Known.C17
-                    C18 -> Known.C18
-                    C19 -> Known.C19
-                    C20 -> Known.C20
-                    else ->
-                        throw DodoPaymentsInvalidDataException("Unknown CustomerTemplate: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): CustomerTemplate = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is CustomerTemplate && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        /** Soft or hard decline. */
-        class DeclineType @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val SOFT = of("soft")
-
-                @JvmField val HARD = of("hard")
-
-                @JvmStatic fun of(value: String) = DeclineType(JsonField.of(value))
-            }
-
-            /** An enum containing [DeclineType]'s known values. */
-            enum class Known {
-                SOFT,
-                HARD,
-            }
-
-            /**
-             * An enum containing [DeclineType]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [DeclineType] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                SOFT,
-                HARD,
-                /**
-                 * An enum member indicating that [DeclineType] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    SOFT -> Value.SOFT
-                    HARD -> Value.HARD
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value is a not a
-             *   known member.
-             */
-            fun known(): Known =
-                when (this) {
-                    SOFT -> Known.SOFT
-                    HARD -> Known.HARD
-                    else -> throw DodoPaymentsInvalidDataException("Unknown DeclineType: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws DodoPaymentsInvalidDataException if this class instance's value does not have
-             *   the expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    DodoPaymentsInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't
-             *   match its expected type.
-             */
-            fun validate(): DeclineType = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: DodoPaymentsInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is DeclineType && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is FailureDetails &&
-                code == other.code &&
-                customerCta == other.customerCta &&
-                customerFixable == other.customerFixable &&
-                customerMessage == other.customerMessage &&
-                customerTemplate == other.customerTemplate &&
-                declineType == other.declineType &&
-                merchantMessage == other.merchantMessage &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(
-                code,
-                customerCta,
-                customerFixable,
-                customerMessage,
-                customerTemplate,
-                declineType,
-                merchantMessage,
-                additionalProperties,
-            )
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "FailureDetails{code=$code, customerCta=$customerCta, customerFixable=$customerFixable, customerMessage=$customerMessage, customerTemplate=$customerTemplate, declineType=$declineType, merchantMessage=$merchantMessage, additionalProperties=$additionalProperties}"
     }
 
     class ProductCart
@@ -3482,7 +2398,6 @@ private constructor(
             discounts == other.discounts &&
             errorCode == other.errorCode &&
             errorMessage == other.errorMessage &&
-            failureDetails == other.failureDetails &&
             invoiceId == other.invoiceId &&
             invoiceUrl == other.invoiceUrl &&
             paymentLink == other.paymentLink &&
@@ -3529,7 +2444,6 @@ private constructor(
             discounts,
             errorCode,
             errorMessage,
-            failureDetails,
             invoiceId,
             invoiceUrl,
             paymentLink,
@@ -3550,5 +2464,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, isUpdatePaymentMethod=$isUpdatePaymentMethod, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, refunds=$refunds, retryAttempt=$retryAttempt, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, failureDetails=$failureDetails, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, isUpdatePaymentMethod=$isUpdatePaymentMethod, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, refunds=$refunds, retryAttempt=$retryAttempt, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
