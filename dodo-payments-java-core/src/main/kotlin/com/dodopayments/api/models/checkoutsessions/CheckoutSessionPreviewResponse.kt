@@ -2771,6 +2771,7 @@ private constructor(
             private val ogCurrency: JsonField<Currency>,
             private val ogPrice: JsonField<Int>,
             private val quantity: JsonField<Int>,
+            private val singleQuantityPrice: JsonField<Int>,
             private val taxCategory: JsonField<TaxCategory>,
             private val taxInclusive: JsonField<Boolean>,
             private val taxRate: JsonField<Int>,
@@ -2801,6 +2802,9 @@ private constructor(
                 @JsonProperty("quantity")
                 @ExcludeMissing
                 quantity: JsonField<Int> = JsonMissing.of(),
+                @JsonProperty("single_quantity_price")
+                @ExcludeMissing
+                singleQuantityPrice: JsonField<Int> = JsonMissing.of(),
                 @JsonProperty("tax_category")
                 @ExcludeMissing
                 taxCategory: JsonField<TaxCategory> = JsonMissing.of(),
@@ -2825,6 +2829,7 @@ private constructor(
                 ogCurrency,
                 ogPrice,
                 quantity,
+                singleQuantityPrice,
                 taxCategory,
                 taxInclusive,
                 taxRate,
@@ -2882,6 +2887,19 @@ private constructor(
              *   value).
              */
             fun quantity(): Int = quantity.getRequired("quantity")
+
+            /**
+             * Per-unit price in `currency`, converted and adaptive-priced but pre-tax and
+             * pre-discount (both depend on quantity and the rest of the cart). Set even when
+             * `quantity` is 0, so the checkout page can price the addon before the buyer has
+             * selected any.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun singleQuantityPrice(): Int =
+                singleQuantityPrice.getRequired("single_quantity_price")
 
             /**
              * Represents the different categories of taxation applicable to various products and
@@ -2988,6 +3006,16 @@ private constructor(
             @JsonProperty("quantity") @ExcludeMissing fun _quantity(): JsonField<Int> = quantity
 
             /**
+             * Returns the raw JSON value of [singleQuantityPrice].
+             *
+             * Unlike [singleQuantityPrice], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("single_quantity_price")
+            @ExcludeMissing
+            fun _singleQuantityPrice(): JsonField<Int> = singleQuantityPrice
+
+            /**
              * Returns the raw JSON value of [taxCategory].
              *
              * Unlike [taxCategory], this method doesn't throw if the JSON field has an unexpected
@@ -3067,6 +3095,7 @@ private constructor(
                  * .ogCurrency()
                  * .ogPrice()
                  * .quantity()
+                 * .singleQuantityPrice()
                  * .taxCategory()
                  * .taxInclusive()
                  * .taxRate()
@@ -3085,6 +3114,7 @@ private constructor(
                 private var ogCurrency: JsonField<Currency>? = null
                 private var ogPrice: JsonField<Int>? = null
                 private var quantity: JsonField<Int>? = null
+                private var singleQuantityPrice: JsonField<Int>? = null
                 private var taxCategory: JsonField<TaxCategory>? = null
                 private var taxInclusive: JsonField<Boolean>? = null
                 private var taxRate: JsonField<Int>? = null
@@ -3102,6 +3132,7 @@ private constructor(
                     ogCurrency = addon.ogCurrency
                     ogPrice = addon.ogPrice
                     quantity = addon.quantity
+                    singleQuantityPrice = addon.singleQuantityPrice
                     taxCategory = addon.taxCategory
                     taxInclusive = addon.taxInclusive
                     taxRate = addon.taxRate
@@ -3192,6 +3223,26 @@ private constructor(
                  * supported value.
                  */
                 fun quantity(quantity: JsonField<Int>) = apply { this.quantity = quantity }
+
+                /**
+                 * Per-unit price in `currency`, converted and adaptive-priced but pre-tax and
+                 * pre-discount (both depend on quantity and the rest of the cart). Set even when
+                 * `quantity` is 0, so the checkout page can price the addon before the buyer has
+                 * selected any.
+                 */
+                fun singleQuantityPrice(singleQuantityPrice: Int) =
+                    singleQuantityPrice(JsonField.of(singleQuantityPrice))
+
+                /**
+                 * Sets [Builder.singleQuantityPrice] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.singleQuantityPrice] with a well-typed [Int]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun singleQuantityPrice(singleQuantityPrice: JsonField<Int>) = apply {
+                    this.singleQuantityPrice = singleQuantityPrice
+                }
 
                 /**
                  * Represents the different categories of taxation applicable to various products
@@ -3340,6 +3391,7 @@ private constructor(
                  * .ogCurrency()
                  * .ogPrice()
                  * .quantity()
+                 * .singleQuantityPrice()
                  * .taxCategory()
                  * .taxInclusive()
                  * .taxRate()
@@ -3356,6 +3408,7 @@ private constructor(
                         checkRequired("ogCurrency", ogCurrency),
                         checkRequired("ogPrice", ogPrice),
                         checkRequired("quantity", quantity),
+                        checkRequired("singleQuantityPrice", singleQuantityPrice),
                         checkRequired("taxCategory", taxCategory),
                         checkRequired("taxInclusive", taxInclusive),
                         checkRequired("taxRate", taxRate),
@@ -3390,6 +3443,7 @@ private constructor(
                 ogCurrency().validate()
                 ogPrice()
                 quantity()
+                singleQuantityPrice()
                 taxCategory().validate()
                 taxInclusive()
                 taxRate()
@@ -3422,6 +3476,7 @@ private constructor(
                     (ogCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (ogPrice.asKnown().isPresent) 1 else 0) +
                     (if (quantity.asKnown().isPresent) 1 else 0) +
+                    (if (singleQuantityPrice.asKnown().isPresent) 1 else 0) +
                     (taxCategory.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (taxInclusive.asKnown().isPresent) 1 else 0) +
                     (if (taxRate.asKnown().isPresent) 1 else 0) +
@@ -3442,6 +3497,7 @@ private constructor(
                     ogCurrency == other.ogCurrency &&
                     ogPrice == other.ogPrice &&
                     quantity == other.quantity &&
+                    singleQuantityPrice == other.singleQuantityPrice &&
                     taxCategory == other.taxCategory &&
                     taxInclusive == other.taxInclusive &&
                     taxRate == other.taxRate &&
@@ -3460,6 +3516,7 @@ private constructor(
                     ogCurrency,
                     ogPrice,
                     quantity,
+                    singleQuantityPrice,
                     taxCategory,
                     taxInclusive,
                     taxRate,
@@ -3473,7 +3530,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Addon{addonId=$addonId, currency=$currency, discountedPrice=$discountedPrice, name=$name, ogCurrency=$ogCurrency, ogPrice=$ogPrice, quantity=$quantity, taxCategory=$taxCategory, taxInclusive=$taxInclusive, taxRate=$taxRate, description=$description, discountAmount=$discountAmount, tax=$tax, additionalProperties=$additionalProperties}"
+                "Addon{addonId=$addonId, currency=$currency, discountedPrice=$discountedPrice, name=$name, ogCurrency=$ogCurrency, ogPrice=$ogPrice, quantity=$quantity, singleQuantityPrice=$singleQuantityPrice, taxCategory=$taxCategory, taxInclusive=$taxInclusive, taxRate=$taxRate, description=$description, discountAmount=$discountAmount, tax=$tax, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
