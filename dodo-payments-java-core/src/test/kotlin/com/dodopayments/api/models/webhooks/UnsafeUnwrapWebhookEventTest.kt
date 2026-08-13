@@ -119,8 +119,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -226,8 +228,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -343,8 +347,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -459,8 +465,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -575,8 +583,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -704,8 +714,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -835,8 +847,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -965,8 +979,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1095,8 +1111,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1224,8 +1242,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1355,8 +1375,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1472,8 +1494,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1577,8 +1601,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1683,8 +1709,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1788,8 +1816,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1893,8 +1923,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -1998,8 +2030,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2103,8 +2137,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2205,8 +2241,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2304,8 +2342,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2451,8 +2491,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2644,8 +2686,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -2837,8 +2881,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -3030,8 +3076,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -3183,8 +3231,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -3402,8 +3452,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -3727,8 +3779,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4053,8 +4107,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4378,8 +4434,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4598,8 +4656,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4713,8 +4773,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4828,8 +4890,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -4943,8 +5007,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -5058,8 +5124,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -5186,8 +5254,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -5327,8 +5397,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -5515,6 +5587,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -5585,8 +5658,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -5726,6 +5801,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -5892,6 +5968,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -5962,8 +6039,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -6103,6 +6182,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -6269,6 +6349,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -6339,8 +6420,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).contains(subscriptionExpired)
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -6480,6 +6563,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -6646,6 +6730,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -6716,8 +6801,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).contains(subscriptionFailed)
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -6857,6 +6944,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -7023,6 +7111,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -7093,8 +7182,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).contains(subscriptionOnHold)
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -7234,6 +7325,388 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentMethodId("payment_method_id")
+                            .scheduledChange(
+                                ScheduledPlanChange.builder()
+                                    .id("id")
+                                    .addAddon(
+                                        ScheduledPlanChange.Addon.builder()
+                                            .addonId("addon_id")
+                                            .name("name")
+                                            .quantity(0)
+                                            .build()
+                                    )
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .effectiveAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .quantity(0)
+                                    .productDescription("product_description")
+                                    .productName("product_name")
+                                    .build()
+                            )
+                            .taxId("tax_id")
+                            .trialAmount(0)
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofSubscriptionPaused() {
+        val subscriptionPaused =
+            SubscriptionPausedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Subscription.builder()
+                        .addAddon(
+                            AddonCartResponseItem.builder().addonId("addon_id").quantity(0).build()
+                        )
+                        .billing(
+                            BillingAddress.builder()
+                                .country(CountryCode.AF)
+                                .city("city")
+                                .state("state")
+                                .street("street")
+                                .zipcode("zipcode")
+                                .build()
+                        )
+                        .brandId("brand_id")
+                        .cancelAtNextBillingDate(true)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addCreditEntitlementCart(
+                            CreditEntitlementCartResponse.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .creditEntitlementName("credit_entitlement_name")
+                                .creditsAmount("credits_amount")
+                                .overageBalance("overage_balance")
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+                                .overageEnabled(true)
+                                .productId("product_id")
+                                .remainingBalance("remaining_balance")
+                                .rolloverEnabled(true)
+                                .unit("unit")
+                                .expiresAfterDays(0)
+                                .lowBalanceThresholdPercent(0)
+                                .maxRolloverCount(0)
+                                .overageLimit("overage_limit")
+                                .rolloverPercentage(0)
+                                .rolloverTimeframeCount(0)
+                                .rolloverTimeframeInterval(TimeInterval.DAY)
+                                .build()
+                        )
+                        .currency(Currency.AED)
+                        .customer(
+                            CustomerLimitedDetails.builder()
+                                .customerId("customer_id")
+                                .email("email")
+                                .name("name")
+                                .metadata(
+                                    Metadata.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                                        .build()
+                                )
+                                .phoneNumber("phone_number")
+                                .build()
+                        )
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
+                        .addMeterCreditEntitlementCart(
+                            MeterCreditEntitlementCartResponse.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .meterId("meter_id")
+                                .meterName("meter_name")
+                                .meterUnitsPerCredit("meter_units_per_credit")
+                                .productId("product_id")
+                                .build()
+                        )
+                        .addMeter(
+                            MeterCartResponseItem.builder()
+                                .currency(Currency.AED)
+                                .freeThreshold(0L)
+                                .measurementUnit("measurement_unit")
+                                .meterId("meter_id")
+                                .name("name")
+                                .description("description")
+                                .pricePerUnit("10.50")
+                                .build()
+                        )
+                        .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .onDemand(true)
+                        .paymentFrequencyCount(0)
+                        .paymentFrequencyInterval(TimeInterval.DAY)
+                        .previousBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .productId("product_id")
+                        .quantity(0)
+                        .recurringPreTaxAmount(0)
+                        .status(SubscriptionStatus.PENDING)
+                        .subscriptionId("subscription_id")
+                        .subscriptionPeriodCount(0)
+                        .subscriptionPeriodInterval(TimeInterval.DAY)
+                        .taxInclusive(true)
+                        .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
+                        .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addCustomFieldResponse(
+                            CustomFieldResponse.builder().key("key").value("value").build()
+                        )
+                        .customerBusinessName("customer_business_name")
+                        .discountCyclesRemaining(0)
+                        .discountId("discount_id")
+                        .addDiscount(
+                            DiscountDetail.builder()
+                                .amount(0)
+                                .businessId("business_id")
+                                .code("code")
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .discountId("discount_id")
+                                .metadata(
+                                    Metadata.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                                        .build()
+                                )
+                                .position(0)
+                                .preserveOnPlanChange(true)
+                                .addRestrictedTo("string")
+                                .timesUsed(0)
+                                .type(DiscountType.FLAT)
+                                .cyclesRemaining(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .name("name")
+                                .subscriptionCycles(0)
+                                .usageLimit(0)
+                                .build()
+                        )
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentMethodId("payment_method_id")
+                        .scheduledChange(
+                            ScheduledPlanChange.builder()
+                                .id("id")
+                                .addAddon(
+                                    ScheduledPlanChange.Addon.builder()
+                                        .addonId("addon_id")
+                                        .name("name")
+                                        .quantity(0)
+                                        .build()
+                                )
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .effectiveAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .quantity(0)
+                                .productDescription("product_description")
+                                .productName("product_name")
+                                .build()
+                        )
+                        .taxId("tax_id")
+                        .trialAmount(0)
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofSubscriptionPaused(subscriptionPaused)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).contains(subscriptionPaused)
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofSubscriptionPausedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofSubscriptionPaused(
+                SubscriptionPausedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Subscription.builder()
+                            .addAddon(
+                                AddonCartResponseItem.builder()
+                                    .addonId("addon_id")
+                                    .quantity(0)
+                                    .build()
+                            )
+                            .billing(
+                                BillingAddress.builder()
+                                    .country(CountryCode.AF)
+                                    .city("city")
+                                    .state("state")
+                                    .street("street")
+                                    .zipcode("zipcode")
+                                    .build()
+                            )
+                            .brandId("brand_id")
+                            .cancelAtNextBillingDate(true)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addCreditEntitlementCart(
+                                CreditEntitlementCartResponse.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .creditEntitlementName("credit_entitlement_name")
+                                    .creditsAmount("credits_amount")
+                                    .overageBalance("overage_balance")
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+                                    .overageEnabled(true)
+                                    .productId("product_id")
+                                    .remainingBalance("remaining_balance")
+                                    .rolloverEnabled(true)
+                                    .unit("unit")
+                                    .expiresAfterDays(0)
+                                    .lowBalanceThresholdPercent(0)
+                                    .maxRolloverCount(0)
+                                    .overageLimit("overage_limit")
+                                    .rolloverPercentage(0)
+                                    .rolloverTimeframeCount(0)
+                                    .rolloverTimeframeInterval(TimeInterval.DAY)
+                                    .build()
+                            )
+                            .currency(Currency.AED)
+                            .customer(
+                                CustomerLimitedDetails.builder()
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .name("name")
+                                    .metadata(
+                                        Metadata.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                                            .build()
+                                    )
+                                    .phoneNumber("phone_number")
+                                    .build()
+                            )
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
+                            .addMeterCreditEntitlementCart(
+                                MeterCreditEntitlementCartResponse.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .meterId("meter_id")
+                                    .meterName("meter_name")
+                                    .meterUnitsPerCredit("meter_units_per_credit")
+                                    .productId("product_id")
+                                    .build()
+                            )
+                            .addMeter(
+                                MeterCartResponseItem.builder()
+                                    .currency(Currency.AED)
+                                    .freeThreshold(0L)
+                                    .measurementUnit("measurement_unit")
+                                    .meterId("meter_id")
+                                    .name("name")
+                                    .description("description")
+                                    .pricePerUnit("10.50")
+                                    .build()
+                            )
+                            .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .onDemand(true)
+                            .paymentFrequencyCount(0)
+                            .paymentFrequencyInterval(TimeInterval.DAY)
+                            .previousBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .productId("product_id")
+                            .quantity(0)
+                            .recurringPreTaxAmount(0)
+                            .status(SubscriptionStatus.PENDING)
+                            .subscriptionId("subscription_id")
+                            .subscriptionPeriodCount(0)
+                            .subscriptionPeriodInterval(TimeInterval.DAY)
+                            .taxInclusive(true)
+                            .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
+                            .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addCustomFieldResponse(
+                                CustomFieldResponse.builder().key("key").value("value").build()
+                            )
+                            .customerBusinessName("customer_business_name")
+                            .discountCyclesRemaining(0)
+                            .discountId("discount_id")
+                            .addDiscount(
+                                DiscountDetail.builder()
+                                    .amount(0)
+                                    .businessId("business_id")
+                                    .code("code")
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .discountId("discount_id")
+                                    .metadata(
+                                        Metadata.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                                            .build()
+                                    )
+                                    .position(0)
+                                    .preserveOnPlanChange(true)
+                                    .addRestrictedTo("string")
+                                    .timesUsed(0)
+                                    .type(DiscountType.FLAT)
+                                    .cyclesRemaining(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .name("name")
+                                    .subscriptionCycles(0)
+                                    .usageLimit(0)
+                                    .build()
+                            )
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -7400,6 +7873,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -7470,9 +7944,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged())
             .contains(subscriptionPlanChanged)
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -7612,6 +8088,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -7778,6 +8255,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -7848,8 +8326,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).contains(subscriptionRenewed)
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
     }
@@ -7989,6 +8469,388 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentMethodId("payment_method_id")
+                            .scheduledChange(
+                                ScheduledPlanChange.builder()
+                                    .id("id")
+                                    .addAddon(
+                                        ScheduledPlanChange.Addon.builder()
+                                            .addonId("addon_id")
+                                            .name("name")
+                                            .quantity(0)
+                                            .build()
+                                    )
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .effectiveAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .quantity(0)
+                                    .productDescription("product_description")
+                                    .productName("product_name")
+                                    .build()
+                            )
+                            .taxId("tax_id")
+                            .trialAmount(0)
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofSubscriptionUnpaused() {
+        val subscriptionUnpaused =
+            SubscriptionUnpausedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Subscription.builder()
+                        .addAddon(
+                            AddonCartResponseItem.builder().addonId("addon_id").quantity(0).build()
+                        )
+                        .billing(
+                            BillingAddress.builder()
+                                .country(CountryCode.AF)
+                                .city("city")
+                                .state("state")
+                                .street("street")
+                                .zipcode("zipcode")
+                                .build()
+                        )
+                        .brandId("brand_id")
+                        .cancelAtNextBillingDate(true)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addCreditEntitlementCart(
+                            CreditEntitlementCartResponse.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .creditEntitlementName("credit_entitlement_name")
+                                .creditsAmount("credits_amount")
+                                .overageBalance("overage_balance")
+                                .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+                                .overageEnabled(true)
+                                .productId("product_id")
+                                .remainingBalance("remaining_balance")
+                                .rolloverEnabled(true)
+                                .unit("unit")
+                                .expiresAfterDays(0)
+                                .lowBalanceThresholdPercent(0)
+                                .maxRolloverCount(0)
+                                .overageLimit("overage_limit")
+                                .rolloverPercentage(0)
+                                .rolloverTimeframeCount(0)
+                                .rolloverTimeframeInterval(TimeInterval.DAY)
+                                .build()
+                        )
+                        .currency(Currency.AED)
+                        .customer(
+                            CustomerLimitedDetails.builder()
+                                .customerId("customer_id")
+                                .email("email")
+                                .name("name")
+                                .metadata(
+                                    Metadata.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                                        .build()
+                                )
+                                .phoneNumber("phone_number")
+                                .build()
+                        )
+                        .metadata(
+                            Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("string"))
+                                .build()
+                        )
+                        .addMeterCreditEntitlementCart(
+                            MeterCreditEntitlementCartResponse.builder()
+                                .creditEntitlementId("credit_entitlement_id")
+                                .meterId("meter_id")
+                                .meterName("meter_name")
+                                .meterUnitsPerCredit("meter_units_per_credit")
+                                .productId("product_id")
+                                .build()
+                        )
+                        .addMeter(
+                            MeterCartResponseItem.builder()
+                                .currency(Currency.AED)
+                                .freeThreshold(0L)
+                                .measurementUnit("measurement_unit")
+                                .meterId("meter_id")
+                                .name("name")
+                                .description("description")
+                                .pricePerUnit("10.50")
+                                .build()
+                        )
+                        .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .onDemand(true)
+                        .paymentFrequencyCount(0)
+                        .paymentFrequencyInterval(TimeInterval.DAY)
+                        .previousBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .productId("product_id")
+                        .quantity(0)
+                        .recurringPreTaxAmount(0)
+                        .status(SubscriptionStatus.PENDING)
+                        .subscriptionId("subscription_id")
+                        .subscriptionPeriodCount(0)
+                        .subscriptionPeriodInterval(TimeInterval.DAY)
+                        .taxInclusive(true)
+                        .trialPeriodDays(0)
+                        .cancellationComment("cancellation_comment")
+                        .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
+                        .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addCustomFieldResponse(
+                            CustomFieldResponse.builder().key("key").value("value").build()
+                        )
+                        .customerBusinessName("customer_business_name")
+                        .discountCyclesRemaining(0)
+                        .discountId("discount_id")
+                        .addDiscount(
+                            DiscountDetail.builder()
+                                .amount(0)
+                                .businessId("business_id")
+                                .code("code")
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .discountId("discount_id")
+                                .metadata(
+                                    Metadata.builder()
+                                        .putAdditionalProperty("foo", JsonValue.from("string"))
+                                        .build()
+                                )
+                                .position(0)
+                                .preserveOnPlanChange(true)
+                                .addRestrictedTo("string")
+                                .timesUsed(0)
+                                .type(DiscountType.FLAT)
+                                .cyclesRemaining(0)
+                                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .name("name")
+                                .subscriptionCycles(0)
+                                .usageLimit(0)
+                                .build()
+                        )
+                        .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentMethodId("payment_method_id")
+                        .scheduledChange(
+                            ScheduledPlanChange.builder()
+                                .id("id")
+                                .addAddon(
+                                    ScheduledPlanChange.Addon.builder()
+                                        .addonId("addon_id")
+                                        .name("name")
+                                        .quantity(0)
+                                        .build()
+                                )
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .effectiveAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .quantity(0)
+                                .productDescription("product_description")
+                                .productName("product_name")
+                                .build()
+                        )
+                        .taxId("tax_id")
+                        .trialAmount(0)
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofSubscriptionUnpaused(subscriptionUnpaused)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).contains(subscriptionUnpaused)
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofSubscriptionUnpausedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofSubscriptionUnpaused(
+                SubscriptionUnpausedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Subscription.builder()
+                            .addAddon(
+                                AddonCartResponseItem.builder()
+                                    .addonId("addon_id")
+                                    .quantity(0)
+                                    .build()
+                            )
+                            .billing(
+                                BillingAddress.builder()
+                                    .country(CountryCode.AF)
+                                    .city("city")
+                                    .state("state")
+                                    .street("street")
+                                    .zipcode("zipcode")
+                                    .build()
+                            )
+                            .brandId("brand_id")
+                            .cancelAtNextBillingDate(true)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addCreditEntitlementCart(
+                                CreditEntitlementCartResponse.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .creditEntitlementName("credit_entitlement_name")
+                                    .creditsAmount("credits_amount")
+                                    .overageBalance("overage_balance")
+                                    .overageBehavior(CbbOverageBehavior.FORGIVE_AT_RESET)
+                                    .overageEnabled(true)
+                                    .productId("product_id")
+                                    .remainingBalance("remaining_balance")
+                                    .rolloverEnabled(true)
+                                    .unit("unit")
+                                    .expiresAfterDays(0)
+                                    .lowBalanceThresholdPercent(0)
+                                    .maxRolloverCount(0)
+                                    .overageLimit("overage_limit")
+                                    .rolloverPercentage(0)
+                                    .rolloverTimeframeCount(0)
+                                    .rolloverTimeframeInterval(TimeInterval.DAY)
+                                    .build()
+                            )
+                            .currency(Currency.AED)
+                            .customer(
+                                CustomerLimitedDetails.builder()
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .name("name")
+                                    .metadata(
+                                        Metadata.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                                            .build()
+                                    )
+                                    .phoneNumber("phone_number")
+                                    .build()
+                            )
+                            .metadata(
+                                Metadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
+                                    .build()
+                            )
+                            .addMeterCreditEntitlementCart(
+                                MeterCreditEntitlementCartResponse.builder()
+                                    .creditEntitlementId("credit_entitlement_id")
+                                    .meterId("meter_id")
+                                    .meterName("meter_name")
+                                    .meterUnitsPerCredit("meter_units_per_credit")
+                                    .productId("product_id")
+                                    .build()
+                            )
+                            .addMeter(
+                                MeterCartResponseItem.builder()
+                                    .currency(Currency.AED)
+                                    .freeThreshold(0L)
+                                    .measurementUnit("measurement_unit")
+                                    .meterId("meter_id")
+                                    .name("name")
+                                    .description("description")
+                                    .pricePerUnit("10.50")
+                                    .build()
+                            )
+                            .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .onDemand(true)
+                            .paymentFrequencyCount(0)
+                            .paymentFrequencyInterval(TimeInterval.DAY)
+                            .previousBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .productId("product_id")
+                            .quantity(0)
+                            .recurringPreTaxAmount(0)
+                            .status(SubscriptionStatus.PENDING)
+                            .subscriptionId("subscription_id")
+                            .subscriptionPeriodCount(0)
+                            .subscriptionPeriodInterval(TimeInterval.DAY)
+                            .taxInclusive(true)
+                            .trialPeriodDays(0)
+                            .cancellationComment("cancellation_comment")
+                            .cancellationFeedback(CancellationFeedback.TOO_EXPENSIVE)
+                            .cancelledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addCustomFieldResponse(
+                                CustomFieldResponse.builder().key("key").value("value").build()
+                            )
+                            .customerBusinessName("customer_business_name")
+                            .discountCyclesRemaining(0)
+                            .discountId("discount_id")
+                            .addDiscount(
+                                DiscountDetail.builder()
+                                    .amount(0)
+                                    .businessId("business_id")
+                                    .code("code")
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .discountId("discount_id")
+                                    .metadata(
+                                        Metadata.builder()
+                                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                                            .build()
+                                    )
+                                    .position(0)
+                                    .preserveOnPlanChange(true)
+                                    .addRestrictedTo("string")
+                                    .timesUsed(0)
+                                    .type(DiscountType.FLAT)
+                                    .cyclesRemaining(0)
+                                    .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .name("name")
+                                    .subscriptionCycles(0)
+                                    .usageLimit(0)
+                                    .build()
+                            )
+                            .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -8155,6 +9017,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -8227,8 +9090,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod())
             .contains(subscriptionUpdatePaymentMethod)
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
@@ -8369,6 +9234,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
@@ -8535,6 +9401,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .build()
                         )
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
                         .scheduledChange(
                             ScheduledPlanChange.builder()
@@ -8605,8 +9472,10 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).contains(subscriptionUpdated)
     }
@@ -8746,6 +9615,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
                             .scheduledChange(
                                 ScheduledPlanChange.builder()

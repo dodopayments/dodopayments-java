@@ -146,6 +146,7 @@ internal class SubscriptionTest {
                         .build()
                 )
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentMethodId("payment_method_id")
                 .scheduledChange(
                     ScheduledPlanChange.builder()
@@ -302,6 +303,8 @@ internal class SubscriptionTest {
             )
         assertThat(subscription.expiresAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(subscription.pausedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(subscription.paymentMethodId()).contains("payment_method_id")
         assertThat(subscription.scheduledChange())
             .contains(
@@ -452,6 +455,7 @@ internal class SubscriptionTest {
                         .build()
                 )
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .paymentMethodId("payment_method_id")
                 .scheduledChange(
                     ScheduledPlanChange.builder()
