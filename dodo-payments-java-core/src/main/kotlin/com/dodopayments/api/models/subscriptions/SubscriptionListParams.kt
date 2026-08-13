@@ -349,6 +349,8 @@ private constructor(
 
             @JvmField val ON_HOLD = of("on_hold")
 
+            @JvmField val PAUSED = of("paused")
+
             @JvmField val CANCELLED = of("cancelled")
 
             @JvmField val FAILED = of("failed")
@@ -363,6 +365,7 @@ private constructor(
             PENDING,
             ACTIVE,
             ON_HOLD,
+            PAUSED,
             CANCELLED,
             FAILED,
             EXPIRED,
@@ -381,6 +384,7 @@ private constructor(
             PENDING,
             ACTIVE,
             ON_HOLD,
+            PAUSED,
             CANCELLED,
             FAILED,
             EXPIRED,
@@ -400,6 +404,7 @@ private constructor(
                 PENDING -> Value.PENDING
                 ACTIVE -> Value.ACTIVE
                 ON_HOLD -> Value.ON_HOLD
+                PAUSED -> Value.PAUSED
                 CANCELLED -> Value.CANCELLED
                 FAILED -> Value.FAILED
                 EXPIRED -> Value.EXPIRED
@@ -420,6 +425,7 @@ private constructor(
                 PENDING -> Known.PENDING
                 ACTIVE -> Known.ACTIVE
                 ON_HOLD -> Known.ON_HOLD
+                PAUSED -> Known.PAUSED
                 CANCELLED -> Known.CANCELLED
                 FAILED -> Known.FAILED
                 EXPIRED -> Known.EXPIRED

@@ -118,6 +118,15 @@ private constructor(
     fun nextBillingDate(): Optional<OffsetDateTime> = body.nextBillingDate()
 
     /**
+     * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or abandoned
+     * `OnHold`) subscription. Exclusive of every other field.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun pause(): Optional<Boolean> = body.pause()
+
+    /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -230,6 +239,13 @@ private constructor(
      * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _nextBillingDate(): JsonField<OffsetDateTime> = body._nextBillingDate()
+
+    /**
+     * Returns the raw JSON value of [pause].
+     *
+     * Unlike [pause], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _pause(): JsonField<Boolean> = body._pause()
 
     /**
      * Returns the raw JSON value of [status].
@@ -555,6 +571,30 @@ private constructor(
             body.nextBillingDate(nextBillingDate)
         }
 
+        /**
+         * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
+         * abandoned `OnHold`) subscription. Exclusive of every other field.
+         */
+        fun pause(pause: Boolean?) = apply { body.pause(pause) }
+
+        /**
+         * Alias for [Builder.pause].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun pause(pause: Boolean) = pause(pause as Boolean?)
+
+        /** Alias for calling [Builder.pause] with `pause.orElse(null)`. */
+        fun pause(pause: Optional<Boolean>) = pause(pause.getOrNull())
+
+        /**
+         * Sets [Builder.pause] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.pause] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun pause(pause: JsonField<Boolean>) = apply { body.pause(pause) }
+
         fun status(status: SubscriptionStatus?) = apply { body.status(status) }
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
@@ -803,6 +843,7 @@ private constructor(
         private val disableOnDemand: JsonField<DisableOnDemand>,
         private val metadata: JsonField<Metadata>,
         private val nextBillingDate: JsonField<OffsetDateTime>,
+        private val pause: JsonField<Boolean>,
         private val status: JsonField<SubscriptionStatus>,
         private val subscriptionPeriodCount: JsonField<Int>,
         private val subscriptionPeriodInterval: JsonField<TimeInterval>,
@@ -845,6 +886,7 @@ private constructor(
             @JsonProperty("next_billing_date")
             @ExcludeMissing
             nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("pause") @ExcludeMissing pause: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("status")
             @ExcludeMissing
             status: JsonField<SubscriptionStatus> = JsonMissing.of(),
@@ -867,6 +909,7 @@ private constructor(
             disableOnDemand,
             metadata,
             nextBillingDate,
+            pause,
             status,
             subscriptionPeriodCount,
             subscriptionPeriodInterval,
@@ -960,6 +1003,15 @@ private constructor(
          */
         fun nextBillingDate(): Optional<OffsetDateTime> =
             nextBillingDate.getOptional("next_billing_date")
+
+        /**
+         * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
+         * abandoned `OnHold`) subscription. Exclusive of every other field.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun pause(): Optional<Boolean> = pause.getOptional("pause")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1101,6 +1153,13 @@ private constructor(
         fun _nextBillingDate(): JsonField<OffsetDateTime> = nextBillingDate
 
         /**
+         * Returns the raw JSON value of [pause].
+         *
+         * Unlike [pause], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("pause") @ExcludeMissing fun _pause(): JsonField<Boolean> = pause
+
+        /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
@@ -1168,6 +1227,7 @@ private constructor(
             private var disableOnDemand: JsonField<DisableOnDemand> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var pause: JsonField<Boolean> = JsonMissing.of()
             private var status: JsonField<SubscriptionStatus> = JsonMissing.of()
             private var subscriptionPeriodCount: JsonField<Int> = JsonMissing.of()
             private var subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of()
@@ -1187,6 +1247,7 @@ private constructor(
                 disableOnDemand = body.disableOnDemand
                 metadata = body.metadata
                 nextBillingDate = body.nextBillingDate
+                pause = body.pause
                 status = body.status
                 subscriptionPeriodCount = body.subscriptionPeriodCount
                 subscriptionPeriodInterval = body.subscriptionPeriodInterval
@@ -1440,6 +1501,31 @@ private constructor(
                 this.nextBillingDate = nextBillingDate
             }
 
+            /**
+             * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
+             * abandoned `OnHold`) subscription. Exclusive of every other field.
+             */
+            fun pause(pause: Boolean?) = pause(JsonField.ofNullable(pause))
+
+            /**
+             * Alias for [Builder.pause].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun pause(pause: Boolean) = pause(pause as Boolean?)
+
+            /** Alias for calling [Builder.pause] with `pause.orElse(null)`. */
+            fun pause(pause: Optional<Boolean>) = pause(pause.getOrNull())
+
+            /**
+             * Sets [Builder.pause] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.pause] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun pause(pause: JsonField<Boolean>) = apply { this.pause = pause }
+
             fun status(status: SubscriptionStatus?) = status(JsonField.ofNullable(status))
 
             /** Alias for calling [Builder.status] with `status.orElse(null)`. */
@@ -1567,6 +1653,7 @@ private constructor(
                     disableOnDemand,
                     metadata,
                     nextBillingDate,
+                    pause,
                     status,
                     subscriptionPeriodCount,
                     subscriptionPeriodInterval,
@@ -1602,6 +1689,7 @@ private constructor(
             disableOnDemand().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             nextBillingDate()
+            pause()
             status().ifPresent { it.validate() }
             subscriptionPeriodCount()
             subscriptionPeriodInterval().ifPresent { it.validate() }
@@ -1637,6 +1725,7 @@ private constructor(
                 (disableOnDemand.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
+                (if (pause.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
                 (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1659,6 +1748,7 @@ private constructor(
                 disableOnDemand == other.disableOnDemand &&
                 metadata == other.metadata &&
                 nextBillingDate == other.nextBillingDate &&
+                pause == other.pause &&
                 status == other.status &&
                 subscriptionPeriodCount == other.subscriptionPeriodCount &&
                 subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
@@ -1679,6 +1769,7 @@ private constructor(
                 disableOnDemand,
                 metadata,
                 nextBillingDate,
+                pause,
                 status,
                 subscriptionPeriodCount,
                 subscriptionPeriodInterval,
@@ -1690,7 +1781,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, status=$status, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, cancelReason=$cancelReason, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, creditEntitlementCart=$creditEntitlementCart, customerBusinessName=$customerBusinessName, customerName=$customerName, disableOnDemand=$disableOnDemand, metadata=$metadata, nextBillingDate=$nextBillingDate, pause=$pause, status=$status, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     class CancelReason @JsonCreator private constructor(private val value: JsonField<String>) :

@@ -53,6 +53,7 @@ private constructor(
     private val customerBusinessName: JsonField<String>,
     private val discountCyclesRemaining: JsonField<Int>,
     private val discountId: JsonField<String>,
+    private val pausedAt: JsonField<OffsetDateTime>,
     private val paymentMethodId: JsonField<String>,
     private val productName: JsonField<String>,
     private val scheduledChange: JsonField<ScheduledPlanChange>,
@@ -128,6 +129,9 @@ private constructor(
         @JsonProperty("discount_id")
         @ExcludeMissing
         discountId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("paused_at")
+        @ExcludeMissing
+        pausedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("payment_method_id")
         @ExcludeMissing
         paymentMethodId: JsonField<String> = JsonMissing.of(),
@@ -165,6 +169,7 @@ private constructor(
         customerBusinessName,
         discountCyclesRemaining,
         discountId,
+        pausedAt,
         paymentMethodId,
         productName,
         scheduledChange,
@@ -381,6 +386,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun discountId(): Optional<String> = discountId.getOptional("discount_id")
+
+    /**
+     * Timestamp when the subscription was paused, if it currently is (or is `OnHold` due to an
+     * unresolved pause settlement). `null` otherwise.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun pausedAt(): Optional<OffsetDateTime> = pausedAt.getOptional("paused_at")
 
     /**
      * Saved payment method id used for recurring charges
@@ -643,6 +657,13 @@ private constructor(
     @JsonProperty("discount_id") @ExcludeMissing fun _discountId(): JsonField<String> = discountId
 
     /**
+     * Returns the raw JSON value of [pausedAt].
+     *
+     * Unlike [pausedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("paused_at") @ExcludeMissing fun _pausedAt(): JsonField<OffsetDateTime> = pausedAt
+
+    /**
      * Returns the raw JSON value of [paymentMethodId].
      *
      * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
@@ -756,6 +777,7 @@ private constructor(
         private var customerBusinessName: JsonField<String> = JsonMissing.of()
         private var discountCyclesRemaining: JsonField<Int> = JsonMissing.of()
         private var discountId: JsonField<String> = JsonMissing.of()
+        private var pausedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var paymentMethodId: JsonField<String> = JsonMissing.of()
         private var productName: JsonField<String> = JsonMissing.of()
         private var scheduledChange: JsonField<ScheduledPlanChange> = JsonMissing.of()
@@ -790,6 +812,7 @@ private constructor(
             customerBusinessName = subscriptionListResponse.customerBusinessName
             discountCyclesRemaining = subscriptionListResponse.discountCyclesRemaining
             discountId = subscriptionListResponse.discountId
+            pausedAt = subscriptionListResponse.pausedAt
             paymentMethodId = subscriptionListResponse.paymentMethodId
             productName = subscriptionListResponse.productName
             scheduledChange = subscriptionListResponse.scheduledChange
@@ -1188,6 +1211,24 @@ private constructor(
          */
         fun discountId(discountId: JsonField<String>) = apply { this.discountId = discountId }
 
+        /**
+         * Timestamp when the subscription was paused, if it currently is (or is `OnHold` due to an
+         * unresolved pause settlement). `null` otherwise.
+         */
+        fun pausedAt(pausedAt: OffsetDateTime?) = pausedAt(JsonField.ofNullable(pausedAt))
+
+        /** Alias for calling [Builder.pausedAt] with `pausedAt.orElse(null)`. */
+        fun pausedAt(pausedAt: Optional<OffsetDateTime>) = pausedAt(pausedAt.getOrNull())
+
+        /**
+         * Sets [Builder.pausedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.pausedAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun pausedAt(pausedAt: JsonField<OffsetDateTime>) = apply { this.pausedAt = pausedAt }
+
         /** Saved payment method id used for recurring charges */
         fun paymentMethodId(paymentMethodId: String?) =
             paymentMethodId(JsonField.ofNullable(paymentMethodId))
@@ -1357,6 +1398,7 @@ private constructor(
                 customerBusinessName,
                 discountCyclesRemaining,
                 discountId,
+                pausedAt,
                 paymentMethodId,
                 productName,
                 scheduledChange,
@@ -1406,6 +1448,7 @@ private constructor(
         customerBusinessName()
         discountCyclesRemaining()
         discountId()
+        pausedAt()
         paymentMethodId()
         productName()
         scheduledChange().ifPresent { it.validate() }
@@ -1454,6 +1497,7 @@ private constructor(
             (if (customerBusinessName.asKnown().isPresent) 1 else 0) +
             (if (discountCyclesRemaining.asKnown().isPresent) 1 else 0) +
             (if (discountId.asKnown().isPresent) 1 else 0) +
+            (if (pausedAt.asKnown().isPresent) 1 else 0) +
             (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
             (if (productName.asKnown().isPresent) 1 else 0) +
             (scheduledChange.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1730,6 +1774,7 @@ private constructor(
             customerBusinessName == other.customerBusinessName &&
             discountCyclesRemaining == other.discountCyclesRemaining &&
             discountId == other.discountId &&
+            pausedAt == other.pausedAt &&
             paymentMethodId == other.paymentMethodId &&
             productName == other.productName &&
             scheduledChange == other.scheduledChange &&
@@ -1765,6 +1810,7 @@ private constructor(
             customerBusinessName,
             discountCyclesRemaining,
             discountId,
+            pausedAt,
             paymentMethodId,
             productName,
             scheduledChange,
@@ -1777,5 +1823,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, discounts=$discounts, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, paymentMethodId=$paymentMethodId, productName=$productName, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, additionalProperties=$additionalProperties}"
+        "SubscriptionListResponse{billing=$billing, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, currency=$currency, customer=$customer, discounts=$discounts, metadata=$metadata, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancelledAt=$cancelledAt, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, productName=$productName, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, additionalProperties=$additionalProperties}"
 }
