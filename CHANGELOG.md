@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.112.0](https://github.com/dodopayments/dodopayments-java/compare/v1.111.0...v1.112.0) (2026-08-13)
+
+
+### Features
+
+* **api:** add subscription pause/unpause ([a7bec88](https://github.com/dodopayments/dodopayments-java/commit/a7bec888f31f7861ca8ca6ad1226e7dc67303982))
+* **api:** add subscription pause/unpause ([19c68c6](https://github.com/dodopayments/dodopayments-java/commit/19c68c681672be79c08a425ad5ea43acf6cc365d))
+
 ## [1.111.0](https://github.com/dodopayments/dodopayments-java/compare/v1.110.0...v1.111.0) (2026-08-05)
 
 
