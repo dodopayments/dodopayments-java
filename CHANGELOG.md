@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.113.0](https://github.com/dodopayments/dodopayments-java/compare/v1.112.0...v1.113.0) (2026-08-17)
+
+
+### Features
+
+* **api:** add brand archive endpoint ([c2029cf](https://github.com/dodopayments/dodopayments-java/commit/c2029cfa48749ded53715af1e4ced18fc3f46642))
+* **api:** add brand archive endpoint ([152df85](https://github.com/dodopayments/dodopayments-java/commit/152df85809668cf4a36874fefa48cdc75b715c3c))
+
 ## [1.112.0](https://github.com/dodopayments/dodopayments-java/compare/v1.111.0...v1.112.0) (2026-08-13)
 
 
