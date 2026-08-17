@@ -35,6 +35,7 @@ private constructor(
     private val alwaysCreateNewCustomer: JsonField<Boolean>,
     private val redirectImmediately: JsonField<Boolean>,
     private val requirePhoneNumber: JsonField<Boolean>,
+    private val singlePage: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -91,6 +92,9 @@ private constructor(
         @JsonProperty("require_phone_number")
         @ExcludeMissing
         requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("single_page")
+        @ExcludeMissing
+        singlePage: JsonField<Boolean> = JsonMissing.of(),
     ) : this(
         allowCurrencySelection,
         allowCustomerEditingBusinessName,
@@ -109,6 +113,7 @@ private constructor(
         alwaysCreateNewCustomer,
         redirectImmediately,
         requirePhoneNumber,
+        singlePage,
         mutableMapOf(),
     )
 
@@ -270,6 +275,17 @@ private constructor(
      */
     fun requirePhoneNumber(): Optional<Boolean> =
         requirePhoneNumber.getOptional("require_phone_number")
+
+    /**
+     * If true, the session uses the single-page checkout flow: the page initializes the payment at
+     * load time and confirms it in place, with no separate payment page.
+     *
+     * Default is false
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun singlePage(): Optional<Boolean> = singlePage.getOptional("single_page")
 
     /**
      * Returns the raw JSON value of [allowCurrencySelection].
@@ -438,6 +454,13 @@ private constructor(
     @ExcludeMissing
     fun _requirePhoneNumber(): JsonField<Boolean> = requirePhoneNumber
 
+    /**
+     * Returns the raw JSON value of [singlePage].
+     *
+     * Unlike [singlePage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("single_page") @ExcludeMissing fun _singlePage(): JsonField<Boolean> = singlePage
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -476,6 +499,7 @@ private constructor(
         private var alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of()
         private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
         private var requirePhoneNumber: JsonField<Boolean> = JsonMissing.of()
+        private var singlePage: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -497,6 +521,7 @@ private constructor(
             alwaysCreateNewCustomer = checkoutSessionFlags.alwaysCreateNewCustomer
             redirectImmediately = checkoutSessionFlags.redirectImmediately
             requirePhoneNumber = checkoutSessionFlags.requirePhoneNumber
+            singlePage = checkoutSessionFlags.singlePage
             additionalProperties = checkoutSessionFlags.additionalProperties.toMutableMap()
         }
 
@@ -786,6 +811,23 @@ private constructor(
             this.requirePhoneNumber = requirePhoneNumber
         }
 
+        /**
+         * If true, the session uses the single-page checkout flow: the page initializes the payment
+         * at load time and confirms it in place, with no separate payment page.
+         *
+         * Default is false
+         */
+        fun singlePage(singlePage: Boolean) = singlePage(JsonField.of(singlePage))
+
+        /**
+         * Sets [Builder.singlePage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.singlePage] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun singlePage(singlePage: JsonField<Boolean>) = apply { this.singlePage = singlePage }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -829,6 +871,7 @@ private constructor(
                 alwaysCreateNewCustomer,
                 redirectImmediately,
                 requirePhoneNumber,
+                singlePage,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -865,6 +908,7 @@ private constructor(
         alwaysCreateNewCustomer()
         redirectImmediately()
         requirePhoneNumber()
+        singlePage()
         validated = true
     }
 
@@ -899,7 +943,8 @@ private constructor(
             (if (allowTaxId.asKnown().isPresent) 1 else 0) +
             (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) +
             (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
-            (if (requirePhoneNumber.asKnown().isPresent) 1 else 0)
+            (if (requirePhoneNumber.asKnown().isPresent) 1 else 0) +
+            (if (singlePage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -924,6 +969,7 @@ private constructor(
             alwaysCreateNewCustomer == other.alwaysCreateNewCustomer &&
             redirectImmediately == other.redirectImmediately &&
             requirePhoneNumber == other.requirePhoneNumber &&
+            singlePage == other.singlePage &&
             additionalProperties == other.additionalProperties
     }
 
@@ -946,6 +992,7 @@ private constructor(
             alwaysCreateNewCustomer,
             redirectImmediately,
             requirePhoneNumber,
+            singlePage,
             additionalProperties,
         )
     }
@@ -953,5 +1000,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowEditingAddons=$allowEditingAddons, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, additionalProperties=$additionalProperties}"
+        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowEditingAddons=$allowEditingAddons, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, singlePage=$singlePage, additionalProperties=$additionalProperties}"
 }

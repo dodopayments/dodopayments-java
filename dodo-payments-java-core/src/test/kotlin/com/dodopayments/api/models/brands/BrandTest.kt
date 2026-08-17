@@ -4,6 +4,7 @@ package com.dodopayments.api.models.brands
 
 import com.dodopayments.api.core.jsonMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -19,6 +20,7 @@ internal class BrandTest {
                 .statementDescriptor("statement_descriptor")
                 .verificationEnabled(true)
                 .verificationStatus(Brand.VerificationStatus.SUCCESS)
+                .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .image("image")
                 .name("name")
@@ -33,6 +35,7 @@ internal class BrandTest {
         assertThat(brand.statementDescriptor()).isEqualTo("statement_descriptor")
         assertThat(brand.verificationEnabled()).isEqualTo(true)
         assertThat(brand.verificationStatus()).isEqualTo(Brand.VerificationStatus.SUCCESS)
+        assertThat(brand.archivedAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(brand.description()).contains("description")
         assertThat(brand.image()).contains("image")
         assertThat(brand.name()).contains("name")
@@ -52,6 +55,7 @@ internal class BrandTest {
                 .statementDescriptor("statement_descriptor")
                 .verificationEnabled(true)
                 .verificationStatus(Brand.VerificationStatus.SUCCESS)
+                .archivedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .description("description")
                 .image("image")
                 .name("name")

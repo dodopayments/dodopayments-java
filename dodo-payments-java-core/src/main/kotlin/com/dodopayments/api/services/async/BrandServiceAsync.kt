@@ -6,6 +6,8 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.brands.Brand
+import com.dodopayments.api.models.brands.BrandArchiveParams
+import com.dodopayments.api.models.brands.BrandArchiveResponse
 import com.dodopayments.api.models.brands.BrandCreateParams
 import com.dodopayments.api.models.brands.BrandListParams
 import com.dodopayments.api.models.brands.BrandListResponse
@@ -121,6 +123,44 @@ interface BrandServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<BrandListResponse> =
         list(BrandListParams.none(), requestOptions)
+
+    /**
+     * Archive a brand. Its products, live subscriptions, and product collections move to the
+     * `move_products_to` brand. Archive is permanent.
+     */
+    fun archive(id: String): CompletableFuture<BrandArchiveResponse> =
+        archive(id, BrandArchiveParams.none())
+
+    /** @see archive */
+    fun archive(
+        id: String,
+        params: BrandArchiveParams = BrandArchiveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BrandArchiveResponse> =
+        archive(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see archive */
+    fun archive(
+        id: String,
+        params: BrandArchiveParams = BrandArchiveParams.none(),
+    ): CompletableFuture<BrandArchiveResponse> = archive(id, params, RequestOptions.none())
+
+    /** @see archive */
+    fun archive(
+        params: BrandArchiveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<BrandArchiveResponse>
+
+    /** @see archive */
+    fun archive(params: BrandArchiveParams): CompletableFuture<BrandArchiveResponse> =
+        archive(params, RequestOptions.none())
+
+    /** @see archive */
+    fun archive(
+        id: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BrandArchiveResponse> =
+        archive(id, BrandArchiveParams.none(), requestOptions)
 
     fun updateImages(id: String): CompletableFuture<BrandUpdateImagesResponse> =
         updateImages(id, BrandUpdateImagesParams.none())
@@ -291,6 +331,47 @@ interface BrandServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<BrandListResponse>> =
             list(BrandListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /brands/{id}/archive`, but is otherwise the same as
+         * [BrandServiceAsync.archive].
+         */
+        fun archive(id: String): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> =
+            archive(id, BrandArchiveParams.none())
+
+        /** @see archive */
+        fun archive(
+            id: String,
+            params: BrandArchiveParams = BrandArchiveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> =
+            archive(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see archive */
+        fun archive(
+            id: String,
+            params: BrandArchiveParams = BrandArchiveParams.none(),
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> =
+            archive(id, params, RequestOptions.none())
+
+        /** @see archive */
+        fun archive(
+            params: BrandArchiveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>>
+
+        /** @see archive */
+        fun archive(
+            params: BrandArchiveParams
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> =
+            archive(params, RequestOptions.none())
+
+        /** @see archive */
+        fun archive(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> =
+            archive(id, BrandArchiveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /brands/{id}/images`, but is otherwise the same as
