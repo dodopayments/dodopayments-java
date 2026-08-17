@@ -17,6 +17,8 @@ import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.brands.Brand
+import com.dodopayments.api.models.brands.BrandArchiveParams
+import com.dodopayments.api.models.brands.BrandArchiveResponse
 import com.dodopayments.api.models.brands.BrandCreateParams
 import com.dodopayments.api.models.brands.BrandListParams
 import com.dodopayments.api.models.brands.BrandListResponse
@@ -67,6 +69,13 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
     ): CompletableFuture<BrandListResponse> =
         // get /brands
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun archive(
+        params: BrandArchiveParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<BrandArchiveResponse> =
+        // post /brands/{id}/archive
+        withRawResponse().archive(params, requestOptions).thenApply { it.parse() }
 
     override fun updateImages(
         params: BrandUpdateImagesParams,
@@ -204,6 +213,40 @@ class BrandServiceAsyncImpl internal constructor(private val clientOptions: Clie
                     errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val archiveHandler: Handler<BrandArchiveResponse> =
+            jsonHandler<BrandArchiveResponse>(clientOptions.jsonMapper)
+
+        override fun archive(
+            params: BrandArchiveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<BrandArchiveResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("brands", params._pathParam(0), "archive")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { archiveHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

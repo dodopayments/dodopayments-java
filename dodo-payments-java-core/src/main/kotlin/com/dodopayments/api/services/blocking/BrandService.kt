@@ -6,6 +6,8 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.brands.Brand
+import com.dodopayments.api.models.brands.BrandArchiveParams
+import com.dodopayments.api.models.brands.BrandArchiveResponse
 import com.dodopayments.api.models.brands.BrandCreateParams
 import com.dodopayments.api.models.brands.BrandListParams
 import com.dodopayments.api.models.brands.BrandListResponse
@@ -114,6 +116,39 @@ interface BrandService {
     /** @see list */
     fun list(requestOptions: RequestOptions): BrandListResponse =
         list(BrandListParams.none(), requestOptions)
+
+    /**
+     * Archive a brand. Its products, live subscriptions, and product collections move to the
+     * `move_products_to` brand. Archive is permanent.
+     */
+    fun archive(id: String): BrandArchiveResponse = archive(id, BrandArchiveParams.none())
+
+    /** @see archive */
+    fun archive(
+        id: String,
+        params: BrandArchiveParams = BrandArchiveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BrandArchiveResponse = archive(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see archive */
+    fun archive(
+        id: String,
+        params: BrandArchiveParams = BrandArchiveParams.none(),
+    ): BrandArchiveResponse = archive(id, params, RequestOptions.none())
+
+    /** @see archive */
+    fun archive(
+        params: BrandArchiveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): BrandArchiveResponse
+
+    /** @see archive */
+    fun archive(params: BrandArchiveParams): BrandArchiveResponse =
+        archive(params, RequestOptions.none())
+
+    /** @see archive */
+    fun archive(id: String, requestOptions: RequestOptions): BrandArchiveResponse =
+        archive(id, BrandArchiveParams.none(), requestOptions)
 
     fun updateImages(id: String): BrandUpdateImagesResponse =
         updateImages(id, BrandUpdateImagesParams.none())
@@ -279,6 +314,50 @@ interface BrandService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<BrandListResponse> =
             list(BrandListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /brands/{id}/archive`, but is otherwise the same as
+         * [BrandService.archive].
+         */
+        @MustBeClosed
+        fun archive(id: String): HttpResponseFor<BrandArchiveResponse> =
+            archive(id, BrandArchiveParams.none())
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(
+            id: String,
+            params: BrandArchiveParams = BrandArchiveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BrandArchiveResponse> =
+            archive(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(
+            id: String,
+            params: BrandArchiveParams = BrandArchiveParams.none(),
+        ): HttpResponseFor<BrandArchiveResponse> = archive(id, params, RequestOptions.none())
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(
+            params: BrandArchiveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<BrandArchiveResponse>
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(params: BrandArchiveParams): HttpResponseFor<BrandArchiveResponse> =
+            archive(params, RequestOptions.none())
+
+        /** @see archive */
+        @MustBeClosed
+        fun archive(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<BrandArchiveResponse> =
+            archive(id, BrandArchiveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /brands/{id}/images`, but is otherwise the same as
