@@ -6,12 +6,18 @@ import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class BrandListParams
 private constructor(
+    private val includeArchived: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Set to true to also list archived brands. Default false. */
+    fun includeArchived(): Optional<Boolean> = Optional.ofNullable(includeArchived)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -32,14 +38,32 @@ private constructor(
     /** A builder for [BrandListParams]. */
     class Builder internal constructor() {
 
+        private var includeArchived: Boolean? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(brandListParams: BrandListParams) = apply {
+            includeArchived = brandListParams.includeArchived
             additionalHeaders = brandListParams.additionalHeaders.toBuilder()
             additionalQueryParams = brandListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Set to true to also list archived brands. Default false. */
+        fun includeArchived(includeArchived: Boolean?) = apply {
+            this.includeArchived = includeArchived
+        }
+
+        /**
+         * Alias for [Builder.includeArchived].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun includeArchived(includeArchived: Boolean) = includeArchived(includeArchived as Boolean?)
+
+        /** Alias for calling [Builder.includeArchived] with `includeArchived.orElse(null)`. */
+        fun includeArchived(includeArchived: Optional<Boolean>) =
+            includeArchived(includeArchived.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -145,12 +169,22 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): BrandListParams =
-            BrandListParams(additionalHeaders.build(), additionalQueryParams.build())
+            BrandListParams(
+                includeArchived,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                includeArchived?.let { put("include_archived", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -158,12 +192,14 @@ private constructor(
         }
 
         return other is BrandListParams &&
+            includeArchived == other.includeArchived &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(includeArchived, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "BrandListParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BrandListParams{includeArchived=$includeArchived, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

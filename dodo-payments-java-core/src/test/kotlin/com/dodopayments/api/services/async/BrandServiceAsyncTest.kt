@@ -4,7 +4,9 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
+import com.dodopayments.api.models.brands.BrandArchiveParams
 import com.dodopayments.api.models.brands.BrandCreateParams
+import com.dodopayments.api.models.brands.BrandListParams
 import com.dodopayments.api.models.brands.BrandUpdateParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -86,10 +88,32 @@ internal class BrandServiceAsyncTest {
                 .build()
         val brandServiceAsync = client.brands()
 
-        val brandsFuture = brandServiceAsync.list()
+        val brandsFuture =
+            brandServiceAsync.list(BrandListParams.builder().includeArchived(true).build())
 
         val brands = brandsFuture.get()
         brands.validate()
+    }
+
+    @Test
+    fun archive() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val brandServiceAsync = client.brands()
+
+        val responseFuture =
+            brandServiceAsync.archive(
+                BrandArchiveParams.builder()
+                    .id("brnd_8dFiAW42v28JzhlVSocjq")
+                    .moveProductsTo("move_products_to")
+                    .build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Test
