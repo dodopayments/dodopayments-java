@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.114.0](https://github.com/dodopayments/dodopayments-java/compare/v1.113.0...v1.114.0) (2026-08-24)
+
+
+### Features
+
+* **api:** return checkout handles from subscription change-plan ([e7bcdd7](https://github.com/dodopayments/dodopayments-java/commit/e7bcdd7174c40d9027036fffa4eb3fed5a5f412c))
+* **api:** return checkout handles from subscription change-plan ([4c49a29](https://github.com/dodopayments/dodopayments-java/commit/4c49a2955b280cb0a515e8bf27bd6aeee63ceec3))
+
 ## [1.113.0](https://github.com/dodopayments/dodopayments-java/compare/v1.112.0...v1.113.0) (2026-08-17)
 
 
