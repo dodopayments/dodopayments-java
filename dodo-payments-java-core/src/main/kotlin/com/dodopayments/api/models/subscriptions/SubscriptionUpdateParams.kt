@@ -118,8 +118,8 @@ private constructor(
     fun nextBillingDate(): Optional<OffsetDateTime> = body.nextBillingDate()
 
     /**
-     * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or abandoned
-     * `OnHold`) subscription. Exclusive of every other field.
+     * Removed. Use `status: paused` to pause and `status: active` to resume. This field always
+     * fails with 422, so a caller still on it gets a loud error instead of a silent no-op.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -127,6 +127,16 @@ private constructor(
     fun pause(): Optional<Boolean> = body.pause()
 
     /**
+     * Set to `cancelled` to cancel the subscription. See `cancel_reason`, `cancellation_feedback`,
+     * `cancellation_comment`, and `cancel_at_next_billing_date` for cancellation options.
+     *
+     * Set to `paused` to pause an active subscription. Set to `active` to resume a `paused`
+     * subscription. `active` also resumes an `on_hold` subscription that has an unpaid pause
+     * invoice. This voids that invoice.
+     *
+     * Send `paused` or `active` alone. A request that combines either with any other field fails
+     * with 422. `cancelled` is not exclusive this way — see `cancel_reason` and friends below.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -572,8 +582,8 @@ private constructor(
         }
 
         /**
-         * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
-         * abandoned `OnHold`) subscription. Exclusive of every other field.
+         * Removed. Use `status: paused` to pause and `status: active` to resume. This field always
+         * fails with 422, so a caller still on it gets a loud error instead of a silent no-op.
          */
         fun pause(pause: Boolean?) = apply { body.pause(pause) }
 
@@ -595,6 +605,19 @@ private constructor(
          */
         fun pause(pause: JsonField<Boolean>) = apply { body.pause(pause) }
 
+        /**
+         * Set to `cancelled` to cancel the subscription. See `cancel_reason`,
+         * `cancellation_feedback`, `cancellation_comment`, and `cancel_at_next_billing_date` for
+         * cancellation options.
+         *
+         * Set to `paused` to pause an active subscription. Set to `active` to resume a `paused`
+         * subscription. `active` also resumes an `on_hold` subscription that has an unpaid pause
+         * invoice. This voids that invoice.
+         *
+         * Send `paused` or `active` alone. A request that combines either with any other field
+         * fails with 422. `cancelled` is not exclusive this way — see `cancel_reason` and friends
+         * below.
+         */
         fun status(status: SubscriptionStatus?) = apply { body.status(status) }
 
         /** Alias for calling [Builder.status] with `status.orElse(null)`. */
@@ -1005,8 +1028,8 @@ private constructor(
             nextBillingDate.getOptional("next_billing_date")
 
         /**
-         * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
-         * abandoned `OnHold`) subscription. Exclusive of every other field.
+         * Removed. Use `status: paused` to pause and `status: active` to resume. This field always
+         * fails with 422, so a caller still on it gets a loud error instead of a silent no-op.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -1014,6 +1037,18 @@ private constructor(
         fun pause(): Optional<Boolean> = pause.getOptional("pause")
 
         /**
+         * Set to `cancelled` to cancel the subscription. See `cancel_reason`,
+         * `cancellation_feedback`, `cancellation_comment`, and `cancel_at_next_billing_date` for
+         * cancellation options.
+         *
+         * Set to `paused` to pause an active subscription. Set to `active` to resume a `paused`
+         * subscription. `active` also resumes an `on_hold` subscription that has an unpaid pause
+         * invoice. This voids that invoice.
+         *
+         * Send `paused` or `active` alone. A request that combines either with any other field
+         * fails with 422. `cancelled` is not exclusive this way — see `cancel_reason` and friends
+         * below.
+         *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
          */
@@ -1502,8 +1537,9 @@ private constructor(
             }
 
             /**
-             * `Some(true)` pauses an active subscription; `Some(false)` unpauses a `Paused` (or
-             * abandoned `OnHold`) subscription. Exclusive of every other field.
+             * Removed. Use `status: paused` to pause and `status: active` to resume. This field
+             * always fails with 422, so a caller still on it gets a loud error instead of a silent
+             * no-op.
              */
             fun pause(pause: Boolean?) = pause(JsonField.ofNullable(pause))
 
@@ -1526,6 +1562,19 @@ private constructor(
              */
             fun pause(pause: JsonField<Boolean>) = apply { this.pause = pause }
 
+            /**
+             * Set to `cancelled` to cancel the subscription. See `cancel_reason`,
+             * `cancellation_feedback`, `cancellation_comment`, and `cancel_at_next_billing_date`
+             * for cancellation options.
+             *
+             * Set to `paused` to pause an active subscription. Set to `active` to resume a `paused`
+             * subscription. `active` also resumes an `on_hold` subscription that has an unpaid
+             * pause invoice. This voids that invoice.
+             *
+             * Send `paused` or `active` alone. A request that combines either with any other field
+             * fails with 422. `cancelled` is not exclusive this way — see `cancel_reason` and
+             * friends below.
+             */
             fun status(status: SubscriptionStatus?) = status(JsonField.ofNullable(status))
 
             /** Alias for calling [Builder.status] with `status.orElse(null)`. */
