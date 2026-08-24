@@ -9,6 +9,7 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
@@ -175,25 +176,27 @@ interface SubscriptionServiceAsync {
     fun changePlan(
         subscriptionId: String,
         params: SubscriptionChangePlanParams,
-    ): CompletableFuture<Void?> = changePlan(subscriptionId, params, RequestOptions.none())
+    ): CompletableFuture<SubscriptionChangePlanResponse> =
+        changePlan(subscriptionId, params, RequestOptions.none())
 
     /** @see changePlan */
     fun changePlan(
         subscriptionId: String,
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<SubscriptionChangePlanResponse> =
         changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
     /** @see changePlan */
-    fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<Void?> =
-        changePlan(params, RequestOptions.none())
+    fun changePlan(
+        params: SubscriptionChangePlanParams
+    ): CompletableFuture<SubscriptionChangePlanResponse> = changePlan(params, RequestOptions.none())
 
     /** @see changePlan */
     fun changePlan(
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    ): CompletableFuture<SubscriptionChangePlanResponse>
 
     fun charge(
         subscriptionId: String,
@@ -596,7 +599,7 @@ interface SubscriptionServiceAsync {
         fun changePlan(
             subscriptionId: String,
             params: SubscriptionChangePlanParams,
-        ): CompletableFuture<HttpResponse> =
+        ): CompletableFuture<HttpResponseFor<SubscriptionChangePlanResponse>> =
             changePlan(subscriptionId, params, RequestOptions.none())
 
         /** @see changePlan */
@@ -604,18 +607,20 @@ interface SubscriptionServiceAsync {
             subscriptionId: String,
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse> =
+        ): CompletableFuture<HttpResponseFor<SubscriptionChangePlanResponse>> =
             changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
         /** @see changePlan */
-        fun changePlan(params: SubscriptionChangePlanParams): CompletableFuture<HttpResponse> =
+        fun changePlan(
+            params: SubscriptionChangePlanParams
+        ): CompletableFuture<HttpResponseFor<SubscriptionChangePlanResponse>> =
             changePlan(params, RequestOptions.none())
 
         /** @see changePlan */
         fun changePlan(
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponse>
+        ): CompletableFuture<HttpResponseFor<SubscriptionChangePlanResponse>>
 
         /**
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is

@@ -9,6 +9,7 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
@@ -161,24 +162,28 @@ interface SubscriptionService {
     fun cancelChangePlan(subscriptionId: String, requestOptions: RequestOptions) =
         cancelChangePlan(subscriptionId, SubscriptionCancelChangePlanParams.none(), requestOptions)
 
-    fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams) =
-        changePlan(subscriptionId, params, RequestOptions.none())
+    fun changePlan(
+        subscriptionId: String,
+        params: SubscriptionChangePlanParams,
+    ): SubscriptionChangePlanResponse = changePlan(subscriptionId, params, RequestOptions.none())
 
     /** @see changePlan */
     fun changePlan(
         subscriptionId: String,
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ) = changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
+    ): SubscriptionChangePlanResponse =
+        changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
     /** @see changePlan */
-    fun changePlan(params: SubscriptionChangePlanParams) = changePlan(params, RequestOptions.none())
+    fun changePlan(params: SubscriptionChangePlanParams): SubscriptionChangePlanResponse =
+        changePlan(params, RequestOptions.none())
 
     /** @see changePlan */
     fun changePlan(
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    ): SubscriptionChangePlanResponse
 
     fun charge(
         subscriptionId: String,
@@ -577,7 +582,10 @@ interface SubscriptionService {
          * is otherwise the same as [SubscriptionService.changePlan].
          */
         @MustBeClosed
-        fun changePlan(subscriptionId: String, params: SubscriptionChangePlanParams): HttpResponse =
+        fun changePlan(
+            subscriptionId: String,
+            params: SubscriptionChangePlanParams,
+        ): HttpResponseFor<SubscriptionChangePlanResponse> =
             changePlan(subscriptionId, params, RequestOptions.none())
 
         /** @see changePlan */
@@ -586,12 +594,14 @@ interface SubscriptionService {
             subscriptionId: String,
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse =
+        ): HttpResponseFor<SubscriptionChangePlanResponse> =
             changePlan(params.toBuilder().subscriptionId(subscriptionId).build(), requestOptions)
 
         /** @see changePlan */
         @MustBeClosed
-        fun changePlan(params: SubscriptionChangePlanParams): HttpResponse =
+        fun changePlan(
+            params: SubscriptionChangePlanParams
+        ): HttpResponseFor<SubscriptionChangePlanResponse> =
             changePlan(params, RequestOptions.none())
 
         /** @see changePlan */
@@ -599,7 +609,7 @@ interface SubscriptionService {
         fun changePlan(
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponse
+        ): HttpResponseFor<SubscriptionChangePlanResponse>
 
         /**
          * Returns a raw HTTP response for `post /subscriptions/{subscription_id}/charge`, but is
