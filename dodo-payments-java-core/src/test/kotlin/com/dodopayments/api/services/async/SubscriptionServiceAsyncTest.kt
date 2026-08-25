@@ -219,7 +219,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val future =
+        val responseFuture =
             subscriptionServiceAsync.changePlan(
                 SubscriptionChangePlanParams.builder()
                     .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
@@ -232,6 +232,8 @@ internal class SubscriptionServiceAsyncTest {
                             .quantity(0)
                             .adaptiveCurrencyFeesInclusive(true)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                            .cancelScheduledChangePlan(true)
+                            .collectViaPaymentLink(true)
                             .discountCode("discount_code")
                             .addDiscountCode("string")
                             .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
@@ -248,7 +250,8 @@ internal class SubscriptionServiceAsyncTest {
                     .build()
             )
 
-        val response = future.get()
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Test
@@ -308,6 +311,8 @@ internal class SubscriptionServiceAsyncTest {
                             .quantity(0)
                             .adaptiveCurrencyFeesInclusive(true)
                             .addAddon(AttachAddon.builder().addonId("addon_id").quantity(0).build())
+                            .cancelScheduledChangePlan(true)
+                            .collectViaPaymentLink(true)
                             .discountCode("discount_code")
                             .addDiscountCode("string")
                             .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)

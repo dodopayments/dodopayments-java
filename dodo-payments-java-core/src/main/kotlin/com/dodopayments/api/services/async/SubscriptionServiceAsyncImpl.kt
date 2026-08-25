@@ -20,6 +20,7 @@ import com.dodopayments.api.core.prepareAsync
 import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
@@ -93,9 +94,9 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
     override fun changePlan(
         params: SubscriptionChangePlanParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<SubscriptionChangePlanResponse> =
         // post /subscriptions/{subscription_id}/change-plan
-        withRawResponse().changePlan(params, requestOptions).thenAccept {}
+        withRawResponse().changePlan(params, requestOptions).thenApply { it.parse() }
 
     override fun charge(
         params: SubscriptionChargeParams,
@@ -314,12 +315,13 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
                 }
         }
 
-        private val changePlanHandler: Handler<Void?> = emptyHandler()
+        private val changePlanHandler: Handler<SubscriptionChangePlanResponse> =
+            jsonHandler<SubscriptionChangePlanResponse>(clientOptions.jsonMapper)
 
         override fun changePlan(
             params: SubscriptionChangePlanParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponse> {
+        ): CompletableFuture<HttpResponseFor<SubscriptionChangePlanResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("subscriptionId", params.subscriptionId().getOrNull())
@@ -336,7 +338,13 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response.use { changePlanHandler.handle(it) }
+                        response
+                            .use { changePlanHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
                 }
         }

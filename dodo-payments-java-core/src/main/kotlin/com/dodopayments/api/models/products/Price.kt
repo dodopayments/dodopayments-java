@@ -277,9 +277,9 @@ private constructor(
         private val currency: JsonField<Currency>,
         private val discount: JsonField<Long>,
         private val price: JsonField<Int>,
-        private val purchasingPowerParity: JsonField<Boolean>,
         private val type: JsonValue,
         private val payWhatYouWant: JsonField<Boolean>,
+        private val purchasingPowerParity: JsonField<Boolean>,
         private val suggestedPrice: JsonField<Int>,
         private val taxInclusive: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -292,13 +292,13 @@ private constructor(
             currency: JsonField<Currency> = JsonMissing.of(),
             @JsonProperty("discount") @ExcludeMissing discount: JsonField<Long> = JsonMissing.of(),
             @JsonProperty("price") @ExcludeMissing price: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("purchasing_power_parity")
-            @ExcludeMissing
-            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             @JsonProperty("pay_what_you_want")
             @ExcludeMissing
             payWhatYouWant: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("purchasing_power_parity")
+            @ExcludeMissing
+            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("suggested_price")
             @ExcludeMissing
             suggestedPrice: JsonField<Int> = JsonMissing.of(),
@@ -309,9 +309,9 @@ private constructor(
             currency,
             discount,
             price,
-            purchasingPowerParity,
             type,
             payWhatYouWant,
+            purchasingPowerParity,
             suggestedPrice,
             taxInclusive,
             mutableMapOf(),
@@ -346,16 +346,6 @@ private constructor(
         fun price(): Int = price.getRequired("price")
 
         /**
-         * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-         * power parity feature is not available as of now.
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun purchasingPowerParity(): Boolean =
-            purchasingPowerParity.getRequired("purchasing_power_parity")
-
-        /**
          * Expected to always return the following:
          * ```java
          * JsonValue.from("one_time_price")
@@ -374,6 +364,17 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun payWhatYouWant(): Optional<Boolean> = payWhatYouWant.getOptional("pay_what_you_want")
+
+        /**
+         * Opts this price in to purchasing power parity. The business must also enable purchasing
+         * power parity. The discount percentage per country is always business-wide. Defaults to
+         * `false`.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun purchasingPowerParity(): Optional<Boolean> =
+            purchasingPowerParity.getOptional("purchasing_power_parity")
 
         /**
          * A suggested price for the user to pay. This value is only considered if
@@ -414,16 +415,6 @@ private constructor(
         @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Int> = price
 
         /**
-         * Returns the raw JSON value of [purchasingPowerParity].
-         *
-         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("purchasing_power_parity")
-        @ExcludeMissing
-        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
-
-        /**
          * Returns the raw JSON value of [payWhatYouWant].
          *
          * Unlike [payWhatYouWant], this method doesn't throw if the JSON field has an unexpected
@@ -432,6 +423,16 @@ private constructor(
         @JsonProperty("pay_what_you_want")
         @ExcludeMissing
         fun _payWhatYouWant(): JsonField<Boolean> = payWhatYouWant
+
+        /**
+         * Returns the raw JSON value of [purchasingPowerParity].
+         *
+         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("purchasing_power_parity")
+        @ExcludeMissing
+        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
 
         /**
          * Returns the raw JSON value of [suggestedPrice].
@@ -475,7 +476,6 @@ private constructor(
              * .currency()
              * .discount()
              * .price()
-             * .purchasingPowerParity()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -487,9 +487,9 @@ private constructor(
             private var currency: JsonField<Currency>? = null
             private var discount: JsonField<Long>? = null
             private var price: JsonField<Int>? = null
-            private var purchasingPowerParity: JsonField<Boolean>? = null
             private var type: JsonValue = JsonValue.from("one_time_price")
             private var payWhatYouWant: JsonField<Boolean> = JsonMissing.of()
+            private var purchasingPowerParity: JsonField<Boolean> = JsonMissing.of()
             private var suggestedPrice: JsonField<Int> = JsonMissing.of()
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -499,9 +499,9 @@ private constructor(
                 currency = oneTimePrice.currency
                 discount = oneTimePrice.discount
                 price = oneTimePrice.price
-                purchasingPowerParity = oneTimePrice.purchasingPowerParity
                 type = oneTimePrice.type
                 payWhatYouWant = oneTimePrice.payWhatYouWant
+                purchasingPowerParity = oneTimePrice.purchasingPowerParity
                 suggestedPrice = oneTimePrice.suggestedPrice
                 taxInclusive = oneTimePrice.taxInclusive
                 additionalProperties = oneTimePrice.additionalProperties.toMutableMap()
@@ -550,24 +550,6 @@ private constructor(
             fun price(price: JsonField<Int>) = apply { this.price = price }
 
             /**
-             * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-             * power parity feature is not available as of now.
-             */
-            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
-                purchasingPowerParity(JsonField.of(purchasingPowerParity))
-
-            /**
-             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
-                this.purchasingPowerParity = purchasingPowerParity
-            }
-
-            /**
              * Sets the field to an arbitrary JSON value.
              *
              * It is usually unnecessary to call this method because the field defaults to the
@@ -597,6 +579,25 @@ private constructor(
              */
             fun payWhatYouWant(payWhatYouWant: JsonField<Boolean>) = apply {
                 this.payWhatYouWant = payWhatYouWant
+            }
+
+            /**
+             * Opts this price in to purchasing power parity. The business must also enable
+             * purchasing power parity. The discount percentage per country is always business-wide.
+             * Defaults to `false`.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
+                purchasingPowerParity(JsonField.of(purchasingPowerParity))
+
+            /**
+             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
+                this.purchasingPowerParity = purchasingPowerParity
             }
 
             /**
@@ -683,7 +684,6 @@ private constructor(
              * .currency()
              * .discount()
              * .price()
-             * .purchasingPowerParity()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -693,9 +693,9 @@ private constructor(
                     checkRequired("currency", currency),
                     checkRequired("discount", discount),
                     checkRequired("price", price),
-                    checkRequired("purchasingPowerParity", purchasingPowerParity),
                     type,
                     payWhatYouWant,
+                    purchasingPowerParity,
                     suggestedPrice,
                     taxInclusive,
                     additionalProperties.toMutableMap(),
@@ -721,13 +721,13 @@ private constructor(
             currency().validate()
             discount()
             price()
-            purchasingPowerParity()
             _type().let {
                 if (it != JsonValue.from("one_time_price")) {
                     throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
                 }
             }
             payWhatYouWant()
+            purchasingPowerParity()
             suggestedPrice()
             taxInclusive()
             validated = true
@@ -752,9 +752,9 @@ private constructor(
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (discount.asKnown().isPresent) 1 else 0) +
                 (if (price.asKnown().isPresent) 1 else 0) +
-                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("one_time_price")) 1 else 0 } +
                 (if (payWhatYouWant.asKnown().isPresent) 1 else 0) +
+                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (suggestedPrice.asKnown().isPresent) 1 else 0) +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0)
 
@@ -767,9 +767,9 @@ private constructor(
                 currency == other.currency &&
                 discount == other.discount &&
                 price == other.price &&
-                purchasingPowerParity == other.purchasingPowerParity &&
                 type == other.type &&
                 payWhatYouWant == other.payWhatYouWant &&
+                purchasingPowerParity == other.purchasingPowerParity &&
                 suggestedPrice == other.suggestedPrice &&
                 taxInclusive == other.taxInclusive &&
                 additionalProperties == other.additionalProperties
@@ -780,9 +780,9 @@ private constructor(
                 currency,
                 discount,
                 price,
-                purchasingPowerParity,
                 type,
                 payWhatYouWant,
+                purchasingPowerParity,
                 suggestedPrice,
                 taxInclusive,
                 additionalProperties,
@@ -792,7 +792,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "OneTimePrice{currency=$currency, discount=$discount, price=$price, purchasingPowerParity=$purchasingPowerParity, type=$type, payWhatYouWant=$payWhatYouWant, suggestedPrice=$suggestedPrice, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
+            "OneTimePrice{currency=$currency, discount=$discount, price=$price, type=$type, payWhatYouWant=$payWhatYouWant, purchasingPowerParity=$purchasingPowerParity, suggestedPrice=$suggestedPrice, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
     }
 
     /** Recurring price details. */
@@ -804,10 +804,10 @@ private constructor(
         private val paymentFrequencyCount: JsonField<Int>,
         private val paymentFrequencyInterval: JsonField<TimeInterval>,
         private val price: JsonField<Int>,
-        private val purchasingPowerParity: JsonField<Boolean>,
         private val subscriptionPeriodCount: JsonField<Int>,
         private val subscriptionPeriodInterval: JsonField<TimeInterval>,
         private val type: JsonValue,
+        private val purchasingPowerParity: JsonField<Boolean>,
         private val taxInclusive: JsonField<Boolean>,
         private val trialAmount: JsonField<Int>,
         private val trialApplyDiscounts: JsonField<Boolean>,
@@ -828,9 +828,6 @@ private constructor(
             @ExcludeMissing
             paymentFrequencyInterval: JsonField<TimeInterval> = JsonMissing.of(),
             @JsonProperty("price") @ExcludeMissing price: JsonField<Int> = JsonMissing.of(),
-            @JsonProperty("purchasing_power_parity")
-            @ExcludeMissing
-            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("subscription_period_count")
             @ExcludeMissing
             subscriptionPeriodCount: JsonField<Int> = JsonMissing.of(),
@@ -838,6 +835,9 @@ private constructor(
             @ExcludeMissing
             subscriptionPeriodInterval: JsonField<TimeInterval> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("purchasing_power_parity")
+            @ExcludeMissing
+            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("tax_inclusive")
             @ExcludeMissing
             taxInclusive: JsonField<Boolean> = JsonMissing.of(),
@@ -856,10 +856,10 @@ private constructor(
             paymentFrequencyCount,
             paymentFrequencyInterval,
             price,
-            purchasingPowerParity,
             subscriptionPeriodCount,
             subscriptionPeriodInterval,
             type,
+            purchasingPowerParity,
             taxInclusive,
             trialAmount,
             trialApplyDiscounts,
@@ -912,16 +912,6 @@ private constructor(
         fun price(): Int = price.getRequired("price")
 
         /**
-         * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-         * power parity feature is not available as of now
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun purchasingPowerParity(): Boolean =
-            purchasingPowerParity.getRequired("purchasing_power_parity")
-
-        /**
          * Number of units for the subscription period. For example, a value of `12` with a
          * `subscription_period_interval` of `month` represents a one-year subscription.
          *
@@ -950,6 +940,17 @@ private constructor(
          * responded with an unexpected value).
          */
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+        /**
+         * Opts this price in to purchasing power parity. The business must also enable purchasing
+         * power parity. The discount percentage per country is always business-wide. Defaults to
+         * `false`.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun purchasingPowerParity(): Optional<Boolean> =
+            purchasingPowerParity.getOptional("purchasing_power_parity")
 
         /**
          * Indicates if the price is tax inclusive
@@ -1028,16 +1029,6 @@ private constructor(
         @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Int> = price
 
         /**
-         * Returns the raw JSON value of [purchasingPowerParity].
-         *
-         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("purchasing_power_parity")
-        @ExcludeMissing
-        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
-
-        /**
          * Returns the raw JSON value of [subscriptionPeriodCount].
          *
          * Unlike [subscriptionPeriodCount], this method doesn't throw if the JSON field has an
@@ -1056,6 +1047,16 @@ private constructor(
         @JsonProperty("subscription_period_interval")
         @ExcludeMissing
         fun _subscriptionPeriodInterval(): JsonField<TimeInterval> = subscriptionPeriodInterval
+
+        /**
+         * Returns the raw JSON value of [purchasingPowerParity].
+         *
+         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("purchasing_power_parity")
+        @ExcludeMissing
+        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
 
         /**
          * Returns the raw JSON value of [taxInclusive].
@@ -1120,7 +1121,6 @@ private constructor(
              * .paymentFrequencyCount()
              * .paymentFrequencyInterval()
              * .price()
-             * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
              * ```
@@ -1136,10 +1136,10 @@ private constructor(
             private var paymentFrequencyCount: JsonField<Int>? = null
             private var paymentFrequencyInterval: JsonField<TimeInterval>? = null
             private var price: JsonField<Int>? = null
-            private var purchasingPowerParity: JsonField<Boolean>? = null
             private var subscriptionPeriodCount: JsonField<Int>? = null
             private var subscriptionPeriodInterval: JsonField<TimeInterval>? = null
             private var type: JsonValue = JsonValue.from("recurring_price")
+            private var purchasingPowerParity: JsonField<Boolean> = JsonMissing.of()
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
             private var trialAmount: JsonField<Int> = JsonMissing.of()
             private var trialApplyDiscounts: JsonField<Boolean> = JsonMissing.of()
@@ -1153,10 +1153,10 @@ private constructor(
                 paymentFrequencyCount = recurringPrice.paymentFrequencyCount
                 paymentFrequencyInterval = recurringPrice.paymentFrequencyInterval
                 price = recurringPrice.price
-                purchasingPowerParity = recurringPrice.purchasingPowerParity
                 subscriptionPeriodCount = recurringPrice.subscriptionPeriodCount
                 subscriptionPeriodInterval = recurringPrice.subscriptionPeriodInterval
                 type = recurringPrice.type
+                purchasingPowerParity = recurringPrice.purchasingPowerParity
                 taxInclusive = recurringPrice.taxInclusive
                 trialAmount = recurringPrice.trialAmount
                 trialApplyDiscounts = recurringPrice.trialApplyDiscounts
@@ -1238,24 +1238,6 @@ private constructor(
             fun price(price: JsonField<Int>) = apply { this.price = price }
 
             /**
-             * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-             * power parity feature is not available as of now
-             */
-            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
-                purchasingPowerParity(JsonField.of(purchasingPowerParity))
-
-            /**
-             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
-                this.purchasingPowerParity = purchasingPowerParity
-            }
-
-            /**
              * Number of units for the subscription period. For example, a value of `12` with a
              * `subscription_period_interval` of `month` represents a one-year subscription.
              */
@@ -1302,6 +1284,25 @@ private constructor(
              * supported value.
              */
             fun type(type: JsonValue) = apply { this.type = type }
+
+            /**
+             * Opts this price in to purchasing power parity. The business must also enable
+             * purchasing power parity. The discount percentage per country is always business-wide.
+             * Defaults to `false`.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
+                purchasingPowerParity(JsonField.of(purchasingPowerParity))
+
+            /**
+             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
+                this.purchasingPowerParity = purchasingPowerParity
+            }
 
             /** Indicates if the price is tax inclusive */
             fun taxInclusive(taxInclusive: Boolean?) =
@@ -1433,7 +1434,6 @@ private constructor(
              * .paymentFrequencyCount()
              * .paymentFrequencyInterval()
              * .price()
-             * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
              * ```
@@ -1447,10 +1447,10 @@ private constructor(
                     checkRequired("paymentFrequencyCount", paymentFrequencyCount),
                     checkRequired("paymentFrequencyInterval", paymentFrequencyInterval),
                     checkRequired("price", price),
-                    checkRequired("purchasingPowerParity", purchasingPowerParity),
                     checkRequired("subscriptionPeriodCount", subscriptionPeriodCount),
                     checkRequired("subscriptionPeriodInterval", subscriptionPeriodInterval),
                     type,
+                    purchasingPowerParity,
                     taxInclusive,
                     trialAmount,
                     trialApplyDiscounts,
@@ -1480,7 +1480,6 @@ private constructor(
             paymentFrequencyCount()
             paymentFrequencyInterval().validate()
             price()
-            purchasingPowerParity()
             subscriptionPeriodCount()
             subscriptionPeriodInterval().validate()
             _type().let {
@@ -1488,6 +1487,7 @@ private constructor(
                     throw DodoPaymentsInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            purchasingPowerParity()
             taxInclusive()
             trialAmount()
             trialApplyDiscounts()
@@ -1516,10 +1516,10 @@ private constructor(
                 (if (paymentFrequencyCount.asKnown().isPresent) 1 else 0) +
                 (paymentFrequencyInterval.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (price.asKnown().isPresent) 1 else 0) +
-                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
                 (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
                 type.let { if (it == JsonValue.from("recurring_price")) 1 else 0 } +
+                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0) +
                 (if (trialAmount.asKnown().isPresent) 1 else 0) +
                 (if (trialApplyDiscounts.asKnown().isPresent) 1 else 0) +
@@ -1536,10 +1536,10 @@ private constructor(
                 paymentFrequencyCount == other.paymentFrequencyCount &&
                 paymentFrequencyInterval == other.paymentFrequencyInterval &&
                 price == other.price &&
-                purchasingPowerParity == other.purchasingPowerParity &&
                 subscriptionPeriodCount == other.subscriptionPeriodCount &&
                 subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
                 type == other.type &&
+                purchasingPowerParity == other.purchasingPowerParity &&
                 taxInclusive == other.taxInclusive &&
                 trialAmount == other.trialAmount &&
                 trialApplyDiscounts == other.trialApplyDiscounts &&
@@ -1554,10 +1554,10 @@ private constructor(
                 paymentFrequencyCount,
                 paymentFrequencyInterval,
                 price,
-                purchasingPowerParity,
                 subscriptionPeriodCount,
                 subscriptionPeriodInterval,
                 type,
+                purchasingPowerParity,
                 taxInclusive,
                 trialAmount,
                 trialApplyDiscounts,
@@ -1569,7 +1569,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "RecurringPrice{currency=$currency, discount=$discount, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, price=$price, purchasingPowerParity=$purchasingPowerParity, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, type=$type, taxInclusive=$taxInclusive, trialAmount=$trialAmount, trialApplyDiscounts=$trialApplyDiscounts, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+            "RecurringPrice{currency=$currency, discount=$discount, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, price=$price, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, type=$type, purchasingPowerParity=$purchasingPowerParity, taxInclusive=$taxInclusive, trialAmount=$trialAmount, trialApplyDiscounts=$trialApplyDiscounts, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
     }
 
     /** Usage Based price details. */
@@ -1581,11 +1581,11 @@ private constructor(
         private val fixedPrice: JsonField<Int>,
         private val paymentFrequencyCount: JsonField<Int>,
         private val paymentFrequencyInterval: JsonField<TimeInterval>,
-        private val purchasingPowerParity: JsonField<Boolean>,
         private val subscriptionPeriodCount: JsonField<Int>,
         private val subscriptionPeriodInterval: JsonField<TimeInterval>,
         private val type: JsonValue,
         private val meters: JsonField<List<AddMeterToPrice>>,
+        private val purchasingPowerParity: JsonField<Boolean>,
         private val taxInclusive: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -1605,9 +1605,6 @@ private constructor(
             @JsonProperty("payment_frequency_interval")
             @ExcludeMissing
             paymentFrequencyInterval: JsonField<TimeInterval> = JsonMissing.of(),
-            @JsonProperty("purchasing_power_parity")
-            @ExcludeMissing
-            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("subscription_period_count")
             @ExcludeMissing
             subscriptionPeriodCount: JsonField<Int> = JsonMissing.of(),
@@ -1618,6 +1615,9 @@ private constructor(
             @JsonProperty("meters")
             @ExcludeMissing
             meters: JsonField<List<AddMeterToPrice>> = JsonMissing.of(),
+            @JsonProperty("purchasing_power_parity")
+            @ExcludeMissing
+            purchasingPowerParity: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("tax_inclusive")
             @ExcludeMissing
             taxInclusive: JsonField<Boolean> = JsonMissing.of(),
@@ -1627,11 +1627,11 @@ private constructor(
             fixedPrice,
             paymentFrequencyCount,
             paymentFrequencyInterval,
-            purchasingPowerParity,
             subscriptionPeriodCount,
             subscriptionPeriodInterval,
             type,
             meters,
+            purchasingPowerParity,
             taxInclusive,
             mutableMapOf(),
         )
@@ -1681,16 +1681,6 @@ private constructor(
             paymentFrequencyInterval.getRequired("payment_frequency_interval")
 
         /**
-         * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-         * power parity feature is not available as of now
-         *
-         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun purchasingPowerParity(): Boolean =
-            purchasingPowerParity.getRequired("purchasing_power_parity")
-
-        /**
          * Number of units for the subscription period. For example, a value of `12` with a
          * `subscription_period_interval` of `month` represents a one-year subscription.
          *
@@ -1725,6 +1715,17 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun meters(): Optional<List<AddMeterToPrice>> = meters.getOptional("meters")
+
+        /**
+         * Opts this price in to purchasing power parity. The business must also enable purchasing
+         * power parity. The discount percentage per country is always business-wide. Applies to the
+         * fixed fee only, never to metered usage. Defaults to `false`.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun purchasingPowerParity(): Optional<Boolean> =
+            purchasingPowerParity.getOptional("purchasing_power_parity")
 
         /**
          * Indicates if the price is tax inclusive
@@ -1776,16 +1777,6 @@ private constructor(
         fun _paymentFrequencyInterval(): JsonField<TimeInterval> = paymentFrequencyInterval
 
         /**
-         * Returns the raw JSON value of [purchasingPowerParity].
-         *
-         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("purchasing_power_parity")
-        @ExcludeMissing
-        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
-
-        /**
          * Returns the raw JSON value of [subscriptionPeriodCount].
          *
          * Unlike [subscriptionPeriodCount], this method doesn't throw if the JSON field has an
@@ -1813,6 +1804,16 @@ private constructor(
         @JsonProperty("meters")
         @ExcludeMissing
         fun _meters(): JsonField<List<AddMeterToPrice>> = meters
+
+        /**
+         * Returns the raw JSON value of [purchasingPowerParity].
+         *
+         * Unlike [purchasingPowerParity], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("purchasing_power_parity")
+        @ExcludeMissing
+        fun _purchasingPowerParity(): JsonField<Boolean> = purchasingPowerParity
 
         /**
          * Returns the raw JSON value of [taxInclusive].
@@ -1848,7 +1849,6 @@ private constructor(
              * .fixedPrice()
              * .paymentFrequencyCount()
              * .paymentFrequencyInterval()
-             * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
              * ```
@@ -1864,11 +1864,11 @@ private constructor(
             private var fixedPrice: JsonField<Int>? = null
             private var paymentFrequencyCount: JsonField<Int>? = null
             private var paymentFrequencyInterval: JsonField<TimeInterval>? = null
-            private var purchasingPowerParity: JsonField<Boolean>? = null
             private var subscriptionPeriodCount: JsonField<Int>? = null
             private var subscriptionPeriodInterval: JsonField<TimeInterval>? = null
             private var type: JsonValue = JsonValue.from("usage_based_price")
             private var meters: JsonField<MutableList<AddMeterToPrice>>? = null
+            private var purchasingPowerParity: JsonField<Boolean> = JsonMissing.of()
             private var taxInclusive: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1879,11 +1879,11 @@ private constructor(
                 fixedPrice = usageBasedPrice.fixedPrice
                 paymentFrequencyCount = usageBasedPrice.paymentFrequencyCount
                 paymentFrequencyInterval = usageBasedPrice.paymentFrequencyInterval
-                purchasingPowerParity = usageBasedPrice.purchasingPowerParity
                 subscriptionPeriodCount = usageBasedPrice.subscriptionPeriodCount
                 subscriptionPeriodInterval = usageBasedPrice.subscriptionPeriodInterval
                 type = usageBasedPrice.type
                 meters = usageBasedPrice.meters.map { it.toMutableList() }
+                purchasingPowerParity = usageBasedPrice.purchasingPowerParity
                 taxInclusive = usageBasedPrice.taxInclusive
                 additionalProperties = usageBasedPrice.additionalProperties.toMutableMap()
             }
@@ -1962,24 +1962,6 @@ private constructor(
                 }
 
             /**
-             * Indicates if purchasing power parity adjustments are applied to the price. Purchasing
-             * power parity feature is not available as of now
-             */
-            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
-                purchasingPowerParity(JsonField.of(purchasingPowerParity))
-
-            /**
-             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
-                this.purchasingPowerParity = purchasingPowerParity
-            }
-
-            /**
              * Number of units for the subscription period. For example, a value of `12` with a
              * `subscription_period_interval` of `month` represents a one-year subscription.
              */
@@ -2055,6 +2037,25 @@ private constructor(
                     }
             }
 
+            /**
+             * Opts this price in to purchasing power parity. The business must also enable
+             * purchasing power parity. The discount percentage per country is always business-wide.
+             * Applies to the fixed fee only, never to metered usage. Defaults to `false`.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: Boolean) =
+                purchasingPowerParity(JsonField.of(purchasingPowerParity))
+
+            /**
+             * Sets [Builder.purchasingPowerParity] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.purchasingPowerParity] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun purchasingPowerParity(purchasingPowerParity: JsonField<Boolean>) = apply {
+                this.purchasingPowerParity = purchasingPowerParity
+            }
+
             /** Indicates if the price is tax inclusive */
             fun taxInclusive(taxInclusive: Boolean?) =
                 taxInclusive(JsonField.ofNullable(taxInclusive))
@@ -2112,7 +2113,6 @@ private constructor(
              * .fixedPrice()
              * .paymentFrequencyCount()
              * .paymentFrequencyInterval()
-             * .purchasingPowerParity()
              * .subscriptionPeriodCount()
              * .subscriptionPeriodInterval()
              * ```
@@ -2126,11 +2126,11 @@ private constructor(
                     checkRequired("fixedPrice", fixedPrice),
                     checkRequired("paymentFrequencyCount", paymentFrequencyCount),
                     checkRequired("paymentFrequencyInterval", paymentFrequencyInterval),
-                    checkRequired("purchasingPowerParity", purchasingPowerParity),
                     checkRequired("subscriptionPeriodCount", subscriptionPeriodCount),
                     checkRequired("subscriptionPeriodInterval", subscriptionPeriodInterval),
                     type,
                     (meters ?: JsonMissing.of()).map { it.toImmutable() },
+                    purchasingPowerParity,
                     taxInclusive,
                     additionalProperties.toMutableMap(),
                 )
@@ -2157,7 +2157,6 @@ private constructor(
             fixedPrice()
             paymentFrequencyCount()
             paymentFrequencyInterval().validate()
-            purchasingPowerParity()
             subscriptionPeriodCount()
             subscriptionPeriodInterval().validate()
             _type().let {
@@ -2166,6 +2165,7 @@ private constructor(
                 }
             }
             meters().ifPresent { it.forEach { it.validate() } }
+            purchasingPowerParity()
             taxInclusive()
             validated = true
         }
@@ -2191,11 +2191,11 @@ private constructor(
                 (if (fixedPrice.asKnown().isPresent) 1 else 0) +
                 (if (paymentFrequencyCount.asKnown().isPresent) 1 else 0) +
                 (paymentFrequencyInterval.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (subscriptionPeriodCount.asKnown().isPresent) 1 else 0) +
                 (subscriptionPeriodInterval.asKnown().getOrNull()?.validity() ?: 0) +
                 type.let { if (it == JsonValue.from("usage_based_price")) 1 else 0 } +
                 (meters.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (purchasingPowerParity.asKnown().isPresent) 1 else 0) +
                 (if (taxInclusive.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -2209,11 +2209,11 @@ private constructor(
                 fixedPrice == other.fixedPrice &&
                 paymentFrequencyCount == other.paymentFrequencyCount &&
                 paymentFrequencyInterval == other.paymentFrequencyInterval &&
-                purchasingPowerParity == other.purchasingPowerParity &&
                 subscriptionPeriodCount == other.subscriptionPeriodCount &&
                 subscriptionPeriodInterval == other.subscriptionPeriodInterval &&
                 type == other.type &&
                 meters == other.meters &&
+                purchasingPowerParity == other.purchasingPowerParity &&
                 taxInclusive == other.taxInclusive &&
                 additionalProperties == other.additionalProperties
         }
@@ -2225,11 +2225,11 @@ private constructor(
                 fixedPrice,
                 paymentFrequencyCount,
                 paymentFrequencyInterval,
-                purchasingPowerParity,
                 subscriptionPeriodCount,
                 subscriptionPeriodInterval,
                 type,
                 meters,
+                purchasingPowerParity,
                 taxInclusive,
                 additionalProperties,
             )
@@ -2238,6 +2238,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "UsageBasedPrice{currency=$currency, discount=$discount, fixedPrice=$fixedPrice, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, purchasingPowerParity=$purchasingPowerParity, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, type=$type, meters=$meters, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
+            "UsageBasedPrice{currency=$currency, discount=$discount, fixedPrice=$fixedPrice, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, type=$type, meters=$meters, purchasingPowerParity=$purchasingPowerParity, taxInclusive=$taxInclusive, additionalProperties=$additionalProperties}"
     }
 }
