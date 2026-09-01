@@ -8,6 +8,8 @@ import com.dodopayments.api.services.async.AddonServiceAsync
 import com.dodopayments.api.services.async.AddonServiceAsyncImpl
 import com.dodopayments.api.services.async.BalanceServiceAsync
 import com.dodopayments.api.services.async.BalanceServiceAsyncImpl
+import com.dodopayments.api.services.async.BlocklistServiceAsync
+import com.dodopayments.api.services.async.BlocklistServiceAsyncImpl
 import com.dodopayments.api.services.async.BrandServiceAsync
 import com.dodopayments.api.services.async.BrandServiceAsyncImpl
 import com.dodopayments.api.services.async.CheckoutSessionServiceAsync
@@ -104,6 +106,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
         CustomerServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val blocklist: BlocklistServiceAsync by lazy {
+        BlocklistServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val refunds: RefundServiceAsync by lazy {
         RefundServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -189,6 +195,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
     override fun customers(): CustomerServiceAsync = customers
 
+    override fun blocklist(): BlocklistServiceAsync = blocklist
+
     override fun refunds(): RefundServiceAsync = refunds
 
     override fun disputes(): DisputeServiceAsync = disputes
@@ -256,6 +264,10 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
 
         private val customers: CustomerServiceAsync.WithRawResponse by lazy {
             CustomerServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val blocklist: BlocklistServiceAsync.WithRawResponse by lazy {
+            BlocklistServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val refunds: RefundServiceAsync.WithRawResponse by lazy {
@@ -346,6 +358,8 @@ class DodoPaymentsClientAsyncImpl(private val clientOptions: ClientOptions) :
             licenseKeyInstances
 
         override fun customers(): CustomerServiceAsync.WithRawResponse = customers
+
+        override fun blocklist(): BlocklistServiceAsync.WithRawResponse = blocklist
 
         override fun refunds(): RefundServiceAsync.WithRawResponse = refunds
 

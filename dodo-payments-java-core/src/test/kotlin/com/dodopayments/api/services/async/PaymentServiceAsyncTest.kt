@@ -119,4 +119,34 @@ internal class PaymentServiceAsyncTest {
         val response = responseFuture.get()
         response.validate()
     }
+
+    @Test
+    fun retrieveRetryState() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val paymentServiceAsync = client.payments()
+
+        val manualRetryStateFuture = paymentServiceAsync.retrieveRetryState("payment_id")
+
+        val manualRetryState = manualRetryStateFuture.get()
+        manualRetryState.validate()
+    }
+
+    @Test
+    fun retry() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val paymentServiceAsync = client.payments()
+
+        val manualRetryFuture = paymentServiceAsync.retry("payment_id")
+
+        val manualRetry = manualRetryFuture.get()
+        manualRetry.validate()
+    }
 }
