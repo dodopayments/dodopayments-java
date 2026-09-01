@@ -836,6 +836,8 @@ private constructor(
 
                 @JvmField val CANCELLED = of("cancelled")
 
+                @JvmField val PAST_DUE = of("past_due")
+
                 @JvmStatic fun of(value: String) = TriggerState(JsonField.of(value))
             }
 
@@ -843,6 +845,7 @@ private constructor(
             enum class Known {
                 ON_HOLD,
                 CANCELLED,
+                PAST_DUE,
             }
 
             /**
@@ -857,6 +860,7 @@ private constructor(
             enum class Value {
                 ON_HOLD,
                 CANCELLED,
+                PAST_DUE,
                 /**
                  * An enum member indicating that [TriggerState] was instantiated with an unknown
                  * value.
@@ -875,6 +879,7 @@ private constructor(
                 when (this) {
                     ON_HOLD -> Value.ON_HOLD
                     CANCELLED -> Value.CANCELLED
+                    PAST_DUE -> Value.PAST_DUE
                     else -> Value._UNKNOWN
                 }
 
@@ -891,6 +896,7 @@ private constructor(
                 when (this) {
                     ON_HOLD -> Known.ON_HOLD
                     CANCELLED -> Known.CANCELLED
+                    PAST_DUE -> Known.PAST_DUE
                     else -> throw DodoPaymentsInvalidDataException("Unknown TriggerState: $value")
                 }
 

@@ -3241,6 +3241,7 @@ private constructor(
             private val taxId: JsonField<String>,
             private val trialAmount: JsonField<Int>,
             private val payloadType: JsonValue,
+            private val pastDueEndsAt: JsonField<OffsetDateTime>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3366,6 +3367,9 @@ private constructor(
                 @JsonProperty("payload_type")
                 @ExcludeMissing
                 payloadType: JsonValue = JsonMissing.of(),
+                @JsonProperty("past_due_ends_at")
+                @ExcludeMissing
+                pastDueEndsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             ) : this(
                 addons,
                 billing,
@@ -3407,6 +3411,7 @@ private constructor(
                 taxId,
                 trialAmount,
                 payloadType,
+                pastDueEndsAt,
                 mutableMapOf(),
             )
 
@@ -3824,6 +3829,21 @@ private constructor(
             fun _payloadType(): JsonValue = payloadType
 
             /**
+             * Time when the grace period ends. The subscription moves to `on_hold` or to
+             * `cancelled` at this time.
+             *
+             * Read in the same query as the rest of the payload, so it always comes from the row
+             * snapshot that produced `status`. It is set whenever the subscription sits in a window
+             * at that moment. A delayed event of another type therefore carries the deadline too,
+             * next to a `past_due` status.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type
+             *   (e.g. if the server responded with an unexpected value).
+             */
+            fun pastDueEndsAt(): Optional<OffsetDateTime> =
+                pastDueEndsAt.getOptional("past_due_ends_at")
+
+            /**
              * Returns the raw JSON value of [addons].
              *
              * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
@@ -4203,6 +4223,16 @@ private constructor(
             @ExcludeMissing
             fun _trialAmount(): JsonField<Int> = trialAmount
 
+            /**
+             * Returns the raw JSON value of [pastDueEndsAt].
+             *
+             * Unlike [pastDueEndsAt], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("past_due_ends_at")
+            @ExcludeMissing
+            fun _pastDueEndsAt(): JsonField<OffsetDateTime> = pastDueEndsAt
+
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
                 additionalProperties.put(key, value)
@@ -4300,6 +4330,7 @@ private constructor(
                 private var taxId: JsonField<String> = JsonMissing.of()
                 private var trialAmount: JsonField<Int> = JsonMissing.of()
                 private var payloadType: JsonValue = JsonValue.from("Subscription")
+                private var pastDueEndsAt: JsonField<OffsetDateTime> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -4347,6 +4378,7 @@ private constructor(
                     taxId = subscription.taxId
                     trialAmount = subscription.trialAmount
                     payloadType = subscription.payloadType
+                    pastDueEndsAt = subscription.pastDueEndsAt
                     additionalProperties = subscription.additionalProperties.toMutableMap()
                 }
 
@@ -5107,6 +5139,33 @@ private constructor(
                  */
                 fun payloadType(payloadType: JsonValue) = apply { this.payloadType = payloadType }
 
+                /**
+                 * Time when the grace period ends. The subscription moves to `on_hold` or to
+                 * `cancelled` at this time.
+                 *
+                 * Read in the same query as the rest of the payload, so it always comes from the
+                 * row snapshot that produced `status`. It is set whenever the subscription sits in
+                 * a window at that moment. A delayed event of another type therefore carries the
+                 * deadline too, next to a `past_due` status.
+                 */
+                fun pastDueEndsAt(pastDueEndsAt: OffsetDateTime?) =
+                    pastDueEndsAt(JsonField.ofNullable(pastDueEndsAt))
+
+                /** Alias for calling [Builder.pastDueEndsAt] with `pastDueEndsAt.orElse(null)`. */
+                fun pastDueEndsAt(pastDueEndsAt: Optional<OffsetDateTime>) =
+                    pastDueEndsAt(pastDueEndsAt.getOrNull())
+
+                /**
+                 * Sets [Builder.pastDueEndsAt] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.pastDueEndsAt] with a well-typed
+                 * [OffsetDateTime] value instead. This method is primarily for setting the field to
+                 * an undocumented or not yet supported value.
+                 */
+                fun pastDueEndsAt(pastDueEndsAt: JsonField<OffsetDateTime>) = apply {
+                    this.pastDueEndsAt = pastDueEndsAt
+                }
+
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
                     putAllAdditionalProperties(additionalProperties)
@@ -5210,6 +5269,7 @@ private constructor(
                         taxId,
                         trialAmount,
                         payloadType,
+                        pastDueEndsAt,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -5277,6 +5337,7 @@ private constructor(
                         )
                     }
                 }
+                pastDueEndsAt()
                 validated = true
             }
 
@@ -5339,7 +5400,8 @@ private constructor(
                     (scheduledChange.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (taxId.asKnown().isPresent) 1 else 0) +
                     (if (trialAmount.asKnown().isPresent) 1 else 0) +
-                    payloadType.let { if (it == JsonValue.from("Subscription")) 1 else 0 }
+                    payloadType.let { if (it == JsonValue.from("Subscription")) 1 else 0 } +
+                    (if (pastDueEndsAt.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -5387,6 +5449,7 @@ private constructor(
                     taxId == other.taxId &&
                     trialAmount == other.trialAmount &&
                     payloadType == other.payloadType &&
+                    pastDueEndsAt == other.pastDueEndsAt &&
                     additionalProperties == other.additionalProperties
             }
 
@@ -5432,6 +5495,7 @@ private constructor(
                     taxId,
                     trialAmount,
                     payloadType,
+                    pastDueEndsAt,
                     additionalProperties,
                 )
             }
@@ -5439,7 +5503,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Subscription{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, payloadType=$payloadType, additionalProperties=$additionalProperties}"
+                "Subscription{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, payloadType=$payloadType, pastDueEndsAt=$pastDueEndsAt, additionalProperties=$additionalProperties}"
         }
 
         class Refund
@@ -11981,6 +12045,8 @@ private constructor(
 
                     @JvmField val CANCELLED = of("cancelled")
 
+                    @JvmField val PAST_DUE = of("past_due")
+
                     @JvmStatic fun of(value: String) = TriggerState(JsonField.of(value))
                 }
 
@@ -11988,6 +12054,7 @@ private constructor(
                 enum class Known {
                     ON_HOLD,
                     CANCELLED,
+                    PAST_DUE,
                 }
 
                 /**
@@ -12003,6 +12070,7 @@ private constructor(
                 enum class Value {
                     ON_HOLD,
                     CANCELLED,
+                    PAST_DUE,
                     /**
                      * An enum member indicating that [TriggerState] was instantiated with an
                      * unknown value.
@@ -12021,6 +12089,7 @@ private constructor(
                     when (this) {
                         ON_HOLD -> Value.ON_HOLD
                         CANCELLED -> Value.CANCELLED
+                        PAST_DUE -> Value.PAST_DUE
                         else -> Value._UNKNOWN
                     }
 
@@ -12037,6 +12106,7 @@ private constructor(
                     when (this) {
                         ON_HOLD -> Known.ON_HOLD
                         CANCELLED -> Known.CANCELLED
+                        PAST_DUE -> Known.PAST_DUE
                         else ->
                             throw DodoPaymentsInvalidDataException("Unknown TriggerState: $value")
                     }

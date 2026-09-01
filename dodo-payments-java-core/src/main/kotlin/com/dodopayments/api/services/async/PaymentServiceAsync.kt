@@ -5,6 +5,8 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.payments.ManualRetry
+import com.dodopayments.api.models.payments.ManualRetryState
 import com.dodopayments.api.models.payments.Payment
 import com.dodopayments.api.models.payments.PaymentCreateParams
 import com.dodopayments.api.models.payments.PaymentCreateResponse
@@ -13,6 +15,8 @@ import com.dodopayments.api.models.payments.PaymentListParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsResponse
 import com.dodopayments.api.models.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.payments.PaymentRetrieveRetryStateParams
+import com.dodopayments.api.models.payments.PaymentRetryParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -125,6 +129,73 @@ interface PaymentServiceAsync {
         requestOptions: RequestOptions,
     ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
         retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none(), requestOptions)
+
+    fun retrieveRetryState(paymentId: String): CompletableFuture<ManualRetryState> =
+        retrieveRetryState(paymentId, PaymentRetrieveRetryStateParams.none())
+
+    /** @see retrieveRetryState */
+    fun retrieveRetryState(
+        paymentId: String,
+        params: PaymentRetrieveRetryStateParams = PaymentRetrieveRetryStateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ManualRetryState> =
+        retrieveRetryState(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+    /** @see retrieveRetryState */
+    fun retrieveRetryState(
+        paymentId: String,
+        params: PaymentRetrieveRetryStateParams = PaymentRetrieveRetryStateParams.none(),
+    ): CompletableFuture<ManualRetryState> =
+        retrieveRetryState(paymentId, params, RequestOptions.none())
+
+    /** @see retrieveRetryState */
+    fun retrieveRetryState(
+        params: PaymentRetrieveRetryStateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ManualRetryState>
+
+    /** @see retrieveRetryState */
+    fun retrieveRetryState(
+        params: PaymentRetrieveRetryStateParams
+    ): CompletableFuture<ManualRetryState> = retrieveRetryState(params, RequestOptions.none())
+
+    /** @see retrieveRetryState */
+    fun retrieveRetryState(
+        paymentId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ManualRetryState> =
+        retrieveRetryState(paymentId, PaymentRetrieveRetryStateParams.none(), requestOptions)
+
+    fun retry(paymentId: String): CompletableFuture<ManualRetry> =
+        retry(paymentId, PaymentRetryParams.none())
+
+    /** @see retry */
+    fun retry(
+        paymentId: String,
+        params: PaymentRetryParams = PaymentRetryParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ManualRetry> =
+        retry(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+    /** @see retry */
+    fun retry(
+        paymentId: String,
+        params: PaymentRetryParams = PaymentRetryParams.none(),
+    ): CompletableFuture<ManualRetry> = retry(paymentId, params, RequestOptions.none())
+
+    /** @see retry */
+    fun retry(
+        params: PaymentRetryParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ManualRetry>
+
+    /** @see retry */
+    fun retry(params: PaymentRetryParams): CompletableFuture<ManualRetry> =
+        retry(params, RequestOptions.none())
+
+    /** @see retry */
+    fun retry(paymentId: String, requestOptions: RequestOptions): CompletableFuture<ManualRetry> =
+        retry(paymentId, PaymentRetryParams.none(), requestOptions)
 
     /**
      * A view of [PaymentServiceAsync] that provides access to raw HTTP responses for each method.
@@ -263,5 +334,87 @@ interface PaymentServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<PaymentRetrieveLineItemsResponse>> =
             retrieveLineItems(paymentId, PaymentRetrieveLineItemsParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /payments/{payment_id}/retry`, but is otherwise the
+         * same as [PaymentServiceAsync.retrieveRetryState].
+         */
+        fun retrieveRetryState(
+            paymentId: String
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> =
+            retrieveRetryState(paymentId, PaymentRetrieveRetryStateParams.none())
+
+        /** @see retrieveRetryState */
+        fun retrieveRetryState(
+            paymentId: String,
+            params: PaymentRetrieveRetryStateParams = PaymentRetrieveRetryStateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> =
+            retrieveRetryState(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+        /** @see retrieveRetryState */
+        fun retrieveRetryState(
+            paymentId: String,
+            params: PaymentRetrieveRetryStateParams = PaymentRetrieveRetryStateParams.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> =
+            retrieveRetryState(paymentId, params, RequestOptions.none())
+
+        /** @see retrieveRetryState */
+        fun retrieveRetryState(
+            params: PaymentRetrieveRetryStateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>>
+
+        /** @see retrieveRetryState */
+        fun retrieveRetryState(
+            params: PaymentRetrieveRetryStateParams
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> =
+            retrieveRetryState(params, RequestOptions.none())
+
+        /** @see retrieveRetryState */
+        fun retrieveRetryState(
+            paymentId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> =
+            retrieveRetryState(paymentId, PaymentRetrieveRetryStateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /payments/{payment_id}/retry`, but is otherwise the
+         * same as [PaymentServiceAsync.retry].
+         */
+        fun retry(paymentId: String): CompletableFuture<HttpResponseFor<ManualRetry>> =
+            retry(paymentId, PaymentRetryParams.none())
+
+        /** @see retry */
+        fun retry(
+            paymentId: String,
+            params: PaymentRetryParams = PaymentRetryParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetry>> =
+            retry(params.toBuilder().paymentId(paymentId).build(), requestOptions)
+
+        /** @see retry */
+        fun retry(
+            paymentId: String,
+            params: PaymentRetryParams = PaymentRetryParams.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetry>> =
+            retry(paymentId, params, RequestOptions.none())
+
+        /** @see retry */
+        fun retry(
+            params: PaymentRetryParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ManualRetry>>
+
+        /** @see retry */
+        fun retry(params: PaymentRetryParams): CompletableFuture<HttpResponseFor<ManualRetry>> =
+            retry(params, RequestOptions.none())
+
+        /** @see retry */
+        fun retry(
+            paymentId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ManualRetry>> =
+            retry(paymentId, PaymentRetryParams.none(), requestOptions)
     }
 }
