@@ -26,6 +26,7 @@ internal class BalanceLedgerEntryTest {
                 .afterBalance(0L)
                 .beforeBalance(0L)
                 .description("description")
+                .payoutId("payout_id")
                 .referenceObjectId("reference_object_id")
                 .build()
 
@@ -41,6 +42,7 @@ internal class BalanceLedgerEntryTest {
         assertThat(balanceLedgerEntry.afterBalance()).contains(0L)
         assertThat(balanceLedgerEntry.beforeBalance()).contains(0L)
         assertThat(balanceLedgerEntry.description()).contains("description")
+        assertThat(balanceLedgerEntry.payoutId()).contains("payout_id")
         assertThat(balanceLedgerEntry.referenceObjectId()).contains("reference_object_id")
     }
 
@@ -60,6 +62,7 @@ internal class BalanceLedgerEntryTest {
                 .afterBalance(0L)
                 .beforeBalance(0L)
                 .description("description")
+                .payoutId("payout_id")
                 .referenceObjectId("reference_object_id")
                 .build()
 

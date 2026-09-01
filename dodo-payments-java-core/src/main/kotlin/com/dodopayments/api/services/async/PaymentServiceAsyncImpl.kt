@@ -16,6 +16,8 @@ import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.core.http.json
 import com.dodopayments.api.core.http.parseable
 import com.dodopayments.api.core.prepareAsync
+import com.dodopayments.api.models.payments.ManualRetry
+import com.dodopayments.api.models.payments.ManualRetryState
 import com.dodopayments.api.models.payments.Payment
 import com.dodopayments.api.models.payments.PaymentCreateParams
 import com.dodopayments.api.models.payments.PaymentCreateResponse
@@ -25,6 +27,8 @@ import com.dodopayments.api.models.payments.PaymentListParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsParams
 import com.dodopayments.api.models.payments.PaymentRetrieveLineItemsResponse
 import com.dodopayments.api.models.payments.PaymentRetrieveParams
+import com.dodopayments.api.models.payments.PaymentRetrieveRetryStateParams
+import com.dodopayments.api.models.payments.PaymentRetryParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -69,6 +73,20 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<PaymentRetrieveLineItemsResponse> =
         // get /payments/{payment_id}/line-items
         withRawResponse().retrieveLineItems(params, requestOptions).thenApply { it.parse() }
+
+    override fun retrieveRetryState(
+        params: PaymentRetrieveRetryStateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ManualRetryState> =
+        // get /payments/{payment_id}/retry
+        withRawResponse().retrieveRetryState(params, requestOptions).thenApply { it.parse() }
+
+    override fun retry(
+        params: PaymentRetryParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ManualRetry> =
+        // post /payments/{payment_id}/retry
+        withRawResponse().retry(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         PaymentServiceAsync.WithRawResponse {
@@ -210,6 +228,73 @@ class PaymentServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     errorHandler.handle(response).parseable {
                         response
                             .use { retrieveLineItemsHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retrieveRetryStateHandler: Handler<ManualRetryState> =
+            jsonHandler<ManualRetryState>(clientOptions.jsonMapper)
+
+        override fun retrieveRetryState(
+            params: PaymentRetrieveRetryStateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ManualRetryState>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("paymentId", params.paymentId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("payments", params._pathParam(0), "retry")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retrieveRetryStateHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val retryHandler: Handler<ManualRetry> =
+            jsonHandler<ManualRetry>(clientOptions.jsonMapper)
+
+        override fun retry(
+            params: PaymentRetryParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ManualRetry>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("paymentId", params.paymentId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("payments", params._pathParam(0), "retry")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { retryHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

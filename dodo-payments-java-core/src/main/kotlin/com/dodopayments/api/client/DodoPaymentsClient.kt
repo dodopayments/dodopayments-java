@@ -5,6 +5,7 @@ package com.dodopayments.api.client
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.services.blocking.AddonService
 import com.dodopayments.api.services.blocking.BalanceService
+import com.dodopayments.api.services.blocking.BlocklistService
 import com.dodopayments.api.services.blocking.BrandService
 import com.dodopayments.api.services.blocking.CheckoutSessionService
 import com.dodopayments.api.services.blocking.CreditEntitlementService
@@ -81,6 +82,8 @@ interface DodoPaymentsClient {
 
     fun customers(): CustomerService
 
+    fun blocklist(): BlocklistService
+
     fun refunds(): RefundService
 
     fun disputes(): DisputeService
@@ -155,6 +158,8 @@ interface DodoPaymentsClient {
         fun licenseKeyInstances(): LicenseKeyInstanceService.WithRawResponse
 
         fun customers(): CustomerService.WithRawResponse
+
+        fun blocklist(): BlocklistService.WithRawResponse
 
         fun refunds(): RefundService.WithRawResponse
 
