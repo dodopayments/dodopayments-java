@@ -323,6 +323,7 @@ private constructor(
         private val creditEntitlementCart: JsonField<List<CreditEntitlementCartResponse>>,
         private val currency: JsonField<Currency>,
         private val customer: JsonField<CustomerLimitedDetails>,
+        private val hasPaymentMethod: JsonField<Boolean>,
         private val metadata: JsonField<Metadata>,
         private val meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>>,
         private val meters: JsonField<List<MeterCartResponseItem>>,
@@ -383,6 +384,9 @@ private constructor(
             @JsonProperty("customer")
             @ExcludeMissing
             customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
+            @JsonProperty("has_payment_method")
+            @ExcludeMissing
+            hasPaymentMethod: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -485,6 +489,7 @@ private constructor(
             creditEntitlementCart,
             currency,
             customer,
+            hasPaymentMethod,
             metadata,
             meterCreditEntitlementCart,
             meters,
@@ -530,6 +535,7 @@ private constructor(
                 .creditEntitlementCart(creditEntitlementCart)
                 .currency(currency)
                 .customer(customer)
+                .hasPaymentMethod(hasPaymentMethod)
                 .metadata(metadata)
                 .meterCreditEntitlementCart(meterCreditEntitlementCart)
                 .meters(meters)
@@ -628,6 +634,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun customer(): CustomerLimitedDetails = customer.getRequired("customer")
+
+        /**
+         * Whether a payment method is on file. False while a card-optional subscription waits for
+         * the customer to add one.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun hasPaymentMethod(): Boolean = hasPaymentMethod.getRequired("has_payment_method")
 
         /**
          * Additional custom data associated with the subscription
@@ -979,6 +994,16 @@ private constructor(
         fun _customer(): JsonField<CustomerLimitedDetails> = customer
 
         /**
+         * Returns the raw JSON value of [hasPaymentMethod].
+         *
+         * Unlike [hasPaymentMethod], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("has_payment_method")
+        @ExcludeMissing
+        fun _hasPaymentMethod(): JsonField<Boolean> = hasPaymentMethod
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -1303,6 +1328,7 @@ private constructor(
              * .creditEntitlementCart()
              * .currency()
              * .customer()
+             * .hasPaymentMethod()
              * .metadata()
              * .meterCreditEntitlementCart()
              * .meters()
@@ -1338,6 +1364,7 @@ private constructor(
                 null
             private var currency: JsonField<Currency>? = null
             private var customer: JsonField<CustomerLimitedDetails>? = null
+            private var hasPaymentMethod: JsonField<Boolean>? = null
             private var metadata: JsonField<Metadata>? = null
             private var meterCreditEntitlementCart:
                 JsonField<MutableList<MeterCreditEntitlementCartResponse>>? =
@@ -1384,6 +1411,7 @@ private constructor(
                 creditEntitlementCart = data.creditEntitlementCart.map { it.toMutableList() }
                 currency = data.currency
                 customer = data.customer
+                hasPaymentMethod = data.hasPaymentMethod
                 metadata = data.metadata
                 meterCreditEntitlementCart =
                     data.meterCreditEntitlementCart.map { it.toMutableList() }
@@ -1553,6 +1581,24 @@ private constructor(
              */
             fun customer(customer: JsonField<CustomerLimitedDetails>) = apply {
                 this.customer = customer
+            }
+
+            /**
+             * Whether a payment method is on file. False while a card-optional subscription waits
+             * for the customer to add one.
+             */
+            fun hasPaymentMethod(hasPaymentMethod: Boolean) =
+                hasPaymentMethod(JsonField.of(hasPaymentMethod))
+
+            /**
+             * Sets [Builder.hasPaymentMethod] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.hasPaymentMethod] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun hasPaymentMethod(hasPaymentMethod: JsonField<Boolean>) = apply {
+                this.hasPaymentMethod = hasPaymentMethod
             }
 
             /** Additional custom data associated with the subscription */
@@ -2205,6 +2251,7 @@ private constructor(
              * .creditEntitlementCart()
              * .currency()
              * .customer()
+             * .hasPaymentMethod()
              * .metadata()
              * .meterCreditEntitlementCart()
              * .meters()
@@ -2238,6 +2285,7 @@ private constructor(
                     },
                     checkRequired("currency", currency),
                     checkRequired("customer", customer),
+                    checkRequired("hasPaymentMethod", hasPaymentMethod),
                     checkRequired("metadata", metadata),
                     checkRequired("meterCreditEntitlementCart", meterCreditEntitlementCart).map {
                         it.toImmutable()
@@ -2300,6 +2348,7 @@ private constructor(
             creditEntitlementCart().forEach { it.validate() }
             currency().validate()
             customer().validate()
+            hasPaymentMethod()
             metadata().validate()
             meterCreditEntitlementCart().forEach { it.validate() }
             meters().forEach { it.validate() }
@@ -2360,6 +2409,7 @@ private constructor(
                     ?: 0) +
                 (currency.asKnown().getOrNull()?.validity() ?: 0) +
                 (customer.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (hasPaymentMethod.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (meterCreditEntitlementCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() }
                     ?: 0) +
@@ -2408,6 +2458,7 @@ private constructor(
                 creditEntitlementCart == other.creditEntitlementCart &&
                 currency == other.currency &&
                 customer == other.customer &&
+                hasPaymentMethod == other.hasPaymentMethod &&
                 metadata == other.metadata &&
                 meterCreditEntitlementCart == other.meterCreditEntitlementCart &&
                 meters == other.meters &&
@@ -2453,6 +2504,7 @@ private constructor(
                 creditEntitlementCart,
                 currency,
                 customer,
+                hasPaymentMethod,
                 metadata,
                 meterCreditEntitlementCart,
                 meters,
@@ -2492,7 +2544,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, pastDueEndsAt=$pastDueEndsAt, additionalProperties=$additionalProperties}"
+            "Data{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, hasPaymentMethod=$hasPaymentMethod, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, pastDueEndsAt=$pastDueEndsAt, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
