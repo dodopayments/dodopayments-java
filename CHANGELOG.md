@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.116.0](https://github.com/dodopayments/dodopayments-java/compare/v1.115.0...v1.116.0) (2026-09-10)
+
+
+### Features
+
+* **api:** add customer email logs ([9ceaaff](https://github.com/dodopayments/dodopayments-java/commit/9ceaaff5252fa0c58b3cb3da29cb3b7308fae982))
+* **api:** add customer email logs ([108a58e](https://github.com/dodopayments/dodopayments-java/commit/108a58eea4dfe1c49d1d737eaef0c92f2bbb9225))
+
 ## [1.115.0](https://github.com/dodopayments/dodopayments-java/compare/v1.114.0...v1.115.0) (2026-09-01)
 
 
