@@ -29,6 +29,7 @@ private constructor(
     private val customer: JsonField<CustomerLimitedDetails>,
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
+    private val paymentMethodRequired: JsonField<Boolean>,
     private val recurringPreTaxAmount: JsonField<Int>,
     private val subscriptionId: JsonField<String>,
     private val clientSecret: JsonField<String>,
@@ -51,6 +52,9 @@ private constructor(
         customer: JsonField<CustomerLimitedDetails> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("payment_method_required")
+        @ExcludeMissing
+        paymentMethodRequired: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("recurring_pre_tax_amount")
         @ExcludeMissing
         recurringPreTaxAmount: JsonField<Int> = JsonMissing.of(),
@@ -81,6 +85,7 @@ private constructor(
         customer,
         metadata,
         paymentId,
+        paymentMethodRequired,
         recurringPreTaxAmount,
         subscriptionId,
         clientSecret,
@@ -124,6 +129,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun paymentId(): String = paymentId.getRequired("payment_id")
+
+    /**
+     * False when the customer can start this subscription with no card. True for every other
+     * subscription.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun paymentMethodRequired(): Boolean =
+        paymentMethodRequired.getRequired("payment_method_required")
 
     /**
      * Tax will be added to the amount and charged to the customer on each billing cycle
@@ -233,6 +248,16 @@ private constructor(
     @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
 
     /**
+     * Returns the raw JSON value of [paymentMethodRequired].
+     *
+     * Unlike [paymentMethodRequired], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("payment_method_required")
+    @ExcludeMissing
+    fun _paymentMethodRequired(): JsonField<Boolean> = paymentMethodRequired
+
+    /**
      * Returns the raw JSON value of [recurringPreTaxAmount].
      *
      * Unlike [recurringPreTaxAmount], this method doesn't throw if the JSON field has an unexpected
@@ -337,6 +362,7 @@ private constructor(
          * .customer()
          * .metadata()
          * .paymentId()
+         * .paymentMethodRequired()
          * .recurringPreTaxAmount()
          * .subscriptionId()
          * ```
@@ -351,6 +377,7 @@ private constructor(
         private var customer: JsonField<CustomerLimitedDetails>? = null
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
+        private var paymentMethodRequired: JsonField<Boolean>? = null
         private var recurringPreTaxAmount: JsonField<Int>? = null
         private var subscriptionId: JsonField<String>? = null
         private var clientSecret: JsonField<String> = JsonMissing.of()
@@ -368,6 +395,7 @@ private constructor(
             customer = subscriptionCreateResponse.customer
             metadata = subscriptionCreateResponse.metadata
             paymentId = subscriptionCreateResponse.paymentId
+            paymentMethodRequired = subscriptionCreateResponse.paymentMethodRequired
             recurringPreTaxAmount = subscriptionCreateResponse.recurringPreTaxAmount
             subscriptionId = subscriptionCreateResponse.subscriptionId
             clientSecret = subscriptionCreateResponse.clientSecret
@@ -444,6 +472,24 @@ private constructor(
          * value.
          */
         fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+
+        /**
+         * False when the customer can start this subscription with no card. True for every other
+         * subscription.
+         */
+        fun paymentMethodRequired(paymentMethodRequired: Boolean) =
+            paymentMethodRequired(JsonField.of(paymentMethodRequired))
+
+        /**
+         * Sets [Builder.paymentMethodRequired] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodRequired] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodRequired(paymentMethodRequired: JsonField<Boolean>) = apply {
+            this.paymentMethodRequired = paymentMethodRequired
+        }
 
         /** Tax will be added to the amount and charged to the customer on each billing cycle */
         fun recurringPreTaxAmount(recurringPreTaxAmount: Int) =
@@ -657,6 +703,7 @@ private constructor(
          * .customer()
          * .metadata()
          * .paymentId()
+         * .paymentMethodRequired()
          * .recurringPreTaxAmount()
          * .subscriptionId()
          * ```
@@ -669,6 +716,7 @@ private constructor(
                 checkRequired("customer", customer),
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
+                checkRequired("paymentMethodRequired", paymentMethodRequired),
                 checkRequired("recurringPreTaxAmount", recurringPreTaxAmount),
                 checkRequired("subscriptionId", subscriptionId),
                 clientSecret,
@@ -701,6 +749,7 @@ private constructor(
         customer().validate()
         metadata().validate()
         paymentId()
+        paymentMethodRequired()
         recurringPreTaxAmount()
         subscriptionId()
         clientSecret()
@@ -732,6 +781,7 @@ private constructor(
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
+            (if (paymentMethodRequired.asKnown().isPresent) 1 else 0) +
             (if (recurringPreTaxAmount.asKnown().isPresent) 1 else 0) +
             (if (subscriptionId.asKnown().isPresent) 1 else 0) +
             (if (clientSecret.asKnown().isPresent) 1 else 0) +
@@ -957,6 +1007,7 @@ private constructor(
             customer == other.customer &&
             metadata == other.metadata &&
             paymentId == other.paymentId &&
+            paymentMethodRequired == other.paymentMethodRequired &&
             recurringPreTaxAmount == other.recurringPreTaxAmount &&
             subscriptionId == other.subscriptionId &&
             clientSecret == other.clientSecret &&
@@ -975,6 +1026,7 @@ private constructor(
             customer,
             metadata,
             paymentId,
+            paymentMethodRequired,
             recurringPreTaxAmount,
             subscriptionId,
             clientSecret,
@@ -991,5 +1043,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, discountIds=$discountIds, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, trialAmount=$trialAmount, additionalProperties=$additionalProperties}"
+        "SubscriptionCreateResponse{addons=$addons, customer=$customer, metadata=$metadata, paymentId=$paymentId, paymentMethodRequired=$paymentMethodRequired, recurringPreTaxAmount=$recurringPreTaxAmount, subscriptionId=$subscriptionId, clientSecret=$clientSecret, discountId=$discountId, discountIds=$discountIds, expiresOn=$expiresOn, oneTimeProductCart=$oneTimeProductCart, paymentLink=$paymentLink, trialAmount=$trialAmount, additionalProperties=$additionalProperties}"
 }

@@ -22,6 +22,7 @@ import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsParam
 import com.dodopayments.api.models.customers.CustomerRetrievePaymentMethodsResponse
 import com.dodopayments.api.models.customers.CustomerUpdateParams
 import com.dodopayments.api.services.async.customers.CustomerPortalServiceAsync
+import com.dodopayments.api.services.async.customers.EmailServiceAsync
 import com.dodopayments.api.services.async.customers.WalletServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -43,6 +44,8 @@ interface CustomerServiceAsync {
     fun customerPortal(): CustomerPortalServiceAsync
 
     fun wallets(): WalletServiceAsync
+
+    fun emails(): EmailServiceAsync
 
     fun create(params: CustomerCreateParams): CompletableFuture<Customer> =
         create(params, RequestOptions.none())
@@ -345,6 +348,8 @@ interface CustomerServiceAsync {
         fun customerPortal(): CustomerPortalServiceAsync.WithRawResponse
 
         fun wallets(): WalletServiceAsync.WithRawResponse
+
+        fun emails(): EmailServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /customers`, but is otherwise the same as

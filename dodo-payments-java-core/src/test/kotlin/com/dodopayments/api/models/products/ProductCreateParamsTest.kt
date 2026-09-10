@@ -22,8 +22,9 @@ internal class ProductCreateParamsTest {
             .price(
                 Price.OneTimePrice.builder()
                     .currency(Currency.AED)
-                    .discount(0L)
                     .price(0)
+                    .discount(0L)
+                    .discountBps(0)
                     .payWhatYouWant(true)
                     .purchasingPowerParity(true)
                     .suggestedPrice(0)
@@ -85,8 +86,9 @@ internal class ProductCreateParamsTest {
                 .price(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
-                        .discount(0L)
                         .price(0)
+                        .discount(0L)
+                        .discountBps(0)
                         .payWhatYouWant(true)
                         .purchasingPowerParity(true)
                         .suggestedPrice(0)
@@ -149,8 +151,9 @@ internal class ProductCreateParamsTest {
                 Price.ofOneTime(
                     Price.OneTimePrice.builder()
                         .currency(Currency.AED)
-                        .discount(0L)
                         .price(0)
+                        .discount(0L)
+                        .discountBps(0)
                         .payWhatYouWant(true)
                         .purchasingPowerParity(true)
                         .suggestedPrice(0)
@@ -212,13 +215,7 @@ internal class ProductCreateParamsTest {
         val params =
             ProductCreateParams.builder()
                 .name("name")
-                .price(
-                    Price.OneTimePrice.builder()
-                        .currency(Currency.AED)
-                        .discount(0L)
-                        .price(0)
-                        .build()
-                )
+                .price(Price.OneTimePrice.builder().currency(Currency.AED).price(0).build())
                 .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
                 .build()
 
@@ -228,11 +225,7 @@ internal class ProductCreateParamsTest {
         assertThat(body.price())
             .isEqualTo(
                 Price.ofOneTime(
-                    Price.OneTimePrice.builder()
-                        .currency(Currency.AED)
-                        .discount(0L)
-                        .price(0)
-                        .build()
+                    Price.OneTimePrice.builder().currency(Currency.AED).price(0).build()
                 )
             )
         assertThat(body.taxCategory()).isEqualTo(TaxCategory.DIGITAL_PRODUCTS)
