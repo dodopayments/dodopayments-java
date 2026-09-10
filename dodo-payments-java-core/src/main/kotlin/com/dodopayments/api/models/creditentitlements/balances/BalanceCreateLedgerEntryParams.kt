@@ -39,6 +39,7 @@ import kotlin.jvm.optionals.getOrNull
  * - `reason` - Optional human-readable reason
  * - `expires_at` - Optional expiration for credited amount (only for credit type)
  * - `idempotency_key` - Optional key to prevent duplicate entries
+ * - `metadata` - Optional key-value pairs
  *
  * # Responses
  * - `201 Created` - Ledger entry created successfully
@@ -95,7 +96,7 @@ private constructor(
     fun idempotencyKey(): Optional<String> = body.idempotencyKey()
 
     /**
-     * Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars)
+     * Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars).
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -279,7 +280,7 @@ private constructor(
             body.idempotencyKey(idempotencyKey)
         }
 
-        /** Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars) */
+        /** Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars). */
         fun metadata(metadata: Metadata?) = apply { body.metadata(metadata) }
 
         /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
@@ -528,7 +529,7 @@ private constructor(
         fun idempotencyKey(): Optional<String> = idempotencyKey.getOptional("idempotency_key")
 
         /**
-         * Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars)
+         * Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars).
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -706,7 +707,9 @@ private constructor(
                 this.idempotencyKey = idempotencyKey
             }
 
-            /** Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars) */
+            /**
+             * Optional metadata (max 50 key-value pairs, key max 40 chars, value max 500 chars).
+             */
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
             /** Alias for calling [Builder.metadata] with `metadata.orElse(null)`. */
