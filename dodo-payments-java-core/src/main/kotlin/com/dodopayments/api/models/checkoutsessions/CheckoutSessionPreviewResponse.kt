@@ -31,6 +31,7 @@ private constructor(
     private val currency: JsonField<Currency>,
     private val currentBreakup: JsonField<CurrentBreakup>,
     private val isByop: JsonField<Boolean>,
+    private val paymentMethodRequired: JsonField<Boolean>,
     private val productCart: JsonField<List<ProductCart>>,
     private val totalPrice: JsonField<Int>,
     private val nextBillingDate: JsonField<OffsetDateTime>,
@@ -54,6 +55,9 @@ private constructor(
         @ExcludeMissing
         currentBreakup: JsonField<CurrentBreakup> = JsonMissing.of(),
         @JsonProperty("is_byop") @ExcludeMissing isByop: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("payment_method_required")
+        @ExcludeMissing
+        paymentMethodRequired: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("product_cart")
         @ExcludeMissing
         productCart: JsonField<List<ProductCart>> = JsonMissing.of(),
@@ -85,6 +89,7 @@ private constructor(
         currency,
         currentBreakup,
         isByop,
+        paymentMethodRequired,
         productCart,
         totalPrice,
         nextBillingDate,
@@ -131,6 +136,16 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun isByop(): Boolean = isByop.getRequired("is_byop")
+
+    /**
+     * False when the customer can confirm this session with no card. True for every other cart,
+     * including a one-time cart.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun paymentMethodRequired(): Boolean =
+        paymentMethodRequired.getRequired("payment_method_required")
 
     /**
      * The total product cart
@@ -254,6 +269,16 @@ private constructor(
     @JsonProperty("is_byop") @ExcludeMissing fun _isByop(): JsonField<Boolean> = isByop
 
     /**
+     * Returns the raw JSON value of [paymentMethodRequired].
+     *
+     * Unlike [paymentMethodRequired], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("payment_method_required")
+    @ExcludeMissing
+    fun _paymentMethodRequired(): JsonField<Boolean> = paymentMethodRequired
+
+    /**
      * Returns the raw JSON value of [productCart].
      *
      * Unlike [productCart], this method doesn't throw if the JSON field has an unexpected type.
@@ -363,6 +388,7 @@ private constructor(
          * .currency()
          * .currentBreakup()
          * .isByop()
+         * .paymentMethodRequired()
          * .productCart()
          * .totalPrice()
          * ```
@@ -377,6 +403,7 @@ private constructor(
         private var currency: JsonField<Currency>? = null
         private var currentBreakup: JsonField<CurrentBreakup>? = null
         private var isByop: JsonField<Boolean>? = null
+        private var paymentMethodRequired: JsonField<Boolean>? = null
         private var productCart: JsonField<MutableList<ProductCart>>? = null
         private var totalPrice: JsonField<Int>? = null
         private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
@@ -395,6 +422,7 @@ private constructor(
             currency = checkoutSessionPreviewResponse.currency
             currentBreakup = checkoutSessionPreviewResponse.currentBreakup
             isByop = checkoutSessionPreviewResponse.isByop
+            paymentMethodRequired = checkoutSessionPreviewResponse.paymentMethodRequired
             productCart = checkoutSessionPreviewResponse.productCart.map { it.toMutableList() }
             totalPrice = checkoutSessionPreviewResponse.totalPrice
             nextBillingDate = checkoutSessionPreviewResponse.nextBillingDate
@@ -465,6 +493,24 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun isByop(isByop: JsonField<Boolean>) = apply { this.isByop = isByop }
+
+        /**
+         * False when the customer can confirm this session with no card. True for every other cart,
+         * including a one-time cart.
+         */
+        fun paymentMethodRequired(paymentMethodRequired: Boolean) =
+            paymentMethodRequired(JsonField.of(paymentMethodRequired))
+
+        /**
+         * Sets [Builder.paymentMethodRequired] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodRequired] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodRequired(paymentMethodRequired: JsonField<Boolean>) = apply {
+            this.paymentMethodRequired = paymentMethodRequired
+        }
 
         /** The total product cart */
         fun productCart(productCart: List<ProductCart>) = productCart(JsonField.of(productCart))
@@ -704,6 +750,7 @@ private constructor(
          * .currency()
          * .currentBreakup()
          * .isByop()
+         * .paymentMethodRequired()
          * .productCart()
          * .totalPrice()
          * ```
@@ -716,6 +763,7 @@ private constructor(
                 checkRequired("currency", currency),
                 checkRequired("currentBreakup", currentBreakup),
                 checkRequired("isByop", isByop),
+                checkRequired("paymentMethodRequired", paymentMethodRequired),
                 checkRequired("productCart", productCart).map { it.toImmutable() },
                 checkRequired("totalPrice", totalPrice),
                 nextBillingDate,
@@ -749,6 +797,7 @@ private constructor(
         currency().validate()
         currentBreakup().validate()
         isByop()
+        paymentMethodRequired()
         productCart().forEach { it.validate() }
         totalPrice()
         nextBillingDate()
@@ -781,6 +830,7 @@ private constructor(
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (currentBreakup.asKnown().getOrNull()?.validity() ?: 0) +
             (if (isByop.asKnown().isPresent) 1 else 0) +
+            (if (paymentMethodRequired.asKnown().isPresent) 1 else 0) +
             (productCart.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (totalPrice.asKnown().isPresent) 1 else 0) +
             (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
@@ -3898,6 +3948,7 @@ private constructor(
             currency == other.currency &&
             currentBreakup == other.currentBreakup &&
             isByop == other.isByop &&
+            paymentMethodRequired == other.paymentMethodRequired &&
             productCart == other.productCart &&
             totalPrice == other.totalPrice &&
             nextBillingDate == other.nextBillingDate &&
@@ -3917,6 +3968,7 @@ private constructor(
             currency,
             currentBreakup,
             isByop,
+            paymentMethodRequired,
             productCart,
             totalPrice,
             nextBillingDate,
@@ -3934,5 +3986,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, isByop=$isByop, productCart=$productCart, totalPrice=$totalPrice, nextBillingDate=$nextBillingDate, recurringBreakup=$recurringBreakup, taxIdBusinessName=$taxIdBusinessName, taxIdErrMsg=$taxIdErrMsg, taxIdFormatName=$taxIdFormatName, totalTax=$totalTax, trialAmount=$trialAmount, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, isByop=$isByop, paymentMethodRequired=$paymentMethodRequired, productCart=$productCart, totalPrice=$totalPrice, nextBillingDate=$nextBillingDate, recurringBreakup=$recurringBreakup, taxIdBusinessName=$taxIdBusinessName, taxIdErrMsg=$taxIdErrMsg, taxIdFormatName=$taxIdFormatName, totalTax=$totalTax, trialAmount=$trialAmount, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
 }
