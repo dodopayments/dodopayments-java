@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.117.0](https://github.com/dodopayments/dodopayments-java/compare/v1.116.0...v1.117.0) (2026-09-18)
+
+
+### Features
+
+* **api:** tax id checkout flag, ledger event types, email policy fields ([d828c84](https://github.com/dodopayments/dodopayments-java/commit/d828c84a7fb414182d3eab225e03d1ba5866a73e))
+* **api:** tax id checkout flag, ledger event types, email policy fields ([91ebe6a](https://github.com/dodopayments/dodopayments-java/commit/91ebe6a23be57bea121fc4e6d359cbd2149d391c))
+
+
+### Chores
+
+* add Dependabot config for GitHub Actions ([804ca71](https://github.com/dodopayments/dodopayments-java/commit/804ca713ae479fe02a7a0e95dc31515dd469b4ea))
+
 ## [1.116.0](https://github.com/dodopayments/dodopayments-java/compare/v1.115.0...v1.116.0) (2026-09-10)
 
 
