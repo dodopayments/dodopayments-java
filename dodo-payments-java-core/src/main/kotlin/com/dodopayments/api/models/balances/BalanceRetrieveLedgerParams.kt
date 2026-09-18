@@ -1370,6 +1370,14 @@ private constructor(
 
             @JvmField val ETHOCA_FEES_REVERSAL = of("ethoca_fees_reversal")
 
+            @JvmField val VISA_RDR_FEE = of("visa_rdr_fee")
+
+            @JvmField val DISPUTE_FEES_REVERSAL = of("dispute_fees_reversal")
+
+            @JvmField val DEFLECTION_FEES = of("deflection_fees")
+
+            @JvmField val DEFLECTION_FEES_REVERSAL = of("deflection_fees_reversal")
+
             @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
         }
 
@@ -1399,6 +1407,10 @@ private constructor(
             BYOP_FEE,
             ETHOCA_FEES,
             ETHOCA_FEES_REVERSAL,
+            VISA_RDR_FEE,
+            DISPUTE_FEES_REVERSAL,
+            DEFLECTION_FEES,
+            DEFLECTION_FEES_REVERSAL,
         }
 
         /**
@@ -1435,6 +1447,10 @@ private constructor(
             BYOP_FEE,
             ETHOCA_FEES,
             ETHOCA_FEES_REVERSAL,
+            VISA_RDR_FEE,
+            DISPUTE_FEES_REVERSAL,
+            DEFLECTION_FEES,
+            DEFLECTION_FEES_REVERSAL,
             /**
              * An enum member indicating that [EventType] was instantiated with an unknown value.
              */
@@ -1474,6 +1490,10 @@ private constructor(
                 BYOP_FEE -> Value.BYOP_FEE
                 ETHOCA_FEES -> Value.ETHOCA_FEES
                 ETHOCA_FEES_REVERSAL -> Value.ETHOCA_FEES_REVERSAL
+                VISA_RDR_FEE -> Value.VISA_RDR_FEE
+                DISPUTE_FEES_REVERSAL -> Value.DISPUTE_FEES_REVERSAL
+                DEFLECTION_FEES -> Value.DEFLECTION_FEES
+                DEFLECTION_FEES_REVERSAL -> Value.DEFLECTION_FEES_REVERSAL
                 else -> Value._UNKNOWN
             }
 
@@ -1512,6 +1532,10 @@ private constructor(
                 BYOP_FEE -> Known.BYOP_FEE
                 ETHOCA_FEES -> Known.ETHOCA_FEES
                 ETHOCA_FEES_REVERSAL -> Known.ETHOCA_FEES_REVERSAL
+                VISA_RDR_FEE -> Known.VISA_RDR_FEE
+                DISPUTE_FEES_REVERSAL -> Known.DISPUTE_FEES_REVERSAL
+                DEFLECTION_FEES -> Known.DEFLECTION_FEES
+                DEFLECTION_FEES_REVERSAL -> Known.DEFLECTION_FEES_REVERSAL
                 else -> throw DodoPaymentsInvalidDataException("Unknown EventType: $value")
             }
 
