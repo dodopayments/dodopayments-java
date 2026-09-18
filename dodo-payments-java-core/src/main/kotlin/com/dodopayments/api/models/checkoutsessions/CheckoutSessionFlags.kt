@@ -35,6 +35,7 @@ private constructor(
     private val alwaysCreateNewCustomer: JsonField<Boolean>,
     private val redirectImmediately: JsonField<Boolean>,
     private val requirePhoneNumber: JsonField<Boolean>,
+    private val requireTaxId: JsonField<Boolean>,
     private val singlePage: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -92,6 +93,9 @@ private constructor(
         @JsonProperty("require_phone_number")
         @ExcludeMissing
         requirePhoneNumber: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("require_tax_id")
+        @ExcludeMissing
+        requireTaxId: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("single_page")
         @ExcludeMissing
         singlePage: JsonField<Boolean> = JsonMissing.of(),
@@ -113,6 +117,7 @@ private constructor(
         alwaysCreateNewCustomer,
         redirectImmediately,
         requirePhoneNumber,
+        requireTaxId,
         singlePage,
         mutableMapOf(),
     )
@@ -275,6 +280,22 @@ private constructor(
      */
     fun requirePhoneNumber(): Optional<Boolean> =
         requirePhoneNumber.getOptional("require_phone_number")
+
+    /**
+     * If true, the customer must give a tax id to check out as a business. A tax id is the GST
+     * number in India, or the VAT number in the EU. You must also set `allow_tax_id` to true.
+     *
+     * On the checkout page, this field does not change checkout for a customer who buys as an
+     * individual.
+     *
+     * A `confirm: true` request skips the checkout page. The request must contain `tax_id`.
+     *
+     * Default is false
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun requireTaxId(): Optional<Boolean> = requireTaxId.getOptional("require_tax_id")
 
     /**
      * If true, the session uses the single-page checkout flow: the page initializes the payment at
@@ -455,6 +476,15 @@ private constructor(
     fun _requirePhoneNumber(): JsonField<Boolean> = requirePhoneNumber
 
     /**
+     * Returns the raw JSON value of [requireTaxId].
+     *
+     * Unlike [requireTaxId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("require_tax_id")
+    @ExcludeMissing
+    fun _requireTaxId(): JsonField<Boolean> = requireTaxId
+
+    /**
      * Returns the raw JSON value of [singlePage].
      *
      * Unlike [singlePage], this method doesn't throw if the JSON field has an unexpected type.
@@ -499,6 +529,7 @@ private constructor(
         private var alwaysCreateNewCustomer: JsonField<Boolean> = JsonMissing.of()
         private var redirectImmediately: JsonField<Boolean> = JsonMissing.of()
         private var requirePhoneNumber: JsonField<Boolean> = JsonMissing.of()
+        private var requireTaxId: JsonField<Boolean> = JsonMissing.of()
         private var singlePage: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -521,6 +552,7 @@ private constructor(
             alwaysCreateNewCustomer = checkoutSessionFlags.alwaysCreateNewCustomer
             redirectImmediately = checkoutSessionFlags.redirectImmediately
             requirePhoneNumber = checkoutSessionFlags.requirePhoneNumber
+            requireTaxId = checkoutSessionFlags.requireTaxId
             singlePage = checkoutSessionFlags.singlePage
             additionalProperties = checkoutSessionFlags.additionalProperties.toMutableMap()
         }
@@ -812,6 +844,30 @@ private constructor(
         }
 
         /**
+         * If true, the customer must give a tax id to check out as a business. A tax id is the GST
+         * number in India, or the VAT number in the EU. You must also set `allow_tax_id` to true.
+         *
+         * On the checkout page, this field does not change checkout for a customer who buys as an
+         * individual.
+         *
+         * A `confirm: true` request skips the checkout page. The request must contain `tax_id`.
+         *
+         * Default is false
+         */
+        fun requireTaxId(requireTaxId: Boolean) = requireTaxId(JsonField.of(requireTaxId))
+
+        /**
+         * Sets [Builder.requireTaxId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.requireTaxId] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun requireTaxId(requireTaxId: JsonField<Boolean>) = apply {
+            this.requireTaxId = requireTaxId
+        }
+
+        /**
          * If true, the session uses the single-page checkout flow: the page initializes the payment
          * at load time and confirms it in place, with no separate payment page.
          *
@@ -871,6 +927,7 @@ private constructor(
                 alwaysCreateNewCustomer,
                 redirectImmediately,
                 requirePhoneNumber,
+                requireTaxId,
                 singlePage,
                 additionalProperties.toMutableMap(),
             )
@@ -908,6 +965,7 @@ private constructor(
         alwaysCreateNewCustomer()
         redirectImmediately()
         requirePhoneNumber()
+        requireTaxId()
         singlePage()
         validated = true
     }
@@ -944,6 +1002,7 @@ private constructor(
             (if (alwaysCreateNewCustomer.asKnown().isPresent) 1 else 0) +
             (if (redirectImmediately.asKnown().isPresent) 1 else 0) +
             (if (requirePhoneNumber.asKnown().isPresent) 1 else 0) +
+            (if (requireTaxId.asKnown().isPresent) 1 else 0) +
             (if (singlePage.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -969,6 +1028,7 @@ private constructor(
             alwaysCreateNewCustomer == other.alwaysCreateNewCustomer &&
             redirectImmediately == other.redirectImmediately &&
             requirePhoneNumber == other.requirePhoneNumber &&
+            requireTaxId == other.requireTaxId &&
             singlePage == other.singlePage &&
             additionalProperties == other.additionalProperties
     }
@@ -992,6 +1052,7 @@ private constructor(
             alwaysCreateNewCustomer,
             redirectImmediately,
             requirePhoneNumber,
+            requireTaxId,
             singlePage,
             additionalProperties,
         )
@@ -1000,5 +1061,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowEditingAddons=$allowEditingAddons, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, singlePage=$singlePage, additionalProperties=$additionalProperties}"
+        "CheckoutSessionFlags{allowCurrencySelection=$allowCurrencySelection, allowCustomerEditingBusinessName=$allowCustomerEditingBusinessName, allowCustomerEditingCity=$allowCustomerEditingCity, allowCustomerEditingCountry=$allowCustomerEditingCountry, allowCustomerEditingEmail=$allowCustomerEditingEmail, allowCustomerEditingName=$allowCustomerEditingName, allowCustomerEditingState=$allowCustomerEditingState, allowCustomerEditingStreet=$allowCustomerEditingStreet, allowCustomerEditingTaxId=$allowCustomerEditingTaxId, allowCustomerEditingZipcode=$allowCustomerEditingZipcode, allowDiscountCode=$allowDiscountCode, allowEditingAddons=$allowEditingAddons, allowPhoneNumberCollection=$allowPhoneNumberCollection, allowTaxId=$allowTaxId, alwaysCreateNewCustomer=$alwaysCreateNewCustomer, redirectImmediately=$redirectImmediately, requirePhoneNumber=$requirePhoneNumber, requireTaxId=$requireTaxId, singlePage=$singlePage, additionalProperties=$additionalProperties}"
 }
