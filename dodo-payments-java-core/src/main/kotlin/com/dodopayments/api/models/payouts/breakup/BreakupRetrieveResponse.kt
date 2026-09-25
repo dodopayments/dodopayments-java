@@ -20,7 +20,6 @@ import java.util.Objects
  *
  * The rows sum to the payout amount. The last row can be `unattributed`, which is not a ledger
  * event type. It holds the payout amount less the entries that fund it, and it takes either sign:
- *
  * - Positive: the entries come to less than the payout, so the payout drew on the balance an
  *   earlier cycle left over. A cycle of refunds and disputes produces a large positive value.
  * - Negative: the entries come to more than the payout, and the remainder funds a later payout.

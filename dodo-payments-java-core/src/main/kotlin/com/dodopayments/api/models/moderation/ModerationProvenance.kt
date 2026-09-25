@@ -42,11 +42,9 @@ class ModerationProvenance @JsonCreator private constructor(private val value: J
      * An enum containing [ModerationProvenance]'s known values, as well as an [_UNKNOWN] member.
      *
      * An instance of [ModerationProvenance] can contain an unknown value in a couple of cases:
-     *
      * - It was deserialized from data that doesn't match any known member. For example, if the SDK
      *   is on an older version than the API, then the API may respond with new members that the SDK
      *   is unaware of.
-     *
      * - It was constructed with an arbitrary value using the [of] method.
      */
     enum class Value {
