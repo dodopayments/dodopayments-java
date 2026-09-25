@@ -8,6 +8,7 @@ import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -92,6 +93,17 @@ internal class CheckoutSessionPreviewResponseTest {
                         .subtotal(0)
                         .totalAmount(0)
                         .tax(0)
+                        .build()
+                )
+                .addSubscription(
+                    CheckoutSessionPreviewResponse.Subscription.builder()
+                        .amountDueNow(0)
+                        .productId("product_id")
+                        .recurringAmount(0)
+                        .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recurringTax(0)
+                        .taxDueNow(0)
+                        .trialPeriodDays(0)
                         .build()
                 )
                 .taxIdBusinessName("tax_id_business_name")
@@ -183,6 +195,18 @@ internal class CheckoutSessionPreviewResponseTest {
                     .tax(0)
                     .build()
             )
+        assertThat(checkoutSessionPreviewResponse.subscriptions().getOrNull())
+            .containsExactly(
+                CheckoutSessionPreviewResponse.Subscription.builder()
+                    .amountDueNow(0)
+                    .productId("product_id")
+                    .recurringAmount(0)
+                    .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .recurringTax(0)
+                    .taxDueNow(0)
+                    .trialPeriodDays(0)
+                    .build()
+            )
         assertThat(checkoutSessionPreviewResponse.taxIdBusinessName())
             .contains("tax_id_business_name")
         assertThat(checkoutSessionPreviewResponse.taxIdErrMsg()).contains("tax_id_err_msg")
@@ -272,6 +296,17 @@ internal class CheckoutSessionPreviewResponseTest {
                         .subtotal(0)
                         .totalAmount(0)
                         .tax(0)
+                        .build()
+                )
+                .addSubscription(
+                    CheckoutSessionPreviewResponse.Subscription.builder()
+                        .amountDueNow(0)
+                        .productId("product_id")
+                        .recurringAmount(0)
+                        .nextBillingDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recurringTax(0)
+                        .taxDueNow(0)
+                        .trialPeriodDays(0)
                         .build()
                 )
                 .taxIdBusinessName("tax_id_business_name")
