@@ -773,9 +773,11 @@ private constructor(
          * An enum containing [Currency]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Currency] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1378,6 +1380,12 @@ private constructor(
 
             @JvmField val DEFLECTION_FEES_REVERSAL = of("deflection_fees_reversal")
 
+            @JvmField val RESERVE_HOLD = of("reserve_hold")
+
+            @JvmField val RESERVE_RELEASE = of("reserve_release")
+
+            @JvmField val MODERATION_FEES = of("moderation_fees")
+
             @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
         }
 
@@ -1411,15 +1419,20 @@ private constructor(
             DISPUTE_FEES_REVERSAL,
             DEFLECTION_FEES,
             DEFLECTION_FEES_REVERSAL,
+            RESERVE_HOLD,
+            RESERVE_RELEASE,
+            MODERATION_FEES,
         }
 
         /**
          * An enum containing [EventType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [EventType] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1451,6 +1464,9 @@ private constructor(
             DISPUTE_FEES_REVERSAL,
             DEFLECTION_FEES,
             DEFLECTION_FEES_REVERSAL,
+            RESERVE_HOLD,
+            RESERVE_RELEASE,
+            MODERATION_FEES,
             /**
              * An enum member indicating that [EventType] was instantiated with an unknown value.
              */
@@ -1494,6 +1510,9 @@ private constructor(
                 DISPUTE_FEES_REVERSAL -> Value.DISPUTE_FEES_REVERSAL
                 DEFLECTION_FEES -> Value.DEFLECTION_FEES
                 DEFLECTION_FEES_REVERSAL -> Value.DEFLECTION_FEES_REVERSAL
+                RESERVE_HOLD -> Value.RESERVE_HOLD
+                RESERVE_RELEASE -> Value.RESERVE_RELEASE
+                MODERATION_FEES -> Value.MODERATION_FEES
                 else -> Value._UNKNOWN
             }
 
@@ -1536,6 +1555,9 @@ private constructor(
                 DISPUTE_FEES_REVERSAL -> Known.DISPUTE_FEES_REVERSAL
                 DEFLECTION_FEES -> Known.DEFLECTION_FEES
                 DEFLECTION_FEES_REVERSAL -> Known.DEFLECTION_FEES_REVERSAL
+                RESERVE_HOLD -> Known.RESERVE_HOLD
+                RESERVE_RELEASE -> Known.RESERVE_RELEASE
+                MODERATION_FEES -> Known.MODERATION_FEES
                 else -> throw DodoPaymentsInvalidDataException("Unknown EventType: $value")
             }
 

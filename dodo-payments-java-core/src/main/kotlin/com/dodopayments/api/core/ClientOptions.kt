@@ -136,6 +136,7 @@ private constructor(
      * Defaults to the live_mode environment: `https://live.dodopayments.com`.
      *
      * The following other environments, with dedicated builder methods, are available:
+     *
      * - test_mode: `https://test.dodopayments.com`
      */
     fun baseUrl(): String = baseUrl ?: LIVE_MODE_URL
@@ -277,6 +278,7 @@ private constructor(
          * Defaults to the live_mode environment: `https://live.dodopayments.com`.
          *
          * The following other environments, with dedicated builder methods, are available:
+         *
          * - test_mode: `https://test.dodopayments.com`
          */
         fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
