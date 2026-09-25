@@ -36,6 +36,7 @@ private constructor(
     private val totalPrice: JsonField<Int>,
     private val nextBillingDate: JsonField<OffsetDateTime>,
     private val recurringBreakup: JsonField<RecurringBreakup>,
+    private val subscriptions: JsonField<List<Subscription>>,
     private val taxIdBusinessName: JsonField<String>,
     private val taxIdErrMsg: JsonField<String>,
     private val taxIdFormatName: JsonField<String>,
@@ -68,6 +69,9 @@ private constructor(
         @JsonProperty("recurring_breakup")
         @ExcludeMissing
         recurringBreakup: JsonField<RecurringBreakup> = JsonMissing.of(),
+        @JsonProperty("subscriptions")
+        @ExcludeMissing
+        subscriptions: JsonField<List<Subscription>> = JsonMissing.of(),
         @JsonProperty("tax_id_business_name")
         @ExcludeMissing
         taxIdBusinessName: JsonField<String> = JsonMissing.of(),
@@ -94,6 +98,7 @@ private constructor(
         totalPrice,
         nextBillingDate,
         recurringBreakup,
+        subscriptions,
         taxIdBusinessName,
         taxIdErrMsg,
         taxIdFormatName,
@@ -167,7 +172,8 @@ private constructor(
      * The upcoming billing date for subscriptions, computed relative to now: with a trial it is
      * `now + trial_period_days`, otherwise `now + payment frequency`. `None` for one-time-only
      * carts. This is a preview estimate; the authoritative value is set when the subscription
-     * activates.
+     * activates. For a cart of more than one subscription, this is the earliest date of the cart.
+     * `subscriptions` gives the date of each subscription.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -183,6 +189,15 @@ private constructor(
      */
     fun recurringBreakup(): Optional<RecurringBreakup> =
         recurringBreakup.getOptional("recurring_breakup")
+
+    /**
+     * One entry for each subscription of a cart that holds more than one. Each subscription renews
+     * on its own schedule, so the checkout shows each one here.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun subscriptions(): Optional<List<Subscription>> = subscriptions.getOptional("subscriptions")
 
     /**
      * Registered business name from the official registry (EU/GB/AU) when found
@@ -220,7 +235,7 @@ private constructor(
     /**
      * Per-unit trial amount after discounts, in the price currency's minor units (pre-quantity,
      * pre-tax; see `current_breakup` for the taxed total due today). Only present for a paid trial;
-     * `None` for a free trial or no trial.
+     * `None` for a free trial or no trial. Always `None` for a cart of more than one subscription.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -229,7 +244,8 @@ private constructor(
 
     /**
      * Effective trial duration in days for the subscription line, when there's a trial (free or
-     * paid). `None` if no subscription or no trial.
+     * paid). `None` if no subscription or no trial. Always `None` for a cart of more than one
+     * subscription. Read the trial of each subscription from `subscriptions`.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
@@ -312,6 +328,15 @@ private constructor(
     @JsonProperty("recurring_breakup")
     @ExcludeMissing
     fun _recurringBreakup(): JsonField<RecurringBreakup> = recurringBreakup
+
+    /**
+     * Returns the raw JSON value of [subscriptions].
+     *
+     * Unlike [subscriptions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("subscriptions")
+    @ExcludeMissing
+    fun _subscriptions(): JsonField<List<Subscription>> = subscriptions
 
     /**
      * Returns the raw JSON value of [taxIdBusinessName].
@@ -408,6 +433,7 @@ private constructor(
         private var totalPrice: JsonField<Int>? = null
         private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
         private var recurringBreakup: JsonField<RecurringBreakup> = JsonMissing.of()
+        private var subscriptions: JsonField<MutableList<Subscription>>? = null
         private var taxIdBusinessName: JsonField<String> = JsonMissing.of()
         private var taxIdErrMsg: JsonField<String> = JsonMissing.of()
         private var taxIdFormatName: JsonField<String> = JsonMissing.of()
@@ -427,6 +453,7 @@ private constructor(
             totalPrice = checkoutSessionPreviewResponse.totalPrice
             nextBillingDate = checkoutSessionPreviewResponse.nextBillingDate
             recurringBreakup = checkoutSessionPreviewResponse.recurringBreakup
+            subscriptions = checkoutSessionPreviewResponse.subscriptions.map { it.toMutableList() }
             taxIdBusinessName = checkoutSessionPreviewResponse.taxIdBusinessName
             taxIdErrMsg = checkoutSessionPreviewResponse.taxIdErrMsg
             taxIdFormatName = checkoutSessionPreviewResponse.taxIdFormatName
@@ -553,7 +580,8 @@ private constructor(
          * The upcoming billing date for subscriptions, computed relative to now: with a trial it is
          * `now + trial_period_days`, otherwise `now + payment frequency`. `None` for one-time-only
          * carts. This is a preview estimate; the authoritative value is set when the subscription
-         * activates.
+         * activates. For a cart of more than one subscription, this is the earliest date of the
+         * cart. `subscriptions` gives the date of each subscription.
          */
         fun nextBillingDate(nextBillingDate: OffsetDateTime?) =
             nextBillingDate(JsonField.ofNullable(nextBillingDate))
@@ -590,6 +618,40 @@ private constructor(
          */
         fun recurringBreakup(recurringBreakup: JsonField<RecurringBreakup>) = apply {
             this.recurringBreakup = recurringBreakup
+        }
+
+        /**
+         * One entry for each subscription of a cart that holds more than one. Each subscription
+         * renews on its own schedule, so the checkout shows each one here.
+         */
+        fun subscriptions(subscriptions: List<Subscription>?) =
+            subscriptions(JsonField.ofNullable(subscriptions))
+
+        /** Alias for calling [Builder.subscriptions] with `subscriptions.orElse(null)`. */
+        fun subscriptions(subscriptions: Optional<List<Subscription>>) =
+            subscriptions(subscriptions.getOrNull())
+
+        /**
+         * Sets [Builder.subscriptions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.subscriptions] with a well-typed `List<Subscription>`
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun subscriptions(subscriptions: JsonField<List<Subscription>>) = apply {
+            this.subscriptions = subscriptions.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [Subscription] to [subscriptions].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addSubscription(subscription: Subscription) = apply {
+            subscriptions =
+                (subscriptions ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("subscriptions", it).add(subscription)
+                }
         }
 
         /** Registered business name from the official registry (EU/GB/AU) when found */
@@ -669,7 +731,8 @@ private constructor(
         /**
          * Per-unit trial amount after discounts, in the price currency's minor units (pre-quantity,
          * pre-tax; see `current_breakup` for the taxed total due today). Only present for a paid
-         * trial; `None` for a free trial or no trial.
+         * trial; `None` for a free trial or no trial. Always `None` for a cart of more than one
+         * subscription.
          */
         fun trialAmount(trialAmount: Int?) = trialAmount(JsonField.ofNullable(trialAmount))
 
@@ -693,7 +756,8 @@ private constructor(
 
         /**
          * Effective trial duration in days for the subscription line, when there's a trial (free or
-         * paid). `None` if no subscription or no trial.
+         * paid). `None` if no subscription or no trial. Always `None` for a cart of more than one
+         * subscription. Read the trial of each subscription from `subscriptions`.
          */
         fun trialPeriodDays(trialPeriodDays: Int?) =
             trialPeriodDays(JsonField.ofNullable(trialPeriodDays))
@@ -768,6 +832,7 @@ private constructor(
                 checkRequired("totalPrice", totalPrice),
                 nextBillingDate,
                 recurringBreakup,
+                (subscriptions ?: JsonMissing.of()).map { it.toImmutable() },
                 taxIdBusinessName,
                 taxIdErrMsg,
                 taxIdFormatName,
@@ -802,6 +867,7 @@ private constructor(
         totalPrice()
         nextBillingDate()
         recurringBreakup().ifPresent { it.validate() }
+        subscriptions().ifPresent { it.forEach { it.validate() } }
         taxIdBusinessName()
         taxIdErrMsg()
         taxIdFormatName()
@@ -835,6 +901,7 @@ private constructor(
             (if (totalPrice.asKnown().isPresent) 1 else 0) +
             (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
             (recurringBreakup.asKnown().getOrNull()?.validity() ?: 0) +
+            (subscriptions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (taxIdBusinessName.asKnown().isPresent) 1 else 0) +
             (if (taxIdErrMsg.asKnown().isPresent) 1 else 0) +
             (if (taxIdFormatName.asKnown().isPresent) 1 else 0) +
@@ -3938,6 +4005,491 @@ private constructor(
             "RecurringBreakup{discount=$discount, subtotal=$subtotal, totalAmount=$totalAmount, tax=$tax, additionalProperties=$additionalProperties}"
     }
 
+    /** The quote of one subscription in a cart of several. */
+    class Subscription
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val amountDueNow: JsonField<Int>,
+        private val productId: JsonField<String>,
+        private val recurringAmount: JsonField<Int>,
+        private val nextBillingDate: JsonField<OffsetDateTime>,
+        private val recurringTax: JsonField<Int>,
+        private val taxDueNow: JsonField<Int>,
+        private val trialPeriodDays: JsonField<Int>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("amount_due_now")
+            @ExcludeMissing
+            amountDueNow: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("product_id")
+            @ExcludeMissing
+            productId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("recurring_amount")
+            @ExcludeMissing
+            recurringAmount: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("next_billing_date")
+            @ExcludeMissing
+            nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("recurring_tax")
+            @ExcludeMissing
+            recurringTax: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("tax_due_now")
+            @ExcludeMissing
+            taxDueNow: JsonField<Int> = JsonMissing.of(),
+            @JsonProperty("trial_period_days")
+            @ExcludeMissing
+            trialPeriodDays: JsonField<Int> = JsonMissing.of(),
+        ) : this(
+            amountDueNow,
+            productId,
+            recurringAmount,
+            nextBillingDate,
+            recurringTax,
+            taxDueNow,
+            trialPeriodDays,
+            mutableMapOf(),
+        )
+
+        /**
+         * The amount this subscription charges today, including tax.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun amountDueNow(): Int = amountDueNow.getRequired("amount_due_now")
+
+        /**
+         * The subscription product.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun productId(): String = productId.getRequired("product_id")
+
+        /**
+         * The amount of each renewal, including tax.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun recurringAmount(): Int = recurringAmount.getRequired("recurring_amount")
+
+        /**
+         * A preview of the first renewal date. The date is set when the subscription activates.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun nextBillingDate(): Optional<OffsetDateTime> =
+            nextBillingDate.getOptional("next_billing_date")
+
+        /**
+         * The tax in `recurring_amount`.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun recurringTax(): Optional<Int> = recurringTax.getOptional("recurring_tax")
+
+        /**
+         * The tax in `amount_due_now`.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun taxDueNow(): Optional<Int> = taxDueNow.getOptional("tax_due_now")
+
+        /**
+         * The trial duration in days. `None` when the subscription has no trial.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun trialPeriodDays(): Optional<Int> = trialPeriodDays.getOptional("trial_period_days")
+
+        /**
+         * Returns the raw JSON value of [amountDueNow].
+         *
+         * Unlike [amountDueNow], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("amount_due_now")
+        @ExcludeMissing
+        fun _amountDueNow(): JsonField<Int> = amountDueNow
+
+        /**
+         * Returns the raw JSON value of [productId].
+         *
+         * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("product_id") @ExcludeMissing fun _productId(): JsonField<String> = productId
+
+        /**
+         * Returns the raw JSON value of [recurringAmount].
+         *
+         * Unlike [recurringAmount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("recurring_amount")
+        @ExcludeMissing
+        fun _recurringAmount(): JsonField<Int> = recurringAmount
+
+        /**
+         * Returns the raw JSON value of [nextBillingDate].
+         *
+         * Unlike [nextBillingDate], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("next_billing_date")
+        @ExcludeMissing
+        fun _nextBillingDate(): JsonField<OffsetDateTime> = nextBillingDate
+
+        /**
+         * Returns the raw JSON value of [recurringTax].
+         *
+         * Unlike [recurringTax], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("recurring_tax")
+        @ExcludeMissing
+        fun _recurringTax(): JsonField<Int> = recurringTax
+
+        /**
+         * Returns the raw JSON value of [taxDueNow].
+         *
+         * Unlike [taxDueNow], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("tax_due_now") @ExcludeMissing fun _taxDueNow(): JsonField<Int> = taxDueNow
+
+        /**
+         * Returns the raw JSON value of [trialPeriodDays].
+         *
+         * Unlike [trialPeriodDays], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("trial_period_days")
+        @ExcludeMissing
+        fun _trialPeriodDays(): JsonField<Int> = trialPeriodDays
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Subscription].
+             *
+             * The following fields are required:
+             * ```java
+             * .amountDueNow()
+             * .productId()
+             * .recurringAmount()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Subscription]. */
+        class Builder internal constructor() {
+
+            private var amountDueNow: JsonField<Int>? = null
+            private var productId: JsonField<String>? = null
+            private var recurringAmount: JsonField<Int>? = null
+            private var nextBillingDate: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var recurringTax: JsonField<Int> = JsonMissing.of()
+            private var taxDueNow: JsonField<Int> = JsonMissing.of()
+            private var trialPeriodDays: JsonField<Int> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(subscription: Subscription) = apply {
+                amountDueNow = subscription.amountDueNow
+                productId = subscription.productId
+                recurringAmount = subscription.recurringAmount
+                nextBillingDate = subscription.nextBillingDate
+                recurringTax = subscription.recurringTax
+                taxDueNow = subscription.taxDueNow
+                trialPeriodDays = subscription.trialPeriodDays
+                additionalProperties = subscription.additionalProperties.toMutableMap()
+            }
+
+            /** The amount this subscription charges today, including tax. */
+            fun amountDueNow(amountDueNow: Int) = amountDueNow(JsonField.of(amountDueNow))
+
+            /**
+             * Sets [Builder.amountDueNow] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.amountDueNow] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun amountDueNow(amountDueNow: JsonField<Int>) = apply {
+                this.amountDueNow = amountDueNow
+            }
+
+            /** The subscription product. */
+            fun productId(productId: String) = productId(JsonField.of(productId))
+
+            /**
+             * Sets [Builder.productId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.productId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun productId(productId: JsonField<String>) = apply { this.productId = productId }
+
+            /** The amount of each renewal, including tax. */
+            fun recurringAmount(recurringAmount: Int) =
+                recurringAmount(JsonField.of(recurringAmount))
+
+            /**
+             * Sets [Builder.recurringAmount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.recurringAmount] with a well-typed [Int] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun recurringAmount(recurringAmount: JsonField<Int>) = apply {
+                this.recurringAmount = recurringAmount
+            }
+
+            /**
+             * A preview of the first renewal date. The date is set when the subscription activates.
+             */
+            fun nextBillingDate(nextBillingDate: OffsetDateTime?) =
+                nextBillingDate(JsonField.ofNullable(nextBillingDate))
+
+            /** Alias for calling [Builder.nextBillingDate] with `nextBillingDate.orElse(null)`. */
+            fun nextBillingDate(nextBillingDate: Optional<OffsetDateTime>) =
+                nextBillingDate(nextBillingDate.getOrNull())
+
+            /**
+             * Sets [Builder.nextBillingDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.nextBillingDate] with a well-typed [OffsetDateTime]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun nextBillingDate(nextBillingDate: JsonField<OffsetDateTime>) = apply {
+                this.nextBillingDate = nextBillingDate
+            }
+
+            /** The tax in `recurring_amount`. */
+            fun recurringTax(recurringTax: Int?) = recurringTax(JsonField.ofNullable(recurringTax))
+
+            /**
+             * Alias for [Builder.recurringTax].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun recurringTax(recurringTax: Int) = recurringTax(recurringTax as Int?)
+
+            /** Alias for calling [Builder.recurringTax] with `recurringTax.orElse(null)`. */
+            fun recurringTax(recurringTax: Optional<Int>) = recurringTax(recurringTax.getOrNull())
+
+            /**
+             * Sets [Builder.recurringTax] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.recurringTax] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun recurringTax(recurringTax: JsonField<Int>) = apply {
+                this.recurringTax = recurringTax
+            }
+
+            /** The tax in `amount_due_now`. */
+            fun taxDueNow(taxDueNow: Int?) = taxDueNow(JsonField.ofNullable(taxDueNow))
+
+            /**
+             * Alias for [Builder.taxDueNow].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun taxDueNow(taxDueNow: Int) = taxDueNow(taxDueNow as Int?)
+
+            /** Alias for calling [Builder.taxDueNow] with `taxDueNow.orElse(null)`. */
+            fun taxDueNow(taxDueNow: Optional<Int>) = taxDueNow(taxDueNow.getOrNull())
+
+            /**
+             * Sets [Builder.taxDueNow] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.taxDueNow] with a well-typed [Int] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun taxDueNow(taxDueNow: JsonField<Int>) = apply { this.taxDueNow = taxDueNow }
+
+            /** The trial duration in days. `None` when the subscription has no trial. */
+            fun trialPeriodDays(trialPeriodDays: Int?) =
+                trialPeriodDays(JsonField.ofNullable(trialPeriodDays))
+
+            /**
+             * Alias for [Builder.trialPeriodDays].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun trialPeriodDays(trialPeriodDays: Int) = trialPeriodDays(trialPeriodDays as Int?)
+
+            /** Alias for calling [Builder.trialPeriodDays] with `trialPeriodDays.orElse(null)`. */
+            fun trialPeriodDays(trialPeriodDays: Optional<Int>) =
+                trialPeriodDays(trialPeriodDays.getOrNull())
+
+            /**
+             * Sets [Builder.trialPeriodDays] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.trialPeriodDays] with a well-typed [Int] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun trialPeriodDays(trialPeriodDays: JsonField<Int>) = apply {
+                this.trialPeriodDays = trialPeriodDays
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Subscription].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .amountDueNow()
+             * .productId()
+             * .recurringAmount()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Subscription =
+                Subscription(
+                    checkRequired("amountDueNow", amountDueNow),
+                    checkRequired("productId", productId),
+                    checkRequired("recurringAmount", recurringAmount),
+                    nextBillingDate,
+                    recurringTax,
+                    taxDueNow,
+                    trialPeriodDays,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws DodoPaymentsInvalidDataException if any value type in this object doesn't match
+         *   its expected type.
+         */
+        fun validate(): Subscription = apply {
+            if (validated) {
+                return@apply
+            }
+
+            amountDueNow()
+            productId()
+            recurringAmount()
+            nextBillingDate()
+            recurringTax()
+            taxDueNow()
+            trialPeriodDays()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: DodoPaymentsInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (amountDueNow.asKnown().isPresent) 1 else 0) +
+                (if (productId.asKnown().isPresent) 1 else 0) +
+                (if (recurringAmount.asKnown().isPresent) 1 else 0) +
+                (if (nextBillingDate.asKnown().isPresent) 1 else 0) +
+                (if (recurringTax.asKnown().isPresent) 1 else 0) +
+                (if (taxDueNow.asKnown().isPresent) 1 else 0) +
+                (if (trialPeriodDays.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Subscription &&
+                amountDueNow == other.amountDueNow &&
+                productId == other.productId &&
+                recurringAmount == other.recurringAmount &&
+                nextBillingDate == other.nextBillingDate &&
+                recurringTax == other.recurringTax &&
+                taxDueNow == other.taxDueNow &&
+                trialPeriodDays == other.trialPeriodDays &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                amountDueNow,
+                productId,
+                recurringAmount,
+                nextBillingDate,
+                recurringTax,
+                taxDueNow,
+                trialPeriodDays,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Subscription{amountDueNow=$amountDueNow, productId=$productId, recurringAmount=$recurringAmount, nextBillingDate=$nextBillingDate, recurringTax=$recurringTax, taxDueNow=$taxDueNow, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -3953,6 +4505,7 @@ private constructor(
             totalPrice == other.totalPrice &&
             nextBillingDate == other.nextBillingDate &&
             recurringBreakup == other.recurringBreakup &&
+            subscriptions == other.subscriptions &&
             taxIdBusinessName == other.taxIdBusinessName &&
             taxIdErrMsg == other.taxIdErrMsg &&
             taxIdFormatName == other.taxIdFormatName &&
@@ -3973,6 +4526,7 @@ private constructor(
             totalPrice,
             nextBillingDate,
             recurringBreakup,
+            subscriptions,
             taxIdBusinessName,
             taxIdErrMsg,
             taxIdFormatName,
@@ -3986,5 +4540,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, isByop=$isByop, paymentMethodRequired=$paymentMethodRequired, productCart=$productCart, totalPrice=$totalPrice, nextBillingDate=$nextBillingDate, recurringBreakup=$recurringBreakup, taxIdBusinessName=$taxIdBusinessName, taxIdErrMsg=$taxIdErrMsg, taxIdFormatName=$taxIdFormatName, totalTax=$totalTax, trialAmount=$trialAmount, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
+        "CheckoutSessionPreviewResponse{billingCountry=$billingCountry, currency=$currency, currentBreakup=$currentBreakup, isByop=$isByop, paymentMethodRequired=$paymentMethodRequired, productCart=$productCart, totalPrice=$totalPrice, nextBillingDate=$nextBillingDate, recurringBreakup=$recurringBreakup, subscriptions=$subscriptions, taxIdBusinessName=$taxIdBusinessName, taxIdErrMsg=$taxIdErrMsg, taxIdFormatName=$taxIdFormatName, totalTax=$totalTax, trialAmount=$trialAmount, trialPeriodDays=$trialPeriodDays, additionalProperties=$additionalProperties}"
 }

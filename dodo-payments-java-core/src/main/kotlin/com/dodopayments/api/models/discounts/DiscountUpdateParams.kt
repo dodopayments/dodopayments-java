@@ -1675,7 +1675,8 @@ private constructor(
         ) : this(currency, isDefault, maxAmountPossible, minimumSubtotal, mutableMapOf())
 
         /**
-         * The currency this option applies to.
+         * The currency this option applies to. The row applies when the buyer pays in this
+         * currency.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1683,8 +1684,8 @@ private constructor(
         fun currency(): Currency = currency.getRequired("currency")
 
         /**
-         * Whether this row is the default to convert from for unconfigured currencies. At most one
-         * row per discount may be default.
+         * Whether this row is the default to convert from when the buyer pays in a currency that
+         * has no row. At most one row per discount may be default.
          *
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
          *   if the server responded with an unexpected value).
@@ -1786,7 +1787,10 @@ private constructor(
                 additionalProperties = currencyOption.additionalProperties.toMutableMap()
             }
 
-            /** The currency this option applies to. */
+            /**
+             * The currency this option applies to. The row applies when the buyer pays in this
+             * currency.
+             */
             fun currency(currency: Currency) = currency(JsonField.of(currency))
 
             /**
@@ -1799,8 +1803,8 @@ private constructor(
             fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
 
             /**
-             * Whether this row is the default to convert from for unconfigured currencies. At most
-             * one row per discount may be default.
+             * Whether this row is the default to convert from when the buyer pays in a currency
+             * that has no row. At most one row per discount may be default.
              */
             fun isDefault(isDefault: Boolean) = isDefault(JsonField.of(isDefault))
 
@@ -2019,9 +2023,11 @@ private constructor(
          * An enum containing [CustomerEligibility]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [CustomerEligibility] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
