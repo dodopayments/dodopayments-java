@@ -146,6 +146,10 @@ private constructor(
     )
 
     /**
+     * The products of the checkout. A cart holds at most 20 of them, one-time and subscription
+     * products together. An empty cart is valid for the product-collection flow, where the customer
+     * chooses the product later.
+     *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -647,6 +651,11 @@ private constructor(
             additionalProperties = checkoutSessionRequest.additionalProperties.toMutableMap()
         }
 
+        /**
+         * The products of the checkout. A cart holds at most 20 of them, one-time and subscription
+         * products together. An empty cart is valid for the product-collection flow, where the
+         * customer chooses the product later.
+         */
         fun productCart(productCart: List<ProductItemReq>) = productCart(JsonField.of(productCart))
 
         /**
