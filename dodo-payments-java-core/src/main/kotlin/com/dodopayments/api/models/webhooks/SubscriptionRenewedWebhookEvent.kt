@@ -1627,9 +1627,8 @@ private constructor(
             fun meterCreditEntitlementCart(
                 meterCreditEntitlementCart: JsonField<List<MeterCreditEntitlementCartResponse>>
             ) = apply {
-                this.meterCreditEntitlementCart = meterCreditEntitlementCart.map {
-                    it.toMutableList()
-                }
+                this.meterCreditEntitlementCart =
+                    meterCreditEntitlementCart.map { it.toMutableList() }
             }
 
             /**
