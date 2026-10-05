@@ -2734,6 +2734,7 @@ private constructor(
         private constructor(
             private val currency: JsonField<Currency>,
             private val customerCredits: JsonField<Long>,
+            private val customerCreditsCurrency: JsonField<Currency>,
             private val settlementAmount: JsonField<Int>,
             private val settlementCurrency: JsonField<Currency>,
             private val totalAmount: JsonField<Int>,
@@ -2750,6 +2751,9 @@ private constructor(
                 @JsonProperty("customer_credits")
                 @ExcludeMissing
                 customerCredits: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("customer_credits_currency")
+                @ExcludeMissing
+                customerCreditsCurrency: JsonField<Currency> = JsonMissing.of(),
                 @JsonProperty("settlement_amount")
                 @ExcludeMissing
                 settlementAmount: JsonField<Int> = JsonMissing.of(),
@@ -2766,6 +2770,7 @@ private constructor(
             ) : this(
                 currency,
                 customerCredits,
+                customerCreditsCurrency,
                 settlementAmount,
                 settlementCurrency,
                 totalAmount,
@@ -2782,17 +2787,29 @@ private constructor(
             fun currency(): Currency = currency.getRequired("currency")
 
             /**
-             * Net credit movement in the smallest currency unit (e.g. cents). **Negative** –
-             * credits were deducted from the customer's balance to offset the charge (typical on
-             * upgrades). **Positive** – credits were added to the customer's balance, either from a
-             * downgrade proration refund or from topping-up the wallet to meet a gateway
-             * minimum-charge threshold. **Zero** – no credit movement occurred.
+             * Net credit movement in the smallest unit of `customer_credits_currency` (e.g. cents).
+             * Read `customer_credits_currency` for the currency. It can differ from `currency`.
+             * **Negative** – credits were deducted from the customer's balance to offset the charge
+             * (typical on upgrades). **Positive** – credits were added to the customer's balance,
+             * either from a downgrade proration refund or from topping-up the wallet to meet a
+             * gateway minimum-charge threshold. **Zero** – no credit movement occurred.
              *
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
              *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
             fun customerCredits(): Long = customerCredits.getRequired("customer_credits")
+
+            /**
+             * This field gives the currency of `customer_credits`. The credit wallet uses the
+             * subscription currency.
+             *
+             * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
+             *   is unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun customerCreditsCurrency(): Currency =
+                customerCreditsCurrency.getRequired("customer_credits_currency")
 
             /**
              * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or
@@ -2847,6 +2864,16 @@ private constructor(
             @JsonProperty("customer_credits")
             @ExcludeMissing
             fun _customerCredits(): JsonField<Long> = customerCredits
+
+            /**
+             * Returns the raw JSON value of [customerCreditsCurrency].
+             *
+             * Unlike [customerCreditsCurrency], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("customer_credits_currency")
+            @ExcludeMissing
+            fun _customerCreditsCurrency(): JsonField<Currency> = customerCreditsCurrency
 
             /**
              * Returns the raw JSON value of [settlementAmount].
@@ -2916,6 +2943,7 @@ private constructor(
                  * ```java
                  * .currency()
                  * .customerCredits()
+                 * .customerCreditsCurrency()
                  * .settlementAmount()
                  * .settlementCurrency()
                  * .totalAmount()
@@ -2929,6 +2957,7 @@ private constructor(
 
                 private var currency: JsonField<Currency>? = null
                 private var customerCredits: JsonField<Long>? = null
+                private var customerCreditsCurrency: JsonField<Currency>? = null
                 private var settlementAmount: JsonField<Int>? = null
                 private var settlementCurrency: JsonField<Currency>? = null
                 private var totalAmount: JsonField<Int>? = null
@@ -2940,6 +2969,7 @@ private constructor(
                 internal fun from(summary: Summary) = apply {
                     currency = summary.currency
                     customerCredits = summary.customerCredits
+                    customerCreditsCurrency = summary.customerCreditsCurrency
                     settlementAmount = summary.settlementAmount
                     settlementCurrency = summary.settlementCurrency
                     totalAmount = summary.totalAmount
@@ -2960,11 +2990,13 @@ private constructor(
                 fun currency(currency: JsonField<Currency>) = apply { this.currency = currency }
 
                 /**
-                 * Net credit movement in the smallest currency unit (e.g. cents). **Negative** –
-                 * credits were deducted from the customer's balance to offset the charge (typical
-                 * on upgrades). **Positive** – credits were added to the customer's balance, either
-                 * from a downgrade proration refund or from topping-up the wallet to meet a gateway
-                 * minimum-charge threshold. **Zero** – no credit movement occurred.
+                 * Net credit movement in the smallest unit of `customer_credits_currency` (e.g.
+                 * cents). Read `customer_credits_currency` for the currency. It can differ from
+                 * `currency`. **Negative** – credits were deducted from the customer's balance to
+                 * offset the charge (typical on upgrades). **Positive** – credits were added to the
+                 * customer's balance, either from a downgrade proration refund or from topping-up
+                 * the wallet to meet a gateway minimum-charge threshold. **Zero** – no credit
+                 * movement occurred.
                  */
                 fun customerCredits(customerCredits: Long) =
                     customerCredits(JsonField.of(customerCredits))
@@ -2978,6 +3010,24 @@ private constructor(
                  */
                 fun customerCredits(customerCredits: JsonField<Long>) = apply {
                     this.customerCredits = customerCredits
+                }
+
+                /**
+                 * This field gives the currency of `customer_credits`. The credit wallet uses the
+                 * subscription currency.
+                 */
+                fun customerCreditsCurrency(customerCreditsCurrency: Currency) =
+                    customerCreditsCurrency(JsonField.of(customerCreditsCurrency))
+
+                /**
+                 * Sets [Builder.customerCreditsCurrency] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.customerCreditsCurrency] with a well-typed
+                 * [Currency] value instead. This method is primarily for setting the field to an
+                 * undocumented or not yet supported value.
+                 */
+                fun customerCreditsCurrency(customerCreditsCurrency: JsonField<Currency>) = apply {
+                    this.customerCreditsCurrency = customerCreditsCurrency
                 }
 
                 fun settlementAmount(settlementAmount: Int) =
@@ -3098,6 +3148,7 @@ private constructor(
                  * ```java
                  * .currency()
                  * .customerCredits()
+                 * .customerCreditsCurrency()
                  * .settlementAmount()
                  * .settlementCurrency()
                  * .totalAmount()
@@ -3109,6 +3160,7 @@ private constructor(
                     Summary(
                         checkRequired("currency", currency),
                         checkRequired("customerCredits", customerCredits),
+                        checkRequired("customerCreditsCurrency", customerCreditsCurrency),
                         checkRequired("settlementAmount", settlementAmount),
                         checkRequired("settlementCurrency", settlementCurrency),
                         checkRequired("totalAmount", totalAmount),
@@ -3137,6 +3189,7 @@ private constructor(
 
                 currency().validate()
                 customerCredits()
+                customerCreditsCurrency().validate()
                 settlementAmount()
                 settlementCurrency().validate()
                 totalAmount()
@@ -3163,6 +3216,7 @@ private constructor(
             internal fun validity(): Int =
                 (currency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (customerCredits.asKnown().isPresent) 1 else 0) +
+                    (customerCreditsCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (settlementAmount.asKnown().isPresent) 1 else 0) +
                     (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (totalAmount.asKnown().isPresent) 1 else 0) +
@@ -3177,6 +3231,7 @@ private constructor(
                 return other is Summary &&
                     currency == other.currency &&
                     customerCredits == other.customerCredits &&
+                    customerCreditsCurrency == other.customerCreditsCurrency &&
                     settlementAmount == other.settlementAmount &&
                     settlementCurrency == other.settlementCurrency &&
                     totalAmount == other.totalAmount &&
@@ -3189,6 +3244,7 @@ private constructor(
                 Objects.hash(
                     currency,
                     customerCredits,
+                    customerCreditsCurrency,
                     settlementAmount,
                     settlementCurrency,
                     totalAmount,
@@ -3201,7 +3257,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Summary{currency=$currency, customerCredits=$customerCredits, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, settlementTax=$settlementTax, tax=$tax, additionalProperties=$additionalProperties}"
+                "Summary{currency=$currency, customerCredits=$customerCredits, customerCreditsCurrency=$customerCreditsCurrency, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, totalAmount=$totalAmount, settlementTax=$settlementTax, tax=$tax, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
