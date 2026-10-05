@@ -275,8 +275,9 @@ private constructor(
         redirectImmediately.getOptional("redirect_immediately")
 
     /**
-     * If true, the customer must give the name on the card to pay by card. The checkout page
-     * enforces this. Other payment methods ignore it.
+     * If true, the customer must give the name on the card to pay by card. Apple Pay and Google Pay
+     * also collect the payer name, and the payment stores it as the card holder name. The checkout
+     * page enforces this. Other payment methods ignore it.
      *
      * Default is false
      *
@@ -853,8 +854,9 @@ private constructor(
         }
 
         /**
-         * If true, the customer must give the name on the card to pay by card. The checkout page
-         * enforces this. Other payment methods ignore it.
+         * If true, the customer must give the name on the card to pay by card. Apple Pay and Google
+         * Pay also collect the payer name, and the payment stores it as the card holder name. The
+         * checkout page enforces this. Other payment methods ignore it.
          *
          * Default is false
          */
