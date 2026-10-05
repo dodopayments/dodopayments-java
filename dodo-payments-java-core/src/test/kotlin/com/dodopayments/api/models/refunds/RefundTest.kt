@@ -45,6 +45,8 @@ internal class RefundTest {
                 .status(RefundStatus.SUCCEEDED)
                 .amount(0)
                 .currency(Currency.AED)
+                .networkReference("network_reference")
+                .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
                 .reason("reason")
                 .build()
 
@@ -75,6 +77,9 @@ internal class RefundTest {
         assertThat(refund.status()).isEqualTo(RefundStatus.SUCCEEDED)
         assertThat(refund.amount()).contains(0)
         assertThat(refund.currency()).contains(Currency.AED)
+        assertThat(refund.networkReference()).contains("network_reference")
+        assertThat(refund.networkReferenceType())
+            .contains(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
         assertThat(refund.reason()).contains("reason")
     }
 
@@ -110,6 +115,8 @@ internal class RefundTest {
                 .status(RefundStatus.SUCCEEDED)
                 .amount(0)
                 .currency(Currency.AED)
+                .networkReference("network_reference")
+                .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
                 .reason("reason")
                 .build()
 

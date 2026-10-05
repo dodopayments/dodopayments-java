@@ -12,6 +12,7 @@ import com.dodopayments.api.models.disputes.DisputeStatus
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.Metadata
+import com.dodopayments.api.models.refunds.RefundNetworkReferenceType
 import com.dodopayments.api.models.refunds.RefundStatus
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import java.time.OffsetDateTime
@@ -85,6 +86,8 @@ internal class PaymentTest {
                         .status(RefundStatus.SUCCEEDED)
                         .amount(0)
                         .currency(Currency.AED)
+                        .networkReference("network_reference")
+                        .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
                         .reason("reason")
                         .build()
                 )
@@ -209,6 +212,8 @@ internal class PaymentTest {
                     .status(RefundStatus.SUCCEEDED)
                     .amount(0)
                     .currency(Currency.AED)
+                    .networkReference("network_reference")
+                    .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
                     .reason("reason")
                     .build()
             )
@@ -336,6 +341,8 @@ internal class PaymentTest {
                         .status(RefundStatus.SUCCEEDED)
                         .amount(0)
                         .currency(Currency.AED)
+                        .networkReference("network_reference")
+                        .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
                         .reason("reason")
                         .build()
                 )
