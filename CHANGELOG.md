@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.119.0](https://github.com/dodopayments/dodopayments-java/compare/v1.118.0...v1.119.0) (2026-10-05)
+
+
+### Features
+
+* **api:** regenerate SDK from latest OpenAPI spec ([d4d06ce](https://github.com/dodopayments/dodopayments-java/commit/d4d06ce695f27e0c9bd8b3c683020739f4e56d12))
+* **api:** regenerate SDK from latest OpenAPI spec ([9b249da](https://github.com/dodopayments/dodopayments-java/commit/9b249daa0f2cc658ec6a53a114722df446b25c57))
+
 ## [1.118.0](https://github.com/dodopayments/dodopayments-java/compare/v1.117.0...v1.118.0) (2026-09-25)
 
 
