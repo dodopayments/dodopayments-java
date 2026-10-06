@@ -29,6 +29,7 @@ private constructor(
     private val quantity: JsonField<Int>,
     private val adaptiveCurrencyFeesInclusive: JsonField<Boolean>,
     private val addons: JsonField<List<AttachAddon>>,
+    private val cancelOlderPaymentLink: JsonField<Boolean>,
     private val cancelScheduledChangePlan: JsonField<Boolean>,
     private val collectViaPaymentLink: JsonField<Boolean>,
     private val discountCode: JsonField<String>,
@@ -36,6 +37,7 @@ private constructor(
     private val effectiveAt: JsonField<EffectiveAt>,
     private val metadata: JsonField<Metadata>,
     private val onPaymentFailure: JsonField<OnPaymentFailure>,
+    private val returnUrl: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -52,6 +54,9 @@ private constructor(
         @JsonProperty("addons")
         @ExcludeMissing
         addons: JsonField<List<AttachAddon>> = JsonMissing.of(),
+        @JsonProperty("cancel_older_payment_link")
+        @ExcludeMissing
+        cancelOlderPaymentLink: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("cancel_scheduled_change_plan")
         @ExcludeMissing
         cancelScheduledChangePlan: JsonField<Boolean> = JsonMissing.of(),
@@ -71,12 +76,14 @@ private constructor(
         @JsonProperty("on_payment_failure")
         @ExcludeMissing
         onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of(),
+        @JsonProperty("return_url") @ExcludeMissing returnUrl: JsonField<String> = JsonMissing.of(),
     ) : this(
         productId,
         prorationBillingMode,
         quantity,
         adaptiveCurrencyFeesInclusive,
         addons,
+        cancelOlderPaymentLink,
         cancelScheduledChangePlan,
         collectViaPaymentLink,
         discountCode,
@@ -84,6 +91,7 @@ private constructor(
         effectiveAt,
         metadata,
         onPaymentFailure,
+        returnUrl,
         mutableMapOf(),
     )
 
@@ -129,6 +137,23 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun addons(): Optional<List<AttachAddon>> = addons.getOptional("addons")
+
+    /**
+     * Cancel the payment link of a pending plan change, so that this change can replace it.
+     *
+     * The link is cancelled only if the customer has not started to pay. A paid or in-progress
+     * payment gives a `409`. A failed cancel gives a `503`, and a retry is safe.
+     *
+     * The request is validated before the cancel. A later failure, for example an amount below the
+     * minimum, leaves the subscription on its current plan with no open link. A retry is safe.
+     *
+     * The preview route shares this request body and ignores this field.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun cancelOlderPaymentLink(): Optional<Boolean> =
+        cancelOlderPaymentLink.getOptional("cancel_older_payment_link")
 
     /**
      * Replace a scheduled plan change with this one.
@@ -217,6 +242,23 @@ private constructor(
         onPaymentFailure.getOptional("on_payment_failure")
 
     /**
+     * The URL that receives the customer after they pay the payment link. Needs
+     * `collect_via_payment_link: true`. Without it, the request gets a `422`. A change that
+     * collects no money issues no link and does not use the URL. The preview route validates this
+     * field but does not use it.
+     *
+     * The redirect adds `subscription_id`, `payment_id` and `status`. The `status` value is the
+     * status of the plan-change payment. It is not the status of the subscription. When that
+     * payment fails, the subscription stays active on its current plan. To try again, call this
+     * endpoint again to get a new link. The new plan can apply after the redirect, when the payment
+     * webhook arrives.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun returnUrl(): Optional<String> = returnUrl.getOptional("return_url")
+
+    /**
      * Returns the raw JSON value of [productId].
      *
      * Unlike [productId], this method doesn't throw if the JSON field has an unexpected type.
@@ -256,6 +298,16 @@ private constructor(
      * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("addons") @ExcludeMissing fun _addons(): JsonField<List<AttachAddon>> = addons
+
+    /**
+     * Returns the raw JSON value of [cancelOlderPaymentLink].
+     *
+     * Unlike [cancelOlderPaymentLink], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("cancel_older_payment_link")
+    @ExcludeMissing
+    fun _cancelOlderPaymentLink(): JsonField<Boolean> = cancelOlderPaymentLink
 
     /**
      * Returns the raw JSON value of [cancelScheduledChangePlan].
@@ -322,6 +374,13 @@ private constructor(
     @ExcludeMissing
     fun _onPaymentFailure(): JsonField<OnPaymentFailure> = onPaymentFailure
 
+    /**
+     * Returns the raw JSON value of [returnUrl].
+     *
+     * Unlike [returnUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("return_url") @ExcludeMissing fun _returnUrl(): JsonField<String> = returnUrl
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -357,6 +416,7 @@ private constructor(
         private var quantity: JsonField<Int>? = null
         private var adaptiveCurrencyFeesInclusive: JsonField<Boolean> = JsonMissing.of()
         private var addons: JsonField<MutableList<AttachAddon>>? = null
+        private var cancelOlderPaymentLink: JsonField<Boolean> = JsonMissing.of()
         private var cancelScheduledChangePlan: JsonField<Boolean> = JsonMissing.of()
         private var collectViaPaymentLink: JsonField<Boolean> = JsonMissing.of()
         private var discountCode: JsonField<String> = JsonMissing.of()
@@ -364,6 +424,7 @@ private constructor(
         private var effectiveAt: JsonField<EffectiveAt> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var onPaymentFailure: JsonField<OnPaymentFailure> = JsonMissing.of()
+        private var returnUrl: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -373,6 +434,7 @@ private constructor(
             quantity = updateSubscriptionPlanReq.quantity
             adaptiveCurrencyFeesInclusive = updateSubscriptionPlanReq.adaptiveCurrencyFeesInclusive
             addons = updateSubscriptionPlanReq.addons.map { it.toMutableList() }
+            cancelOlderPaymentLink = updateSubscriptionPlanReq.cancelOlderPaymentLink
             cancelScheduledChangePlan = updateSubscriptionPlanReq.cancelScheduledChangePlan
             collectViaPaymentLink = updateSubscriptionPlanReq.collectViaPaymentLink
             discountCode = updateSubscriptionPlanReq.discountCode
@@ -380,6 +442,7 @@ private constructor(
             effectiveAt = updateSubscriptionPlanReq.effectiveAt
             metadata = updateSubscriptionPlanReq.metadata
             onPaymentFailure = updateSubscriptionPlanReq.onPaymentFailure
+            returnUrl = updateSubscriptionPlanReq.returnUrl
             additionalProperties = updateSubscriptionPlanReq.additionalProperties.toMutableMap()
         }
 
@@ -482,6 +545,32 @@ private constructor(
                 (addons ?: JsonField.of(mutableListOf())).also {
                     checkKnown("addons", it).add(addon)
                 }
+        }
+
+        /**
+         * Cancel the payment link of a pending plan change, so that this change can replace it.
+         *
+         * The link is cancelled only if the customer has not started to pay. A paid or in-progress
+         * payment gives a `409`. A failed cancel gives a `503`, and a retry is safe.
+         *
+         * The request is validated before the cancel. A later failure, for example an amount below
+         * the minimum, leaves the subscription on its current plan with no open link. A retry is
+         * safe.
+         *
+         * The preview route shares this request body and ignores this field.
+         */
+        fun cancelOlderPaymentLink(cancelOlderPaymentLink: Boolean) =
+            cancelOlderPaymentLink(JsonField.of(cancelOlderPaymentLink))
+
+        /**
+         * Sets [Builder.cancelOlderPaymentLink] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cancelOlderPaymentLink] with a well-typed [Boolean]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun cancelOlderPaymentLink(cancelOlderPaymentLink: JsonField<Boolean>) = apply {
+            this.cancelOlderPaymentLink = cancelOlderPaymentLink
         }
 
         /**
@@ -651,6 +740,32 @@ private constructor(
             this.onPaymentFailure = onPaymentFailure
         }
 
+        /**
+         * The URL that receives the customer after they pay the payment link. Needs
+         * `collect_via_payment_link: true`. Without it, the request gets a `422`. A change that
+         * collects no money issues no link and does not use the URL. The preview route validates
+         * this field but does not use it.
+         *
+         * The redirect adds `subscription_id`, `payment_id` and `status`. The `status` value is the
+         * status of the plan-change payment. It is not the status of the subscription. When that
+         * payment fails, the subscription stays active on its current plan. To try again, call this
+         * endpoint again to get a new link. The new plan can apply after the redirect, when the
+         * payment webhook arrives.
+         */
+        fun returnUrl(returnUrl: String?) = returnUrl(JsonField.ofNullable(returnUrl))
+
+        /** Alias for calling [Builder.returnUrl] with `returnUrl.orElse(null)`. */
+        fun returnUrl(returnUrl: Optional<String>) = returnUrl(returnUrl.getOrNull())
+
+        /**
+         * Sets [Builder.returnUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.returnUrl] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun returnUrl(returnUrl: JsonField<String>) = apply { this.returnUrl = returnUrl }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -691,6 +806,7 @@ private constructor(
                 checkRequired("quantity", quantity),
                 adaptiveCurrencyFeesInclusive,
                 (addons ?: JsonMissing.of()).map { it.toImmutable() },
+                cancelOlderPaymentLink,
                 cancelScheduledChangePlan,
                 collectViaPaymentLink,
                 discountCode,
@@ -698,6 +814,7 @@ private constructor(
                 effectiveAt,
                 metadata,
                 onPaymentFailure,
+                returnUrl,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -722,6 +839,7 @@ private constructor(
         quantity()
         adaptiveCurrencyFeesInclusive()
         addons().ifPresent { it.forEach { it.validate() } }
+        cancelOlderPaymentLink()
         cancelScheduledChangePlan()
         collectViaPaymentLink()
         discountCode()
@@ -729,6 +847,7 @@ private constructor(
         effectiveAt().ifPresent { it.validate() }
         metadata().ifPresent { it.validate() }
         onPaymentFailure().ifPresent { it.validate() }
+        returnUrl()
         validated = true
     }
 
@@ -752,13 +871,15 @@ private constructor(
             (if (quantity.asKnown().isPresent) 1 else 0) +
             (if (adaptiveCurrencyFeesInclusive.asKnown().isPresent) 1 else 0) +
             (addons.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (cancelOlderPaymentLink.asKnown().isPresent) 1 else 0) +
             (if (cancelScheduledChangePlan.asKnown().isPresent) 1 else 0) +
             (if (collectViaPaymentLink.asKnown().isPresent) 1 else 0) +
             (if (discountCode.asKnown().isPresent) 1 else 0) +
             (discountCodes.asKnown().getOrNull()?.size ?: 0) +
             (effectiveAt.asKnown().getOrNull()?.validity() ?: 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0)
+            (onPaymentFailure.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (returnUrl.asKnown().isPresent) 1 else 0)
 
     /** Proration Billing Mode */
     class ProrationBillingMode
@@ -1218,6 +1339,7 @@ private constructor(
             quantity == other.quantity &&
             adaptiveCurrencyFeesInclusive == other.adaptiveCurrencyFeesInclusive &&
             addons == other.addons &&
+            cancelOlderPaymentLink == other.cancelOlderPaymentLink &&
             cancelScheduledChangePlan == other.cancelScheduledChangePlan &&
             collectViaPaymentLink == other.collectViaPaymentLink &&
             discountCode == other.discountCode &&
@@ -1225,6 +1347,7 @@ private constructor(
             effectiveAt == other.effectiveAt &&
             metadata == other.metadata &&
             onPaymentFailure == other.onPaymentFailure &&
+            returnUrl == other.returnUrl &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1235,6 +1358,7 @@ private constructor(
             quantity,
             adaptiveCurrencyFeesInclusive,
             addons,
+            cancelOlderPaymentLink,
             cancelScheduledChangePlan,
             collectViaPaymentLink,
             discountCode,
@@ -1242,6 +1366,7 @@ private constructor(
             effectiveAt,
             metadata,
             onPaymentFailure,
+            returnUrl,
             additionalProperties,
         )
     }
@@ -1249,5 +1374,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, cancelScheduledChangePlan=$cancelScheduledChangePlan, collectViaPaymentLink=$collectViaPaymentLink, discountCode=$discountCode, discountCodes=$discountCodes, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, additionalProperties=$additionalProperties}"
+        "UpdateSubscriptionPlanReq{productId=$productId, prorationBillingMode=$prorationBillingMode, quantity=$quantity, adaptiveCurrencyFeesInclusive=$adaptiveCurrencyFeesInclusive, addons=$addons, cancelOlderPaymentLink=$cancelOlderPaymentLink, cancelScheduledChangePlan=$cancelScheduledChangePlan, collectViaPaymentLink=$collectViaPaymentLink, discountCode=$discountCode, discountCodes=$discountCodes, effectiveAt=$effectiveAt, metadata=$metadata, onPaymentFailure=$onPaymentFailure, returnUrl=$returnUrl, additionalProperties=$additionalProperties}"
 }
