@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.120.0](https://github.com/dodopayments/dodopayments-java/compare/v1.119.0...v1.120.0) (2026-10-06)
+
+
+### Features
+
+* **api:** change-plan cancel_older_payment_link and return_url ([ad57a1b](https://github.com/dodopayments/dodopayments-java/commit/ad57a1b2cc77f00ccad320a7ff96ddc2ea1822bc))
+* **api:** change-plan cancel_older_payment_link and return_url ([387a828](https://github.com/dodopayments/dodopayments-java/commit/387a828b09b4c820972953fdc881cf29fba50721))
+
 ## [1.119.0](https://github.com/dodopayments/dodopayments-java/compare/v1.118.0...v1.119.0) (2026-10-05)
 
 
