@@ -6,7 +6,7 @@ plugins {
 dependencies {
     api(project(":dodo-payments-java-core"))
 
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:5.5.0")
 
     testImplementation(kotlin("test"))
     testImplementation("org.assertj:assertj-core:3.27.7")
