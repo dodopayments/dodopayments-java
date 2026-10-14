@@ -47,6 +47,7 @@ internal class RefundTest {
                 .currency(Currency.AED)
                 .networkReference("network_reference")
                 .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+                .networkReferenceUpdatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .reason("reason")
                 .build()
 
@@ -80,6 +81,8 @@ internal class RefundTest {
         assertThat(refund.networkReference()).contains("network_reference")
         assertThat(refund.networkReferenceType())
             .contains(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+        assertThat(refund.networkReferenceUpdatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(refund.reason()).contains("reason")
     }
 
@@ -117,6 +120,7 @@ internal class RefundTest {
                 .currency(Currency.AED)
                 .networkReference("network_reference")
                 .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+                .networkReferenceUpdatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .reason("reason")
                 .build()
 

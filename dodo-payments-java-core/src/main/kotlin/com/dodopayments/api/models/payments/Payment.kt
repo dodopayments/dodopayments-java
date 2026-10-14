@@ -44,6 +44,7 @@ private constructor(
     private val paymentProvider: JsonField<PaymentProvider>,
     private val refunds: JsonField<List<RefundListItem>>,
     private val retryAttempt: JsonField<Int>,
+    private val servicePeriods: JsonField<List<SubscriptionServicePeriod>>,
     private val settlementAmount: JsonField<Int>,
     private val settlementCurrency: JsonField<Currency>,
     private val subscriptionIds: JsonField<List<String>>,
@@ -114,6 +115,9 @@ private constructor(
         @JsonProperty("retry_attempt")
         @ExcludeMissing
         retryAttempt: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("service_periods")
+        @ExcludeMissing
+        servicePeriods: JsonField<List<SubscriptionServicePeriod>> = JsonMissing.of(),
         @JsonProperty("settlement_amount")
         @ExcludeMissing
         settlementAmount: JsonField<Int> = JsonMissing.of(),
@@ -204,6 +208,7 @@ private constructor(
         paymentProvider,
         refunds,
         retryAttempt,
+        servicePeriods,
         settlementAmount,
         settlementCurrency,
         subscriptionIds,
@@ -361,6 +366,18 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun retryAttempt(): Int = retryAttempt.getRequired("retry_attempt")
+
+    /**
+     * The service period of each subscription that this payment pays for. The order is the same as
+     * `subscription_ids`. For a plan change charge, the period starts at the plan change and ends
+     * at the next billing date. The list is empty unless the payment status is `succeeded`. The
+     * list is also empty for a one-time payment, an on-demand charge, or a payment method update.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun servicePeriods(): List<SubscriptionServicePeriod> =
+        servicePeriods.getRequired("service_periods")
 
     /**
      * The amount that will be credited to your Dodo balance after currency conversion and
@@ -727,6 +744,15 @@ private constructor(
     fun _retryAttempt(): JsonField<Int> = retryAttempt
 
     /**
+     * Returns the raw JSON value of [servicePeriods].
+     *
+     * Unlike [servicePeriods], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("service_periods")
+    @ExcludeMissing
+    fun _servicePeriods(): JsonField<List<SubscriptionServicePeriod>> = servicePeriods
+
+    /**
      * Returns the raw JSON value of [settlementAmount].
      *
      * Unlike [settlementAmount], this method doesn't throw if the JSON field has an unexpected
@@ -1005,6 +1031,7 @@ private constructor(
          * .paymentProvider()
          * .refunds()
          * .retryAttempt()
+         * .servicePeriods()
          * .settlementAmount()
          * .settlementCurrency()
          * .subscriptionIds()
@@ -1032,6 +1059,7 @@ private constructor(
         private var paymentProvider: JsonField<PaymentProvider>? = null
         private var refunds: JsonField<MutableList<RefundListItem>>? = null
         private var retryAttempt: JsonField<Int>? = null
+        private var servicePeriods: JsonField<MutableList<SubscriptionServicePeriod>>? = null
         private var settlementAmount: JsonField<Int>? = null
         private var settlementCurrency: JsonField<Currency>? = null
         private var subscriptionIds: JsonField<MutableList<String>>? = null
@@ -1079,6 +1107,7 @@ private constructor(
             paymentProvider = payment.paymentProvider
             refunds = payment.refunds.map { it.toMutableList() }
             retryAttempt = payment.retryAttempt
+            servicePeriods = payment.servicePeriods.map { it.toMutableList() }
             settlementAmount = payment.settlementAmount
             settlementCurrency = payment.settlementCurrency
             subscriptionIds = payment.subscriptionIds.map { it.toMutableList() }
@@ -1344,6 +1373,39 @@ private constructor(
          * value.
          */
         fun retryAttempt(retryAttempt: JsonField<Int>) = apply { this.retryAttempt = retryAttempt }
+
+        /**
+         * The service period of each subscription that this payment pays for. The order is the same
+         * as `subscription_ids`. For a plan change charge, the period starts at the plan change and
+         * ends at the next billing date. The list is empty unless the payment status is
+         * `succeeded`. The list is also empty for a one-time payment, an on-demand charge, or a
+         * payment method update.
+         */
+        fun servicePeriods(servicePeriods: List<SubscriptionServicePeriod>) =
+            servicePeriods(JsonField.of(servicePeriods))
+
+        /**
+         * Sets [Builder.servicePeriods] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.servicePeriods] with a well-typed
+         * `List<SubscriptionServicePeriod>` value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun servicePeriods(servicePeriods: JsonField<List<SubscriptionServicePeriod>>) = apply {
+            this.servicePeriods = servicePeriods.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [SubscriptionServicePeriod] to [servicePeriods].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addServicePeriod(servicePeriod: SubscriptionServicePeriod) = apply {
+            servicePeriods =
+                (servicePeriods ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("servicePeriods", it).add(servicePeriod)
+                }
+        }
 
         /**
          * The amount that will be credited to your Dodo balance after currency conversion and
@@ -1950,6 +2012,7 @@ private constructor(
          * .paymentProvider()
          * .refunds()
          * .retryAttempt()
+         * .servicePeriods()
          * .settlementAmount()
          * .settlementCurrency()
          * .subscriptionIds()
@@ -1975,6 +2038,7 @@ private constructor(
                 checkRequired("paymentProvider", paymentProvider),
                 checkRequired("refunds", refunds).map { it.toImmutable() },
                 checkRequired("retryAttempt", retryAttempt),
+                checkRequired("servicePeriods", servicePeriods).map { it.toImmutable() },
                 checkRequired("settlementAmount", settlementAmount),
                 checkRequired("settlementCurrency", settlementCurrency),
                 checkRequired("subscriptionIds", subscriptionIds).map { it.toImmutable() },
@@ -2037,6 +2101,7 @@ private constructor(
         paymentProvider().validate()
         refunds().forEach { it.validate() }
         retryAttempt()
+        servicePeriods().forEach { it.validate() }
         settlementAmount()
         settlementCurrency().validate()
         subscriptionIds()
@@ -2098,6 +2163,7 @@ private constructor(
             (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
             (refunds.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (retryAttempt.asKnown().isPresent) 1 else 0) +
+            (servicePeriods.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (settlementAmount.asKnown().isPresent) 1 else 0) +
             (settlementCurrency.asKnown().getOrNull()?.validity() ?: 0) +
             (subscriptionIds.asKnown().getOrNull()?.size ?: 0) +
@@ -2503,6 +2569,7 @@ private constructor(
             paymentProvider == other.paymentProvider &&
             refunds == other.refunds &&
             retryAttempt == other.retryAttempt &&
+            servicePeriods == other.servicePeriods &&
             settlementAmount == other.settlementAmount &&
             settlementCurrency == other.settlementCurrency &&
             subscriptionIds == other.subscriptionIds &&
@@ -2551,6 +2618,7 @@ private constructor(
             paymentProvider,
             refunds,
             retryAttempt,
+            servicePeriods,
             settlementAmount,
             settlementCurrency,
             subscriptionIds,
@@ -2586,5 +2654,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, isMultiSubscription=$isMultiSubscription, isUpdatePaymentMethod=$isUpdatePaymentMethod, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, refunds=$refunds, retryAttempt=$retryAttempt, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Payment{billing=$billing, brandId=$brandId, businessId=$businessId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, disputes=$disputes, isMultiSubscription=$isMultiSubscription, isUpdatePaymentMethod=$isUpdatePaymentMethod, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, refunds=$refunds, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, settlementAmount=$settlementAmount, settlementCurrency=$settlementCurrency, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardHolderName=$cardHolderName, cardIssuingCountry=$cardIssuingCountry, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, checkoutSessionId=$checkoutSessionId, customFieldResponses=$customFieldResponses, discountId=$discountId, discounts=$discounts, errorCode=$errorCode, errorMessage=$errorMessage, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentLink=$paymentLink, paymentMethod=$paymentMethod, paymentMethodId=$paymentMethodId, paymentMethodType=$paymentMethodType, productCart=$productCart, refundStatus=$refundStatus, settlementTax=$settlementTax, status=$status, subscriptionId=$subscriptionId, tax=$tax, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

@@ -27,6 +27,7 @@ internal class RefundListItemTest {
                 .currency(Currency.AED)
                 .networkReference("network_reference")
                 .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+                .networkReferenceUpdatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .reason("reason")
                 .build()
 
@@ -42,6 +43,8 @@ internal class RefundListItemTest {
         assertThat(refundListItem.networkReference()).contains("network_reference")
         assertThat(refundListItem.networkReferenceType())
             .contains(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+        assertThat(refundListItem.networkReferenceUpdatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(refundListItem.reason()).contains("reason")
     }
 
@@ -60,6 +63,7 @@ internal class RefundListItemTest {
                 .currency(Currency.AED)
                 .networkReference("network_reference")
                 .networkReferenceType(RefundNetworkReferenceType.ACQUIRER_REFERENCE_NUMBER)
+                .networkReferenceUpdatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .reason("reason")
                 .build()
 
