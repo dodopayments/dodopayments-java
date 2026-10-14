@@ -34,6 +34,7 @@ private constructor(
     private val currency: JsonField<Currency>,
     private val networkReference: JsonField<String>,
     private val networkReferenceType: JsonField<RefundNetworkReferenceType>,
+    private val networkReferenceUpdatedAt: JsonField<OffsetDateTime>,
     private val reason: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -60,6 +61,9 @@ private constructor(
         @JsonProperty("network_reference_type")
         @ExcludeMissing
         networkReferenceType: JsonField<RefundNetworkReferenceType> = JsonMissing.of(),
+        @JsonProperty("network_reference_updated_at")
+        @ExcludeMissing
+        networkReferenceUpdatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("reason") @ExcludeMissing reason: JsonField<String> = JsonMissing.of(),
     ) : this(
         businessId,
@@ -72,6 +76,7 @@ private constructor(
         currency,
         networkReference,
         networkReferenceType,
+        networkReferenceUpdatedAt,
         reason,
         mutableMapOf(),
     )
@@ -160,6 +165,16 @@ private constructor(
         networkReferenceType.getOptional("network_reference_type")
 
     /**
+     * The time in UTC when `network_reference` became available. It is null when the reference is
+     * not available, or when it became available before this field existed.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun networkReferenceUpdatedAt(): Optional<OffsetDateTime> =
+        networkReferenceUpdatedAt.getOptional("network_reference_updated_at")
+
+    /**
      * The reason provided for the refund, if any. Optional.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -246,6 +261,16 @@ private constructor(
     fun _networkReferenceType(): JsonField<RefundNetworkReferenceType> = networkReferenceType
 
     /**
+     * Returns the raw JSON value of [networkReferenceUpdatedAt].
+     *
+     * Unlike [networkReferenceUpdatedAt], this method doesn't throw if the JSON field has an
+     * unexpected type.
+     */
+    @JsonProperty("network_reference_updated_at")
+    @ExcludeMissing
+    fun _networkReferenceUpdatedAt(): JsonField<OffsetDateTime> = networkReferenceUpdatedAt
+
+    /**
      * Returns the raw JSON value of [reason].
      *
      * Unlike [reason], this method doesn't throw if the JSON field has an unexpected type.
@@ -295,6 +320,7 @@ private constructor(
         private var currency: JsonField<Currency> = JsonMissing.of()
         private var networkReference: JsonField<String> = JsonMissing.of()
         private var networkReferenceType: JsonField<RefundNetworkReferenceType> = JsonMissing.of()
+        private var networkReferenceUpdatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var reason: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -310,6 +336,7 @@ private constructor(
             currency = refundListItem.currency
             networkReference = refundListItem.networkReference
             networkReferenceType = refundListItem.networkReferenceType
+            networkReferenceUpdatedAt = refundListItem.networkReferenceUpdatedAt
             reason = refundListItem.reason
             additionalProperties = refundListItem.additionalProperties.toMutableMap()
         }
@@ -467,6 +494,32 @@ private constructor(
                 this.networkReferenceType = networkReferenceType
             }
 
+        /**
+         * The time in UTC when `network_reference` became available. It is null when the reference
+         * is not available, or when it became available before this field existed.
+         */
+        fun networkReferenceUpdatedAt(networkReferenceUpdatedAt: OffsetDateTime?) =
+            networkReferenceUpdatedAt(JsonField.ofNullable(networkReferenceUpdatedAt))
+
+        /**
+         * Alias for calling [Builder.networkReferenceUpdatedAt] with
+         * `networkReferenceUpdatedAt.orElse(null)`.
+         */
+        fun networkReferenceUpdatedAt(networkReferenceUpdatedAt: Optional<OffsetDateTime>) =
+            networkReferenceUpdatedAt(networkReferenceUpdatedAt.getOrNull())
+
+        /**
+         * Sets [Builder.networkReferenceUpdatedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.networkReferenceUpdatedAt] with a well-typed
+         * [OffsetDateTime] value instead. This method is primarily for setting the field to an
+         * undocumented or not yet supported value.
+         */
+        fun networkReferenceUpdatedAt(networkReferenceUpdatedAt: JsonField<OffsetDateTime>) =
+            apply {
+                this.networkReferenceUpdatedAt = networkReferenceUpdatedAt
+            }
+
         /** The reason provided for the refund, if any. Optional. */
         fun reason(reason: String?) = reason(JsonField.ofNullable(reason))
 
@@ -529,6 +582,7 @@ private constructor(
                 currency,
                 networkReference,
                 networkReferenceType,
+                networkReferenceUpdatedAt,
                 reason,
                 additionalProperties.toMutableMap(),
             )
@@ -559,6 +613,7 @@ private constructor(
         currency().ifPresent { it.validate() }
         networkReference()
         networkReferenceType().ifPresent { it.validate() }
+        networkReferenceUpdatedAt()
         reason()
         validated = true
     }
@@ -588,6 +643,7 @@ private constructor(
             (currency.asKnown().getOrNull()?.validity() ?: 0) +
             (if (networkReference.asKnown().isPresent) 1 else 0) +
             (networkReferenceType.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (networkReferenceUpdatedAt.asKnown().isPresent) 1 else 0) +
             (if (reason.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -606,6 +662,7 @@ private constructor(
             currency == other.currency &&
             networkReference == other.networkReference &&
             networkReferenceType == other.networkReferenceType &&
+            networkReferenceUpdatedAt == other.networkReferenceUpdatedAt &&
             reason == other.reason &&
             additionalProperties == other.additionalProperties
     }
@@ -622,6 +679,7 @@ private constructor(
             currency,
             networkReference,
             networkReferenceType,
+            networkReferenceUpdatedAt,
             reason,
             additionalProperties,
         )
@@ -630,5 +688,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "RefundListItem{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, networkReference=$networkReference, networkReferenceType=$networkReferenceType, reason=$reason, additionalProperties=$additionalProperties}"
+        "RefundListItem{businessId=$businessId, createdAt=$createdAt, isPartial=$isPartial, paymentId=$paymentId, refundId=$refundId, status=$status, amount=$amount, currency=$currency, networkReference=$networkReference, networkReferenceType=$networkReferenceType, networkReferenceUpdatedAt=$networkReferenceUpdatedAt, reason=$reason, additionalProperties=$additionalProperties}"
 }

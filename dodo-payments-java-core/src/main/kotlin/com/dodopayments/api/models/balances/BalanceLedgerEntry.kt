@@ -707,6 +707,12 @@ private constructor(
 
             @JvmField val MODERATION_FEES = of("moderation_fees")
 
+            @JvmField val DODO_FIXED_FEE = of("dodo_fixed_fee")
+
+            @JvmField val INTERCHANGE_FEE = of("interchange_fee")
+
+            @JvmField val SCHEME_FEE = of("scheme_fee")
+
             @JvmStatic fun of(value: String) = EventType(JsonField.of(value))
         }
 
@@ -743,6 +749,9 @@ private constructor(
             RESERVE_HOLD,
             RESERVE_RELEASE,
             MODERATION_FEES,
+            DODO_FIXED_FEE,
+            INTERCHANGE_FEE,
+            SCHEME_FEE,
         }
 
         /**
@@ -786,6 +795,9 @@ private constructor(
             RESERVE_HOLD,
             RESERVE_RELEASE,
             MODERATION_FEES,
+            DODO_FIXED_FEE,
+            INTERCHANGE_FEE,
+            SCHEME_FEE,
             /**
              * An enum member indicating that [EventType] was instantiated with an unknown value.
              */
@@ -832,6 +844,9 @@ private constructor(
                 RESERVE_HOLD -> Value.RESERVE_HOLD
                 RESERVE_RELEASE -> Value.RESERVE_RELEASE
                 MODERATION_FEES -> Value.MODERATION_FEES
+                DODO_FIXED_FEE -> Value.DODO_FIXED_FEE
+                INTERCHANGE_FEE -> Value.INTERCHANGE_FEE
+                SCHEME_FEE -> Value.SCHEME_FEE
                 else -> Value._UNKNOWN
             }
 
@@ -877,6 +892,9 @@ private constructor(
                 RESERVE_HOLD -> Known.RESERVE_HOLD
                 RESERVE_RELEASE -> Known.RESERVE_RELEASE
                 MODERATION_FEES -> Known.MODERATION_FEES
+                DODO_FIXED_FEE -> Known.DODO_FIXED_FEE
+                INTERCHANGE_FEE -> Known.INTERCHANGE_FEE
+                SCHEME_FEE -> Known.SCHEME_FEE
                 else -> throw DodoPaymentsInvalidDataException("Unknown EventType: $value")
             }
 

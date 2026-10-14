@@ -37,10 +37,13 @@ private constructor(
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
     private val paymentProvider: JsonField<PaymentProvider>,
+    private val retryAttempt: JsonField<Int>,
+    private val servicePeriods: JsonField<List<SubscriptionServicePeriod>>,
     private val subscriptionIds: JsonField<List<String>>,
     private val totalAmount: JsonField<Int>,
     private val cardLastFour: JsonField<String>,
     private val cardNetwork: JsonField<String>,
+    private val checkoutSessionId: JsonField<String>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val invoiceId: JsonField<String>,
     private val invoiceUrl: JsonField<String>,
@@ -76,6 +79,12 @@ private constructor(
         @JsonProperty("payment_provider")
         @ExcludeMissing
         paymentProvider: JsonField<PaymentProvider> = JsonMissing.of(),
+        @JsonProperty("retry_attempt")
+        @ExcludeMissing
+        retryAttempt: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("service_periods")
+        @ExcludeMissing
+        servicePeriods: JsonField<List<SubscriptionServicePeriod>> = JsonMissing.of(),
         @JsonProperty("subscription_ids")
         @ExcludeMissing
         subscriptionIds: JsonField<List<String>> = JsonMissing.of(),
@@ -88,6 +97,9 @@ private constructor(
         @JsonProperty("card_network")
         @ExcludeMissing
         cardNetwork: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("checkout_session_id")
+        @ExcludeMissing
+        checkoutSessionId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dispute_status")
         @ExcludeMissing
         disputeStatus: JsonField<DisputeStatus> = JsonMissing.of(),
@@ -119,10 +131,13 @@ private constructor(
         metadata,
         paymentId,
         paymentProvider,
+        retryAttempt,
+        servicePeriods,
         subscriptionIds,
         totalAmount,
         cardLastFour,
         cardNetwork,
+        checkoutSessionId,
         disputeStatus,
         invoiceId,
         invoiceUrl,
@@ -204,6 +219,28 @@ private constructor(
     fun paymentProvider(): PaymentProvider = paymentProvider.getRequired("payment_provider")
 
     /**
+     * The retry attempt number of this payment. The value is `0` for the original payment. Each
+     * retry after a failed subscription renewal adds `1`. The value is always `0` for a payment
+     * that is not for a subscription.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun retryAttempt(): Int = retryAttempt.getRequired("retry_attempt")
+
+    /**
+     * The service period of each subscription that this payment pays for. The order is the same as
+     * `subscription_ids`. For a plan change charge, the period starts at the plan change and ends
+     * at the next billing date. The list is empty unless the payment status is `succeeded`. The
+     * list is also empty for a one-time payment, an on-demand charge, or a payment method update.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun servicePeriods(): List<SubscriptionServicePeriod> =
+        servicePeriods.getRequired("service_periods")
+
+    /**
      * Every subscription that this payment starts or charges, in a stable order. It is empty for a
      * one-time payment. It holds the value of `subscription_id` when the payment names one
      * subscription.
@@ -234,6 +271,15 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun cardNetwork(): Optional<String> = cardNetwork.getOptional("card_network")
+
+    /**
+     * The ID of the checkout session for this payment. The value is null when the payment does not
+     * use a checkout session.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun checkoutSessionId(): Optional<String> = checkoutSessionId.getOptional("checkout_session_id")
 
     /**
      * The most recent dispute status for this payment. None if no disputes exist.
@@ -376,6 +422,24 @@ private constructor(
     fun _paymentProvider(): JsonField<PaymentProvider> = paymentProvider
 
     /**
+     * Returns the raw JSON value of [retryAttempt].
+     *
+     * Unlike [retryAttempt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("retry_attempt")
+    @ExcludeMissing
+    fun _retryAttempt(): JsonField<Int> = retryAttempt
+
+    /**
+     * Returns the raw JSON value of [servicePeriods].
+     *
+     * Unlike [servicePeriods], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("service_periods")
+    @ExcludeMissing
+    fun _servicePeriods(): JsonField<List<SubscriptionServicePeriod>> = servicePeriods
+
+    /**
      * Returns the raw JSON value of [subscriptionIds].
      *
      * Unlike [subscriptionIds], this method doesn't throw if the JSON field has an unexpected type.
@@ -408,6 +472,16 @@ private constructor(
     @JsonProperty("card_network")
     @ExcludeMissing
     fun _cardNetwork(): JsonField<String> = cardNetwork
+
+    /**
+     * Returns the raw JSON value of [checkoutSessionId].
+     *
+     * Unlike [checkoutSessionId], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("checkout_session_id")
+    @ExcludeMissing
+    fun _checkoutSessionId(): JsonField<String> = checkoutSessionId
 
     /**
      * Returns the raw JSON value of [disputeStatus].
@@ -505,6 +579,8 @@ private constructor(
          * .metadata()
          * .paymentId()
          * .paymentProvider()
+         * .retryAttempt()
+         * .servicePeriods()
          * .subscriptionIds()
          * .totalAmount()
          * ```
@@ -525,10 +601,13 @@ private constructor(
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
         private var paymentProvider: JsonField<PaymentProvider>? = null
+        private var retryAttempt: JsonField<Int>? = null
+        private var servicePeriods: JsonField<MutableList<SubscriptionServicePeriod>>? = null
         private var subscriptionIds: JsonField<MutableList<String>>? = null
         private var totalAmount: JsonField<Int>? = null
         private var cardLastFour: JsonField<String> = JsonMissing.of()
         private var cardNetwork: JsonField<String> = JsonMissing.of()
+        private var checkoutSessionId: JsonField<String> = JsonMissing.of()
         private var disputeStatus: JsonField<DisputeStatus> = JsonMissing.of()
         private var invoiceId: JsonField<String> = JsonMissing.of()
         private var invoiceUrl: JsonField<String> = JsonMissing.of()
@@ -551,10 +630,13 @@ private constructor(
             metadata = paymentListResponse.metadata
             paymentId = paymentListResponse.paymentId
             paymentProvider = paymentListResponse.paymentProvider
+            retryAttempt = paymentListResponse.retryAttempt
+            servicePeriods = paymentListResponse.servicePeriods.map { it.toMutableList() }
             subscriptionIds = paymentListResponse.subscriptionIds.map { it.toMutableList() }
             totalAmount = paymentListResponse.totalAmount
             cardLastFour = paymentListResponse.cardLastFour
             cardNetwork = paymentListResponse.cardNetwork
+            checkoutSessionId = paymentListResponse.checkoutSessionId
             disputeStatus = paymentListResponse.disputeStatus
             invoiceId = paymentListResponse.invoiceId
             invoiceUrl = paymentListResponse.invoiceUrl
@@ -699,6 +781,55 @@ private constructor(
         }
 
         /**
+         * The retry attempt number of this payment. The value is `0` for the original payment. Each
+         * retry after a failed subscription renewal adds `1`. The value is always `0` for a payment
+         * that is not for a subscription.
+         */
+        fun retryAttempt(retryAttempt: Int) = retryAttempt(JsonField.of(retryAttempt))
+
+        /**
+         * Sets [Builder.retryAttempt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.retryAttempt] with a well-typed [Int] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun retryAttempt(retryAttempt: JsonField<Int>) = apply { this.retryAttempt = retryAttempt }
+
+        /**
+         * The service period of each subscription that this payment pays for. The order is the same
+         * as `subscription_ids`. For a plan change charge, the period starts at the plan change and
+         * ends at the next billing date. The list is empty unless the payment status is
+         * `succeeded`. The list is also empty for a one-time payment, an on-demand charge, or a
+         * payment method update.
+         */
+        fun servicePeriods(servicePeriods: List<SubscriptionServicePeriod>) =
+            servicePeriods(JsonField.of(servicePeriods))
+
+        /**
+         * Sets [Builder.servicePeriods] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.servicePeriods] with a well-typed
+         * `List<SubscriptionServicePeriod>` value instead. This method is primarily for setting the
+         * field to an undocumented or not yet supported value.
+         */
+        fun servicePeriods(servicePeriods: JsonField<List<SubscriptionServicePeriod>>) = apply {
+            this.servicePeriods = servicePeriods.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [SubscriptionServicePeriod] to [servicePeriods].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addServicePeriod(servicePeriod: SubscriptionServicePeriod) = apply {
+            servicePeriods =
+                (servicePeriods ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("servicePeriods", it).add(servicePeriod)
+                }
+        }
+
+        /**
          * Every subscription that this payment starts or charges, in a stable order. It is empty
          * for a one-time payment. It holds the value of `subscription_id` when the payment names
          * one subscription.
@@ -770,6 +901,28 @@ private constructor(
          * value.
          */
         fun cardNetwork(cardNetwork: JsonField<String>) = apply { this.cardNetwork = cardNetwork }
+
+        /**
+         * The ID of the checkout session for this payment. The value is null when the payment does
+         * not use a checkout session.
+         */
+        fun checkoutSessionId(checkoutSessionId: String?) =
+            checkoutSessionId(JsonField.ofNullable(checkoutSessionId))
+
+        /** Alias for calling [Builder.checkoutSessionId] with `checkoutSessionId.orElse(null)`. */
+        fun checkoutSessionId(checkoutSessionId: Optional<String>) =
+            checkoutSessionId(checkoutSessionId.getOrNull())
+
+        /**
+         * Sets [Builder.checkoutSessionId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.checkoutSessionId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun checkoutSessionId(checkoutSessionId: JsonField<String>) = apply {
+            this.checkoutSessionId = checkoutSessionId
+        }
 
         /** The most recent dispute status for this payment. None if no disputes exist. */
         fun disputeStatus(disputeStatus: DisputeStatus?) =
@@ -943,6 +1096,8 @@ private constructor(
          * .metadata()
          * .paymentId()
          * .paymentProvider()
+         * .retryAttempt()
+         * .servicePeriods()
          * .subscriptionIds()
          * .totalAmount()
          * ```
@@ -961,10 +1116,13 @@ private constructor(
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
                 checkRequired("paymentProvider", paymentProvider),
+                checkRequired("retryAttempt", retryAttempt),
+                checkRequired("servicePeriods", servicePeriods).map { it.toImmutable() },
                 checkRequired("subscriptionIds", subscriptionIds).map { it.toImmutable() },
                 checkRequired("totalAmount", totalAmount),
                 cardLastFour,
                 cardNetwork,
+                checkoutSessionId,
                 disputeStatus,
                 invoiceId,
                 invoiceUrl,
@@ -1002,10 +1160,13 @@ private constructor(
         metadata().validate()
         paymentId()
         paymentProvider().validate()
+        retryAttempt()
+        servicePeriods().forEach { it.validate() }
         subscriptionIds()
         totalAmount()
         cardLastFour()
         cardNetwork()
+        checkoutSessionId()
         disputeStatus().ifPresent { it.validate() }
         invoiceId()
         invoiceUrl()
@@ -1042,10 +1203,13 @@ private constructor(
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
             (paymentProvider.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (retryAttempt.asKnown().isPresent) 1 else 0) +
+            (servicePeriods.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (subscriptionIds.asKnown().getOrNull()?.size ?: 0) +
             (if (totalAmount.asKnown().isPresent) 1 else 0) +
             (if (cardLastFour.asKnown().isPresent) 1 else 0) +
             (if (cardNetwork.asKnown().isPresent) 1 else 0) +
+            (if (checkoutSessionId.asKnown().isPresent) 1 else 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (invoiceId.asKnown().isPresent) 1 else 0) +
             (if (invoiceUrl.asKnown().isPresent) 1 else 0) +
@@ -1221,10 +1385,13 @@ private constructor(
             metadata == other.metadata &&
             paymentId == other.paymentId &&
             paymentProvider == other.paymentProvider &&
+            retryAttempt == other.retryAttempt &&
+            servicePeriods == other.servicePeriods &&
             subscriptionIds == other.subscriptionIds &&
             totalAmount == other.totalAmount &&
             cardLastFour == other.cardLastFour &&
             cardNetwork == other.cardNetwork &&
+            checkoutSessionId == other.checkoutSessionId &&
             disputeStatus == other.disputeStatus &&
             invoiceId == other.invoiceId &&
             invoiceUrl == other.invoiceUrl &&
@@ -1248,10 +1415,13 @@ private constructor(
             metadata,
             paymentId,
             paymentProvider,
+            retryAttempt,
+            servicePeriods,
             subscriptionIds,
             totalAmount,
             cardLastFour,
             cardNetwork,
+            checkoutSessionId,
             disputeStatus,
             invoiceId,
             invoiceUrl,
@@ -1267,5 +1437,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, checkoutSessionId=$checkoutSessionId, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }
