@@ -357,6 +357,7 @@ private constructor(
         private val taxId: JsonField<String>,
         private val trialAmount: JsonField<Int>,
         private val pastDueEndsAt: JsonField<OffsetDateTime>,
+        private val paymentId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -484,6 +485,9 @@ private constructor(
             @JsonProperty("past_due_ends_at")
             @ExcludeMissing
             pastDueEndsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("payment_id")
+            @ExcludeMissing
+            paymentId: JsonField<String> = JsonMissing.of(),
         ) : this(
             addons,
             billing,
@@ -527,6 +531,7 @@ private constructor(
             taxId,
             trialAmount,
             pastDueEndsAt,
+            paymentId,
             mutableMapOf(),
         )
 
@@ -941,6 +946,15 @@ private constructor(
             pastDueEndsAt.getOptional("past_due_ends_at")
 
         /**
+         * Identifier of the payment that caused this event. It is set only for
+         * `subscription.renewed`. It is null for all other subscription events.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun paymentId(): Optional<String> = paymentId.getOptional("payment_id")
+
+        /**
          * Returns the raw JSON value of [addons].
          *
          * Unlike [addons], this method doesn't throw if the JSON field has an unexpected type.
@@ -1326,6 +1340,13 @@ private constructor(
         @ExcludeMissing
         fun _pastDueEndsAt(): JsonField<OffsetDateTime> = pastDueEndsAt
 
+        /**
+         * Returns the raw JSON value of [paymentId].
+         *
+         * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("payment_id") @ExcludeMissing fun _paymentId(): JsonField<String> = paymentId
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1425,6 +1446,7 @@ private constructor(
             private var taxId: JsonField<String> = JsonMissing.of()
             private var trialAmount: JsonField<Int> = JsonMissing.of()
             private var pastDueEndsAt: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var paymentId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1472,6 +1494,7 @@ private constructor(
                 taxId = data.taxId
                 trialAmount = data.trialAmount
                 pastDueEndsAt = data.pastDueEndsAt
+                paymentId = data.paymentId
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
@@ -2266,6 +2289,24 @@ private constructor(
                 this.pastDueEndsAt = pastDueEndsAt
             }
 
+            /**
+             * Identifier of the payment that caused this event. It is set only for
+             * `subscription.renewed`. It is null for all other subscription events.
+             */
+            fun paymentId(paymentId: String?) = paymentId(JsonField.ofNullable(paymentId))
+
+            /** Alias for calling [Builder.paymentId] with `paymentId.orElse(null)`. */
+            fun paymentId(paymentId: Optional<String>) = paymentId(paymentId.getOrNull())
+
+            /**
+             * Sets [Builder.paymentId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun paymentId(paymentId: JsonField<String>) = apply { this.paymentId = paymentId }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2370,6 +2411,7 @@ private constructor(
                     taxId,
                     trialAmount,
                     pastDueEndsAt,
+                    paymentId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -2432,6 +2474,7 @@ private constructor(
             taxId()
             trialAmount()
             pastDueEndsAt()
+            paymentId()
             validated = true
         }
 
@@ -2494,7 +2537,8 @@ private constructor(
                 (scheduledChange.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0) +
                 (if (trialAmount.asKnown().isPresent) 1 else 0) +
-                (if (pastDueEndsAt.asKnown().isPresent) 1 else 0)
+                (if (pastDueEndsAt.asKnown().isPresent) 1 else 0) +
+                (if (paymentId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2544,6 +2588,7 @@ private constructor(
                 taxId == other.taxId &&
                 trialAmount == other.trialAmount &&
                 pastDueEndsAt == other.pastDueEndsAt &&
+                paymentId == other.paymentId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -2591,6 +2636,7 @@ private constructor(
                 taxId,
                 trialAmount,
                 pastDueEndsAt,
+                paymentId,
                 additionalProperties,
             )
         }
@@ -2598,7 +2644,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, hasPaymentMethod=$hasPaymentMethod, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, cancelledBy=$cancelledBy, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, pastDueEndsAt=$pastDueEndsAt, additionalProperties=$additionalProperties}"
+            "Data{addons=$addons, billing=$billing, brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAt=$createdAt, creditEntitlementCart=$creditEntitlementCart, currency=$currency, customer=$customer, hasPaymentMethod=$hasPaymentMethod, metadata=$metadata, meterCreditEntitlementCart=$meterCreditEntitlementCart, meters=$meters, nextBillingDate=$nextBillingDate, onDemand=$onDemand, paymentFrequencyCount=$paymentFrequencyCount, paymentFrequencyInterval=$paymentFrequencyInterval, previousBillingDate=$previousBillingDate, productId=$productId, quantity=$quantity, recurringPreTaxAmount=$recurringPreTaxAmount, status=$status, subscriptionId=$subscriptionId, subscriptionPeriodCount=$subscriptionPeriodCount, subscriptionPeriodInterval=$subscriptionPeriodInterval, taxInclusive=$taxInclusive, trialPeriodDays=$trialPeriodDays, cancellationComment=$cancellationComment, cancellationFeedback=$cancellationFeedback, cancelledAt=$cancelledAt, cancelledBy=$cancelledBy, customFieldResponses=$customFieldResponses, customerBusinessName=$customerBusinessName, discountCyclesRemaining=$discountCyclesRemaining, discountId=$discountId, discounts=$discounts, expiresAt=$expiresAt, pausedAt=$pausedAt, paymentMethodId=$paymentMethodId, scheduledChange=$scheduledChange, taxId=$taxId, trialAmount=$trialAmount, pastDueEndsAt=$pastDueEndsAt, paymentId=$paymentId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
