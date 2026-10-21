@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.122.0](https://github.com/dodopayments/dodopayments-java/compare/v1.121.0...v1.122.0) (2026-10-21)
+
+
+### Features
+
+* **api:** payment charge type, usage flag and card details, signed invoice link tokens ([a27ad11](https://github.com/dodopayments/dodopayments-java/commit/a27ad11ad9934267a6ac9934dc8d9fee16c6d658))
+* **api:** payment charge type, usage flag and card details, signed invoice link tokens ([8a5d769](https://github.com/dodopayments/dodopayments-java/commit/8a5d76915803104e7b44555c8e7979de8b466644))
+
 ## [1.121.0](https://github.com/dodopayments/dodopayments-java/compare/v1.120.2...v1.121.0) (2026-10-14)
 
 
