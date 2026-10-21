@@ -33,6 +33,7 @@ private constructor(
     private val customer: JsonField<CustomerLimitedDetails>,
     private val digitalProductsDelivered: JsonField<Boolean>,
     private val hasLicenseKey: JsonField<Boolean>,
+    private val includesUsage: JsonField<Boolean>,
     private val isMultiSubscription: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
     private val paymentId: JsonField<String>,
@@ -41,8 +42,12 @@ private constructor(
     private val servicePeriods: JsonField<List<SubscriptionServicePeriod>>,
     private val subscriptionIds: JsonField<List<String>>,
     private val totalAmount: JsonField<Int>,
+    private val cardExpMonth: JsonField<String>,
+    private val cardExpYear: JsonField<String>,
     private val cardLastFour: JsonField<String>,
     private val cardNetwork: JsonField<String>,
+    private val cardType: JsonField<String>,
+    private val chargeType: JsonField<ChargeType>,
     private val checkoutSessionId: JsonField<String>,
     private val disputeStatus: JsonField<DisputeStatus>,
     private val invoiceId: JsonField<String>,
@@ -71,6 +76,9 @@ private constructor(
         @JsonProperty("has_license_key")
         @ExcludeMissing
         hasLicenseKey: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("includes_usage")
+        @ExcludeMissing
+        includesUsage: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("is_multi_subscription")
         @ExcludeMissing
         isMultiSubscription: JsonField<Boolean> = JsonMissing.of(),
@@ -91,12 +99,22 @@ private constructor(
         @JsonProperty("total_amount")
         @ExcludeMissing
         totalAmount: JsonField<Int> = JsonMissing.of(),
+        @JsonProperty("card_exp_month")
+        @ExcludeMissing
+        cardExpMonth: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("card_exp_year")
+        @ExcludeMissing
+        cardExpYear: JsonField<String> = JsonMissing.of(),
         @JsonProperty("card_last_four")
         @ExcludeMissing
         cardLastFour: JsonField<String> = JsonMissing.of(),
         @JsonProperty("card_network")
         @ExcludeMissing
         cardNetwork: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("card_type") @ExcludeMissing cardType: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("charge_type")
+        @ExcludeMissing
+        chargeType: JsonField<ChargeType> = JsonMissing.of(),
         @JsonProperty("checkout_session_id")
         @ExcludeMissing
         checkoutSessionId: JsonField<String> = JsonMissing.of(),
@@ -127,6 +145,7 @@ private constructor(
         customer,
         digitalProductsDelivered,
         hasLicenseKey,
+        includesUsage,
         isMultiSubscription,
         metadata,
         paymentId,
@@ -135,8 +154,12 @@ private constructor(
         servicePeriods,
         subscriptionIds,
         totalAmount,
+        cardExpMonth,
+        cardExpYear,
         cardLastFour,
         cardNetwork,
+        cardType,
+        chargeType,
         checkoutSessionId,
         disputeStatus,
         invoiceId,
@@ -187,6 +210,16 @@ private constructor(
     fun hasLicenseKey(): Boolean = hasLicenseKey.getRequired("has_license_key")
 
     /**
+     * True when this payment also bills metered usage or credit overage. The usage is for the
+     * billing cycle before the service period, not for the service period. The value is set for
+     * each payment status. It is false when `charge_type` is null.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun includesUsage(): Boolean = includesUsage.getRequired("includes_usage")
+
+    /**
      * True when one payment starts more than one subscription. Read this field to find the payment
      * type. Do not read the length of `subscription_ids`. Do not read `subscription_id` for null.
      *
@@ -233,6 +266,9 @@ private constructor(
      * `subscription_ids`. For a plan change charge, the period starts at the plan change and ends
      * at the next billing date. The list is empty unless the payment status is `succeeded`. The
      * list is also empty for a one-time payment, an on-demand charge, or a payment method update.
+     * The list is set for `new`, `renewal` and `plan_change` charges that succeeded. It can be
+     * empty for some zero-amount payments. A `renewal` with no entry for its subscription bills
+     * usage only. That payment does not extend the service period.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -257,6 +293,25 @@ private constructor(
     fun totalAmount(): Int = totalAmount.getRequired("total_amount")
 
     /**
+     * Expiry month of the card, as two digits from `01` to `12`. For Apple Pay and Google Pay, this
+     * is the expiry of the wallet token, which can differ from the expiry of the physical card.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun cardExpMonth(): Optional<String> = cardExpMonth.getOptional("card_exp_month")
+
+    /**
+     * Expiry year of the card, as four digits, for example `2029`. For Apple Pay and Google Pay,
+     * this is the expiry of the wallet token, which can differ from the expiry of the physical
+     * card.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun cardExpYear(): Optional<String> = cardExpYear.getOptional("card_exp_year")
+
+    /**
      * The last four digits of the card
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -265,12 +320,32 @@ private constructor(
     fun cardLastFour(): Optional<String> = cardLastFour.getOptional("card_last_four")
 
     /**
-     * Card network like VISA, MASTERCARD etc.
+     * Card network, in lowercase, for example `visa`, `mastercard` or `amex`. Older payments can
+     * carry other casing.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
     fun cardNetwork(): Optional<String> = cardNetwork.getOptional("card_network")
+
+    /**
+     * The type of card, in lowercase: `credit`, `debit` or `prepaid`. Older payments can carry
+     * other casing.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun cardType(): Optional<String> = cardType.getOptional("card_type")
+
+    /**
+     * The type of subscription charge that this payment is for. Refer to `ChargeType`. The value is
+     * set for each payment status, not only for `succeeded`. The value is null when this payment
+     * charges no subscription.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun chargeType(): Optional<ChargeType> = chargeType.getOptional("charge_type")
 
     /**
      * The ID of the checkout session for this payment. The value is null when the payment does not
@@ -298,11 +373,14 @@ private constructor(
     fun invoiceId(): Optional<String> = invoiceId.getOptional("invoice_id")
 
     /**
-     * URL to download the invoice PDF for this payment.
+     * DEPRECATED: Use `GET /invoices/payments/{payment_id}` with an API key. URL to download the
+     * invoice PDF for this payment. The URL has no signed token. If the business asks for a
+     * credential on its invoice links, the URL needs an API key.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
+    @Deprecated("Use `GET /invoices/payments/{payment_id}` with an API key.")
     fun invoiceUrl(): Optional<String> = invoiceUrl.getOptional("invoice_url")
 
     /**
@@ -389,6 +467,15 @@ private constructor(
     fun _hasLicenseKey(): JsonField<Boolean> = hasLicenseKey
 
     /**
+     * Returns the raw JSON value of [includesUsage].
+     *
+     * Unlike [includesUsage], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("includes_usage")
+    @ExcludeMissing
+    fun _includesUsage(): JsonField<Boolean> = includesUsage
+
+    /**
      * Returns the raw JSON value of [isMultiSubscription].
      *
      * Unlike [isMultiSubscription], this method doesn't throw if the JSON field has an unexpected
@@ -456,6 +543,24 @@ private constructor(
     @JsonProperty("total_amount") @ExcludeMissing fun _totalAmount(): JsonField<Int> = totalAmount
 
     /**
+     * Returns the raw JSON value of [cardExpMonth].
+     *
+     * Unlike [cardExpMonth], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("card_exp_month")
+    @ExcludeMissing
+    fun _cardExpMonth(): JsonField<String> = cardExpMonth
+
+    /**
+     * Returns the raw JSON value of [cardExpYear].
+     *
+     * Unlike [cardExpYear], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("card_exp_year")
+    @ExcludeMissing
+    fun _cardExpYear(): JsonField<String> = cardExpYear
+
+    /**
      * Returns the raw JSON value of [cardLastFour].
      *
      * Unlike [cardLastFour], this method doesn't throw if the JSON field has an unexpected type.
@@ -472,6 +577,22 @@ private constructor(
     @JsonProperty("card_network")
     @ExcludeMissing
     fun _cardNetwork(): JsonField<String> = cardNetwork
+
+    /**
+     * Returns the raw JSON value of [cardType].
+     *
+     * Unlike [cardType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("card_type") @ExcludeMissing fun _cardType(): JsonField<String> = cardType
+
+    /**
+     * Returns the raw JSON value of [chargeType].
+     *
+     * Unlike [chargeType], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("charge_type")
+    @ExcludeMissing
+    fun _chargeType(): JsonField<ChargeType> = chargeType
 
     /**
      * Returns the raw JSON value of [checkoutSessionId].
@@ -504,7 +625,10 @@ private constructor(
      *
      * Unlike [invoiceUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("invoice_url") @ExcludeMissing fun _invoiceUrl(): JsonField<String> = invoiceUrl
+    @Deprecated("Use `GET /invoices/payments/{payment_id}` with an API key.")
+    @JsonProperty("invoice_url")
+    @ExcludeMissing
+    fun _invoiceUrl(): JsonField<String> = invoiceUrl
 
     /**
      * Returns the raw JSON value of [paymentMethod].
@@ -575,6 +699,7 @@ private constructor(
          * .customer()
          * .digitalProductsDelivered()
          * .hasLicenseKey()
+         * .includesUsage()
          * .isMultiSubscription()
          * .metadata()
          * .paymentId()
@@ -597,6 +722,7 @@ private constructor(
         private var customer: JsonField<CustomerLimitedDetails>? = null
         private var digitalProductsDelivered: JsonField<Boolean>? = null
         private var hasLicenseKey: JsonField<Boolean>? = null
+        private var includesUsage: JsonField<Boolean>? = null
         private var isMultiSubscription: JsonField<Boolean>? = null
         private var metadata: JsonField<Metadata>? = null
         private var paymentId: JsonField<String>? = null
@@ -605,8 +731,12 @@ private constructor(
         private var servicePeriods: JsonField<MutableList<SubscriptionServicePeriod>>? = null
         private var subscriptionIds: JsonField<MutableList<String>>? = null
         private var totalAmount: JsonField<Int>? = null
+        private var cardExpMonth: JsonField<String> = JsonMissing.of()
+        private var cardExpYear: JsonField<String> = JsonMissing.of()
         private var cardLastFour: JsonField<String> = JsonMissing.of()
         private var cardNetwork: JsonField<String> = JsonMissing.of()
+        private var cardType: JsonField<String> = JsonMissing.of()
+        private var chargeType: JsonField<ChargeType> = JsonMissing.of()
         private var checkoutSessionId: JsonField<String> = JsonMissing.of()
         private var disputeStatus: JsonField<DisputeStatus> = JsonMissing.of()
         private var invoiceId: JsonField<String> = JsonMissing.of()
@@ -626,6 +756,7 @@ private constructor(
             customer = paymentListResponse.customer
             digitalProductsDelivered = paymentListResponse.digitalProductsDelivered
             hasLicenseKey = paymentListResponse.hasLicenseKey
+            includesUsage = paymentListResponse.includesUsage
             isMultiSubscription = paymentListResponse.isMultiSubscription
             metadata = paymentListResponse.metadata
             paymentId = paymentListResponse.paymentId
@@ -634,8 +765,12 @@ private constructor(
             servicePeriods = paymentListResponse.servicePeriods.map { it.toMutableList() }
             subscriptionIds = paymentListResponse.subscriptionIds.map { it.toMutableList() }
             totalAmount = paymentListResponse.totalAmount
+            cardExpMonth = paymentListResponse.cardExpMonth
+            cardExpYear = paymentListResponse.cardExpYear
             cardLastFour = paymentListResponse.cardLastFour
             cardNetwork = paymentListResponse.cardNetwork
+            cardType = paymentListResponse.cardType
+            chargeType = paymentListResponse.chargeType
             checkoutSessionId = paymentListResponse.checkoutSessionId
             disputeStatus = paymentListResponse.disputeStatus
             invoiceId = paymentListResponse.invoiceId
@@ -721,6 +856,24 @@ private constructor(
         }
 
         /**
+         * True when this payment also bills metered usage or credit overage. The usage is for the
+         * billing cycle before the service period, not for the service period. The value is set for
+         * each payment status. It is false when `charge_type` is null.
+         */
+        fun includesUsage(includesUsage: Boolean) = includesUsage(JsonField.of(includesUsage))
+
+        /**
+         * Sets [Builder.includesUsage] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.includesUsage] with a well-typed [Boolean] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun includesUsage(includesUsage: JsonField<Boolean>) = apply {
+            this.includesUsage = includesUsage
+        }
+
+        /**
          * True when one payment starts more than one subscription. Read this field to find the
          * payment type. Do not read the length of `subscription_ids`. Do not read `subscription_id`
          * for null.
@@ -801,7 +954,9 @@ private constructor(
          * as `subscription_ids`. For a plan change charge, the period starts at the plan change and
          * ends at the next billing date. The list is empty unless the payment status is
          * `succeeded`. The list is also empty for a one-time payment, an on-demand charge, or a
-         * payment method update.
+         * payment method update. The list is set for `new`, `renewal` and `plan_change` charges
+         * that succeeded. It can be empty for some zero-amount payments. A `renewal` with no entry
+         * for its subscription bills usage only. That payment does not extend the service period.
          */
         fun servicePeriods(servicePeriods: List<SubscriptionServicePeriod>) =
             servicePeriods(JsonField.of(servicePeriods))
@@ -870,6 +1025,46 @@ private constructor(
          */
         fun totalAmount(totalAmount: JsonField<Int>) = apply { this.totalAmount = totalAmount }
 
+        /**
+         * Expiry month of the card, as two digits from `01` to `12`. For Apple Pay and Google Pay,
+         * this is the expiry of the wallet token, which can differ from the expiry of the physical
+         * card.
+         */
+        fun cardExpMonth(cardExpMonth: String?) = cardExpMonth(JsonField.ofNullable(cardExpMonth))
+
+        /** Alias for calling [Builder.cardExpMonth] with `cardExpMonth.orElse(null)`. */
+        fun cardExpMonth(cardExpMonth: Optional<String>) = cardExpMonth(cardExpMonth.getOrNull())
+
+        /**
+         * Sets [Builder.cardExpMonth] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cardExpMonth] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun cardExpMonth(cardExpMonth: JsonField<String>) = apply {
+            this.cardExpMonth = cardExpMonth
+        }
+
+        /**
+         * Expiry year of the card, as four digits, for example `2029`. For Apple Pay and Google
+         * Pay, this is the expiry of the wallet token, which can differ from the expiry of the
+         * physical card.
+         */
+        fun cardExpYear(cardExpYear: String?) = cardExpYear(JsonField.ofNullable(cardExpYear))
+
+        /** Alias for calling [Builder.cardExpYear] with `cardExpYear.orElse(null)`. */
+        fun cardExpYear(cardExpYear: Optional<String>) = cardExpYear(cardExpYear.getOrNull())
+
+        /**
+         * Sets [Builder.cardExpYear] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cardExpYear] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun cardExpYear(cardExpYear: JsonField<String>) = apply { this.cardExpYear = cardExpYear }
+
         /** The last four digits of the card */
         fun cardLastFour(cardLastFour: String?) = cardLastFour(JsonField.ofNullable(cardLastFour))
 
@@ -887,7 +1082,10 @@ private constructor(
             this.cardLastFour = cardLastFour
         }
 
-        /** Card network like VISA, MASTERCARD etc. */
+        /**
+         * Card network, in lowercase, for example `visa`, `mastercard` or `amex`. Older payments
+         * can carry other casing.
+         */
         fun cardNetwork(cardNetwork: String?) = cardNetwork(JsonField.ofNullable(cardNetwork))
 
         /** Alias for calling [Builder.cardNetwork] with `cardNetwork.orElse(null)`. */
@@ -901,6 +1099,42 @@ private constructor(
          * value.
          */
         fun cardNetwork(cardNetwork: JsonField<String>) = apply { this.cardNetwork = cardNetwork }
+
+        /**
+         * The type of card, in lowercase: `credit`, `debit` or `prepaid`. Older payments can carry
+         * other casing.
+         */
+        fun cardType(cardType: String?) = cardType(JsonField.ofNullable(cardType))
+
+        /** Alias for calling [Builder.cardType] with `cardType.orElse(null)`. */
+        fun cardType(cardType: Optional<String>) = cardType(cardType.getOrNull())
+
+        /**
+         * Sets [Builder.cardType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.cardType] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun cardType(cardType: JsonField<String>) = apply { this.cardType = cardType }
+
+        /**
+         * The type of subscription charge that this payment is for. Refer to `ChargeType`. The
+         * value is set for each payment status, not only for `succeeded`. The value is null when
+         * this payment charges no subscription.
+         */
+        fun chargeType(chargeType: ChargeType?) = chargeType(JsonField.ofNullable(chargeType))
+
+        /** Alias for calling [Builder.chargeType] with `chargeType.orElse(null)`. */
+        fun chargeType(chargeType: Optional<ChargeType>) = chargeType(chargeType.getOrNull())
+
+        /**
+         * Sets [Builder.chargeType] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.chargeType] with a well-typed [ChargeType] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun chargeType(chargeType: JsonField<ChargeType>) = apply { this.chargeType = chargeType }
 
         /**
          * The ID of the checkout session for this payment. The value is null when the payment does
@@ -958,10 +1192,16 @@ private constructor(
          */
         fun invoiceId(invoiceId: JsonField<String>) = apply { this.invoiceId = invoiceId }
 
-        /** URL to download the invoice PDF for this payment. */
+        /**
+         * DEPRECATED: Use `GET /invoices/payments/{payment_id}` with an API key. URL to download
+         * the invoice PDF for this payment. The URL has no signed token. If the business asks for a
+         * credential on its invoice links, the URL needs an API key.
+         */
+        @Deprecated("Use `GET /invoices/payments/{payment_id}` with an API key.")
         fun invoiceUrl(invoiceUrl: String?) = invoiceUrl(JsonField.ofNullable(invoiceUrl))
 
         /** Alias for calling [Builder.invoiceUrl] with `invoiceUrl.orElse(null)`. */
+        @Deprecated("Use `GET /invoices/payments/{payment_id}` with an API key.")
         fun invoiceUrl(invoiceUrl: Optional<String>) = invoiceUrl(invoiceUrl.getOrNull())
 
         /**
@@ -971,6 +1211,7 @@ private constructor(
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
+        @Deprecated("Use `GET /invoices/payments/{payment_id}` with an API key.")
         fun invoiceUrl(invoiceUrl: JsonField<String>) = apply { this.invoiceUrl = invoiceUrl }
 
         fun paymentMethod(paymentMethod: String?) =
@@ -1092,6 +1333,7 @@ private constructor(
          * .customer()
          * .digitalProductsDelivered()
          * .hasLicenseKey()
+         * .includesUsage()
          * .isMultiSubscription()
          * .metadata()
          * .paymentId()
@@ -1112,6 +1354,7 @@ private constructor(
                 checkRequired("customer", customer),
                 checkRequired("digitalProductsDelivered", digitalProductsDelivered),
                 checkRequired("hasLicenseKey", hasLicenseKey),
+                checkRequired("includesUsage", includesUsage),
                 checkRequired("isMultiSubscription", isMultiSubscription),
                 checkRequired("metadata", metadata),
                 checkRequired("paymentId", paymentId),
@@ -1120,8 +1363,12 @@ private constructor(
                 checkRequired("servicePeriods", servicePeriods).map { it.toImmutable() },
                 checkRequired("subscriptionIds", subscriptionIds).map { it.toImmutable() },
                 checkRequired("totalAmount", totalAmount),
+                cardExpMonth,
+                cardExpYear,
                 cardLastFour,
                 cardNetwork,
+                cardType,
+                chargeType,
                 checkoutSessionId,
                 disputeStatus,
                 invoiceId,
@@ -1156,6 +1403,7 @@ private constructor(
         customer().validate()
         digitalProductsDelivered()
         hasLicenseKey()
+        includesUsage()
         isMultiSubscription()
         metadata().validate()
         paymentId()
@@ -1164,8 +1412,12 @@ private constructor(
         servicePeriods().forEach { it.validate() }
         subscriptionIds()
         totalAmount()
+        cardExpMonth()
+        cardExpYear()
         cardLastFour()
         cardNetwork()
+        cardType()
+        chargeType().ifPresent { it.validate() }
         checkoutSessionId()
         disputeStatus().ifPresent { it.validate() }
         invoiceId()
@@ -1199,6 +1451,7 @@ private constructor(
             (customer.asKnown().getOrNull()?.validity() ?: 0) +
             (if (digitalProductsDelivered.asKnown().isPresent) 1 else 0) +
             (if (hasLicenseKey.asKnown().isPresent) 1 else 0) +
+            (if (includesUsage.asKnown().isPresent) 1 else 0) +
             (if (isMultiSubscription.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
@@ -1207,8 +1460,12 @@ private constructor(
             (servicePeriods.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (subscriptionIds.asKnown().getOrNull()?.size ?: 0) +
             (if (totalAmount.asKnown().isPresent) 1 else 0) +
+            (if (cardExpMonth.asKnown().isPresent) 1 else 0) +
+            (if (cardExpYear.asKnown().isPresent) 1 else 0) +
             (if (cardLastFour.asKnown().isPresent) 1 else 0) +
             (if (cardNetwork.asKnown().isPresent) 1 else 0) +
+            (if (cardType.asKnown().isPresent) 1 else 0) +
+            (chargeType.asKnown().getOrNull()?.validity() ?: 0) +
             (if (checkoutSessionId.asKnown().isPresent) 1 else 0) +
             (disputeStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (invoiceId.asKnown().isPresent) 1 else 0) +
@@ -1381,6 +1638,7 @@ private constructor(
             customer == other.customer &&
             digitalProductsDelivered == other.digitalProductsDelivered &&
             hasLicenseKey == other.hasLicenseKey &&
+            includesUsage == other.includesUsage &&
             isMultiSubscription == other.isMultiSubscription &&
             metadata == other.metadata &&
             paymentId == other.paymentId &&
@@ -1389,8 +1647,12 @@ private constructor(
             servicePeriods == other.servicePeriods &&
             subscriptionIds == other.subscriptionIds &&
             totalAmount == other.totalAmount &&
+            cardExpMonth == other.cardExpMonth &&
+            cardExpYear == other.cardExpYear &&
             cardLastFour == other.cardLastFour &&
             cardNetwork == other.cardNetwork &&
+            cardType == other.cardType &&
+            chargeType == other.chargeType &&
             checkoutSessionId == other.checkoutSessionId &&
             disputeStatus == other.disputeStatus &&
             invoiceId == other.invoiceId &&
@@ -1411,6 +1673,7 @@ private constructor(
             customer,
             digitalProductsDelivered,
             hasLicenseKey,
+            includesUsage,
             isMultiSubscription,
             metadata,
             paymentId,
@@ -1419,8 +1682,12 @@ private constructor(
             servicePeriods,
             subscriptionIds,
             totalAmount,
+            cardExpMonth,
+            cardExpYear,
             cardLastFour,
             cardNetwork,
+            cardType,
+            chargeType,
             checkoutSessionId,
             disputeStatus,
             invoiceId,
@@ -1437,5 +1704,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, checkoutSessionId=$checkoutSessionId, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, includesUsage=$includesUsage, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardExpMonth=$cardExpMonth, cardExpYear=$cardExpYear, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, chargeType=$chargeType, checkoutSessionId=$checkoutSessionId, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
 }
