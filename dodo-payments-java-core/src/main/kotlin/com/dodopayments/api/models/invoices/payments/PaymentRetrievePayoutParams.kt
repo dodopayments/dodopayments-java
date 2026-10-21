@@ -12,11 +12,18 @@ import kotlin.jvm.optionals.getOrNull
 class PaymentRetrievePayoutParams
 private constructor(
     private val payoutId: String?,
+    private val token: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun payoutId(): Optional<String> = Optional.ofNullable(payoutId)
+
+    /**
+     * The signed link token. If the business asks for a credential on its invoice links, a valid
+     * token for this record replaces the credential.
+     */
+    fun token(): Optional<String> = Optional.ofNullable(token)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,12 +47,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var payoutId: String? = null
+        private var token: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(paymentRetrievePayoutParams: PaymentRetrievePayoutParams) = apply {
             payoutId = paymentRetrievePayoutParams.payoutId
+            token = paymentRetrievePayoutParams.token
             additionalHeaders = paymentRetrievePayoutParams.additionalHeaders.toBuilder()
             additionalQueryParams = paymentRetrievePayoutParams.additionalQueryParams.toBuilder()
         }
@@ -54,6 +63,15 @@ private constructor(
 
         /** Alias for calling [Builder.payoutId] with `payoutId.orElse(null)`. */
         fun payoutId(payoutId: Optional<String>) = payoutId(payoutId.getOrNull())
+
+        /**
+         * The signed link token. If the business asks for a credential on its invoice links, a
+         * valid token for this record replaces the credential.
+         */
+        fun token(token: String?) = apply { this.token = token }
+
+        /** Alias for calling [Builder.token] with `token.orElse(null)`. */
+        fun token(token: Optional<String>) = token(token.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -161,6 +179,7 @@ private constructor(
         fun build(): PaymentRetrievePayoutParams =
             PaymentRetrievePayoutParams(
                 payoutId,
+                token,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -174,7 +193,13 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                token?.let { put("token", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -183,12 +208,14 @@ private constructor(
 
         return other is PaymentRetrievePayoutParams &&
             payoutId == other.payoutId &&
+            token == other.token &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(payoutId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(payoutId, token, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "PaymentRetrievePayoutParams{payoutId=$payoutId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PaymentRetrievePayoutParams{payoutId=$payoutId, token=$token, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
