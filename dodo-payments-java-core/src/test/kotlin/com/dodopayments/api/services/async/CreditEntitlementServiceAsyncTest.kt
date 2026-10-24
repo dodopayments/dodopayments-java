@@ -6,6 +6,7 @@ import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.models.creditentitlements.CbbOverageBehavior
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementCreateParams
+import com.dodopayments.api.models.creditentitlements.CreditEntitlementRetrieveParams
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementUpdateParams
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -59,7 +60,12 @@ internal class CreditEntitlementServiceAsyncTest {
         val creditEntitlementServiceAsync = client.creditEntitlements()
 
         val creditEntitlementFuture =
-            creditEntitlementServiceAsync.retrieve("cde_ztxm5XJsKxWucRWA3rjdM")
+            creditEntitlementServiceAsync.retrieve(
+                CreditEntitlementRetrieveParams.builder()
+                    .id("cde_ztxm5XJsKxWucRWA3rjdM")
+                    .locale("locale")
+                    .build()
+            )
 
         val creditEntitlement = creditEntitlementFuture.get()
         creditEntitlement.validate()

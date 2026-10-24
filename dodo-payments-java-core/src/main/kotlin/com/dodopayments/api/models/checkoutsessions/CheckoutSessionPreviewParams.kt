@@ -8,13 +8,26 @@ import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 class CheckoutSessionPreviewParams
 private constructor(
+    private val locale: String?,
     private val checkoutSessionRequest: CheckoutSessionRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Shows the translated name, description and unit of the catalog entities in this locale. The
+     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
+     * unknown code, or no code shows the base text.
+     *
+     * Do not send a text from a localized response back in a create or update request. The base
+     * text then changes to the translated text.
+     */
+    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     fun checkoutSessionRequest(): CheckoutSessionRequest = checkoutSessionRequest
 
@@ -45,16 +58,31 @@ private constructor(
     /** A builder for [CheckoutSessionPreviewParams]. */
     class Builder internal constructor() {
 
+        private var locale: String? = null
         private var checkoutSessionRequest: CheckoutSessionRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(checkoutSessionPreviewParams: CheckoutSessionPreviewParams) = apply {
+            locale = checkoutSessionPreviewParams.locale
             checkoutSessionRequest = checkoutSessionPreviewParams.checkoutSessionRequest
             additionalHeaders = checkoutSessionPreviewParams.additionalHeaders.toBuilder()
             additionalQueryParams = checkoutSessionPreviewParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * Shows the translated name, description and unit of the catalog entities in this locale.
+         * The value must be a code from `GET /locales`, for example `fr`. A field with no
+         * translation, an unknown code, or no code shows the base text.
+         *
+         * Do not send a text from a localized response back in a create or update request. The base
+         * text then changes to the translated text.
+         */
+        fun locale(locale: String?) = apply { this.locale = locale }
+
+        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
+        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         fun checkoutSessionRequest(checkoutSessionRequest: CheckoutSessionRequest) = apply {
             this.checkoutSessionRequest = checkoutSessionRequest
@@ -172,6 +200,7 @@ private constructor(
          */
         fun build(): CheckoutSessionPreviewParams =
             CheckoutSessionPreviewParams(
+                locale,
                 checkRequired("checkoutSessionRequest", checkoutSessionRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -182,7 +211,13 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                locale?.let { put("locale", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -190,14 +225,15 @@ private constructor(
         }
 
         return other is CheckoutSessionPreviewParams &&
+            locale == other.locale &&
             checkoutSessionRequest == other.checkoutSessionRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(checkoutSessionRequest, additionalHeaders, additionalQueryParams)
+        Objects.hash(locale, checkoutSessionRequest, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CheckoutSessionPreviewParams{checkoutSessionRequest=$checkoutSessionRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CheckoutSessionPreviewParams{locale=$locale, checkoutSessionRequest=$checkoutSessionRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

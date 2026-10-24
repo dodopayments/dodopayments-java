@@ -19,6 +19,7 @@ import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChargeParams
 import com.dodopayments.api.models.subscriptions.SubscriptionCreateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
@@ -109,7 +110,13 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscriptions()
 
-        val subscriptionFuture = subscriptionServiceAsync.retrieve("sub_Iuaq622bbmmfOGrVTqdXv")
+        val subscriptionFuture =
+            subscriptionServiceAsync.retrieve(
+                SubscriptionRetrieveParams.builder()
+                    .subscriptionId("sub_Iuaq622bbmmfOGrVTqdXv")
+                    .locale("locale")
+                    .build()
+            )
 
         val subscription = subscriptionFuture.get()
         subscription.validate()

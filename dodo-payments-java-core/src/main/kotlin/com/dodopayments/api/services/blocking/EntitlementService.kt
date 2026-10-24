@@ -15,6 +15,7 @@ import com.dodopayments.api.models.entitlements.EntitlementRetrieveParams
 import com.dodopayments.api.models.entitlements.EntitlementUpdateParams
 import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.dodopayments.api.services.blocking.entitlements.GrantService
+import com.dodopayments.api.services.blocking.entitlements.TranslationService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -31,6 +32,8 @@ interface EntitlementService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService
+
+    fun translations(): TranslationService
 
     fun files(): FileService
 
@@ -161,6 +164,8 @@ interface EntitlementService {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): EntitlementService.WithRawResponse
+
+        fun translations(): TranslationService.WithRawResponse
 
         fun files(): FileService.WithRawResponse
 

@@ -12,6 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 class MeterListParams
 private constructor(
     private val archived: Boolean?,
+    private val locale: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
@@ -20,6 +21,16 @@ private constructor(
 
     /** List archived meters */
     fun archived(): Optional<Boolean> = Optional.ofNullable(archived)
+
+    /**
+     * Shows the translated name, description and unit of the catalog entities in this locale. The
+     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
+     * unknown code, or no code shows the base text.
+     *
+     * Do not send a text from a localized response back in a create or update request. The base
+     * text then changes to the translated text.
+     */
+    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -47,6 +58,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var archived: Boolean? = null
+        private var locale: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -55,6 +67,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(meterListParams: MeterListParams) = apply {
             archived = meterListParams.archived
+            locale = meterListParams.locale
             pageNumber = meterListParams.pageNumber
             pageSize = meterListParams.pageSize
             additionalHeaders = meterListParams.additionalHeaders.toBuilder()
@@ -73,6 +86,19 @@ private constructor(
 
         /** Alias for calling [Builder.archived] with `archived.orElse(null)`. */
         fun archived(archived: Optional<Boolean>) = archived(archived.getOrNull())
+
+        /**
+         * Shows the translated name, description and unit of the catalog entities in this locale.
+         * The value must be a code from `GET /locales`, for example `fr`. A field with no
+         * translation, an unknown code, or no code shows the base text.
+         *
+         * Do not send a text from a localized response back in a create or update request. The base
+         * text then changes to the translated text.
+         */
+        fun locale(locale: String?) = apply { this.locale = locale }
+
+        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
+        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -206,6 +232,7 @@ private constructor(
         fun build(): MeterListParams =
             MeterListParams(
                 archived,
+                locale,
                 pageNumber,
                 pageSize,
                 additionalHeaders.build(),
@@ -219,6 +246,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 archived?.let { put("archived", it.toString()) }
+                locale?.let { put("locale", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -232,6 +260,7 @@ private constructor(
 
         return other is MeterListParams &&
             archived == other.archived &&
+            locale == other.locale &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
@@ -239,8 +268,15 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(archived, pageNumber, pageSize, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            archived,
+            locale,
+            pageNumber,
+            pageSize,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "MeterListParams{archived=$archived, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MeterListParams{archived=$archived, locale=$locale, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

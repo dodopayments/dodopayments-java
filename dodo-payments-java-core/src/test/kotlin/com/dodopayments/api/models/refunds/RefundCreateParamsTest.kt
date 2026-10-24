@@ -3,6 +3,7 @@
 package com.dodopayments.api.models.refunds
 
 import com.dodopayments.api.core.JsonValue
+import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.Metadata
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -14,6 +15,7 @@ internal class RefundCreateParamsTest {
     fun create() {
         RefundCreateParams.builder()
             .paymentId("payment_id")
+            .currency(Currency.AED)
             .addItem(
                 RefundCreateParams.Item.builder()
                     .itemId("item_id")
@@ -33,6 +35,7 @@ internal class RefundCreateParamsTest {
         val params =
             RefundCreateParams.builder()
                 .paymentId("payment_id")
+                .currency(Currency.AED)
                 .addItem(
                     RefundCreateParams.Item.builder()
                         .itemId("item_id")
@@ -51,6 +54,7 @@ internal class RefundCreateParamsTest {
         val body = params._body()
 
         assertThat(body.paymentId()).isEqualTo("payment_id")
+        assertThat(body.currency()).contains(Currency.AED)
         assertThat(body.items().getOrNull())
             .containsExactly(
                 RefundCreateParams.Item.builder()
