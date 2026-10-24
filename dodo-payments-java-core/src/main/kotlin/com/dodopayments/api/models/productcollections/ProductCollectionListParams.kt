@@ -13,6 +13,7 @@ class ProductCollectionListParams
 private constructor(
     private val archived: Boolean?,
     private val brandId: String?,
+    private val locale: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
@@ -24,6 +25,16 @@ private constructor(
 
     /** Filter by Brand id */
     fun brandId(): Optional<String> = Optional.ofNullable(brandId)
+
+    /**
+     * Shows the translated name, description and unit of the catalog entities in this locale. The
+     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
+     * unknown code, or no code shows the base text.
+     *
+     * Do not send a text from a localized response back in a create or update request. The base
+     * text then changes to the translated text.
+     */
+    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -54,6 +65,7 @@ private constructor(
 
         private var archived: Boolean? = null
         private var brandId: String? = null
+        private var locale: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -63,6 +75,7 @@ private constructor(
         internal fun from(productCollectionListParams: ProductCollectionListParams) = apply {
             archived = productCollectionListParams.archived
             brandId = productCollectionListParams.brandId
+            locale = productCollectionListParams.locale
             pageNumber = productCollectionListParams.pageNumber
             pageSize = productCollectionListParams.pageSize
             additionalHeaders = productCollectionListParams.additionalHeaders.toBuilder()
@@ -87,6 +100,19 @@ private constructor(
 
         /** Alias for calling [Builder.brandId] with `brandId.orElse(null)`. */
         fun brandId(brandId: Optional<String>) = brandId(brandId.getOrNull())
+
+        /**
+         * Shows the translated name, description and unit of the catalog entities in this locale.
+         * The value must be a code from `GET /locales`, for example `fr`. A field with no
+         * translation, an unknown code, or no code shows the base text.
+         *
+         * Do not send a text from a localized response back in a create or update request. The base
+         * text then changes to the translated text.
+         */
+        fun locale(locale: String?) = apply { this.locale = locale }
+
+        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
+        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -221,6 +247,7 @@ private constructor(
             ProductCollectionListParams(
                 archived,
                 brandId,
+                locale,
                 pageNumber,
                 pageSize,
                 additionalHeaders.build(),
@@ -235,6 +262,7 @@ private constructor(
             .apply {
                 archived?.let { put("archived", it.toString()) }
                 brandId?.let { put("brand_id", it) }
+                locale?.let { put("locale", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -249,6 +277,7 @@ private constructor(
         return other is ProductCollectionListParams &&
             archived == other.archived &&
             brandId == other.brandId &&
+            locale == other.locale &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
@@ -259,6 +288,7 @@ private constructor(
         Objects.hash(
             archived,
             brandId,
+            locale,
             pageNumber,
             pageSize,
             additionalHeaders,
@@ -266,5 +296,5 @@ private constructor(
         )
 
     override fun toString() =
-        "ProductCollectionListParams{archived=$archived, brandId=$brandId, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ProductCollectionListParams{archived=$archived, brandId=$brandId, locale=$locale, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

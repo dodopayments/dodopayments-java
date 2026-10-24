@@ -19,6 +19,7 @@ import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.blocking.products.ImageService
 import com.dodopayments.api.services.blocking.products.LocalizedPriceService
 import com.dodopayments.api.services.blocking.products.ShortLinkService
+import com.dodopayments.api.services.blocking.products.TranslationService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -35,6 +36,8 @@ interface ProductService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService
+
+    fun translations(): TranslationService
 
     fun images(): ImageService
 
@@ -198,6 +201,8 @@ interface ProductService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService.WithRawResponse
+
+        fun translations(): TranslationService.WithRawResponse
 
         fun images(): ImageService.WithRawResponse
 

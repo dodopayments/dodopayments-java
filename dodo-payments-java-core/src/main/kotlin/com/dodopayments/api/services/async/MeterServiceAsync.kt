@@ -13,6 +13,8 @@ import com.dodopayments.api.models.meters.MeterListPageAsync
 import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.models.meters.MeterRetrieveParams
 import com.dodopayments.api.models.meters.MeterUnarchiveParams
+import com.dodopayments.api.models.meters.MeterUpdateParams
+import com.dodopayments.api.services.async.meters.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,6 +31,8 @@ interface MeterServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterServiceAsync
+
+    fun translations(): TranslationServiceAsync
 
     fun create(params: MeterCreateParams): CompletableFuture<Meter> =
         create(params, RequestOptions.none())
@@ -67,6 +71,35 @@ interface MeterServiceAsync {
     /** @see retrieve */
     fun retrieve(id: String, requestOptions: RequestOptions): CompletableFuture<Meter> =
         retrieve(id, MeterRetrieveParams.none(), requestOptions)
+
+    fun update(id: String): CompletableFuture<Meter> = update(id, MeterUpdateParams.none())
+
+    /** @see update */
+    fun update(
+        id: String,
+        params: MeterUpdateParams = MeterUpdateParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Meter> = update(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see update */
+    fun update(
+        id: String,
+        params: MeterUpdateParams = MeterUpdateParams.none(),
+    ): CompletableFuture<Meter> = update(id, params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        params: MeterUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Meter>
+
+    /** @see update */
+    fun update(params: MeterUpdateParams): CompletableFuture<Meter> =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<Meter> =
+        update(id, MeterUpdateParams.none(), requestOptions)
 
     fun list(): CompletableFuture<MeterListPageAsync> = list(MeterListParams.none())
 
@@ -155,6 +188,8 @@ interface MeterServiceAsync {
             modifier: Consumer<ClientOptions.Builder>
         ): MeterServiceAsync.WithRawResponse
 
+        fun translations(): TranslationServiceAsync.WithRawResponse
+
         /**
          * Returns a raw HTTP response for `post /meters`, but is otherwise the same as
          * [MeterServiceAsync.create].
@@ -205,6 +240,44 @@ interface MeterServiceAsync {
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<Meter>> =
             retrieve(id, MeterRetrieveParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `patch /meters/{id}`, but is otherwise the same as
+         * [MeterServiceAsync.update].
+         */
+        fun update(id: String): CompletableFuture<HttpResponseFor<Meter>> =
+            update(id, MeterUpdateParams.none())
+
+        /** @see update */
+        fun update(
+            id: String,
+            params: MeterUpdateParams = MeterUpdateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Meter>> =
+            update(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see update */
+        fun update(
+            id: String,
+            params: MeterUpdateParams = MeterUpdateParams.none(),
+        ): CompletableFuture<HttpResponseFor<Meter>> = update(id, params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            params: MeterUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Meter>>
+
+        /** @see update */
+        fun update(params: MeterUpdateParams): CompletableFuture<HttpResponseFor<Meter>> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Meter>> =
+            update(id, MeterUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /meters`, but is otherwise the same as

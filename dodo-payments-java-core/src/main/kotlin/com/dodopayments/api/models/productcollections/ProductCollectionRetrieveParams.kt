@@ -12,11 +12,22 @@ import kotlin.jvm.optionals.getOrNull
 class ProductCollectionRetrieveParams
 private constructor(
     private val id: String?,
+    private val locale: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
+
+    /**
+     * Shows the translated name, description and unit of the catalog entities in this locale. The
+     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
+     * unknown code, or no code shows the base text.
+     *
+     * Do not send a text from a localized response back in a create or update request. The base
+     * text then changes to the translated text.
+     */
+    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -41,6 +52,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
+        private var locale: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -48,6 +60,7 @@ private constructor(
         internal fun from(productCollectionRetrieveParams: ProductCollectionRetrieveParams) =
             apply {
                 id = productCollectionRetrieveParams.id
+                locale = productCollectionRetrieveParams.locale
                 additionalHeaders = productCollectionRetrieveParams.additionalHeaders.toBuilder()
                 additionalQueryParams =
                     productCollectionRetrieveParams.additionalQueryParams.toBuilder()
@@ -57,6 +70,19 @@ private constructor(
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
+
+        /**
+         * Shows the translated name, description and unit of the catalog entities in this locale.
+         * The value must be a code from `GET /locales`, for example `fr`. A field with no
+         * translation, an unknown code, or no code shows the base text.
+         *
+         * Do not send a text from a localized response back in a create or update request. The base
+         * text then changes to the translated text.
+         */
+        fun locale(locale: String?) = apply { this.locale = locale }
+
+        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
+        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -164,6 +190,7 @@ private constructor(
         fun build(): ProductCollectionRetrieveParams =
             ProductCollectionRetrieveParams(
                 id,
+                locale,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -177,7 +204,13 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                locale?.let { put("locale", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -186,12 +219,14 @@ private constructor(
 
         return other is ProductCollectionRetrieveParams &&
             id == other.id &&
+            locale == other.locale &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(id, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(id, locale, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ProductCollectionRetrieveParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ProductCollectionRetrieveParams{id=$id, locale=$locale, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

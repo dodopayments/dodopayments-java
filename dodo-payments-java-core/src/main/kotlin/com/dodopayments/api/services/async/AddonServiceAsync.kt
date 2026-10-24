@@ -4,15 +4,19 @@ package com.dodopayments.api.services.async
 
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
+import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
 import com.dodopayments.api.models.addons.AddonCreateParams
+import com.dodopayments.api.models.addons.AddonDeleteParams
 import com.dodopayments.api.models.addons.AddonListPageAsync
 import com.dodopayments.api.models.addons.AddonListParams
 import com.dodopayments.api.models.addons.AddonResponse
 import com.dodopayments.api.models.addons.AddonRetrieveParams
+import com.dodopayments.api.models.addons.AddonUnarchiveParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesResponse
 import com.dodopayments.api.models.addons.AddonUpdateParams
+import com.dodopayments.api.services.async.addons.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,6 +33,8 @@ interface AddonServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonServiceAsync
+
+    fun translations(): TranslationServiceAsync
 
     fun create(params: AddonCreateParams): CompletableFuture<AddonResponse> =
         create(params, RequestOptions.none())
@@ -116,6 +122,64 @@ interface AddonServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<AddonListPageAsync> =
         list(AddonListParams.none(), requestOptions)
 
+    fun delete(id: String): CompletableFuture<Void?> = delete(id, AddonDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        id: String,
+        params: AddonDeleteParams = AddonDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> = delete(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        id: String,
+        params: AddonDeleteParams = AddonDeleteParams.none(),
+    ): CompletableFuture<Void?> = delete(id, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: AddonDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /** @see delete */
+    fun delete(params: AddonDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        delete(id, AddonDeleteParams.none(), requestOptions)
+
+    fun unarchive(id: String): CompletableFuture<Void?> = unarchive(id, AddonUnarchiveParams.none())
+
+    /** @see unarchive */
+    fun unarchive(
+        id: String,
+        params: AddonUnarchiveParams = AddonUnarchiveParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> = unarchive(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see unarchive */
+    fun unarchive(
+        id: String,
+        params: AddonUnarchiveParams = AddonUnarchiveParams.none(),
+    ): CompletableFuture<Void?> = unarchive(id, params, RequestOptions.none())
+
+    /** @see unarchive */
+    fun unarchive(
+        params: AddonUnarchiveParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /** @see unarchive */
+    fun unarchive(params: AddonUnarchiveParams): CompletableFuture<Void?> =
+        unarchive(params, RequestOptions.none())
+
+    /** @see unarchive */
+    fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        unarchive(id, AddonUnarchiveParams.none(), requestOptions)
+
     fun updateImages(id: String): CompletableFuture<AddonUpdateImagesResponse> =
         updateImages(id, AddonUpdateImagesParams.none())
 
@@ -163,6 +227,8 @@ interface AddonServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): AddonServiceAsync.WithRawResponse
+
+        fun translations(): TranslationServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /addons`, but is otherwise the same as
@@ -281,6 +347,76 @@ interface AddonServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<AddonListPageAsync>> =
             list(AddonListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /addons/{id}`, but is otherwise the same as
+         * [AddonServiceAsync.delete].
+         */
+        fun delete(id: String): CompletableFuture<HttpResponse> =
+            delete(id, AddonDeleteParams.none())
+
+        /** @see delete */
+        fun delete(
+            id: String,
+            params: AddonDeleteParams = AddonDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            delete(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see delete */
+        fun delete(
+            id: String,
+            params: AddonDeleteParams = AddonDeleteParams.none(),
+        ): CompletableFuture<HttpResponse> = delete(id, params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            params: AddonDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see delete */
+        fun delete(params: AddonDeleteParams): CompletableFuture<HttpResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            delete(id, AddonDeleteParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `post /addons/{id}/unarchive`, but is otherwise the same
+         * as [AddonServiceAsync.unarchive].
+         */
+        fun unarchive(id: String): CompletableFuture<HttpResponse> =
+            unarchive(id, AddonUnarchiveParams.none())
+
+        /** @see unarchive */
+        fun unarchive(
+            id: String,
+            params: AddonUnarchiveParams = AddonUnarchiveParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            unarchive(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see unarchive */
+        fun unarchive(
+            id: String,
+            params: AddonUnarchiveParams = AddonUnarchiveParams.none(),
+        ): CompletableFuture<HttpResponse> = unarchive(id, params, RequestOptions.none())
+
+        /** @see unarchive */
+        fun unarchive(
+            params: AddonUnarchiveParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see unarchive */
+        fun unarchive(params: AddonUnarchiveParams): CompletableFuture<HttpResponse> =
+            unarchive(params, RequestOptions.none())
+
+        /** @see unarchive */
+        fun unarchive(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
+            unarchive(id, AddonUnarchiveParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /addons/{id}/images`, but is otherwise the same as

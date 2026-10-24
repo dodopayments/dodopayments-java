@@ -71,6 +71,9 @@ internal class PaymentListResponseTest {
                 .refundStatus(PaymentRefundStatus.PARTIAL)
                 .status(IntentStatus.SUCCEEDED)
                 .subscriptionId("subscription_id")
+                .threeDSFlow(ThreeDSFlow.CHALLENGE)
+                .threeDSStatus(ThreeDSStatus.AUTHENTICATED)
+                .threeDSVersion("three_ds_version")
                 .build()
 
         assertThat(paymentListResponse.brandId()).isEqualTo("brand_id")
@@ -129,6 +132,9 @@ internal class PaymentListResponseTest {
         assertThat(paymentListResponse.refundStatus()).contains(PaymentRefundStatus.PARTIAL)
         assertThat(paymentListResponse.status()).contains(IntentStatus.SUCCEEDED)
         assertThat(paymentListResponse.subscriptionId()).contains("subscription_id")
+        assertThat(paymentListResponse.threeDSFlow()).contains(ThreeDSFlow.CHALLENGE)
+        assertThat(paymentListResponse.threeDSStatus()).contains(ThreeDSStatus.AUTHENTICATED)
+        assertThat(paymentListResponse.threeDSVersion()).contains("three_ds_version")
     }
 
     @Test
@@ -189,6 +195,9 @@ internal class PaymentListResponseTest {
                 .refundStatus(PaymentRefundStatus.PARTIAL)
                 .status(IntentStatus.SUCCEEDED)
                 .subscriptionId("subscription_id")
+                .threeDSFlow(ThreeDSFlow.CHALLENGE)
+                .threeDSStatus(ThreeDSStatus.AUTHENTICATED)
+                .threeDSVersion("three_ds_version")
                 .build()
 
         val roundtrippedPaymentListResponse =

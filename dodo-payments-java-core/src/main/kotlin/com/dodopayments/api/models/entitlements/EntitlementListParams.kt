@@ -17,6 +17,7 @@ import kotlin.jvm.optionals.getOrNull
 class EntitlementListParams
 private constructor(
     private val integrationType: IntegrationType?,
+    private val locale: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val additionalHeaders: Headers,
@@ -25,6 +26,16 @@ private constructor(
 
     /** Filter by integration type */
     fun integrationType(): Optional<IntegrationType> = Optional.ofNullable(integrationType)
+
+    /**
+     * Shows the translated name, description and unit of the catalog entities in this locale. The
+     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
+     * unknown code, or no code shows the base text.
+     *
+     * Do not send a text from a localized response back in a create or update request. The base
+     * text then changes to the translated text.
+     */
+    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     /** Page number (default 0) */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -52,6 +63,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var integrationType: IntegrationType? = null
+        private var locale: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -60,6 +72,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(entitlementListParams: EntitlementListParams) = apply {
             integrationType = entitlementListParams.integrationType
+            locale = entitlementListParams.locale
             pageNumber = entitlementListParams.pageNumber
             pageSize = entitlementListParams.pageSize
             additionalHeaders = entitlementListParams.additionalHeaders.toBuilder()
@@ -74,6 +87,19 @@ private constructor(
         /** Alias for calling [Builder.integrationType] with `integrationType.orElse(null)`. */
         fun integrationType(integrationType: Optional<IntegrationType>) =
             integrationType(integrationType.getOrNull())
+
+        /**
+         * Shows the translated name, description and unit of the catalog entities in this locale.
+         * The value must be a code from `GET /locales`, for example `fr`. A field with no
+         * translation, an unknown code, or no code shows the base text.
+         *
+         * Do not send a text from a localized response back in a create or update request. The base
+         * text then changes to the translated text.
+         */
+        fun locale(locale: String?) = apply { this.locale = locale }
+
+        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
+        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         /** Page number (default 0) */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -207,6 +233,7 @@ private constructor(
         fun build(): EntitlementListParams =
             EntitlementListParams(
                 integrationType,
+                locale,
                 pageNumber,
                 pageSize,
                 additionalHeaders.build(),
@@ -220,6 +247,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 integrationType?.let { put("integration_type", it.toString()) }
+                locale?.let { put("locale", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 putAll(additionalQueryParams)
@@ -416,6 +444,7 @@ private constructor(
 
         return other is EntitlementListParams &&
             integrationType == other.integrationType &&
+            locale == other.locale &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             additionalHeaders == other.additionalHeaders &&
@@ -425,6 +454,7 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             integrationType,
+            locale,
             pageNumber,
             pageSize,
             additionalHeaders,
@@ -432,5 +462,5 @@ private constructor(
         )
 
     override fun toString() =
-        "EntitlementListParams{integrationType=$integrationType, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "EntitlementListParams{integrationType=$integrationType, locale=$locale, pageNumber=$pageNumber, pageSize=$pageSize, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
