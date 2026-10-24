@@ -15,6 +15,7 @@ import com.dodopayments.api.models.products.CbbProrationBehavior
 import com.dodopayments.api.models.products.LicenseKeyDuration
 import com.dodopayments.api.models.products.Price
 import com.dodopayments.api.models.products.ProductCreateParams
+import com.dodopayments.api.models.products.ProductRetrieveParams
 import com.dodopayments.api.models.products.ProductUpdateFilesParams
 import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.models.products.localizedprices.PricingMode
@@ -112,7 +113,13 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.products()
 
-        val productFuture = productServiceAsync.retrieve("pdt_R8AWMPiV8RyJElcCKvAID")
+        val productFuture =
+            productServiceAsync.retrieve(
+                ProductRetrieveParams.builder()
+                    .id("pdt_R8AWMPiV8RyJElcCKvAID")
+                    .locale("locale")
+                    .build()
+            )
 
         val product = productFuture.get()
         product.validate()
