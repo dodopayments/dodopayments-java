@@ -57,6 +57,9 @@ private constructor(
     private val refundStatus: JsonField<PaymentRefundStatus>,
     private val status: JsonField<IntentStatus>,
     private val subscriptionId: JsonField<String>,
+    private val threeDSFlow: JsonField<ThreeDSFlow>,
+    private val threeDSStatus: JsonField<ThreeDSStatus>,
+    private val threeDSVersion: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -138,6 +141,15 @@ private constructor(
         @JsonProperty("subscription_id")
         @ExcludeMissing
         subscriptionId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("three_ds_flow")
+        @ExcludeMissing
+        threeDSFlow: JsonField<ThreeDSFlow> = JsonMissing.of(),
+        @JsonProperty("three_ds_status")
+        @ExcludeMissing
+        threeDSStatus: JsonField<ThreeDSStatus> = JsonMissing.of(),
+        @JsonProperty("three_ds_version")
+        @ExcludeMissing
+        threeDSVersion: JsonField<String> = JsonMissing.of(),
     ) : this(
         brandId,
         createdAt,
@@ -169,6 +181,9 @@ private constructor(
         refundStatus,
         status,
         subscriptionId,
+        threeDSFlow,
+        threeDSStatus,
+        threeDSVersion,
         mutableMapOf(),
     )
 
@@ -414,6 +429,33 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun subscriptionId(): Optional<String> = subscriptionId.getOptional("subscription_id")
+
+    /**
+     * How the cardholder completed the 3DS authentication. The value is null when the processor
+     * does not report it.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun threeDSFlow(): Optional<ThreeDSFlow> = threeDSFlow.getOptional("three_ds_flow")
+
+    /**
+     * The result of the 3DS authentication, as the processor reports it. The value is null when the
+     * processor reports no 3DS data, for example when the payment did not use 3DS.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun threeDSStatus(): Optional<ThreeDSStatus> = threeDSStatus.getOptional("three_ds_status")
+
+    /**
+     * The 3DS protocol version, for example `2.2.0`. The value is null when the processor does not
+     * report it.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun threeDSVersion(): Optional<String> = threeDSVersion.getOptional("three_ds_version")
 
     /**
      * Returns the raw JSON value of [brandId].
@@ -674,6 +716,33 @@ private constructor(
     @ExcludeMissing
     fun _subscriptionId(): JsonField<String> = subscriptionId
 
+    /**
+     * Returns the raw JSON value of [threeDSFlow].
+     *
+     * Unlike [threeDSFlow], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("three_ds_flow")
+    @ExcludeMissing
+    fun _threeDSFlow(): JsonField<ThreeDSFlow> = threeDSFlow
+
+    /**
+     * Returns the raw JSON value of [threeDSStatus].
+     *
+     * Unlike [threeDSStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("three_ds_status")
+    @ExcludeMissing
+    fun _threeDSStatus(): JsonField<ThreeDSStatus> = threeDSStatus
+
+    /**
+     * Returns the raw JSON value of [threeDSVersion].
+     *
+     * Unlike [threeDSVersion], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("three_ds_version")
+    @ExcludeMissing
+    fun _threeDSVersion(): JsonField<String> = threeDSVersion
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -746,6 +815,9 @@ private constructor(
         private var refundStatus: JsonField<PaymentRefundStatus> = JsonMissing.of()
         private var status: JsonField<IntentStatus> = JsonMissing.of()
         private var subscriptionId: JsonField<String> = JsonMissing.of()
+        private var threeDSFlow: JsonField<ThreeDSFlow> = JsonMissing.of()
+        private var threeDSStatus: JsonField<ThreeDSStatus> = JsonMissing.of()
+        private var threeDSVersion: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -780,6 +852,9 @@ private constructor(
             refundStatus = paymentListResponse.refundStatus
             status = paymentListResponse.status
             subscriptionId = paymentListResponse.subscriptionId
+            threeDSFlow = paymentListResponse.threeDSFlow
+            threeDSStatus = paymentListResponse.threeDSStatus
+            threeDSVersion = paymentListResponse.threeDSVersion
             additionalProperties = paymentListResponse.additionalProperties.toMutableMap()
         }
 
@@ -1301,6 +1376,70 @@ private constructor(
             this.subscriptionId = subscriptionId
         }
 
+        /**
+         * How the cardholder completed the 3DS authentication. The value is null when the processor
+         * does not report it.
+         */
+        fun threeDSFlow(threeDSFlow: ThreeDSFlow?) = threeDSFlow(JsonField.ofNullable(threeDSFlow))
+
+        /** Alias for calling [Builder.threeDSFlow] with `threeDSFlow.orElse(null)`. */
+        fun threeDSFlow(threeDSFlow: Optional<ThreeDSFlow>) = threeDSFlow(threeDSFlow.getOrNull())
+
+        /**
+         * Sets [Builder.threeDSFlow] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threeDSFlow] with a well-typed [ThreeDSFlow] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun threeDSFlow(threeDSFlow: JsonField<ThreeDSFlow>) = apply {
+            this.threeDSFlow = threeDSFlow
+        }
+
+        /**
+         * The result of the 3DS authentication, as the processor reports it. The value is null when
+         * the processor reports no 3DS data, for example when the payment did not use 3DS.
+         */
+        fun threeDSStatus(threeDSStatus: ThreeDSStatus?) =
+            threeDSStatus(JsonField.ofNullable(threeDSStatus))
+
+        /** Alias for calling [Builder.threeDSStatus] with `threeDSStatus.orElse(null)`. */
+        fun threeDSStatus(threeDSStatus: Optional<ThreeDSStatus>) =
+            threeDSStatus(threeDSStatus.getOrNull())
+
+        /**
+         * Sets [Builder.threeDSStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threeDSStatus] with a well-typed [ThreeDSStatus] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun threeDSStatus(threeDSStatus: JsonField<ThreeDSStatus>) = apply {
+            this.threeDSStatus = threeDSStatus
+        }
+
+        /**
+         * The 3DS protocol version, for example `2.2.0`. The value is null when the processor does
+         * not report it.
+         */
+        fun threeDSVersion(threeDSVersion: String?) =
+            threeDSVersion(JsonField.ofNullable(threeDSVersion))
+
+        /** Alias for calling [Builder.threeDSVersion] with `threeDSVersion.orElse(null)`. */
+        fun threeDSVersion(threeDSVersion: Optional<String>) =
+            threeDSVersion(threeDSVersion.getOrNull())
+
+        /**
+         * Sets [Builder.threeDSVersion] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threeDSVersion] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun threeDSVersion(threeDSVersion: JsonField<String>) = apply {
+            this.threeDSVersion = threeDSVersion
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -1378,6 +1517,9 @@ private constructor(
                 refundStatus,
                 status,
                 subscriptionId,
+                threeDSFlow,
+                threeDSStatus,
+                threeDSVersion,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -1427,6 +1569,9 @@ private constructor(
         refundStatus().ifPresent { it.validate() }
         status().ifPresent { it.validate() }
         subscriptionId()
+        threeDSFlow().ifPresent { it.validate() }
+        threeDSStatus().ifPresent { it.validate() }
+        threeDSVersion()
         validated = true
     }
 
@@ -1474,7 +1619,10 @@ private constructor(
             (if (paymentMethodType.asKnown().isPresent) 1 else 0) +
             (refundStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (subscriptionId.asKnown().isPresent) 1 else 0)
+            (if (subscriptionId.asKnown().isPresent) 1 else 0) +
+            (threeDSFlow.asKnown().getOrNull()?.validity() ?: 0) +
+            (threeDSStatus.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (threeDSVersion.asKnown().isPresent) 1 else 0)
 
     /**
      * Which processor handled this payment. `stripe` / `adyen` for BYOP routes (the merchant's own
@@ -1662,6 +1810,9 @@ private constructor(
             refundStatus == other.refundStatus &&
             status == other.status &&
             subscriptionId == other.subscriptionId &&
+            threeDSFlow == other.threeDSFlow &&
+            threeDSStatus == other.threeDSStatus &&
+            threeDSVersion == other.threeDSVersion &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1697,6 +1848,9 @@ private constructor(
             refundStatus,
             status,
             subscriptionId,
+            threeDSFlow,
+            threeDSStatus,
+            threeDSVersion,
             additionalProperties,
         )
     }
@@ -1704,5 +1858,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, includesUsage=$includesUsage, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardExpMonth=$cardExpMonth, cardExpYear=$cardExpYear, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, chargeType=$chargeType, checkoutSessionId=$checkoutSessionId, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, additionalProperties=$additionalProperties}"
+        "PaymentListResponse{brandId=$brandId, createdAt=$createdAt, currency=$currency, customer=$customer, digitalProductsDelivered=$digitalProductsDelivered, hasLicenseKey=$hasLicenseKey, includesUsage=$includesUsage, isMultiSubscription=$isMultiSubscription, metadata=$metadata, paymentId=$paymentId, paymentProvider=$paymentProvider, retryAttempt=$retryAttempt, servicePeriods=$servicePeriods, subscriptionIds=$subscriptionIds, totalAmount=$totalAmount, cardExpMonth=$cardExpMonth, cardExpYear=$cardExpYear, cardLastFour=$cardLastFour, cardNetwork=$cardNetwork, cardType=$cardType, chargeType=$chargeType, checkoutSessionId=$checkoutSessionId, disputeStatus=$disputeStatus, invoiceId=$invoiceId, invoiceUrl=$invoiceUrl, paymentMethod=$paymentMethod, paymentMethodType=$paymentMethodType, refundStatus=$refundStatus, status=$status, subscriptionId=$subscriptionId, threeDSFlow=$threeDSFlow, threeDSStatus=$threeDSStatus, threeDSVersion=$threeDSVersion, additionalProperties=$additionalProperties}"
 }

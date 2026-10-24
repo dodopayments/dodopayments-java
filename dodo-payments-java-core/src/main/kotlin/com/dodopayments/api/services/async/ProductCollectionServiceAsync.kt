@@ -18,6 +18,7 @@ import com.dodopayments.api.models.productcollections.ProductCollectionUpdateIma
 import com.dodopayments.api.models.productcollections.ProductCollectionUpdateImagesResponse
 import com.dodopayments.api.models.productcollections.ProductCollectionUpdateParams
 import com.dodopayments.api.services.async.productcollections.GroupServiceAsync
+import com.dodopayments.api.services.async.productcollections.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -34,6 +35,8 @@ interface ProductCollectionServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductCollectionServiceAsync
+
+    fun translations(): TranslationServiceAsync
 
     fun groups(): GroupServiceAsync
 
@@ -243,6 +246,8 @@ interface ProductCollectionServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ProductCollectionServiceAsync.WithRawResponse
+
+        fun translations(): TranslationServiceAsync.WithRawResponse
 
         fun groups(): GroupServiceAsync.WithRawResponse
 

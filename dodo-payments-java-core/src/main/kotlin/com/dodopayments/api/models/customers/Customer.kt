@@ -8,6 +8,7 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
+import com.dodopayments.api.models.misc.Locale
 import com.dodopayments.api.models.misc.Metadata
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -31,6 +32,7 @@ private constructor(
     private val blocklistEntryId: JsonField<String>,
     private val metadata: JsonField<Metadata>,
     private val phoneNumber: JsonField<String>,
+    private val preferredLocale: JsonField<Locale>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -57,6 +59,9 @@ private constructor(
         @JsonProperty("phone_number")
         @ExcludeMissing
         phoneNumber: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("preferred_locale")
+        @ExcludeMissing
+        preferredLocale: JsonField<Locale> = JsonMissing.of(),
     ) : this(
         businessId,
         createdAt,
@@ -67,6 +72,7 @@ private constructor(
         blocklistEntryId,
         metadata,
         phoneNumber,
+        preferredLocale,
         mutableMapOf(),
     )
 
@@ -131,6 +137,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun phoneNumber(): Optional<String> = phoneNumber.getOptional("phone_number")
+
+    /**
+     * The language of the customer emails. `null` gives English.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun preferredLocale(): Optional<Locale> = preferredLocale.getOptional("preferred_locale")
 
     /**
      * Returns the raw JSON value of [businessId].
@@ -204,6 +218,15 @@ private constructor(
     @ExcludeMissing
     fun _phoneNumber(): JsonField<String> = phoneNumber
 
+    /**
+     * Returns the raw JSON value of [preferredLocale].
+     *
+     * Unlike [preferredLocale], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("preferred_locale")
+    @ExcludeMissing
+    fun _preferredLocale(): JsonField<Locale> = preferredLocale
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -245,6 +268,7 @@ private constructor(
         private var blocklistEntryId: JsonField<String> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var phoneNumber: JsonField<String> = JsonMissing.of()
+        private var preferredLocale: JsonField<Locale> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -258,6 +282,7 @@ private constructor(
             blocklistEntryId = customer.blocklistEntryId
             metadata = customer.metadata
             phoneNumber = customer.phoneNumber
+            preferredLocale = customer.preferredLocale
             additionalProperties = customer.additionalProperties.toMutableMap()
         }
 
@@ -378,6 +403,25 @@ private constructor(
          */
         fun phoneNumber(phoneNumber: JsonField<String>) = apply { this.phoneNumber = phoneNumber }
 
+        /** The language of the customer emails. `null` gives English. */
+        fun preferredLocale(preferredLocale: Locale?) =
+            preferredLocale(JsonField.ofNullable(preferredLocale))
+
+        /** Alias for calling [Builder.preferredLocale] with `preferredLocale.orElse(null)`. */
+        fun preferredLocale(preferredLocale: Optional<Locale>) =
+            preferredLocale(preferredLocale.getOrNull())
+
+        /**
+         * Sets [Builder.preferredLocale] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.preferredLocale] with a well-typed [Locale] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun preferredLocale(preferredLocale: JsonField<Locale>) = apply {
+            this.preferredLocale = preferredLocale
+        }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -424,6 +468,7 @@ private constructor(
                 blocklistEntryId,
                 metadata,
                 phoneNumber,
+                preferredLocale,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -452,6 +497,7 @@ private constructor(
         blocklistEntryId()
         metadata().ifPresent { it.validate() }
         phoneNumber()
+        preferredLocale().ifPresent { it.validate() }
         validated = true
     }
 
@@ -478,7 +524,8 @@ private constructor(
             (if (blockedAt.asKnown().isPresent) 1 else 0) +
             (if (blocklistEntryId.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (phoneNumber.asKnown().isPresent) 1 else 0)
+            (if (phoneNumber.asKnown().isPresent) 1 else 0) +
+            (preferredLocale.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -495,6 +542,7 @@ private constructor(
             blocklistEntryId == other.blocklistEntryId &&
             metadata == other.metadata &&
             phoneNumber == other.phoneNumber &&
+            preferredLocale == other.preferredLocale &&
             additionalProperties == other.additionalProperties
     }
 
@@ -509,6 +557,7 @@ private constructor(
             blocklistEntryId,
             metadata,
             phoneNumber,
+            preferredLocale,
             additionalProperties,
         )
     }
@@ -516,5 +565,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Customer{businessId=$businessId, createdAt=$createdAt, customerId=$customerId, email=$email, name=$name, blockedAt=$blockedAt, blocklistEntryId=$blocklistEntryId, metadata=$metadata, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
+        "Customer{businessId=$businessId, createdAt=$createdAt, customerId=$customerId, email=$email, name=$name, blockedAt=$blockedAt, blocklistEntryId=$blocklistEntryId, metadata=$metadata, phoneNumber=$phoneNumber, preferredLocale=$preferredLocale, additionalProperties=$additionalProperties}"
 }

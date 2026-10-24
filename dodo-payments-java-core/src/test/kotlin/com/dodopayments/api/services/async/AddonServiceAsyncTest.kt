@@ -5,6 +5,7 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.models.addons.AddonCreateParams
+import com.dodopayments.api.models.addons.AddonRetrieveParams
 import com.dodopayments.api.models.addons.AddonUpdateParams
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
@@ -47,7 +48,13 @@ internal class AddonServiceAsyncTest {
                 .build()
         val addonServiceAsync = client.addons()
 
-        val addonResponseFuture = addonServiceAsync.retrieve("adn_NX1zdqW4Hbivsqz8vI9dc")
+        val addonResponseFuture =
+            addonServiceAsync.retrieve(
+                AddonRetrieveParams.builder()
+                    .id("adn_NX1zdqW4Hbivsqz8vI9dc")
+                    .locale("locale")
+                    .build()
+            )
 
         val addonResponse = addonResponseFuture.get()
         addonResponse.validate()
@@ -92,6 +99,34 @@ internal class AddonServiceAsyncTest {
 
         val page = pageFuture.get()
         page.response().validate()
+    }
+
+    @Test
+    fun delete() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val addonServiceAsync = client.addons()
+
+        val future = addonServiceAsync.delete("adn_NX1zdqW4Hbivsqz8vI9dc")
+
+        val response = future.get()
+    }
+
+    @Test
+    fun unarchive() {
+        val client =
+            DodoPaymentsOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val addonServiceAsync = client.addons()
+
+        val future = addonServiceAsync.unarchive("adn_NX1zdqW4Hbivsqz8vI9dc")
+
+        val response = future.get()
     }
 
     @Test
