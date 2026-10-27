@@ -122,6 +122,10 @@ private constructor(
     /** Bearer Token for API authentication */
     @get:JvmName("bearerToken") val bearerToken: String,
     private val webhookKey: String?,
+    private val workloadIdentity: com.dodopayments.api.workloadidentity.WorkloadIdentity?,
+    @get:JvmSynthetic
+    internal val workloadIdentityTokenManager:
+        com.dodopayments.api.workloadidentity.WorkloadIdentityTokenManager?,
 ) {
 
     init {
@@ -141,6 +145,10 @@ private constructor(
     fun baseUrl(): String = baseUrl ?: LIVE_MODE_URL
 
     fun webhookKey(): Optional<String> = Optional.ofNullable(webhookKey)
+
+    /** The workload identity configuration. It is empty when the client uses [bearerToken]. */
+    fun workloadIdentity(): Optional<com.dodopayments.api.workloadidentity.WorkloadIdentity> =
+        Optional.ofNullable(workloadIdentity)
 
     fun toBuilder() = Builder().from(this)
 
@@ -186,6 +194,8 @@ private constructor(
         private var maxRetries: Int = 2
         private var logLevel: LogLevel = LogLevel.fromEnv()
         private var bearerToken: String? = null
+        private var bearerTokenFromEnv: Boolean = false
+        private var workloadIdentity: com.dodopayments.api.workloadidentity.WorkloadIdentity? = null
         private var webhookKey: String? = null
 
         @JvmSynthetic
@@ -203,7 +213,9 @@ private constructor(
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
             logLevel = clientOptions.logLevel
-            bearerToken = clientOptions.bearerToken
+            bearerToken =
+                clientOptions.bearerToken.takeIf { clientOptions.workloadIdentity == null }
+            workloadIdentity = clientOptions.workloadIdentity
             webhookKey = clientOptions.webhookKey
         }
 
@@ -344,7 +356,24 @@ private constructor(
         fun logLevel(logLevel: LogLevel) = apply { this.logLevel = logLevel }
 
         /** Bearer Token for API authentication */
-        fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
+        fun bearerToken(bearerToken: String) = apply {
+            this.bearerToken = bearerToken
+            bearerTokenFromEnv = false
+        }
+
+        /**
+         * Authenticates with workload identity federation instead of [bearerToken].
+         *
+         * The client exchanges a token from your identity provider for a short-lived access token.
+         */
+        fun workloadIdentity(
+            workloadIdentity: com.dodopayments.api.workloadidentity.WorkloadIdentity?
+        ) = apply { this.workloadIdentity = workloadIdentity }
+
+        /** Alias for calling [Builder.workloadIdentity] with `workloadIdentity.orElse(null)`. */
+        fun workloadIdentity(
+            workloadIdentity: Optional<com.dodopayments.api.workloadidentity.WorkloadIdentity>
+        ) = workloadIdentity(workloadIdentity.getOrNull())
 
         fun webhookKey(webhookKey: String?) = apply { this.webhookKey = webhookKey }
 
@@ -451,7 +480,29 @@ private constructor(
             (System.getProperty("dodopayments.baseUrl") ?: System.getenv("DODO_PAYMENTS_BASE_URL"))
                 ?.let { baseUrl(it) }
             (System.getProperty("dodopayments.apiKey") ?: System.getenv("DODO_PAYMENTS_API_KEY"))
-                ?.let { bearerToken(it) }
+                ?.let {
+                    bearerToken(it)
+                    bearerTokenFromEnv = true
+                }
+            if (
+                bearerToken == null &&
+                    workloadIdentity == null &&
+                    !System.getenv(
+                            com.dodopayments.api.workloadidentity.WorkloadIdentity
+                                .IDENTITY_PROVIDER_ID_ENV
+                        )
+                        .isNullOrEmpty()
+            ) {
+                com.dodopayments.api.workloadidentity.SubjectTokenProviders.auto()
+                    .getOrNull()
+                    ?.let {
+                        workloadIdentity(
+                            com.dodopayments.api.workloadidentity.WorkloadIdentity.builder()
+                                .provider(it)
+                                .build()
+                        )
+                    }
+            }
             (System.getProperty("dodopayments.webhookKey")
                     ?: System.getenv("DODO_PAYMENTS_WEBHOOK_KEY"))
                 ?.let { webhookKey(it) }
@@ -499,7 +550,11 @@ private constructor(
                         )
                     )
             val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
-            val bearerToken = checkRequired("bearerToken", bearerToken)
+            if (workloadIdentity != null && bearerToken != null && !bearerTokenFromEnv) {
+                throw IllegalStateException("Set bearerToken or workloadIdentity, not both.")
+            }
+            val bearerToken =
+                if (workloadIdentity != null) "" else checkRequired("bearerToken", bearerToken)
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -520,8 +575,7 @@ private constructor(
                 }
             }
 
-            return ClientOptions(
-                httpClient,
+            val retryingHttpClient =
                 RetryingHttpClient.builder()
                     .httpClient(
                         LoggingHttpClient.builder()
@@ -533,7 +587,32 @@ private constructor(
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
-                    .build(),
+                    .build()
+
+            val workloadIdentityTokenManager =
+                workloadIdentity?.let {
+                    com.dodopayments.api.workloadidentity.WorkloadIdentityTokenManager(
+                        it,
+                        com.dodopayments.api.workloadidentity.WorkloadIdentityTokenManager.Config(
+                            httpClient = httpClient,
+                            sleeper = sleeper,
+                            clock = clock,
+                            maxRetries = maxRetries,
+                            baseUrl = baseUrl ?: LIVE_MODE_URL,
+                            headers = headers.build(),
+                            jsonMapper = jsonMapper,
+                        ),
+                    )
+                }
+
+            return ClientOptions(
+                httpClient,
+                workloadIdentityTokenManager?.let {
+                    com.dodopayments.api.workloadidentity.WorkloadIdentityHttpClient(
+                        retryingHttpClient,
+                        it,
+                    )
+                } ?: retryingHttpClient,
                 checkJacksonVersionCompatibility,
                 jsonMapper,
                 streamHandlerExecutor,
@@ -548,6 +627,8 @@ private constructor(
                 logLevel,
                 bearerToken,
                 webhookKey,
+                workloadIdentity,
+                workloadIdentityTokenManager,
             )
         }
     }

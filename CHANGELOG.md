@@ -1,13 +1,5 @@
 # Changelog
 
-## [1.123.1](https://github.com/dodopayments/dodopayments-java/compare/v1.123.0...v1.123.1) (2026-10-25)
-
-
-### Chores
-
-* sync generated version strings with the latest release ([502fe3e](https://github.com/dodopayments/dodopayments-java/commit/502fe3ea63c9f71d79fe5b6ff80ab8982bf0e44d))
-* sync generated version strings with the latest release ([5297fcf](https://github.com/dodopayments/dodopayments-java/commit/5297fcf3705c6f16e66a9e152ca850badf7bd457))
-
 ## [1.123.0](https://github.com/dodopayments/dodopayments-java/compare/v1.122.0...v1.123.0) (2026-10-24)
 
 
