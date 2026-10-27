@@ -157,6 +157,14 @@ class DodoPaymentsClientImpl(private val clientOptions: ClientOptions) : DodoPay
 
     override fun async(): DodoPaymentsClientAsync = async
 
+    private val workloadIdentity:
+        com.dodopayments.api.workloadidentity.WorkloadIdentityService by lazy {
+        com.dodopayments.api.workloadidentity.WorkloadIdentityService(clientOptions)
+    }
+
+    override fun workloadIdentity(): com.dodopayments.api.workloadidentity.WorkloadIdentityService =
+        workloadIdentity
+
     override fun withRawResponse(): DodoPaymentsClient.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient =

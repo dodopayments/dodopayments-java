@@ -309,6 +309,20 @@ class DodoPaymentsOkHttpClientAsync private constructor() {
         /** Bearer Token for API authentication */
         fun bearerToken(bearerToken: String) = apply { clientOptions.bearerToken(bearerToken) }
 
+        /**
+         * Authenticates with workload identity federation instead of [bearerToken].
+         *
+         * The client exchanges a token from your identity provider for a short-lived access token.
+         */
+        fun workloadIdentity(
+            workloadIdentity: com.dodopayments.api.workloadidentity.WorkloadIdentity?
+        ) = apply { clientOptions.workloadIdentity(workloadIdentity) }
+
+        /** Alias for calling [Builder.workloadIdentity] with `workloadIdentity.orElse(null)`. */
+        fun workloadIdentity(
+            workloadIdentity: Optional<com.dodopayments.api.workloadidentity.WorkloadIdentity>
+        ) = workloadIdentity(workloadIdentity.getOrNull())
+
         fun webhookKey(webhookKey: String?) = apply { clientOptions.webhookKey(webhookKey) }
 
         /** Alias for calling [Builder.webhookKey] with `webhookKey.orElse(null)`. */
