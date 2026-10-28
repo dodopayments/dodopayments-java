@@ -170,6 +170,8 @@ DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
 
 `SubjectTokenProviders` has these providers: `githubActions()`, `gitlab()`, `terraformCloud()`, `gcp()`, `vercel()`, `kubernetes()`, `file()`, `aws(Supplier<String>)`, `staticToken(token)` and `auto()`. You can also give your own `SubjectTokenProvider` lambda.
 
+`vercel()` reads `VERCEL_OIDC_TOKEN_FILE` or `VERCEL_OIDC_TOKEN`. It exchanges that token at Vercel for a token with the Dodo Payments audience. The Dodo Payments API accepts only that audience. `vercel(audience)` uses the audience that you supply.
+
 ## Requests and responses
 
 To send a request to the Dodo Payments API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
