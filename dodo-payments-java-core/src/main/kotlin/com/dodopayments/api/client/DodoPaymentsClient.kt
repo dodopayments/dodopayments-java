@@ -67,6 +67,9 @@ interface DodoPaymentsClient {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): DodoPaymentsClient
 
+    /** Manages the workload identity access token of the client. */
+    fun workloadIdentity(): com.dodopayments.api.workloadidentity.WorkloadIdentityService
+
     fun checkoutSessions(): CheckoutSessionService
 
     fun payments(): PaymentService
