@@ -3,7 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.124.0)
-[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.124.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.123.1)
+[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.124.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.124.0)
 
 <!-- x-release-please-end -->
 
@@ -169,6 +169,8 @@ DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
 - `client.workloadIdentity().revoke()` (or `revokeAsync()`) revokes the access token and clears the cache.
 
 `SubjectTokenProviders` has these providers: `githubActions()`, `gitlab()`, `terraformCloud()`, `gcp()`, `vercel()`, `kubernetes()`, `file()`, `aws(Supplier<String>)`, `staticToken(token)` and `auto()`. You can also give your own `SubjectTokenProvider` lambda.
+
+`vercel()` reads `VERCEL_OIDC_TOKEN_FILE` or `VERCEL_OIDC_TOKEN`. It exchanges that token at Vercel for a token with the Dodo Payments audience. The Dodo Payments API accepts only that audience. `vercel(audience)` uses the audience that you supply.
 
 ## Requests and responses
 
