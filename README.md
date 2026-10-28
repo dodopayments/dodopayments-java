@@ -140,6 +140,36 @@ DodoPaymentsClient clientWithOptions = client.withOptions(optionsBuilder -> {
 
 The `withOptions()` method does not affect the original client or service.
 
+## Workload identity
+
+The client can use workload identity federation instead of an API key. The client exchanges a JWT from your platform for a short-lived access token.
+
+```java
+import com.dodopayments.api.client.DodoPaymentsClient;
+import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClient;
+import com.dodopayments.api.workloadidentity.SubjectTokenProviders;
+import com.dodopayments.api.workloadidentity.WorkloadIdentity;
+
+DodoPaymentsClient client = DodoPaymentsOkHttpClient.builder()
+    .testMode()
+    .workloadIdentity(WorkloadIdentity.builder()
+        // Or set the `DODO_PAYMENTS_IDENTITY_PROVIDER_ID` environment variable.
+        .identityProviderId("wip_...")
+        .provider(SubjectTokenProviders.githubActions())
+        .build())
+    .build();
+```
+
+`DodoPaymentsOkHttpClientAsync.builder()` has the same `workloadIdentity` method.
+
+- The client keeps the access token and gets a new token when 5 minutes or less remain. Concurrent requests share one exchange.
+- If the API returns `401`, the client gets a new token and sends the request again one time.
+- Do not set `bearerToken` and `workloadIdentity` together. The client builder throws an `IllegalStateException`.
+- If `fromEnv()` finds no API key and `DODO_PAYMENTS_IDENTITY_PROVIDER_ID` is set, the client uses `SubjectTokenProviders.auto()`.
+- `client.workloadIdentity().revoke()` (or `revokeAsync()`) revokes the access token and clears the cache.
+
+`SubjectTokenProviders` has these providers: `githubActions()`, `gitlab()`, `terraformCloud()`, `gcp()`, `vercel()`, `kubernetes()`, `file()`, `aws(Supplier<String>)`, `staticToken(token)` and `auto()`. You can also give your own `SubjectTokenProvider` lambda.
+
 ## Requests and responses
 
 To send a request to the Dodo Payments API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
