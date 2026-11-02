@@ -87,9 +87,50 @@ object SubjectTokenProviders {
             ?: throw WorkloadIdentityException("The GCP metadata server returned no token.")
     }
 
-    /** Reads the Vercel OIDC token from `VERCEL_OIDC_TOKEN`. */
+    /**
+     * Exchanges the Vercel OIDC token for a token with the Dodo Payments audience, on each
+     * exchange.
+     *
+     * The provider reads the token from the file in `VERCEL_OIDC_TOKEN_FILE` or from
+     * `VERCEL_OIDC_TOKEN`.
+     *
+     * @param audience the audience of the token. Defaults to the origin of the client base URL.
+     */
     @JvmStatic
-    fun vercel(): SubjectTokenProvider = SubjectTokenProvider { requiredEnv("VERCEL_OIDC_TOKEN") }
+    @JvmOverloads
+    fun vercel(audience: String? = null): SubjectTokenProvider =
+        vercelProvider(audience, VERCEL_TOKEN_EXCHANGE_URL) { System.getenv(it) }
+
+    internal fun vercelProvider(
+        audience: String?,
+        exchangeUrl: String,
+        getenv: (String) -> String?,
+    ): SubjectTokenProvider = SubjectTokenProvider { baseUrl ->
+        val baseToken = vercelBaseToken(getenv)
+        val body =
+            jsonMapper()
+                .writeValueAsBytes(
+                    mapOf("token" to baseToken, "aud" to (audience ?: origin(baseUrl)))
+                )
+        val connection = URL(exchangeUrl).openConnection() as HttpURLConnection
+        try {
+            connection.connectTimeout = TIMEOUT_MILLIS
+            connection.readTimeout = TIMEOUT_MILLIS
+            connection.requestMethod = "POST"
+            connection.doOutput = true
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Accept", "application/json")
+            connection.outputStream.use { it.write(body) }
+            val status = connection.responseCode
+            val stream = if (status in 200..299) connection.inputStream else connection.errorStream
+            val text = stream?.use { String(it.readBytes(), Charsets.UTF_8) } ?: ""
+            vercelToken(status, text, baseToken)
+        } catch (e: IOException) {
+            throw WorkloadIdentityException("The Vercel OIDC token exchange failed.", e)
+        } finally {
+            connection.disconnect()
+        }
+    }
 
     /**
      * Reads a projected Kubernetes service account token from a file on each exchange.
@@ -149,6 +190,47 @@ object SubjectTokenProviders {
                 else -> null
             }
         )
+
+    private const val VERCEL_TOKEN_EXCHANGE_URL: String = "https://oidc.vercel.com/~token"
+
+    private fun vercelBaseToken(getenv: (String) -> String?): String {
+        val tokenFile = getenv("VERCEL_OIDC_TOKEN_FILE")?.takeIf { it.isNotEmpty() }
+        val token =
+            if (tokenFile != null) {
+                try {
+                    String(Files.readAllBytes(Paths.get(tokenFile)), Charsets.UTF_8).trim()
+                } catch (e: IOException) {
+                    throw WorkloadIdentityException("Cannot read the token file $tokenFile.", e)
+                }
+            } else {
+                getenv("VERCEL_OIDC_TOKEN")?.trim()
+            }
+        if (token.isNullOrEmpty()) {
+            throw WorkloadIdentityException("Set VERCEL_OIDC_TOKEN_FILE or VERCEL_OIDC_TOKEN.")
+        }
+        return token
+    }
+
+    private fun vercelToken(status: Int, body: String, baseToken: String): String {
+        if (status !in 200..299) {
+            val excerpt = body.trim().replace(baseToken, "[redacted]").take(200)
+            throw WorkloadIdentityException(
+                "The Vercel OIDC token exchange failed with status $status: $excerpt"
+            )
+        }
+        val token =
+            try {
+                jsonMapper().readTree(body).get("token")?.asText()?.trim()
+            } catch (e: IOException) {
+                null
+            }
+        if (token.isNullOrEmpty()) {
+            throw WorkloadIdentityException(
+                "The Vercel OIDC token exchange response with status $status has no token."
+            )
+        }
+        return token
+    }
 
     private fun env(name: String): String? = System.getenv(name)?.takeIf { it.isNotEmpty() }
 
