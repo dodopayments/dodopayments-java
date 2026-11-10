@@ -307,43 +307,52 @@ interface InvoiceService {
     ): Invoice
 
     /** Prices the body as a draft and returns it. No row is saved. */
-    fun preview(params: InvoicePreviewParams) = preview(params, RequestOptions.none())
+    @MustBeClosed
+    fun preview(params: InvoicePreviewParams): HttpResponse = preview(params, RequestOptions.none())
 
     /** @see preview */
+    @MustBeClosed
     fun preview(
         params: InvoicePreviewParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    ): HttpResponse
 
     /** Preview a draft invoice */
-    fun previewExisting(invoiceId: String) =
+    @MustBeClosed
+    fun previewExisting(invoiceId: String): HttpResponse =
         previewExisting(invoiceId, InvoicePreviewExistingParams.none())
 
     /** @see previewExisting */
+    @MustBeClosed
     fun previewExisting(
         invoiceId: String,
         params: InvoicePreviewExistingParams = InvoicePreviewExistingParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ) = previewExisting(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
+    ): HttpResponse =
+        previewExisting(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
 
     /** @see previewExisting */
+    @MustBeClosed
     fun previewExisting(
         invoiceId: String,
         params: InvoicePreviewExistingParams = InvoicePreviewExistingParams.none(),
-    ) = previewExisting(invoiceId, params, RequestOptions.none())
+    ): HttpResponse = previewExisting(invoiceId, params, RequestOptions.none())
 
     /** @see previewExisting */
+    @MustBeClosed
     fun previewExisting(
         params: InvoicePreviewExistingParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    )
+    ): HttpResponse
 
     /** @see previewExisting */
-    fun previewExisting(params: InvoicePreviewExistingParams) =
+    @MustBeClosed
+    fun previewExisting(params: InvoicePreviewExistingParams): HttpResponse =
         previewExisting(params, RequestOptions.none())
 
     /** @see previewExisting */
-    fun previewExisting(invoiceId: String, requestOptions: RequestOptions) =
+    @MustBeClosed
+    fun previewExisting(invoiceId: String, requestOptions: RequestOptions): HttpResponse =
         previewExisting(invoiceId, InvoicePreviewExistingParams.none(), requestOptions)
 
     /** Charges the saved payment method of the invoice subscription now. */

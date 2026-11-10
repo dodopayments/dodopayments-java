@@ -23,11 +23,22 @@ import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.Metadata
 import com.dodopayments.api.models.misc.TaxCategory
+import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.ok
+import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo
+import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import java.time.OffsetDateTime
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.ResourceLock
 
 @ExtendWith(TestServerExtension::class)
+@WireMockTest
+@ResourceLock("https://github.com/wiremock/wiremock/issues/169")
 internal class InvoiceServiceAsyncTest {
 
     @Test
@@ -308,15 +319,16 @@ internal class InvoiceServiceAsyncTest {
     }
 
     @Test
-    fun preview() {
+    fun preview(wmRuntimeInfo: WireMockRuntimeInfo) {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
+                .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .bearerToken("My Bearer Token")
                 .build()
         val invoiceServiceAsync = client.invoices()
+        stubFor(post(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val future =
+        val responseFuture =
             invoiceServiceAsync.preview(
                 InvoicePreviewParams.builder()
                     .format(InvoicePreviewParams.Format.JSON)
@@ -362,19 +374,21 @@ internal class InvoiceServiceAsyncTest {
                     .build()
             )
 
-        val response = future.get()
+        val response = responseFuture.get()
+        assertThat(response.body()).hasContent("abc")
     }
 
     @Test
-    fun previewExisting() {
+    fun previewExisting(wmRuntimeInfo: WireMockRuntimeInfo) {
         val client =
             DodoPaymentsOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
+                .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .bearerToken("My Bearer Token")
                 .build()
         val invoiceServiceAsync = client.invoices()
+        stubFor(get(anyUrl()).willReturn(ok().withBody("abc")))
 
-        val future =
+        val responseFuture =
             invoiceServiceAsync.previewExisting(
                 InvoicePreviewExistingParams.builder()
                     .invoiceId("invoice_id")
@@ -382,7 +396,8 @@ internal class InvoiceServiceAsyncTest {
                     .build()
             )
 
-        val response = future.get()
+        val response = responseFuture.get()
+        assertThat(response.body()).hasContent("abc")
     }
 
     @Test

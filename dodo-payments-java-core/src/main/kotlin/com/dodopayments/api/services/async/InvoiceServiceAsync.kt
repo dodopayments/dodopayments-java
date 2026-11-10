@@ -335,17 +335,17 @@ interface InvoiceServiceAsync {
     ): CompletableFuture<Invoice>
 
     /** Prices the body as a draft and returns it. No row is saved. */
-    fun preview(params: InvoicePreviewParams): CompletableFuture<Void?> =
+    fun preview(params: InvoicePreviewParams): CompletableFuture<HttpResponse> =
         preview(params, RequestOptions.none())
 
     /** @see preview */
     fun preview(
         params: InvoicePreviewParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    ): CompletableFuture<HttpResponse>
 
     /** Preview a draft invoice */
-    fun previewExisting(invoiceId: String): CompletableFuture<Void?> =
+    fun previewExisting(invoiceId: String): CompletableFuture<HttpResponse> =
         previewExisting(invoiceId, InvoicePreviewExistingParams.none())
 
     /** @see previewExisting */
@@ -353,30 +353,30 @@ interface InvoiceServiceAsync {
         invoiceId: String,
         params: InvoicePreviewExistingParams = InvoicePreviewExistingParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<HttpResponse> =
         previewExisting(params.toBuilder().invoiceId(invoiceId).build(), requestOptions)
 
     /** @see previewExisting */
     fun previewExisting(
         invoiceId: String,
         params: InvoicePreviewExistingParams = InvoicePreviewExistingParams.none(),
-    ): CompletableFuture<Void?> = previewExisting(invoiceId, params, RequestOptions.none())
+    ): CompletableFuture<HttpResponse> = previewExisting(invoiceId, params, RequestOptions.none())
 
     /** @see previewExisting */
     fun previewExisting(
         params: InvoicePreviewExistingParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<Void?>
+    ): CompletableFuture<HttpResponse>
 
     /** @see previewExisting */
-    fun previewExisting(params: InvoicePreviewExistingParams): CompletableFuture<Void?> =
+    fun previewExisting(params: InvoicePreviewExistingParams): CompletableFuture<HttpResponse> =
         previewExisting(params, RequestOptions.none())
 
     /** @see previewExisting */
     fun previewExisting(
         invoiceId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<HttpResponse> =
         previewExisting(invoiceId, InvoicePreviewExistingParams.none(), requestOptions)
 
     /** Charges the saved payment method of the invoice subscription now. */
