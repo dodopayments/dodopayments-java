@@ -14,7 +14,6 @@ import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.models.meters.MeterRetrieveParams
 import com.dodopayments.api.models.meters.MeterUnarchiveParams
 import com.dodopayments.api.models.meters.MeterUpdateParams
-import com.dodopayments.api.services.async.meters.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -31,8 +30,6 @@ interface MeterServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterServiceAsync
-
-    fun translations(): TranslationServiceAsync
 
     fun create(params: MeterCreateParams): CompletableFuture<Meter> =
         create(params, RequestOptions.none())
@@ -187,8 +184,6 @@ interface MeterServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): MeterServiceAsync.WithRawResponse
-
-        fun translations(): TranslationServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /meters`, but is otherwise the same as

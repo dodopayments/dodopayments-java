@@ -65,6 +65,9 @@ internal class CheckoutSessionRequestTest {
                 .customization(
                     CheckoutSessionCustomization.builder()
                         .forceLanguage("force_language")
+                        .paymentMethodLayout(
+                            CheckoutSessionCustomization.PaymentMethodLayout.ACCORDION
+                        )
                         .showOnDemandTag(true)
                         .showOrderDetails(true)
                         .theme(CheckoutSessionCustomization.Theme.DARK)
@@ -228,6 +231,7 @@ internal class CheckoutSessionRequestTest {
             .contains(
                 CheckoutSessionCustomization.builder()
                     .forceLanguage("force_language")
+                    .paymentMethodLayout(CheckoutSessionCustomization.PaymentMethodLayout.ACCORDION)
                     .showOnDemandTag(true)
                     .showOrderDetails(true)
                     .theme(CheckoutSessionCustomization.Theme.DARK)
@@ -387,6 +391,9 @@ internal class CheckoutSessionRequestTest {
                 .customization(
                     CheckoutSessionCustomization.builder()
                         .forceLanguage("force_language")
+                        .paymentMethodLayout(
+                            CheckoutSessionCustomization.PaymentMethodLayout.ACCORDION
+                        )
                         .showOnDemandTag(true)
                         .showOrderDetails(true)
                         .theme(CheckoutSessionCustomization.Theme.DARK)

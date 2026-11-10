@@ -5,7 +5,6 @@ package com.dodopayments.api.services.async
 import com.dodopayments.api.TestServerExtension
 import com.dodopayments.api.client.okhttp.DodoPaymentsOkHttpClientAsync
 import com.dodopayments.api.models.addons.AddonCreateParams
-import com.dodopayments.api.models.addons.AddonRetrieveParams
 import com.dodopayments.api.models.addons.AddonUpdateParams
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.TaxCategory
@@ -48,13 +47,7 @@ internal class AddonServiceAsyncTest {
                 .build()
         val addonServiceAsync = client.addons()
 
-        val addonResponseFuture =
-            addonServiceAsync.retrieve(
-                AddonRetrieveParams.builder()
-                    .id("adn_NX1zdqW4Hbivsqz8vI9dc")
-                    .locale("locale")
-                    .build()
-            )
+        val addonResponseFuture = addonServiceAsync.retrieve("adn_NX1zdqW4Hbivsqz8vI9dc")
 
         val addonResponse = addonResponseFuture.get()
         addonResponse.validate()

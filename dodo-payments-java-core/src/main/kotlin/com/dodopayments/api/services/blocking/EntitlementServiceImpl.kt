@@ -29,8 +29,6 @@ import com.dodopayments.api.services.blocking.entitlements.FileService
 import com.dodopayments.api.services.blocking.entitlements.FileServiceImpl
 import com.dodopayments.api.services.blocking.entitlements.GrantService
 import com.dodopayments.api.services.blocking.entitlements.GrantServiceImpl
-import com.dodopayments.api.services.blocking.entitlements.TranslationService
-import com.dodopayments.api.services.blocking.entitlements.TranslationServiceImpl
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -41,8 +39,6 @@ class EntitlementServiceImpl internal constructor(private val clientOptions: Cli
         WithRawResponseImpl(clientOptions)
     }
 
-    private val translations: TranslationService by lazy { TranslationServiceImpl(clientOptions) }
-
     private val files: FileService by lazy { FileServiceImpl(clientOptions) }
 
     private val grants: GrantService by lazy { GrantServiceImpl(clientOptions) }
@@ -51,8 +47,6 @@ class EntitlementServiceImpl internal constructor(private val clientOptions: Cli
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EntitlementService =
         EntitlementServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
-
-    override fun translations(): TranslationService = translations
 
     override fun files(): FileService = files
 
@@ -97,10 +91,6 @@ class EntitlementServiceImpl internal constructor(private val clientOptions: Cli
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val translations: TranslationService.WithRawResponse by lazy {
-            TranslationServiceImpl.WithRawResponseImpl(clientOptions)
-        }
-
         private val files: FileService.WithRawResponse by lazy {
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -115,8 +105,6 @@ class EntitlementServiceImpl internal constructor(private val clientOptions: Cli
             EntitlementServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        override fun translations(): TranslationService.WithRawResponse = translations
 
         override fun files(): FileService.WithRawResponse = files
 
