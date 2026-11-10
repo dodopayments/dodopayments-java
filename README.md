@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.125.0)
-[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.125.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.125.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.dodopayments.api/dodo-payments-java)](https://central.sonatype.com/artifact/com.dodopayments.api/dodo-payments-java/1.126.0)
+[![javadoc](https://javadoc.io/badge2/com.dodopayments.api/dodo-payments-java/1.126.0/javadoc.svg)](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.126.0)
 
 <!-- x-release-please-end -->
 
@@ -21,7 +21,7 @@ Use the Dodo Payments MCP Server to enable AI assistants to interact with this A
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com/api-reference/introduction). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.125.0).
+The REST API documentation can be found on [docs.dodopayments.com](https://docs.dodopayments.com/api-reference/introduction). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.dodopayments.api/dodo-payments-java/1.126.0).
 
 <!-- x-release-please-end -->
 
@@ -32,7 +32,7 @@ The REST API documentation can be found on [docs.dodopayments.com](https://docs.
 ### Gradle
 
 ```kotlin
-implementation("com.dodopayments.api:dodo-payments-java:1.125.0")
+implementation("com.dodopayments.api:dodo-payments-java:1.126.0")
 ```
 
 ### Maven
@@ -41,7 +41,7 @@ implementation("com.dodopayments.api:dodo-payments-java:1.125.0")
 <dependency>
   <groupId>com.dodopayments.api</groupId>
   <artifactId>dodo-payments-java</artifactId>
-  <version>1.125.0</version>
+  <version>1.126.0</version>
 </dependency>
 ```
 
@@ -244,9 +244,22 @@ These methods return [`HttpResponse`](dodo-payments-java-core/src/main/kotlin/co
 
 ```java
 import com.dodopayments.api.core.http.HttpResponse;
-import com.dodopayments.api.models.invoices.payments.PaymentRetrieveParams;
+import com.dodopayments.api.models.invoices.CollectionMethod;
+import com.dodopayments.api.models.invoices.InvoicePreviewParams;
+import com.dodopayments.api.models.misc.Currency;
+import com.dodopayments.api.models.misc.TaxCategory;
 
-HttpResponse payment = client.invoices().payments().retrieve("pay_gr4RizvMOXFJ6xca3y2tU");
+InvoicePreviewParams params = InvoicePreviewParams.builder()
+    .collectionMethod(CollectionMethod.AUTO_CHARGE)
+    .currency(Currency.AED)
+    .customerId("customer_id")
+    .addItem(InvoicePreviewParams.Item.CustomItem.builder()
+        .description("description")
+        .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
+        .unitAmount(0)
+        .build())
+    .build();
+HttpResponse response = client.invoices().preview(params);
 ```
 
 To save the response content to a file, use the [`Files.copy(...)`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Files.html#copy-java.io.InputStream-java.nio.file.Path-java.nio.file.CopyOption...-) method:
@@ -257,7 +270,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-try (HttpResponse response = client.invoices().payments().retrieve(params)) {
+try (HttpResponse response = client.invoices().preview(params)) {
     Files.copy(
         response.body(),
         Paths.get(path),
@@ -276,7 +289,7 @@ import com.dodopayments.api.core.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-try (HttpResponse response = client.invoices().payments().retrieve(params)) {
+try (HttpResponse response = client.invoices().preview(params)) {
     response.body().transferTo(Files.newOutputStream(Paths.get(path)));
 } catch (Exception e) {
     System.out.println("Something went wrong!");

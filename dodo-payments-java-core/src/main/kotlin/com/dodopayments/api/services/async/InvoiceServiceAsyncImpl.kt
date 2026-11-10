@@ -141,16 +141,16 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun preview(
         params: InvoicePreviewParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<HttpResponse> =
         // post /billing/invoices/preview
-        withRawResponse().preview(params, requestOptions).thenAccept {}
+        withRawResponse().preview(params, requestOptions)
 
     override fun previewExisting(
         params: InvoicePreviewExistingParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<Void?> =
+    ): CompletableFuture<HttpResponse> =
         // get /billing/invoices/{invoice_id}/preview
-        withRawResponse().previewExisting(params, requestOptions).thenAccept {}
+        withRawResponse().previewExisting(params, requestOptions)
 
     override fun retry(
         params: InvoiceRetryParams,
@@ -568,8 +568,6 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val previewHandler: Handler<Void?> = emptyHandler()
-
         override fun preview(
             params: InvoicePreviewParams,
             requestOptions: RequestOptions,
@@ -579,20 +577,15 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("billing", "invoices", "preview")
+                    .putHeader("Accept", "application/pdf")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { previewHandler.handle(it) }
-                    }
-                }
+                .thenApply { response -> errorHandler.handle(response) }
         }
-
-        private val previewExistingHandler: Handler<Void?> = emptyHandler()
 
         override fun previewExisting(
             params: InvoicePreviewExistingParams,
@@ -606,16 +599,13 @@ class InvoiceServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("billing", "invoices", params._pathParam(0), "preview")
+                    .putHeader("Accept", "application/pdf")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response.use { previewExistingHandler.handle(it) }
-                    }
-                }
+                .thenApply { response -> errorHandler.handle(response) }
         }
 
         private val retryHandler: Handler<Invoice> = jsonHandler<Invoice>(clientOptions.jsonMapper)
