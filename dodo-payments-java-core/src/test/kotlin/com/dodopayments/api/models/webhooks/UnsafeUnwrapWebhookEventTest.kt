@@ -17,6 +17,11 @@ import com.dodopayments.api.models.entitlements.Feature
 import com.dodopayments.api.models.entitlements.FeatureType
 import com.dodopayments.api.models.entitlements.grants.EntitlementGrant
 import com.dodopayments.api.models.entitlements.grants.LicenseKeyGrant
+import com.dodopayments.api.models.invoices.CollectionMethod
+import com.dodopayments.api.models.invoices.DunningState
+import com.dodopayments.api.models.invoices.Invoice
+import com.dodopayments.api.models.invoices.InvoiceLine
+import com.dodopayments.api.models.invoices.InvoiceStatus
 import com.dodopayments.api.models.licensekeys.LicenseKey
 import com.dodopayments.api.models.licensekeys.LicenseKeyStatus
 import com.dodopayments.api.models.misc.CountryCode
@@ -44,6 +49,7 @@ import com.dodopayments.api.models.subscriptions.CreditEntitlementCartResponse
 import com.dodopayments.api.models.subscriptions.MeterCartResponseItem
 import com.dodopayments.api.models.subscriptions.MeterCreditEntitlementCartResponse
 import com.dodopayments.api.models.subscriptions.ScheduledPlanChange
+import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionCancelledBy
 import com.dodopayments.api.models.subscriptions.SubscriptionStatus
 import com.dodopayments.api.models.subscriptions.TimeInterval
@@ -107,6 +113,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -217,6 +231,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -337,6 +359,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -456,6 +486,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -575,6 +613,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -707,6 +753,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -841,6 +895,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -974,6 +1036,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1107,6 +1177,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1239,6 +1317,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1373,6 +1459,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1493,6 +1587,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1601,6 +1703,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1710,6 +1820,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1818,6 +1936,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -1926,6 +2052,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2034,6 +2168,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2142,6 +2284,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2247,6 +2397,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2349,6 +2507,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2501,6 +2667,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2701,6 +2875,14 @@ internal class UnsafeUnwrapWebhookEventTest {
             .contains(entitlementGrantDelivered)
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -2901,6 +3083,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed())
             .contains(entitlementGrantFailed)
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3101,6 +3291,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked())
             .contains(entitlementGrantRevoked)
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3207,6 +3405,2137 @@ internal class UnsafeUnwrapWebhookEventTest {
     }
 
     @Test
+    fun ofInvoiceFinalized() {
+        val invoiceFinalized =
+            InvoiceFinalizedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoiceFinalized(invoiceFinalized)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).contains(invoiceFinalized)
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoiceFinalizedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceFinalized(
+                InvoiceFinalizedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoiceMarkedUncollectable() {
+        val invoiceMarkedUncollectable =
+            InvoiceMarkedUncollectableWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceMarkedUncollectable(invoiceMarkedUncollectable)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable())
+            .contains(invoiceMarkedUncollectable)
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoiceMarkedUncollectableRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceMarkedUncollectable(
+                InvoiceMarkedUncollectableWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoicePaid() {
+        val invoicePaid =
+            InvoicePaidWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoicePaid(invoicePaid)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).contains(invoicePaid)
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoicePaidRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoicePaid(
+                InvoicePaidWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoicePastDue() {
+        val invoicePastDue =
+            InvoicePastDueWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoicePastDue(invoicePastDue)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).contains(invoicePastDue)
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoicePastDueRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoicePastDue(
+                InvoicePastDueWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoicePaymentFailed() {
+        val invoicePaymentFailed =
+            InvoicePaymentFailedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoicePaymentFailed(invoicePaymentFailed)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).contains(invoicePaymentFailed)
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoicePaymentFailedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoicePaymentFailed(
+                InvoicePaymentFailedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoiceReopened() {
+        val invoiceReopened =
+            InvoiceReopenedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoiceReopened(invoiceReopened)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).contains(invoiceReopened)
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoiceReopenedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceReopened(
+                InvoiceReopenedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoiceSent() {
+        val invoiceSent =
+            InvoiceSentWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoiceSent(invoiceSent)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).contains(invoiceSent)
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoiceSentRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceSent(
+                InvoiceSentWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofInvoiceVoided() {
+        val invoiceVoided =
+            InvoiceVoidedWebhookEvent.builder()
+                .businessId("business_id")
+                .data(
+                    Invoice.builder()
+                        .addAllowedAction(Invoice.AllowedAction.EDIT)
+                        .amountDue(0L)
+                        .amountPaid(0L)
+                        .amountRefunded(0L)
+                        .billingMode(Invoice.BillingMode.NORMAL)
+                        .businessId("business_id")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .credits(0L)
+                        .currency(Currency.AED)
+                        .customer(
+                            Invoice.Customer.builder()
+                                .billingAddress(
+                                    Invoice.Customer.BillingAddress.builder()
+                                        .city("city")
+                                        .country(CountryCode.AF)
+                                        .state("state")
+                                        .street("street")
+                                        .zipcode("zipcode")
+                                        .build()
+                                )
+                                .addCcEmail("string")
+                                .customerId("customer_id")
+                                .email("email")
+                                .taxId("tax_id")
+                                .build()
+                        )
+                        .addDiscountId("string")
+                        .addEditableField(Invoice.EditableField.CUSTOMER)
+                        .frequencyOneTime()
+                        .invoiceId("invoice_id")
+                        .metadata(JsonValue.from(mapOf<String, Any>()))
+                        .addRefundId("string")
+                        .retryCount(0)
+                        .rowVersion(0L)
+                        .status(InvoiceStatus.OPEN)
+                        .addSubscriptionId("string")
+                        .addTag(Invoice.Tag.REFUNDED)
+                        .tax(0)
+                        .totalAmount(0)
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .dunningState(DunningState.NOT_STARTED)
+                        .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .hostedUrl("hosted_url")
+                        .addLine(
+                            InvoiceLine.builder()
+                                .amount(0L)
+                                .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                .quantity(0)
+                                .tax(0L)
+                                .taxInclusive(true)
+                                .unitAmount(0L)
+                                .addonId("addon_id")
+                                .description("description")
+                                .name("name")
+                                .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .productId("product_id")
+                                .subscriptionId("subscription_id")
+                                .taxRate(0)
+                                .build()
+                        )
+                        .memo("memo")
+                        .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .paymentTermsDays(0)
+                        .addPayment(
+                            Invoice.Payment.builder()
+                                .amount(0L)
+                                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                .paymentId("payment_id")
+                                .retryAttempt(0)
+                                .status(IntentStatus.SUCCEEDED)
+                                .build()
+                        )
+                        .pdfUrl("pdf_url")
+                        .reminderSettings(
+                            Invoice.ReminderSettings.Snapshot.builder()
+                                .addOffsetsMinute(0L)
+                                .paused(true)
+                                .remindersEnabled(true)
+                                .build()
+                        )
+                        .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofInvoiceVoided(invoiceVoided)
+
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutDetected()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.abandonedCheckoutRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditAdded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditBalanceLow()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditDeducted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditManualAdjustment()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageCharged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditOverageReset()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolledOver()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.creditRolloverForfeited()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeChallenged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeLost()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeOpened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.disputeWon()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningRecovered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.dunningStarted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).contains(invoiceVoided)
+        assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentProcessing()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.paymentSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutInProgress()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.payoutSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.refundSucceeded()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionActive()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionCancelled()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionExpired()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionOnHold()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionPlanChanged()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionRenewed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUnpaused()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdatePaymentMethod()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.subscriptionUpdated()).isEmpty
+    }
+
+    @Test
+    fun ofInvoiceVoidedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofInvoiceVoided(
+                InvoiceVoidedWebhookEvent.builder()
+                    .businessId("business_id")
+                    .data(
+                        Invoice.builder()
+                            .addAllowedAction(Invoice.AllowedAction.EDIT)
+                            .amountDue(0L)
+                            .amountPaid(0L)
+                            .amountRefunded(0L)
+                            .billingMode(Invoice.BillingMode.NORMAL)
+                            .businessId("business_id")
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .credits(0L)
+                            .currency(Currency.AED)
+                            .customer(
+                                Invoice.Customer.builder()
+                                    .billingAddress(
+                                        Invoice.Customer.BillingAddress.builder()
+                                            .city("city")
+                                            .country(CountryCode.AF)
+                                            .state("state")
+                                            .street("street")
+                                            .zipcode("zipcode")
+                                            .build()
+                                    )
+                                    .addCcEmail("string")
+                                    .customerId("customer_id")
+                                    .email("email")
+                                    .taxId("tax_id")
+                                    .build()
+                            )
+                            .addDiscountId("string")
+                            .addEditableField(Invoice.EditableField.CUSTOMER)
+                            .frequencyOneTime()
+                            .invoiceId("invoice_id")
+                            .metadata(JsonValue.from(mapOf<String, Any>()))
+                            .addRefundId("string")
+                            .retryCount(0)
+                            .rowVersion(0L)
+                            .status(InvoiceStatus.OPEN)
+                            .addSubscriptionId("string")
+                            .addTag(Invoice.Tag.REFUNDED)
+                            .tax(0)
+                            .totalAmount(0)
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                            .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .dunningState(DunningState.NOT_STARTED)
+                            .finalizedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .hostedUrl("hosted_url")
+                            .addLine(
+                                InvoiceLine.builder()
+                                    .amount(0L)
+                                    .kind(InvoiceLine.Kind.SUBSCRIPTION)
+                                    .quantity(0)
+                                    .tax(0L)
+                                    .taxInclusive(true)
+                                    .unitAmount(0L)
+                                    .addonId("addon_id")
+                                    .description("description")
+                                    .name("name")
+                                    .periodEnd(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .periodStart(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .productId("product_id")
+                                    .subscriptionId("subscription_id")
+                                    .taxRate(0)
+                                    .build()
+                            )
+                            .memo("memo")
+                            .nextReminderAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .nextRetryAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .paymentTermsDays(0)
+                            .addPayment(
+                                Invoice.Payment.builder()
+                                    .amount(0L)
+                                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                                    .paymentId("payment_id")
+                                    .retryAttempt(0)
+                                    .status(IntentStatus.SUCCEEDED)
+                                    .build()
+                            )
+                            .pdfUrl("pdf_url")
+                            .reminderSettings(
+                                Invoice.ReminderSettings.Snapshot.builder()
+                                    .addOffsetsMinute(0L)
+                                    .paused(true)
+                                    .remindersEnabled(true)
+                                    .build()
+                            )
+                            .reviewDeadline(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .sentAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .timestamp(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
     fun ofLicenseKeyCreated() {
         val licenseKeyCreated =
             LicenseKeyCreatedWebhookEvent.builder()
@@ -3259,6 +5588,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).contains(licenseKeyCreated)
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3505,6 +5842,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).contains(paymentCancelled)
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -3881,6 +6226,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).contains(paymentFailed)
@@ -4258,6 +6611,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4634,6 +6995,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4881,6 +7250,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -4999,6 +7376,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5117,6 +7502,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5235,6 +7628,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5353,6 +7754,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5487,6 +7896,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5641,6 +8058,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5745,6 +8170,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -5833,6 +8259,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -5866,6 +8293,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -5920,6 +8348,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -5970,6 +8406,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -6058,6 +8495,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -6091,6 +8529,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -6147,6 +8586,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -6235,6 +8675,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -6268,6 +8709,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -6322,6 +8764,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -6372,6 +8822,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -6460,6 +8911,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -6493,6 +8945,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -6549,6 +9002,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -6637,6 +9091,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -6670,6 +9125,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -6724,6 +9180,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -6774,6 +9238,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -6862,6 +9327,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -6895,6 +9361,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -6951,6 +9418,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -7039,6 +9507,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -7072,6 +9541,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -7126,6 +9596,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -7176,6 +9654,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -7264,6 +9743,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -7297,6 +9777,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -7353,6 +9834,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -7441,6 +9923,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -7474,6 +9957,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -7528,6 +10012,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -7578,6 +10070,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -7666,6 +10159,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -7699,6 +10193,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -7755,6 +10250,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -7843,6 +10339,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -7876,6 +10373,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -7930,6 +10428,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -7980,6 +10486,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -8068,6 +10575,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -8101,6 +10609,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -8157,6 +10666,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -8245,6 +10755,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -8278,6 +10789,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -8332,6 +10844,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -8382,6 +10902,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -8470,6 +10991,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -8503,6 +11025,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -8559,6 +11082,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -8647,6 +11171,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -8680,6 +11205,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -8734,6 +11260,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -8785,6 +11319,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -8873,6 +11408,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -8906,6 +11442,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -8962,6 +11499,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -9050,6 +11588,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -9083,6 +11622,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -9137,6 +11677,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -9187,6 +11735,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -9275,6 +11824,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -9308,6 +11858,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -9364,6 +11915,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -9452,6 +12004,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -9485,6 +12038,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -9539,6 +12093,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -9589,6 +12151,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -9677,6 +12240,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -9710,6 +12274,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -9766,6 +12331,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -9854,6 +12420,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -9887,6 +12454,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -9943,6 +12511,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -9994,6 +12570,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -10082,6 +12659,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -10115,6 +12693,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")
@@ -10171,6 +12750,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .zipcode("zipcode")
                                 .build()
                         )
+                        .billingMode(Subscription.BillingMode.NORMAL)
                         .brandId("brand_id")
                         .cancelAtNextBillingDate(true)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -10259,6 +12839,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 .name("name")
                                 .build()
                         )
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
                         .addCustomFieldResponse(
                             CustomFieldResponse.builder().key("key").value("value").build()
                         )
@@ -10292,6 +12873,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .paymentMethodId("payment_method_id")
+                        .paymentTermsDays(0)
                         .scheduledChange(
                             ScheduledPlanChange.builder()
                                 .id("id")
@@ -10346,6 +12928,14 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantDelivered()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantFailed()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.entitlementGrantRevoked()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceFinalized()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceMarkedUncollectable()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaid()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePastDue()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoicePaymentFailed()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceReopened()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceSent()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.invoiceVoided()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.licenseKeyCreated()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentCancelled()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.paymentFailed()).isEmpty
@@ -10396,6 +12986,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .zipcode("zipcode")
                                     .build()
                             )
+                            .billingMode(Subscription.BillingMode.NORMAL)
                             .brandId("brand_id")
                             .cancelAtNextBillingDate(true)
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -10484,6 +13075,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .name("name")
                                     .build()
                             )
+                            .collectionMethod(CollectionMethod.AUTO_CHARGE)
                             .addCustomFieldResponse(
                                 CustomFieldResponse.builder().key("key").value("value").build()
                             )
@@ -10517,6 +13109,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .pausedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .paymentMethodId("payment_method_id")
+                            .paymentTermsDays(0)
                             .scheduledChange(
                                 ScheduledPlanChange.builder()
                                     .id("id")

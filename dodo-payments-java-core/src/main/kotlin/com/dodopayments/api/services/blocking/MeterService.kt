@@ -14,7 +14,6 @@ import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.models.meters.MeterRetrieveParams
 import com.dodopayments.api.models.meters.MeterUnarchiveParams
 import com.dodopayments.api.models.meters.MeterUpdateParams
-import com.dodopayments.api.services.blocking.meters.TranslationService
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -31,8 +30,6 @@ interface MeterService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterService
-
-    fun translations(): TranslationService
 
     fun create(params: MeterCreateParams): Meter = create(params, RequestOptions.none())
 
@@ -168,8 +165,6 @@ interface MeterService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterService.WithRawResponse
-
-        fun translations(): TranslationService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /meters`, but is otherwise the same as

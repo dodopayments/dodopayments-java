@@ -19,7 +19,6 @@ import com.dodopayments.api.models.products.ProductUpdateParams
 import com.dodopayments.api.services.async.products.ImageServiceAsync
 import com.dodopayments.api.services.async.products.LocalizedPriceServiceAsync
 import com.dodopayments.api.services.async.products.ShortLinkServiceAsync
-import com.dodopayments.api.services.async.products.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -36,8 +35,6 @@ interface ProductServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync
-
-    fun translations(): TranslationServiceAsync
 
     fun images(): ImageServiceAsync
 
@@ -227,8 +224,6 @@ interface ProductServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ProductServiceAsync.WithRawResponse
-
-        fun translations(): TranslationServiceAsync.WithRawResponse
 
         fun images(): ImageServiceAsync.WithRawResponse
 
