@@ -19,10 +19,7 @@ private constructor(
 
     fun payoutId(): Optional<String> = Optional.ofNullable(payoutId)
 
-    /**
-     * The signed link token. If the business asks for a credential on its invoice links, a valid
-     * token for this record replaces the credential.
-     */
+    /** The signed link token. A valid token for this record replaces the credential. */
     fun token(): Optional<String> = Optional.ofNullable(token)
 
     /** Additional headers to send with the request. */
@@ -64,10 +61,7 @@ private constructor(
         /** Alias for calling [Builder.payoutId] with `payoutId.orElse(null)`. */
         fun payoutId(payoutId: Optional<String>) = payoutId(payoutId.getOrNull())
 
-        /**
-         * The signed link token. If the business asks for a credential on its invoice links, a
-         * valid token for this record replaces the credential.
-         */
+        /** The signed link token. A valid token for this record replaces the credential. */
         fun token(token: String?) = apply { this.token = token }
 
         /** Alias for calling [Builder.token] with `token.orElse(null)`. */

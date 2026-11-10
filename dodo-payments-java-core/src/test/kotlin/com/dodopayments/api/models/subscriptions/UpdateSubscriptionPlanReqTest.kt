@@ -4,6 +4,7 @@ package com.dodopayments.api.models.subscriptions
 
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.jsonMapper
+import com.dodopayments.api.models.invoices.CollectionMethod
 import com.dodopayments.api.models.misc.Metadata
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import kotlin.jvm.optionals.getOrNull
@@ -26,9 +27,17 @@ internal class UpdateSubscriptionPlanReqTest {
                 .cancelOlderPaymentLink(true)
                 .cancelScheduledChangePlan(true)
                 .collectViaPaymentLink(true)
+                .credit(UpdateSubscriptionPlanReq.Credit.CUSTOMER_BALANCE)
                 .discountCode("discount_code")
                 .addDiscountCode("string")
                 .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+                .invoice(
+                    UpdateSubscriptionPlanReq.Invoice.builder()
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .finalize(true)
+                        .paymentTermsDueOnReceipt()
+                        .build()
+                )
                 .metadata(
                     Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
@@ -48,10 +57,20 @@ internal class UpdateSubscriptionPlanReqTest {
         assertThat(updateSubscriptionPlanReq.cancelOlderPaymentLink()).contains(true)
         assertThat(updateSubscriptionPlanReq.cancelScheduledChangePlan()).contains(true)
         assertThat(updateSubscriptionPlanReq.collectViaPaymentLink()).contains(true)
+        assertThat(updateSubscriptionPlanReq.credit())
+            .contains(UpdateSubscriptionPlanReq.Credit.CUSTOMER_BALANCE)
         assertThat(updateSubscriptionPlanReq.discountCode()).contains("discount_code")
         assertThat(updateSubscriptionPlanReq.discountCodes().getOrNull()).containsExactly("string")
         assertThat(updateSubscriptionPlanReq.effectiveAt())
             .contains(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+        assertThat(updateSubscriptionPlanReq.invoice())
+            .contains(
+                UpdateSubscriptionPlanReq.Invoice.builder()
+                    .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                    .finalize(true)
+                    .paymentTermsDueOnReceipt()
+                    .build()
+            )
         assertThat(updateSubscriptionPlanReq.metadata())
             .contains(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
@@ -76,9 +95,17 @@ internal class UpdateSubscriptionPlanReqTest {
                 .cancelOlderPaymentLink(true)
                 .cancelScheduledChangePlan(true)
                 .collectViaPaymentLink(true)
+                .credit(UpdateSubscriptionPlanReq.Credit.CUSTOMER_BALANCE)
                 .discountCode("discount_code")
                 .addDiscountCode("string")
                 .effectiveAt(UpdateSubscriptionPlanReq.EffectiveAt.IMMEDIATELY)
+                .invoice(
+                    UpdateSubscriptionPlanReq.Invoice.builder()
+                        .collectionMethod(CollectionMethod.AUTO_CHARGE)
+                        .finalize(true)
+                        .paymentTermsDueOnReceipt()
+                        .build()
+                )
                 .metadata(
                     Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
