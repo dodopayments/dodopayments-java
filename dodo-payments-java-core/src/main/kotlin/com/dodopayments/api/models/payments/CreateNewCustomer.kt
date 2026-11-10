@@ -8,7 +8,6 @@ import com.dodopayments.api.core.JsonMissing
 import com.dodopayments.api.core.JsonValue
 import com.dodopayments.api.core.checkRequired
 import com.dodopayments.api.errors.DodoPaymentsInvalidDataException
-import com.dodopayments.api.models.misc.Locale
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -25,7 +24,6 @@ private constructor(
     private val name: JsonField<String>,
     private val createNewCustomer: JsonField<Boolean>,
     private val phoneNumber: JsonField<String>,
-    private val preferredLocale: JsonField<Locale>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -39,10 +37,7 @@ private constructor(
         @JsonProperty("phone_number")
         @ExcludeMissing
         phoneNumber: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("preferred_locale")
-        @ExcludeMissing
-        preferredLocale: JsonField<Locale> = JsonMissing.of(),
-    ) : this(email, name, createNewCustomer, phoneNumber, preferredLocale, mutableMapOf())
+    ) : this(email, name, createNewCustomer, phoneNumber, mutableMapOf())
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -71,16 +66,6 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun phoneNumber(): Optional<String> = phoneNumber.getOptional("phone_number")
-
-    /**
-     * The language of the customer emails, a code from `GET /locales`. A value replaces the stored
-     * language of the customer, also for an existing customer. Send a value only to change that
-     * language on purpose. With no value, the stored language stays.
-     *
-     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
-     *   the server responded with an unexpected value).
-     */
-    fun preferredLocale(): Optional<Locale> = preferredLocale.getOptional("preferred_locale")
 
     /**
      * Returns the raw JSON value of [email].
@@ -115,15 +100,6 @@ private constructor(
     @ExcludeMissing
     fun _phoneNumber(): JsonField<String> = phoneNumber
 
-    /**
-     * Returns the raw JSON value of [preferredLocale].
-     *
-     * Unlike [preferredLocale], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("preferred_locale")
-    @ExcludeMissing
-    fun _preferredLocale(): JsonField<Locale> = preferredLocale
-
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -157,7 +133,6 @@ private constructor(
         private var name: JsonField<String>? = null
         private var createNewCustomer: JsonField<Boolean> = JsonMissing.of()
         private var phoneNumber: JsonField<String> = JsonMissing.of()
-        private var preferredLocale: JsonField<Locale> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -166,7 +141,6 @@ private constructor(
             name = createNewCustomer.name
             this.createNewCustomer = createNewCustomer.createNewCustomer
             phoneNumber = createNewCustomer.phoneNumber
-            preferredLocale = createNewCustomer.preferredLocale
             additionalProperties = createNewCustomer.additionalProperties.toMutableMap()
         }
 
@@ -222,29 +196,6 @@ private constructor(
          */
         fun phoneNumber(phoneNumber: JsonField<String>) = apply { this.phoneNumber = phoneNumber }
 
-        /**
-         * The language of the customer emails, a code from `GET /locales`. A value replaces the
-         * stored language of the customer, also for an existing customer. Send a value only to
-         * change that language on purpose. With no value, the stored language stays.
-         */
-        fun preferredLocale(preferredLocale: Locale?) =
-            preferredLocale(JsonField.ofNullable(preferredLocale))
-
-        /** Alias for calling [Builder.preferredLocale] with `preferredLocale.orElse(null)`. */
-        fun preferredLocale(preferredLocale: Optional<Locale>) =
-            preferredLocale(preferredLocale.getOrNull())
-
-        /**
-         * Sets [Builder.preferredLocale] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.preferredLocale] with a well-typed [Locale] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun preferredLocale(preferredLocale: JsonField<Locale>) = apply {
-            this.preferredLocale = preferredLocale
-        }
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -283,7 +234,6 @@ private constructor(
                 checkRequired("name", name),
                 createNewCustomer,
                 phoneNumber,
-                preferredLocale,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -307,7 +257,6 @@ private constructor(
         name()
         createNewCustomer()
         phoneNumber()
-        preferredLocale().ifPresent { it.validate() }
         validated = true
     }
 
@@ -329,8 +278,7 @@ private constructor(
         (if (email.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (createNewCustomer.asKnown().isPresent) 1 else 0) +
-            (if (phoneNumber.asKnown().isPresent) 1 else 0) +
-            (preferredLocale.asKnown().getOrNull()?.validity() ?: 0)
+            (if (phoneNumber.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -342,23 +290,15 @@ private constructor(
             name == other.name &&
             createNewCustomer == other.createNewCustomer &&
             phoneNumber == other.phoneNumber &&
-            preferredLocale == other.preferredLocale &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(
-            email,
-            name,
-            createNewCustomer,
-            phoneNumber,
-            preferredLocale,
-            additionalProperties,
-        )
+        Objects.hash(email, name, createNewCustomer, phoneNumber, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CreateNewCustomer{email=$email, name=$name, createNewCustomer=$createNewCustomer, phoneNumber=$phoneNumber, preferredLocale=$preferredLocale, additionalProperties=$additionalProperties}"
+        "CreateNewCustomer{email=$email, name=$name, createNewCustomer=$createNewCustomer, phoneNumber=$phoneNumber, additionalProperties=$additionalProperties}"
 }

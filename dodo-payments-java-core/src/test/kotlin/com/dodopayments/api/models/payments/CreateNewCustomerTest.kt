@@ -3,7 +3,6 @@
 package com.dodopayments.api.models.payments
 
 import com.dodopayments.api.core.jsonMapper
-import com.dodopayments.api.models.misc.Locale
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,14 +17,12 @@ internal class CreateNewCustomerTest {
                 .name("name")
                 .createNewCustomer(true)
                 .phoneNumber("phone_number")
-                .preferredLocale(Locale.AR)
                 .build()
 
         assertThat(createNewCustomer.email()).isEqualTo("email")
         assertThat(createNewCustomer.name()).isEqualTo("name")
         assertThat(createNewCustomer.createNewCustomer()).contains(true)
         assertThat(createNewCustomer.phoneNumber()).contains("phone_number")
-        assertThat(createNewCustomer.preferredLocale()).contains(Locale.AR)
     }
 
     @Test
@@ -37,7 +34,6 @@ internal class CreateNewCustomerTest {
                 .name("name")
                 .createNewCustomer(true)
                 .phoneNumber("phone_number")
-                .preferredLocale(Locale.AR)
                 .build()
 
         val roundtrippedCreateNewCustomer =

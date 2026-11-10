@@ -15,7 +15,6 @@ import com.dodopayments.api.models.creditentitlements.CreditEntitlementRetrieveP
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementUndeleteParams
 import com.dodopayments.api.models.creditentitlements.CreditEntitlementUpdateParams
 import com.dodopayments.api.services.async.creditentitlements.BalanceServiceAsync
-import com.dodopayments.api.services.async.creditentitlements.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -32,8 +31,6 @@ interface CreditEntitlementServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): CreditEntitlementServiceAsync
-
-    fun translations(): TranslationServiceAsync
 
     fun balances(): BalanceServiceAsync
 
@@ -360,8 +357,6 @@ interface CreditEntitlementServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): CreditEntitlementServiceAsync.WithRawResponse
-
-        fun translations(): TranslationServiceAsync.WithRawResponse
 
         fun balances(): BalanceServiceAsync.WithRawResponse
 
