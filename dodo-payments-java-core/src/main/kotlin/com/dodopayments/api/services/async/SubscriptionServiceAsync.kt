@@ -6,6 +6,7 @@ import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.core.RequestOptions
 import com.dodopayments.api.core.http.HttpResponse
 import com.dodopayments.api.core.http.HttpResponseFor
+import com.dodopayments.api.models.invoices.Invoice
 import com.dodopayments.api.models.subscriptions.Subscription
 import com.dodopayments.api.models.subscriptions.SubscriptionCancelChangePlanParams
 import com.dodopayments.api.models.subscriptions.SubscriptionChangePlanParams
@@ -21,6 +22,7 @@ import com.dodopayments.api.models.subscriptions.SubscriptionPreviewChangePlanRe
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveCreditUsageResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
+import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUpcomingInvoiceParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
@@ -296,6 +298,55 @@ interface SubscriptionServiceAsync {
         )
 
     /**
+     * Prices the next cycle invoice of an invoice-led subscription. The invoice ID in the response
+     * is not stored, so the response has no allowed actions and no editable fields.
+     */
+    fun retrieveUpcomingInvoice(subscriptionId: String): CompletableFuture<Invoice> =
+        retrieveUpcomingInvoice(subscriptionId, SubscriptionRetrieveUpcomingInvoiceParams.none())
+
+    /** @see retrieveUpcomingInvoice */
+    fun retrieveUpcomingInvoice(
+        subscriptionId: String,
+        params: SubscriptionRetrieveUpcomingInvoiceParams =
+            SubscriptionRetrieveUpcomingInvoiceParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Invoice> =
+        retrieveUpcomingInvoice(
+            params.toBuilder().subscriptionId(subscriptionId).build(),
+            requestOptions,
+        )
+
+    /** @see retrieveUpcomingInvoice */
+    fun retrieveUpcomingInvoice(
+        subscriptionId: String,
+        params: SubscriptionRetrieveUpcomingInvoiceParams =
+            SubscriptionRetrieveUpcomingInvoiceParams.none(),
+    ): CompletableFuture<Invoice> =
+        retrieveUpcomingInvoice(subscriptionId, params, RequestOptions.none())
+
+    /** @see retrieveUpcomingInvoice */
+    fun retrieveUpcomingInvoice(
+        params: SubscriptionRetrieveUpcomingInvoiceParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Invoice>
+
+    /** @see retrieveUpcomingInvoice */
+    fun retrieveUpcomingInvoice(
+        params: SubscriptionRetrieveUpcomingInvoiceParams
+    ): CompletableFuture<Invoice> = retrieveUpcomingInvoice(params, RequestOptions.none())
+
+    /** @see retrieveUpcomingInvoice */
+    fun retrieveUpcomingInvoice(
+        subscriptionId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Invoice> =
+        retrieveUpcomingInvoice(
+            subscriptionId,
+            SubscriptionRetrieveUpcomingInvoiceParams.none(),
+            requestOptions,
+        )
+
+    /**
      * Get detailed usage history for a subscription that includes usage-based billing (metered
      * components). This endpoint provides insights into customer usage patterns and billing
      * calculations over time.
@@ -377,6 +428,10 @@ interface SubscriptionServiceAsync {
             requestOptions,
         )
 
+    /**
+     * For an invoice-led subscription, billing charges the open invoices after the change, so the
+     * response has no payment.
+     */
     fun updatePaymentMethod(
         subscriptionId: String,
         params: SubscriptionUpdatePaymentMethodParams,
@@ -735,6 +790,61 @@ interface SubscriptionServiceAsync {
             retrieveCreditUsage(
                 subscriptionId,
                 SubscriptionRetrieveCreditUsageParams.none(),
+                requestOptions,
+            )
+
+        /**
+         * Returns a raw HTTP response for `get /subscriptions/{subscription_id}/upcoming-invoice`,
+         * but is otherwise the same as [SubscriptionServiceAsync.retrieveUpcomingInvoice].
+         */
+        fun retrieveUpcomingInvoice(
+            subscriptionId: String
+        ): CompletableFuture<HttpResponseFor<Invoice>> =
+            retrieveUpcomingInvoice(
+                subscriptionId,
+                SubscriptionRetrieveUpcomingInvoiceParams.none(),
+            )
+
+        /** @see retrieveUpcomingInvoice */
+        fun retrieveUpcomingInvoice(
+            subscriptionId: String,
+            params: SubscriptionRetrieveUpcomingInvoiceParams =
+                SubscriptionRetrieveUpcomingInvoiceParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Invoice>> =
+            retrieveUpcomingInvoice(
+                params.toBuilder().subscriptionId(subscriptionId).build(),
+                requestOptions,
+            )
+
+        /** @see retrieveUpcomingInvoice */
+        fun retrieveUpcomingInvoice(
+            subscriptionId: String,
+            params: SubscriptionRetrieveUpcomingInvoiceParams =
+                SubscriptionRetrieveUpcomingInvoiceParams.none(),
+        ): CompletableFuture<HttpResponseFor<Invoice>> =
+            retrieveUpcomingInvoice(subscriptionId, params, RequestOptions.none())
+
+        /** @see retrieveUpcomingInvoice */
+        fun retrieveUpcomingInvoice(
+            params: SubscriptionRetrieveUpcomingInvoiceParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<Invoice>>
+
+        /** @see retrieveUpcomingInvoice */
+        fun retrieveUpcomingInvoice(
+            params: SubscriptionRetrieveUpcomingInvoiceParams
+        ): CompletableFuture<HttpResponseFor<Invoice>> =
+            retrieveUpcomingInvoice(params, RequestOptions.none())
+
+        /** @see retrieveUpcomingInvoice */
+        fun retrieveUpcomingInvoice(
+            subscriptionId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<Invoice>> =
+            retrieveUpcomingInvoice(
+                subscriptionId,
+                SubscriptionRetrieveUpcomingInvoiceParams.none(),
                 requestOptions,
             )
 

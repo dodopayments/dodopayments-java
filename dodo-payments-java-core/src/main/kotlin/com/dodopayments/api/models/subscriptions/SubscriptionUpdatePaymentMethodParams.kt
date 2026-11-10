@@ -33,6 +33,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * For an invoice-led subscription, billing charges the open invoices after the change, so the
+ * response has no payment.
+ */
 class SubscriptionUpdatePaymentMethodParams
 private constructor(
     private val subscriptionId: String?,

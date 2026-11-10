@@ -22,7 +22,6 @@ private constructor(
     private val createdAtGte: OffsetDateTime?,
     private val createdAtLte: OffsetDateTime?,
     private val customerId: String?,
-    private val locale: String?,
     private val pageNumber: Int?,
     private val pageSize: Int?,
     private val productId: String?,
@@ -45,16 +44,6 @@ private constructor(
 
     /** Filter by customer id */
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
-
-    /**
-     * Shows the translated name, description and unit of the catalog entities in this locale. The
-     * value must be a code from `GET /locales`, for example `fr`. A field with no translation, an
-     * unknown code, or no code shows the base text.
-     *
-     * Do not send a text from a localized response back in a create or update request. The base
-     * text then changes to the translated text.
-     */
-    fun locale(): Optional<String> = Optional.ofNullable(locale)
 
     /** Page number default is 0 */
     fun pageNumber(): Optional<Int> = Optional.ofNullable(pageNumber)
@@ -92,7 +81,6 @@ private constructor(
         private var createdAtGte: OffsetDateTime? = null
         private var createdAtLte: OffsetDateTime? = null
         private var customerId: String? = null
-        private var locale: String? = null
         private var pageNumber: Int? = null
         private var pageSize: Int? = null
         private var productId: String? = null
@@ -107,7 +95,6 @@ private constructor(
             createdAtGte = subscriptionListParams.createdAtGte
             createdAtLte = subscriptionListParams.createdAtLte
             customerId = subscriptionListParams.customerId
-            locale = subscriptionListParams.locale
             pageNumber = subscriptionListParams.pageNumber
             pageSize = subscriptionListParams.pageSize
             productId = subscriptionListParams.productId
@@ -161,19 +148,6 @@ private constructor(
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
-
-        /**
-         * Shows the translated name, description and unit of the catalog entities in this locale.
-         * The value must be a code from `GET /locales`, for example `fr`. A field with no
-         * translation, an unknown code, or no code shows the base text.
-         *
-         * Do not send a text from a localized response back in a create or update request. The base
-         * text then changes to the translated text.
-         */
-        fun locale(locale: String?) = apply { this.locale = locale }
-
-        /** Alias for calling [Builder.locale] with `locale.orElse(null)`. */
-        fun locale(locale: Optional<String>) = locale(locale.getOrNull())
 
         /** Page number default is 0 */
         fun pageNumber(pageNumber: Int?) = apply { this.pageNumber = pageNumber }
@@ -323,7 +297,6 @@ private constructor(
                 createdAtGte,
                 createdAtLte,
                 customerId,
-                locale,
                 pageNumber,
                 pageSize,
                 productId,
@@ -347,7 +320,6 @@ private constructor(
                     put("created_at_lte", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it))
                 }
                 customerId?.let { put("customer_id", it) }
-                locale?.let { put("locale", it) }
                 pageNumber?.let { put("page_number", it.toString()) }
                 pageSize?.let { put("page_size", it.toString()) }
                 productId?.let { put("product_id", it) }
@@ -540,7 +512,6 @@ private constructor(
             createdAtGte == other.createdAtGte &&
             createdAtLte == other.createdAtLte &&
             customerId == other.customerId &&
-            locale == other.locale &&
             pageNumber == other.pageNumber &&
             pageSize == other.pageSize &&
             productId == other.productId &&
@@ -556,7 +527,6 @@ private constructor(
             createdAtGte,
             createdAtLte,
             customerId,
-            locale,
             pageNumber,
             pageSize,
             productId,
@@ -566,5 +536,5 @@ private constructor(
         )
 
     override fun toString() =
-        "SubscriptionListParams{brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, locale=$locale, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SubscriptionListParams{brandId=$brandId, cancelAtNextBillingDate=$cancelAtNextBillingDate, createdAtGte=$createdAtGte, createdAtLte=$createdAtLte, customerId=$customerId, pageNumber=$pageNumber, pageSize=$pageSize, productId=$productId, status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

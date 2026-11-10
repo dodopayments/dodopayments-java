@@ -16,15 +16,19 @@ internal class SubscriptionChangePlanResponseTest {
             SubscriptionChangePlanResponse.builder()
                 .clientSecret("client_secret")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .invoiceId("invoice_id")
                 .paymentId("payment_id")
                 .paymentLink("payment_link")
+                .refundId("refund_id")
                 .build()
 
         assertThat(subscriptionChangePlanResponse.clientSecret()).contains("client_secret")
         assertThat(subscriptionChangePlanResponse.expiresOn())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(subscriptionChangePlanResponse.invoiceId()).contains("invoice_id")
         assertThat(subscriptionChangePlanResponse.paymentId()).contains("payment_id")
         assertThat(subscriptionChangePlanResponse.paymentLink()).contains("payment_link")
+        assertThat(subscriptionChangePlanResponse.refundId()).contains("refund_id")
     }
 
     @Test
@@ -34,8 +38,10 @@ internal class SubscriptionChangePlanResponseTest {
             SubscriptionChangePlanResponse.builder()
                 .clientSecret("client_secret")
                 .expiresOn(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .invoiceId("invoice_id")
                 .paymentId("payment_id")
                 .paymentLink("payment_link")
+                .refundId("refund_id")
                 .build()
 
         val roundtrippedSubscriptionChangePlanResponse =
