@@ -29,8 +29,10 @@ class SubscriptionChangePlanResponse
 private constructor(
     private val clientSecret: JsonField<String>,
     private val expiresOn: JsonField<OffsetDateTime>,
+    private val invoiceId: JsonField<String>,
     private val paymentId: JsonField<String>,
     private val paymentLink: JsonField<String>,
+    private val refundId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -42,11 +44,13 @@ private constructor(
         @JsonProperty("expires_on")
         @ExcludeMissing
         expiresOn: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("invoice_id") @ExcludeMissing invoiceId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("payment_id") @ExcludeMissing paymentId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("payment_link")
         @ExcludeMissing
         paymentLink: JsonField<String> = JsonMissing.of(),
-    ) : this(clientSecret, expiresOn, paymentId, paymentLink, mutableMapOf())
+        @JsonProperty("refund_id") @ExcludeMissing refundId: JsonField<String> = JsonMissing.of(),
+    ) : this(clientSecret, expiresOn, invoiceId, paymentId, paymentLink, refundId, mutableMapOf())
 
     /**
      * Client secret for an embedded checkout.
@@ -65,6 +69,14 @@ private constructor(
     fun expiresOn(): Optional<OffsetDateTime> = expiresOn.getOptional("expires_on")
 
     /**
+     * The invoice that bills the plan change. Set only for an invoice-led subscription.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun invoiceId(): Optional<String> = invoiceId.getOptional("invoice_id")
+
+    /**
      * Id of the payment that settles the plan change.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -79,6 +91,14 @@ private constructor(
      *   the server responded with an unexpected value).
      */
     fun paymentLink(): Optional<String> = paymentLink.getOptional("payment_link")
+
+    /**
+     * The refund of a downgrade with `credit: refund`.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun refundId(): Optional<String> = refundId.getOptional("refund_id")
 
     /**
      * Returns the raw JSON value of [clientSecret].
@@ -99,6 +119,13 @@ private constructor(
     fun _expiresOn(): JsonField<OffsetDateTime> = expiresOn
 
     /**
+     * Returns the raw JSON value of [invoiceId].
+     *
+     * Unlike [invoiceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("invoice_id") @ExcludeMissing fun _invoiceId(): JsonField<String> = invoiceId
+
+    /**
      * Returns the raw JSON value of [paymentId].
      *
      * Unlike [paymentId], this method doesn't throw if the JSON field has an unexpected type.
@@ -113,6 +140,13 @@ private constructor(
     @JsonProperty("payment_link")
     @ExcludeMissing
     fun _paymentLink(): JsonField<String> = paymentLink
+
+    /**
+     * Returns the raw JSON value of [refundId].
+     *
+     * Unlike [refundId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("refund_id") @ExcludeMissing fun _refundId(): JsonField<String> = refundId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -140,16 +174,20 @@ private constructor(
 
         private var clientSecret: JsonField<String> = JsonMissing.of()
         private var expiresOn: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var invoiceId: JsonField<String> = JsonMissing.of()
         private var paymentId: JsonField<String> = JsonMissing.of()
         private var paymentLink: JsonField<String> = JsonMissing.of()
+        private var refundId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(subscriptionChangePlanResponse: SubscriptionChangePlanResponse) = apply {
             clientSecret = subscriptionChangePlanResponse.clientSecret
             expiresOn = subscriptionChangePlanResponse.expiresOn
+            invoiceId = subscriptionChangePlanResponse.invoiceId
             paymentId = subscriptionChangePlanResponse.paymentId
             paymentLink = subscriptionChangePlanResponse.paymentLink
+            refundId = subscriptionChangePlanResponse.refundId
             additionalProperties =
                 subscriptionChangePlanResponse.additionalProperties.toMutableMap()
         }
@@ -186,6 +224,21 @@ private constructor(
          */
         fun expiresOn(expiresOn: JsonField<OffsetDateTime>) = apply { this.expiresOn = expiresOn }
 
+        /** The invoice that bills the plan change. Set only for an invoice-led subscription. */
+        fun invoiceId(invoiceId: String?) = invoiceId(JsonField.ofNullable(invoiceId))
+
+        /** Alias for calling [Builder.invoiceId] with `invoiceId.orElse(null)`. */
+        fun invoiceId(invoiceId: Optional<String>) = invoiceId(invoiceId.getOrNull())
+
+        /**
+         * Sets [Builder.invoiceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.invoiceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun invoiceId(invoiceId: JsonField<String>) = apply { this.invoiceId = invoiceId }
+
         /** Id of the payment that settles the plan change. */
         fun paymentId(paymentId: String?) = paymentId(JsonField.ofNullable(paymentId))
 
@@ -216,6 +269,20 @@ private constructor(
          */
         fun paymentLink(paymentLink: JsonField<String>) = apply { this.paymentLink = paymentLink }
 
+        /** The refund of a downgrade with `credit: refund`. */
+        fun refundId(refundId: String?) = refundId(JsonField.ofNullable(refundId))
+
+        /** Alias for calling [Builder.refundId] with `refundId.orElse(null)`. */
+        fun refundId(refundId: Optional<String>) = refundId(refundId.getOrNull())
+
+        /**
+         * Sets [Builder.refundId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.refundId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun refundId(refundId: JsonField<String>) = apply { this.refundId = refundId }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -244,8 +311,10 @@ private constructor(
             SubscriptionChangePlanResponse(
                 clientSecret,
                 expiresOn,
+                invoiceId,
                 paymentId,
                 paymentLink,
+                refundId,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -267,8 +336,10 @@ private constructor(
 
         clientSecret()
         expiresOn()
+        invoiceId()
         paymentId()
         paymentLink()
+        refundId()
         validated = true
     }
 
@@ -289,8 +360,10 @@ private constructor(
     internal fun validity(): Int =
         (if (clientSecret.asKnown().isPresent) 1 else 0) +
             (if (expiresOn.asKnown().isPresent) 1 else 0) +
+            (if (invoiceId.asKnown().isPresent) 1 else 0) +
             (if (paymentId.asKnown().isPresent) 1 else 0) +
-            (if (paymentLink.asKnown().isPresent) 1 else 0)
+            (if (paymentLink.asKnown().isPresent) 1 else 0) +
+            (if (refundId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -300,17 +373,27 @@ private constructor(
         return other is SubscriptionChangePlanResponse &&
             clientSecret == other.clientSecret &&
             expiresOn == other.expiresOn &&
+            invoiceId == other.invoiceId &&
             paymentId == other.paymentId &&
             paymentLink == other.paymentLink &&
+            refundId == other.refundId &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(clientSecret, expiresOn, paymentId, paymentLink, additionalProperties)
+        Objects.hash(
+            clientSecret,
+            expiresOn,
+            invoiceId,
+            paymentId,
+            paymentLink,
+            refundId,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SubscriptionChangePlanResponse{clientSecret=$clientSecret, expiresOn=$expiresOn, paymentId=$paymentId, paymentLink=$paymentLink, additionalProperties=$additionalProperties}"
+        "SubscriptionChangePlanResponse{clientSecret=$clientSecret, expiresOn=$expiresOn, invoiceId=$invoiceId, paymentId=$paymentId, paymentLink=$paymentLink, refundId=$refundId, additionalProperties=$additionalProperties}"
 }

@@ -26,8 +26,6 @@ import com.dodopayments.api.models.meters.MeterListParams
 import com.dodopayments.api.models.meters.MeterRetrieveParams
 import com.dodopayments.api.models.meters.MeterUnarchiveParams
 import com.dodopayments.api.models.meters.MeterUpdateParams
-import com.dodopayments.api.services.async.meters.TranslationServiceAsync
-import com.dodopayments.api.services.async.meters.TranslationServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -39,16 +37,10 @@ class MeterServiceAsyncImpl internal constructor(private val clientOptions: Clie
         WithRawResponseImpl(clientOptions)
     }
 
-    private val translations: TranslationServiceAsync by lazy {
-        TranslationServiceAsyncImpl(clientOptions)
-    }
-
     override fun withRawResponse(): MeterServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MeterServiceAsync =
         MeterServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
-
-    override fun translations(): TranslationServiceAsync = translations
 
     override fun create(
         params: MeterCreateParams,
@@ -98,18 +90,12 @@ class MeterServiceAsyncImpl internal constructor(private val clientOptions: Clie
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val translations: TranslationServiceAsync.WithRawResponse by lazy {
-            TranslationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): MeterServiceAsync.WithRawResponse =
             MeterServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        override fun translations(): TranslationServiceAsync.WithRawResponse = translations
 
         private val createHandler: Handler<Meter> = jsonHandler<Meter>(clientOptions.jsonMapper)
 

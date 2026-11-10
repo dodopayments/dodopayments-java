@@ -16,7 +16,6 @@ import com.dodopayments.api.models.addons.AddonUnarchiveParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesParams
 import com.dodopayments.api.models.addons.AddonUpdateImagesResponse
 import com.dodopayments.api.models.addons.AddonUpdateParams
-import com.dodopayments.api.services.async.addons.TranslationServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -33,8 +32,6 @@ interface AddonServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddonServiceAsync
-
-    fun translations(): TranslationServiceAsync
 
     fun create(params: AddonCreateParams): CompletableFuture<AddonResponse> =
         create(params, RequestOptions.none())
@@ -227,8 +224,6 @@ interface AddonServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): AddonServiceAsync.WithRawResponse
-
-        fun translations(): TranslationServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /addons`, but is otherwise the same as
