@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.126.0](https://github.com/dodopayments/dodopayments-java/compare/v1.125.0...v1.126.0) (2026-11-10)
+
+
+### Features
+
+* **api:** billing invoices and upcoming invoice; sync spec to prod 1.122.7 ([a28da4d](https://github.com/dodopayments/dodopayments-java/commit/a28da4d1418d3c06730059bdb8c6dd285d251c82))
+* **api:** billing invoices and upcoming invoice; sync spec to prod 1.122.7 ([6f3bc30](https://github.com/dodopayments/dodopayments-java/commit/6f3bc3040f70253e95f18f688e2b9c0ed783cf05))
+* **api:** regenerate SDK from latest OpenAPI spec ([3840926](https://github.com/dodopayments/dodopayments-java/commit/3840926dbc30af34427023b78fefb857ff2cfe50))
+* **api:** regenerate SDK from latest OpenAPI spec ([fc92d75](https://github.com/dodopayments/dodopayments-java/commit/fc92d75648cc5943f48c3e6b6567b0b7bdfb56e5))
+
 ## [1.125.0](https://github.com/dodopayments/dodopayments-java/compare/v1.124.0...v1.125.0) (2026-10-28)
 
 
