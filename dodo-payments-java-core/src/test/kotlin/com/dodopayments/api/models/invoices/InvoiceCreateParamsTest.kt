@@ -53,6 +53,7 @@ internal class InvoiceCreateParamsTest {
             .metadata(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
+            .paymentMethodId("payment_method_id")
             .paymentTermsDueOnReceipt()
             .reviewRequired(true)
             .taxId("tax_id")
@@ -100,6 +101,7 @@ internal class InvoiceCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .paymentMethodId("payment_method_id")
                 .paymentTermsDueOnReceipt()
                 .reviewRequired(true)
                 .taxId("tax_id")
@@ -173,6 +175,7 @@ internal class InvoiceCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .paymentMethodId("payment_method_id")
                 .paymentTermsDueOnReceipt()
                 .reviewRequired(true)
                 .taxId("tax_id")
@@ -220,6 +223,7 @@ internal class InvoiceCreateParamsTest {
             .contains(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
+        assertThat(body.paymentMethodId()).contains("payment_method_id")
         assertThat(body.paymentTerms()).contains(InvoiceCreateParams.PaymentTerms.ofDueOnReceipt())
         assertThat(body.reviewRequired()).contains(true)
         assertThat(body.taxId()).contains("tax_id")
