@@ -138,6 +138,14 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
+     * A saved card of the customer. `null` removes the card from the draft.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun paymentMethodId(): Optional<String> = body.paymentMethodId()
+
+    /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
      *   the server responded with an unexpected value).
      */
@@ -239,6 +247,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<Metadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [paymentMethodId].
+     *
+     * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _paymentMethodId(): JsonField<String> = body._paymentMethodId()
 
     /**
      * Returns the raw JSON value of [paymentTerms].
@@ -540,6 +555,26 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
+        /** A saved card of the customer. `null` removes the card from the draft. */
+        fun paymentMethodId(paymentMethodId: String?) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
+        /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+        fun paymentMethodId(paymentMethodId: Optional<String>) =
+            paymentMethodId(paymentMethodId.getOrNull())
+
+        /**
+         * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
         fun paymentTerms(paymentTerms: PaymentTerms?) = apply { body.paymentTerms(paymentTerms) }
 
         /** Alias for calling [Builder.paymentTerms] with `paymentTerms.orElse(null)`. */
@@ -783,6 +818,7 @@ private constructor(
         private val items: JsonField<List<Item>>,
         private val memo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
+        private val paymentMethodId: JsonField<String>,
         private val paymentTerms: JsonField<PaymentTerms>,
         private val reviewRequired: JsonField<Boolean>,
         private val taxId: JsonField<String>,
@@ -821,6 +857,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("payment_method_id")
+            @ExcludeMissing
+            paymentMethodId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("payment_terms")
             @ExcludeMissing
             paymentTerms: JsonField<PaymentTerms> = JsonMissing.of(),
@@ -841,6 +880,7 @@ private constructor(
             items,
             memo,
             metadata,
+            paymentMethodId,
             paymentTerms,
             reviewRequired,
             taxId,
@@ -933,6 +973,14 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+        /**
+         * A saved card of the customer. `null` removes the card from the draft.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
 
         /**
          * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1052,6 +1100,16 @@ private constructor(
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
         /**
+         * Returns the raw JSON value of [paymentMethodId].
+         *
+         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_method_id")
+        @ExcludeMissing
+        fun _paymentMethodId(): JsonField<String> = paymentMethodId
+
+        /**
          * Returns the raw JSON value of [paymentTerms].
          *
          * Unlike [paymentTerms], this method doesn't throw if the JSON field has an unexpected
@@ -1111,6 +1169,7 @@ private constructor(
             private var items: JsonField<MutableList<Item>>? = null
             private var memo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var paymentTerms: JsonField<PaymentTerms> = JsonMissing.of()
             private var reviewRequired: JsonField<Boolean> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
@@ -1130,6 +1189,7 @@ private constructor(
                 items = body.items.map { it.toMutableList() }
                 memo = body.memo
                 metadata = body.metadata
+                paymentMethodId = body.paymentMethodId
                 paymentTerms = body.paymentTerms
                 reviewRequired = body.reviewRequired
                 taxId = body.taxId
@@ -1377,6 +1437,25 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+            /** A saved card of the customer. `null` removes the card from the draft. */
+            fun paymentMethodId(paymentMethodId: String?) =
+                paymentMethodId(JsonField.ofNullable(paymentMethodId))
+
+            /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+            fun paymentMethodId(paymentMethodId: Optional<String>) =
+                paymentMethodId(paymentMethodId.getOrNull())
+
+            /**
+             * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+                this.paymentMethodId = paymentMethodId
+            }
+
             fun paymentTerms(paymentTerms: PaymentTerms?) =
                 paymentTerms(JsonField.ofNullable(paymentTerms))
 
@@ -1489,6 +1568,7 @@ private constructor(
                     (items ?: JsonMissing.of()).map { it.toImmutable() },
                     memo,
                     metadata,
+                    paymentMethodId,
                     paymentTerms,
                     reviewRequired,
                     taxId,
@@ -1524,6 +1604,7 @@ private constructor(
             items().ifPresent { it.forEach { it.validate() } }
             memo()
             metadata().ifPresent { it.validate() }
+            paymentMethodId()
             paymentTerms().ifPresent { it.validate() }
             reviewRequired()
             taxId()
@@ -1558,6 +1639,7 @@ private constructor(
                 (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (memo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (paymentTerms.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (reviewRequired.asKnown().isPresent) 1 else 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0)
@@ -1580,6 +1662,7 @@ private constructor(
                 items == other.items &&
                 memo == other.memo &&
                 metadata == other.metadata &&
+                paymentMethodId == other.paymentMethodId &&
                 paymentTerms == other.paymentTerms &&
                 reviewRequired == other.reviewRequired &&
                 taxId == other.taxId &&
@@ -1600,6 +1683,7 @@ private constructor(
                 items,
                 memo,
                 metadata,
+                paymentMethodId,
                 paymentTerms,
                 reviewRequired,
                 taxId,
@@ -1610,7 +1694,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{billingAddress=$billingAddress, ccEmails=$ccEmails, collectionMethod=$collectionMethod, currency=$currency, customerEmail=$customerEmail, customerId=$customerId, discountIds=$discountIds, dueAt=$dueAt, dunning=$dunning, items=$items, memo=$memo, metadata=$metadata, paymentTerms=$paymentTerms, reviewRequired=$reviewRequired, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{billingAddress=$billingAddress, ccEmails=$ccEmails, collectionMethod=$collectionMethod, currency=$currency, customerEmail=$customerEmail, customerId=$customerId, discountIds=$discountIds, dueAt=$dueAt, dunning=$dunning, items=$items, memo=$memo, metadata=$metadata, paymentMethodId=$paymentMethodId, paymentTerms=$paymentTerms, reviewRequired=$reviewRequired, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     /** The billing address of an invoice request. */
