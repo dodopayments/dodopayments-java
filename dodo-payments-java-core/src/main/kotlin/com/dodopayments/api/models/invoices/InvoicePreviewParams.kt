@@ -144,6 +144,14 @@ private constructor(
     fun metadata(): Optional<Metadata> = body.metadata()
 
     /**
+     * A saved card of the customer. The new subscriptions of the invoice charge it.
+     *
+     * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
+     *   the server responded with an unexpected value).
+     */
+    fun paymentMethodId(): Optional<String> = body.paymentMethodId()
+
+    /**
      * Do not send it with `due_at`.
      *
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -249,6 +257,13 @@ private constructor(
      * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _metadata(): JsonField<Metadata> = body._metadata()
+
+    /**
+     * Returns the raw JSON value of [paymentMethodId].
+     *
+     * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _paymentMethodId(): JsonField<String> = body._paymentMethodId()
 
     /**
      * Returns the raw JSON value of [paymentTerms].
@@ -539,6 +554,26 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Metadata>) = apply { body.metadata(metadata) }
 
+        /** A saved card of the customer. The new subscriptions of the invoice charge it. */
+        fun paymentMethodId(paymentMethodId: String?) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
+        /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+        fun paymentMethodId(paymentMethodId: Optional<String>) =
+            paymentMethodId(paymentMethodId.getOrNull())
+
+        /**
+         * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+            body.paymentMethodId(paymentMethodId)
+        }
+
         /** Do not send it with `due_at`. */
         fun paymentTerms(paymentTerms: PaymentTerms?) = apply { body.paymentTerms(paymentTerms) }
 
@@ -753,6 +788,10 @@ private constructor(
             }
             .build()
 
+    /**
+     * This request does not start the trial of a product. To start a trial, use `POST
+     * /billing/subscriptions`.
+     */
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
@@ -768,6 +807,7 @@ private constructor(
         private val dunning: JsonField<Dunning>,
         private val memo: JsonField<String>,
         private val metadata: JsonField<Metadata>,
+        private val paymentMethodId: JsonField<String>,
         private val paymentTerms: JsonField<PaymentTerms>,
         private val reviewRequired: JsonField<Boolean>,
         private val taxId: JsonField<String>,
@@ -806,6 +846,9 @@ private constructor(
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
+            @JsonProperty("payment_method_id")
+            @ExcludeMissing
+            paymentMethodId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("payment_terms")
             @ExcludeMissing
             paymentTerms: JsonField<PaymentTerms> = JsonMissing.of(),
@@ -826,6 +869,7 @@ private constructor(
             dunning,
             memo,
             metadata,
+            paymentMethodId,
             paymentTerms,
             reviewRequired,
             taxId,
@@ -921,6 +965,14 @@ private constructor(
          *   if the server responded with an unexpected value).
          */
         fun metadata(): Optional<Metadata> = metadata.getOptional("metadata")
+
+        /**
+         * A saved card of the customer. The new subscriptions of the invoice charge it.
+         *
+         * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type (e.g.
+         *   if the server responded with an unexpected value).
+         */
+        fun paymentMethodId(): Optional<String> = paymentMethodId.getOptional("payment_method_id")
 
         /**
          * Do not send it with `due_at`.
@@ -1044,6 +1096,16 @@ private constructor(
         @JsonProperty("metadata") @ExcludeMissing fun _metadata(): JsonField<Metadata> = metadata
 
         /**
+         * Returns the raw JSON value of [paymentMethodId].
+         *
+         * Unlike [paymentMethodId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("payment_method_id")
+        @ExcludeMissing
+        fun _paymentMethodId(): JsonField<String> = paymentMethodId
+
+        /**
          * Returns the raw JSON value of [paymentTerms].
          *
          * Unlike [paymentTerms], this method doesn't throw if the JSON field has an unexpected
@@ -1113,6 +1175,7 @@ private constructor(
             private var dunning: JsonField<Dunning> = JsonMissing.of()
             private var memo: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
+            private var paymentMethodId: JsonField<String> = JsonMissing.of()
             private var paymentTerms: JsonField<PaymentTerms> = JsonMissing.of()
             private var reviewRequired: JsonField<Boolean> = JsonMissing.of()
             private var taxId: JsonField<String> = JsonMissing.of()
@@ -1132,6 +1195,7 @@ private constructor(
                 dunning = body.dunning
                 memo = body.memo
                 metadata = body.metadata
+                paymentMethodId = body.paymentMethodId
                 paymentTerms = body.paymentTerms
                 reviewRequired = body.reviewRequired
                 taxId = body.taxId
@@ -1363,6 +1427,25 @@ private constructor(
              */
             fun metadata(metadata: JsonField<Metadata>) = apply { this.metadata = metadata }
 
+            /** A saved card of the customer. The new subscriptions of the invoice charge it. */
+            fun paymentMethodId(paymentMethodId: String?) =
+                paymentMethodId(JsonField.ofNullable(paymentMethodId))
+
+            /** Alias for calling [Builder.paymentMethodId] with `paymentMethodId.orElse(null)`. */
+            fun paymentMethodId(paymentMethodId: Optional<String>) =
+                paymentMethodId(paymentMethodId.getOrNull())
+
+            /**
+             * Sets [Builder.paymentMethodId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.paymentMethodId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun paymentMethodId(paymentMethodId: JsonField<String>) = apply {
+                this.paymentMethodId = paymentMethodId
+            }
+
             /** Do not send it with `due_at`. */
             fun paymentTerms(paymentTerms: PaymentTerms?) =
                 paymentTerms(JsonField.ofNullable(paymentTerms))
@@ -1476,6 +1559,7 @@ private constructor(
                     dunning,
                     memo,
                     metadata,
+                    paymentMethodId,
                     paymentTerms,
                     reviewRequired,
                     taxId,
@@ -1511,6 +1595,7 @@ private constructor(
             dunning().ifPresent { it.validate() }
             memo()
             metadata().ifPresent { it.validate() }
+            paymentMethodId()
             paymentTerms().ifPresent { it.validate() }
             reviewRequired()
             taxId()
@@ -1545,6 +1630,7 @@ private constructor(
                 (dunning.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (memo.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (paymentMethodId.asKnown().isPresent) 1 else 0) +
                 (paymentTerms.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (reviewRequired.asKnown().isPresent) 1 else 0) +
                 (if (taxId.asKnown().isPresent) 1 else 0)
@@ -1567,6 +1653,7 @@ private constructor(
                 dunning == other.dunning &&
                 memo == other.memo &&
                 metadata == other.metadata &&
+                paymentMethodId == other.paymentMethodId &&
                 paymentTerms == other.paymentTerms &&
                 reviewRequired == other.reviewRequired &&
                 taxId == other.taxId &&
@@ -1587,6 +1674,7 @@ private constructor(
                 dunning,
                 memo,
                 metadata,
+                paymentMethodId,
                 paymentTerms,
                 reviewRequired,
                 taxId,
@@ -1597,7 +1685,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{collectionMethod=$collectionMethod, currency=$currency, customerId=$customerId, items=$items, billingAddress=$billingAddress, ccEmails=$ccEmails, customerEmail=$customerEmail, discountIds=$discountIds, dueAt=$dueAt, dunning=$dunning, memo=$memo, metadata=$metadata, paymentTerms=$paymentTerms, reviewRequired=$reviewRequired, taxId=$taxId, additionalProperties=$additionalProperties}"
+            "Body{collectionMethod=$collectionMethod, currency=$currency, customerId=$customerId, items=$items, billingAddress=$billingAddress, ccEmails=$ccEmails, customerEmail=$customerEmail, discountIds=$discountIds, dueAt=$dueAt, dunning=$dunning, memo=$memo, metadata=$metadata, paymentMethodId=$paymentMethodId, paymentTerms=$paymentTerms, reviewRequired=$reviewRequired, taxId=$taxId, additionalProperties=$additionalProperties}"
     }
 
     /** A line that exists only on this invoice. */
