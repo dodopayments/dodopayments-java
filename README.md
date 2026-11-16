@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.dodopayments.dodopayments-java:dodo-payments-java:1.127.1")
+    implementation("com.github.dodopayments.dodopayments-java:dodo-payments-java:1.127.2")
 }
 ```
 
@@ -57,7 +57,7 @@ dependencies {
 <dependency>
   <groupId>com.github.dodopayments.dodopayments-java</groupId>
   <artifactId>dodo-payments-java</artifactId>
-  <version>1.127.1</version>
+  <version>1.127.2</version>
 </dependency>
 ```
 
