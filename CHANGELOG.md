@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.127.0](https://github.com/dodopayments/dodopayments-java/compare/v1.126.0...v1.127.0) (2026-11-16)
+
+
+### Features
+
+* **api:** trial subscriptions and app installation settings; sync spec to prod 1.124.0 ([a24b360](https://github.com/dodopayments/dodopayments-java/commit/a24b360ceb7f48208726863eb9bc0a8ebd088ec4))
+* **api:** trial subscriptions and app installation settings; sync spec to prod 1.124.0 ([2b0a4e7](https://github.com/dodopayments/dodopayments-java/commit/2b0a4e7dafcd156e0c22b60c447687953110c499))
+
 ## [1.126.0](https://github.com/dodopayments/dodopayments-java/compare/v1.125.0...v1.126.0) (2026-11-10)
 
 
