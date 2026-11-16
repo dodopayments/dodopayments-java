@@ -4,6 +4,7 @@ package com.dodopayments.api.client
 
 import com.dodopayments.api.core.ClientOptions
 import com.dodopayments.api.services.async.AddonServiceAsync
+import com.dodopayments.api.services.async.AppInstallationServiceAsync
 import com.dodopayments.api.services.async.BalanceServiceAsync
 import com.dodopayments.api.services.async.BlocklistServiceAsync
 import com.dodopayments.api.services.async.BrandServiceAsync
@@ -122,6 +123,8 @@ interface DodoPaymentsClientAsync {
 
     fun moderation(): ModerationServiceAsync
 
+    fun appInstallation(): AppInstallationServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -201,5 +204,7 @@ interface DodoPaymentsClientAsync {
         fun productCollections(): ProductCollectionServiceAsync.WithRawResponse
 
         fun moderation(): ModerationServiceAsync.WithRawResponse
+
+        fun appInstallation(): AppInstallationServiceAsync.WithRawResponse
     }
 }
