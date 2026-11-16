@@ -25,6 +25,8 @@ import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUpcomingInvoiceParams
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryPageAsync
 import com.dodopayments.api.models.subscriptions.SubscriptionRetrieveUsageHistoryParams
+import com.dodopayments.api.models.subscriptions.SubscriptionStartTrialParams
+import com.dodopayments.api.models.subscriptions.SubscriptionStartTrialResponse
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdateParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodParams
 import com.dodopayments.api.models.subscriptions.SubscriptionUpdatePaymentMethodResponse
@@ -427,6 +429,20 @@ interface SubscriptionServiceAsync {
             SubscriptionRetrieveUsageHistoryParams.none(),
             requestOptions,
         )
+
+    /**
+     * Creates an invoice-led subscription and a paid $0 invoice for the trial. The first invoice
+     * after the trial bills at `trial_ends_at`.
+     */
+    fun startTrial(
+        params: SubscriptionStartTrialParams
+    ): CompletableFuture<SubscriptionStartTrialResponse> = startTrial(params, RequestOptions.none())
+
+    /** @see startTrial */
+    fun startTrial(
+        params: SubscriptionStartTrialParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionStartTrialResponse>
 
     /**
      * For an invoice-led subscription, billing charges the open invoices after the change, so the
@@ -899,6 +915,21 @@ interface SubscriptionServiceAsync {
                 SubscriptionRetrieveUsageHistoryParams.none(),
                 requestOptions,
             )
+
+        /**
+         * Returns a raw HTTP response for `post /billing/subscriptions`, but is otherwise the same
+         * as [SubscriptionServiceAsync.startTrial].
+         */
+        fun startTrial(
+            params: SubscriptionStartTrialParams
+        ): CompletableFuture<HttpResponseFor<SubscriptionStartTrialResponse>> =
+            startTrial(params, RequestOptions.none())
+
+        /** @see startTrial */
+        fun startTrial(
+            params: SubscriptionStartTrialParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionStartTrialResponse>>
 
         /**
          * Returns a raw HTTP response for `post
