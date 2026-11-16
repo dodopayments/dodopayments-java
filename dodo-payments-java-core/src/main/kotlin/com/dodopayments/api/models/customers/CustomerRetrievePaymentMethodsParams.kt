@@ -5,6 +5,8 @@ package com.dodopayments.api.models.customers
 import com.dodopayments.api.core.Params
 import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.core.http.QueryParams
+import com.dodopayments.api.models.misc.CountryCode
+import com.dodopayments.api.models.misc.Currency
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -12,11 +14,18 @@ import kotlin.jvm.optionals.getOrNull
 class CustomerRetrievePaymentMethodsParams
 private constructor(
     private val customerId: String?,
+    private val billingCountry: CountryCode?,
+    private val currency: Currency?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun customerId(): Optional<String> = Optional.ofNullable(customerId)
+
+    /** ISO country code alpha2 variant */
+    fun billingCountry(): Optional<CountryCode> = Optional.ofNullable(billingCountry)
+
+    fun currency(): Optional<Currency> = Optional.ofNullable(currency)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -41,6 +50,8 @@ private constructor(
     class Builder internal constructor() {
 
         private var customerId: String? = null
+        private var billingCountry: CountryCode? = null
+        private var currency: Currency? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -49,6 +60,8 @@ private constructor(
             customerRetrievePaymentMethodsParams: CustomerRetrievePaymentMethodsParams
         ) = apply {
             customerId = customerRetrievePaymentMethodsParams.customerId
+            billingCountry = customerRetrievePaymentMethodsParams.billingCountry
+            currency = customerRetrievePaymentMethodsParams.currency
             additionalHeaders = customerRetrievePaymentMethodsParams.additionalHeaders.toBuilder()
             additionalQueryParams =
                 customerRetrievePaymentMethodsParams.additionalQueryParams.toBuilder()
@@ -58,6 +71,20 @@ private constructor(
 
         /** Alias for calling [Builder.customerId] with `customerId.orElse(null)`. */
         fun customerId(customerId: Optional<String>) = customerId(customerId.getOrNull())
+
+        /** ISO country code alpha2 variant */
+        fun billingCountry(billingCountry: CountryCode?) = apply {
+            this.billingCountry = billingCountry
+        }
+
+        /** Alias for calling [Builder.billingCountry] with `billingCountry.orElse(null)`. */
+        fun billingCountry(billingCountry: Optional<CountryCode>) =
+            billingCountry(billingCountry.getOrNull())
+
+        fun currency(currency: Currency?) = apply { this.currency = currency }
+
+        /** Alias for calling [Builder.currency] with `currency.orElse(null)`. */
+        fun currency(currency: Optional<Currency>) = currency(currency.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -165,6 +192,8 @@ private constructor(
         fun build(): CustomerRetrievePaymentMethodsParams =
             CustomerRetrievePaymentMethodsParams(
                 customerId,
+                billingCountry,
+                currency,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -178,7 +207,14 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                billingCountry?.let { put("billing_country", it.toString()) }
+                currency?.let { put("currency", it.toString()) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -187,13 +223,15 @@ private constructor(
 
         return other is CustomerRetrievePaymentMethodsParams &&
             customerId == other.customerId &&
+            billingCountry == other.billingCountry &&
+            currency == other.currency &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(customerId, additionalHeaders, additionalQueryParams)
+        Objects.hash(customerId, billingCountry, currency, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CustomerRetrievePaymentMethodsParams{customerId=$customerId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CustomerRetrievePaymentMethodsParams{customerId=$customerId, billingCountry=$billingCountry, currency=$currency, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

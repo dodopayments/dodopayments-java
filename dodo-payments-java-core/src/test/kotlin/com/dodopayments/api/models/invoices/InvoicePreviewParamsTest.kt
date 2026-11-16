@@ -53,6 +53,7 @@ internal class InvoicePreviewParamsTest {
             .metadata(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
+            .paymentMethodId("payment_method_id")
             .paymentTermsDueOnReceipt()
             .reviewRequired(true)
             .taxId("tax_id")
@@ -100,6 +101,7 @@ internal class InvoicePreviewParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .paymentMethodId("payment_method_id")
                 .paymentTermsDueOnReceipt()
                 .reviewRequired(true)
                 .taxId("tax_id")
@@ -172,6 +174,7 @@ internal class InvoicePreviewParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .paymentMethodId("payment_method_id")
                 .paymentTermsDueOnReceipt()
                 .reviewRequired(true)
                 .taxId("tax_id")
@@ -219,6 +222,7 @@ internal class InvoicePreviewParamsTest {
             .contains(
                 Metadata.builder().putAdditionalProperty("foo", JsonValue.from("string")).build()
             )
+        assertThat(body.paymentMethodId()).contains("payment_method_id")
         assertThat(body.paymentTerms()).contains(InvoicePreviewParams.PaymentTerms.ofDueOnReceipt())
         assertThat(body.reviewRequired()).contains(true)
         assertThat(body.taxId()).contains("tax_id")
