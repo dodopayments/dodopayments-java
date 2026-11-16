@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.127.1](https://github.com/dodopayments/dodopayments-java/compare/v1.127.0...v1.127.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **build:** build and publish the SDK on JitPack ([3de7e98](https://github.com/dodopayments/dodopayments-java/commit/3de7e98e5fc5a11b3fafc89a73755a5f61b2a56c))
+* **build:** check that the downloaded JitPack JAR files are complete ([8e09ff8](https://github.com/dodopayments/dodopayments-java/commit/8e09ff886816f0edf97f18e194392623fc42f93b))
+* **build:** compile and run Dokka in separate JitPack Gradle runs ([f06e4a3](https://github.com/dodopayments/dodopayments-java/commit/f06e4a3f9df4b33159f32c8bac382375d89187f9))
+* **build:** distribute the SDK on JitPack instead of Maven Central ([f8416ee](https://github.com/dodopayments/dodopayments-java/commit/f8416eeae0719a4b9a36b2d5dcfbf20c78539646))
+* **build:** publish an empty javadoc JAR in the JitPack build ([3fe5583](https://github.com/dodopayments/dodopayments-java/commit/3fe55837ec1076280f7cd4c73655b2056f346f1f))
+* **build:** publish releases on JitPack instead of Maven Central ([9a4175e](https://github.com/dodopayments/dodopayments-java/commit/9a4175ee5e6c45bad2d20c4d708784384b73e09d))
+
 ## [1.127.0](https://github.com/dodopayments/dodopayments-java/compare/v1.126.0...v1.127.0) (2026-11-16)
 
 
