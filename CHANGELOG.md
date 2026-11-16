@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.127.2](https://github.com/dodopayments/dodopayments-java/compare/v1.127.1...v1.127.2) (2026-11-16)
+
+
+### Chores
+
+* **build:** remove the Maven Central publish settings and show the JitPack badge ([89953cb](https://github.com/dodopayments/dodopayments-java/commit/89953cbac632e74070b6a730c88a84af18098897))
+* **build:** remove the Maven Central publish settings and show the JitPack badge ([68024ab](https://github.com/dodopayments/dodopayments-java/commit/68024ab51de08e5cd746747ddf62716ab43662ad))
+
+
+### Documentation
+
+* **readme:** remove the javadoc.io badge and link ([7e78c11](https://github.com/dodopayments/dodopayments-java/commit/7e78c11acbd363fd79682b39b6987181d1641c6c))
+* **readme:** use the generated JitPack note ([9b57370](https://github.com/dodopayments/dodopayments-java/commit/9b573706ab14d4693c529eb2e27d90fd0f047131))
+
 ## [1.127.1](https://github.com/dodopayments/dodopayments-java/compare/v1.127.0...v1.127.1) (2026-11-16)
 
 
