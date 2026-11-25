@@ -39,13 +39,10 @@ import kotlin.jvm.optionals.getOrNull
  */
 class SubscriptionStartTrialParams
 private constructor(
-    private val idempotencyKey: String?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
-
-    fun idempotencyKey(): Optional<String> = Optional.ofNullable(idempotencyKey)
 
     /**
      * @throws DodoPaymentsInvalidDataException if the JSON field has an unexpected type or is
@@ -233,24 +230,16 @@ private constructor(
     /** A builder for [SubscriptionStartTrialParams]. */
     class Builder internal constructor() {
 
-        private var idempotencyKey: String? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(subscriptionStartTrialParams: SubscriptionStartTrialParams) = apply {
-            idempotencyKey = subscriptionStartTrialParams.idempotencyKey
             body = subscriptionStartTrialParams.body.toBuilder()
             additionalHeaders = subscriptionStartTrialParams.additionalHeaders.toBuilder()
             additionalQueryParams = subscriptionStartTrialParams.additionalQueryParams.toBuilder()
         }
-
-        fun idempotencyKey(idempotencyKey: String?) = apply { this.idempotencyKey = idempotencyKey }
-
-        /** Alias for calling [Builder.idempotencyKey] with `idempotencyKey.orElse(null)`. */
-        fun idempotencyKey(idempotencyKey: Optional<String>) =
-            idempotencyKey(idempotencyKey.getOrNull())
 
         /**
          * Sets the entire request body.
@@ -588,7 +577,6 @@ private constructor(
          */
         fun build(): SubscriptionStartTrialParams =
             SubscriptionStartTrialParams(
-                idempotencyKey,
                 body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -597,13 +585,7 @@ private constructor(
 
     fun _body(): Body = body
 
-    override fun _headers(): Headers =
-        Headers.builder()
-            .apply {
-                idempotencyKey?.let { put("Idempotency-Key", it) }
-                putAll(additionalHeaders)
-            }
-            .build()
+    override fun _headers(): Headers = additionalHeaders
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
@@ -1994,15 +1976,13 @@ private constructor(
         }
 
         return other is SubscriptionStartTrialParams &&
-            idempotencyKey == other.idempotencyKey &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(idempotencyKey, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "SubscriptionStartTrialParams{idempotencyKey=$idempotencyKey, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "SubscriptionStartTrialParams{body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

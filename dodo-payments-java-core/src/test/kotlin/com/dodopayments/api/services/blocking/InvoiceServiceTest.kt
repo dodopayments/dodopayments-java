@@ -53,7 +53,6 @@ internal class InvoiceServiceTest {
         val invoice =
             invoiceService.create(
                 InvoiceCreateParams.builder()
-                    .idempotencyKey("Idempotency-Key")
                     .collectionMethod(CollectionMethod.AUTO_CHARGE)
                     .currency(Currency.AED)
                     .customerId("customer_id")
