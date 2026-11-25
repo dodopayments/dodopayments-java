@@ -3,7 +3,6 @@
 package com.dodopayments.api.models.invoices
 
 import com.dodopayments.api.core.JsonValue
-import com.dodopayments.api.core.http.Headers
 import com.dodopayments.api.models.misc.CountryCode
 import com.dodopayments.api.models.misc.Currency
 import com.dodopayments.api.models.misc.Metadata
@@ -18,7 +17,6 @@ internal class InvoiceCreateParamsTest {
     @Test
     fun create() {
         InvoiceCreateParams.builder()
-            .idempotencyKey("Idempotency-Key")
             .collectionMethod(CollectionMethod.AUTO_CHARGE)
             .currency(Currency.AED)
             .customerId("customer_id")
@@ -61,84 +59,9 @@ internal class InvoiceCreateParamsTest {
     }
 
     @Test
-    fun headers() {
-        val params =
-            InvoiceCreateParams.builder()
-                .idempotencyKey("Idempotency-Key")
-                .collectionMethod(CollectionMethod.AUTO_CHARGE)
-                .currency(Currency.AED)
-                .customerId("customer_id")
-                .addItem(
-                    InvoiceCreateParams.Item.CustomItem.builder()
-                        .description("description")
-                        .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                        .unitAmount(0)
-                        .quantity(0)
-                        .build()
-                )
-                .billingAddress(
-                    InvoiceCreateParams.BillingAddress.builder()
-                        .country(CountryCode.AF)
-                        .city("city")
-                        .state("state")
-                        .street("street")
-                        .zipcode("zipcode")
-                        .build()
-                )
-                .addCcEmail("string")
-                .customerEmail("customer_email")
-                .addDiscountId("string")
-                .dueAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .dunning(
-                    InvoiceCreateParams.Dunning.builder()
-                        .remindersEnabled(true)
-                        .addOffsetsDay(0)
-                        .build()
-                )
-                .memo("memo")
-                .metadata(
-                    Metadata.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("string"))
-                        .build()
-                )
-                .paymentMethodId("payment_method_id")
-                .paymentTermsDueOnReceipt()
-                .reviewRequired(true)
-                .taxId("tax_id")
-                .build()
-
-        val headers = params._headers()
-
-        assertThat(headers)
-            .isEqualTo(Headers.builder().put("Idempotency-Key", "Idempotency-Key").build())
-    }
-
-    @Test
-    fun headersWithoutOptionalFields() {
-        val params =
-            InvoiceCreateParams.builder()
-                .collectionMethod(CollectionMethod.AUTO_CHARGE)
-                .currency(Currency.AED)
-                .customerId("customer_id")
-                .addItem(
-                    InvoiceCreateParams.Item.CustomItem.builder()
-                        .description("description")
-                        .taxCategory(TaxCategory.DIGITAL_PRODUCTS)
-                        .unitAmount(0)
-                        .build()
-                )
-                .build()
-
-        val headers = params._headers()
-
-        assertThat(headers).isEqualTo(Headers.builder().build())
-    }
-
-    @Test
     fun body() {
         val params =
             InvoiceCreateParams.builder()
-                .idempotencyKey("Idempotency-Key")
                 .collectionMethod(CollectionMethod.AUTO_CHARGE)
                 .currency(Currency.AED)
                 .customerId("customer_id")

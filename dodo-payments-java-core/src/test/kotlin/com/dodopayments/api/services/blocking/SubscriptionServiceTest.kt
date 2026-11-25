@@ -400,7 +400,6 @@ internal class SubscriptionServiceTest {
         val response =
             subscriptionService.startTrial(
                 SubscriptionStartTrialParams.builder()
-                    .idempotencyKey("Idempotency-Key")
                     .collectionMethod(CollectionMethod.AUTO_CHARGE)
                     .currency(Currency.AED)
                     .customerId("customer_id")

@@ -587,6 +587,7 @@ private constructor(
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
+                    .idempotencyHeader("Idempotency-Key")
                     .build()
 
             val workloadIdentityTokenManager =
